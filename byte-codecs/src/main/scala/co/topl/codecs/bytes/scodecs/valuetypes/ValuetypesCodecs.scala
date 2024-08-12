@@ -109,3 +109,5 @@ trait ValuetypesCodecs {
 
   implicit def optionCodec[T: Codec]: Codec[Option[T]] = new OptionCodec[T]
 }
+
+object ValuetypesCodecs extends ValuetypesCodecs

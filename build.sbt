@@ -472,7 +472,7 @@ lazy val consensus = project
     models % "compile->compile;test->test",
     typeclasses,
     nodeCrypto,
-    tetraByteCodecs,
+    tetraByteCodecs % "compile->compile;test->test",
     algebras % "compile->compile;test->test",
     numerics,
     eventTree,

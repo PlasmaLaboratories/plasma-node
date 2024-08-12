@@ -6,6 +6,7 @@ import co.topl.codecs.bytes.scodecs._
 import co.topl.codecs.bytes.typeclasses.Persistable
 import co.topl.consensus.models.BlockId
 import co.topl.crypto.models.SecretKeyKesProduct
+import co.topl.models.{Epoch, ProposalId}
 import com.google.protobuf.ByteString
 import scalapb.{GeneratedMessage, GeneratedMessageCompanion}
 import scodec.Codec
@@ -28,6 +29,13 @@ trait TetraPersistableCodecs {
   implicit def persistableSeq[T: Codec]: Persistable[Seq[T]] =
     Persistable.instanceFromCodec(seqCodec[T])
 
+  implicit def persistableSet[T: Codec]: Persistable[Set[T]] = new Persistable[Set[T]] {
+    override def persistedBytes(value: Set[T]): ByteString = persistableSeq[T].persistedBytes(value.toSeq)
+
+    override def fromPersistedBytes(bytes: ByteString): Either[String, Set[T]] =
+      persistableSeq[T].fromPersistedBytes(bytes).map(_.toSet)
+  }
+
   implicit val persistableTransactionOutputIndices: Persistable[NonEmptySet[Short]] =
     Persistable.instanceFromCodec(
       seqCodec[Short].xmap(s => NonEmptySet.fromSetUnsafe(SortedSet.from(s)), _.toList)
@@ -35,6 +43,9 @@ trait TetraPersistableCodecs {
 
   implicit val persistableLong: Persistable[Long] =
     Persistable.instanceFromCodec(longCodec)
+
+  implicit val persistableInt: Persistable[Int] =
+    Persistable.instanceFromCodec(intCodec)
 
   implicit val persistableBigInt: Persistable[BigInt] =
     Persistable.instanceFromCodec
@@ -49,6 +60,9 @@ trait TetraPersistableCodecs {
 
   implicit val persistableHeightIdTuple: Persistable[(Long, BlockId)] =
     Persistable.instanceFromCodec(tupleCodec(longCodec, blockIdCodec))
+
+  implicit val persistableEpochToProposalId: Persistable[(Epoch, ProposalId)] =
+    Persistable.instanceFromCodec(tupleCodec(longCodec, intCodec))
 
   implicit val persistableByte: Persistable[Byte] =
     Persistable.instanceFromCodec

@@ -24,4 +24,6 @@ class TestStore[F[_]: Async, Key, T] private (ref: Ref[F, Map[Key, T]]) extends 
 
   def contains(id: Key): F[Boolean] =
     ref.get.map(_.contains(id))
+
+  def copyData: F[Map[Key, T]] = ref.get.map(_.toMap)
 }
