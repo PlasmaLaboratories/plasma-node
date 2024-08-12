@@ -42,6 +42,7 @@ import fs2.io.file.Path
 import kamon.Kamon
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
+import co.topl.consensus.interpreters.VersionsEventSourceState.VersionsData
 
 import scala.concurrent.duration._
 import java.time.Instant
@@ -515,6 +516,54 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         appConfig.bifrost.mempool.protection
       )
 
+      versionsLocalInitialState = new VersionsData[F](
+        dataStores.versioningDataStoresLocal.idToProposal,
+        dataStores.versioningDataStoresLocal.epochToProposalIds,
+        dataStores.versioningDataStoresLocal.proposalVoting,
+        dataStores.versioningDataStoresLocal.epochToVersionIds,
+        dataStores.versioningDataStoresLocal.versionIdToProposal,
+        dataStores.versioningDataStoresLocal.versionCounter,
+        dataStores.epochData
+      )
+
+      versionsLocal <- VersionsEventSourceState
+        .make[F](
+          currentEventIdGetterSetters.versionsLocal.get(),
+          blockIdTree,
+          currentEventIdGetterSetters.versionsLocal.set,
+          versionsLocalInitialState.pure[F],
+          clock,
+          dataStores.headers.getOrRaise,
+          dataStores.bodies.getOrRaise,
+          dataStores.transactions.getOrRaise,
+          ProposalConfig()
+        )
+        .toResource
+
+      versionsP2PInitialState = new VersionsData[F](
+        dataStores.versioningDataStoresP2P.idToProposal,
+        dataStores.versioningDataStoresP2P.epochToProposalIds,
+        dataStores.versioningDataStoresP2P.proposalVoting,
+        dataStores.versioningDataStoresP2P.epochToVersionIds,
+        dataStores.versioningDataStoresP2P.versionIdToProposal,
+        dataStores.versioningDataStoresP2P.versionCounter,
+        dataStores.epochData
+      )
+
+      versionsP2P <- VersionsEventSourceState
+        .make[F](
+          currentEventIdGetterSetters.versionsP2P.get(),
+          blockIdTree,
+          currentEventIdGetterSetters.versionsP2P.set,
+          versionsP2PInitialState.pure[F],
+          clock,
+          dataStores.headers.getOrRaise,
+          dataStores.bodies.getOrRaise,
+          dataStores.transactions.getOrRaise,
+          ProposalConfig()
+        )
+        .toResource
+
       eventSourcedStates = EventSourcedStates[F](
         epochDataEventSourcedState,
         blockHeightTreeLocal,
@@ -528,7 +577,9 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         mempoolState,
         registrationAccumulatorStateLocal,
         registrationAccumulatorStateP2P,
-        txIdToBlockIdTree
+        txIdToBlockIdTree,
+        versionsLocal,
+        versionsP2P
       )
 
       _ <- Logger[F].info(show"Updating EventSourcedStates to id=$canonicalHeadId").toResource

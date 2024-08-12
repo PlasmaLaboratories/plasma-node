@@ -28,8 +28,11 @@ import fs2.io.file.{Files, Path}
 import org.iq80.leveldb.DBFactory
 import org.typelevel.log4cats.Logger
 import DataStoresInit.DataStoreNames._
+import co.topl.brambl.models.box.Value.UpdateProposal
 import co.topl.consensus.interpreters.BlockHeaderToBodyValidation
+import co.topl.models.{Epoch, ProposalId, VersionId}
 import co.topl.typeclasses.implicits._
+import co.topl.codecs.bytes.scodecs.valuetypes.ValuetypesCodecs.intCodec
 
 object DataStoresInit {
 
@@ -60,6 +63,19 @@ object DataStoresInit {
     val knownRemotePeersStoreDbName = "known-remote-peers"
     val metadataStoreDbName = "metadata"
     val txIdToBlockIdDbName = "txId-to-BlockId"
+    val idToProposalLocalDbName = "id-to-proposal-local"
+    val epochToProposalIdsLocalDbName = "epoch-to-proposal-ids-local"
+    val proposalVotingLocalDbName = "proposal-voting-local"
+    val epochToVersionIdsLocalDbName = "epoch-to-version-ids-local"
+    val versionIdToProposalLocalDbName = "version-id-to-proposal-local"
+    val versionCounterLocalDbName = "version-counter-local"
+
+    val idToProposalP2PDbName = "id-to-proposal-p2p"
+    val epochToProposalIdsP2PDbName = "epoch-to-proposal-ids-p2p"
+    val proposalVotingP2PDbName = "proposal-voting-p2p"
+    val epochToVersionIdsP2PDbName = "epoch-to-version-ids-p2p"
+    val versionIdToProposalP2PDbName = "version-id-to-proposal-p2p"
+    val versionCounterP2PDbName = "version-counter-p2p"
   }
 
   // scalastyle:off method.length
@@ -213,6 +229,82 @@ object DataStoresInit {
         _.value
       )
 
+      idToProposalLocal <- makeCachedDb[F, ProposalId, java.lang.Integer, UpdateProposal](dataDir, levelDbFactory)(
+        idToProposalLocalDbName,
+        appConfig.bifrost.cache.idToProposal,
+        Int.box
+      )
+
+      epochToProposalIdsLocal <- makeCachedDb[F, Epoch, java.lang.Long, Set[ProposalId]](dataDir, levelDbFactory)(
+        epochToProposalIdsLocalDbName,
+        appConfig.bifrost.cache.epochToProposalIds,
+        Long.box
+      )
+      proposalVotingLocal <- makeCachedDb[F, (Epoch, ProposalId), (Epoch, ProposalId), Long](dataDir, levelDbFactory)(
+        proposalVotingLocalDbName,
+        appConfig.bifrost.cache.proposalVoting,
+        identity
+      )
+      epochToVersionIdsLocal <- makeCachedDb[F, Epoch, java.lang.Long, Set[VersionId]](dataDir, levelDbFactory)(
+        epochToVersionIdsLocalDbName,
+        appConfig.bifrost.cache.epochToVersionIds,
+        Long.box
+      )
+      versionIdToProposalLocal <- makeCachedDb[F, VersionId, java.lang.Integer, UpdateProposal](
+        dataDir,
+        levelDbFactory
+      )(
+        versionIdToProposalLocalDbName,
+        appConfig.bifrost.cache.versionIdToProposal,
+        Int.box
+      )
+      versionCounterLocal <- makeDb[F, Unit, VersionId](dataDir, levelDbFactory)(versionCounterLocalDbName)
+
+      idToProposalP2P <- makeCachedDb[F, ProposalId, java.lang.Integer, UpdateProposal](dataDir, levelDbFactory)(
+        idToProposalP2PDbName,
+        appConfig.bifrost.cache.idToProposal,
+        Int.box
+      )
+      epochToProposalIdsP2P <- makeCachedDb[F, Epoch, java.lang.Long, Set[ProposalId]](dataDir, levelDbFactory)(
+        epochToProposalIdsP2PDbName,
+        appConfig.bifrost.cache.epochToProposalIds,
+        Long.box
+      )
+      proposalVotingP2P <- makeCachedDb[F, (Epoch, ProposalId), (Epoch, ProposalId), Long](dataDir, levelDbFactory)(
+        proposalVotingP2PDbName,
+        appConfig.bifrost.cache.proposalVoting,
+        identity
+      )
+      epochToVersionIdsP2P <- makeCachedDb[F, Epoch, java.lang.Long, Set[VersionId]](dataDir, levelDbFactory)(
+        epochToVersionIdsP2PDbName,
+        appConfig.bifrost.cache.epochToVersionIds,
+        Long.box
+      )
+      versionIdToProposalP2P <- makeCachedDb[F, VersionId, java.lang.Integer, UpdateProposal](dataDir, levelDbFactory)(
+        versionIdToProposalP2PDbName,
+        appConfig.bifrost.cache.versionIdToProposal,
+        Int.box
+      )
+
+      versionCounterP2P <- makeDb[F, Unit, VersionId](dataDir, levelDbFactory)(versionCounterP2PDbName)
+
+      versioningDataStoresLocal = VersioningDataStores(
+        idToProposalLocal,
+        epochToProposalIdsLocal,
+        proposalVotingLocal,
+        epochToVersionIdsLocal,
+        versionIdToProposalLocal,
+        versionCounterLocal
+      )
+      versioningDataStoresP2P = VersioningDataStores(
+        idToProposalP2P,
+        epochToProposalIdsP2P,
+        proposalVotingP2P,
+        epochToVersionIdsP2P,
+        versionIdToProposalP2P,
+        versionCounterP2P
+      )
+
       dataStores = DataStoresImpl(
         dataDir,
         parentChildTree,
@@ -240,7 +332,9 @@ object DataStoresInit {
         registrationAccumulatorStoreP2P,
         knownRemotePeersStore,
         metadataStore,
-        txIdToBlockId
+        txIdToBlockId,
+        versioningDataStoresLocal,
+        versioningDataStoresP2P
       )
     } yield dataStores
   // scalastyle:on method.length
@@ -464,6 +558,8 @@ object DataStoresInit {
         bigBangBlock.header.id,
         (bigBangBlock.header.height, bigBangBlock.header.parentHeaderId)
       )
+      _ <- dataStores.versioningDataStoresLocal.versionCounter.put((), 0)
+      _ <- dataStores.versioningDataStoresP2P.versionCounter.put((), 0)
     } yield ()
 
   def repair[F[_]: Sync](dataStores: DataStores[F], bigBangBlock: FullBlock): F[Unit] =

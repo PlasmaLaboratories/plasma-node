@@ -31,4 +31,10 @@ package object models {
   @newtype case class RhoNonceHash(sizedBytes: Sized.Strict[Bytes, Lengths.`64`.type])
   type Digest32 = Sized.Strict[Bytes, Lengths.`32`.type]
 
+  type ProposalId = Int
+  val emptyProposal = 0
+
+  type VersionId = Int
+  val emptyVersion = 0
+
 }

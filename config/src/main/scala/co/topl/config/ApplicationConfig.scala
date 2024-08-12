@@ -222,6 +222,12 @@ object ApplicationConfig {
       epochData:               Cache.CacheConfig,
       registrationAccumulator: Cache.CacheConfig,
       txIdToBlockId:           Cache.CacheConfig,
+      idToProposal:            Cache.CacheConfig,
+      epochToProposalIds:      Cache.CacheConfig,
+      proposalVoting:          Cache.CacheConfig,
+      epochToVersionIds:       Cache.CacheConfig,
+      versionIdToProposal:     Cache.CacheConfig,
+      versionCounter:          Cache.CacheConfig,
       containsCacheSize:       Long = 16384
     )
 

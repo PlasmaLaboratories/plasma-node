@@ -5,9 +5,10 @@ import cats.data.NonEmptySet
 import cats.implicits._
 import co.topl.algebras.Store
 import co.topl.brambl.models.TransactionId
+import co.topl.brambl.models.box.Value.UpdateProposal
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.consensus.models._
-import co.topl.models.Epoch
+import co.topl.models.{Epoch, ProposalId, VersionId}
 import co.topl.models.p2p._
 import co.topl.node.models._
 import co.topl.proto.node.EpochData
@@ -41,7 +42,18 @@ trait DataStores[F[_]] {
   def knownHosts: Store[F, Unit, Seq[KnownRemotePeer]]
   def metadata: Store[F, Array[Byte], Array[Byte]]
   def txIdToBlockId: Store[F, TransactionId, BlockId]
+  def versioningDataStoresLocal: VersioningDataStores[F]
+  def versioningDataStoresP2P: VersioningDataStores[F]
 }
+
+case class VersioningDataStores[F[_]](
+  idToProposal:        Store[F, ProposalId, UpdateProposal],
+  epochToProposalIds:  Store[F, Epoch, Set[ProposalId]],
+  proposalVoting:      Store[F, (Epoch, ProposalId), Long],
+  epochToVersionIds:   Store[F, Epoch, Set[VersionId]],
+  versionIdToProposal: Store[F, VersionId, UpdateProposal],
+  versionCounter:      Store[F, Unit, VersionId]
+)
 
 case class DataStoresImpl[F[_]](
   baseDirectory:                Path,
@@ -70,7 +82,9 @@ case class DataStoresImpl[F[_]](
   registrationAccumulatorP2P:   Store[F, StakingAddress, Unit],
   knownHosts:                   Store[F, Unit, Seq[KnownRemotePeer]],
   metadata:                     Store[F, Array[Byte], Array[Byte]],
-  txIdToBlockId:                Store[F, TransactionId, BlockId]
+  txIdToBlockId:                Store[F, TransactionId, BlockId],
+  versioningDataStoresLocal:    VersioningDataStores[F],
+  versioningDataStoresP2P:      VersioningDataStores[F]
 ) extends DataStores[F]
 
 /**
@@ -129,6 +143,12 @@ class CurrentEventIdGetterSetters[F[_]: MonadThrow](store: Store[F, Byte, BlockI
 
   val registrationAccumulatorP2P: CurrentEventIdGetterSetters.GetterSetter[F] =
     CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.RegistrationAccumulatorP2P)
+
+  val versionsLocal: CurrentEventIdGetterSetters.GetterSetter[F] =
+    CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.VersionsLocal)
+
+  val versionsP2P: CurrentEventIdGetterSetters.GetterSetter[F] =
+    CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.VersionsP2P)
 }
 
 object CurrentEventIdGetterSetters {
@@ -163,5 +183,20 @@ object CurrentEventIdGetterSetters {
     val BlockHeightTreeP2P: Byte = 10
     val BoxStateP2P: Byte = 11
     val RegistrationAccumulatorP2P: Byte = 12
+    val VersionsLocal: Byte = 13
+    val VersionsP2P: Byte = 14
+//    val idToProposalLocal: Byte = 13
+//    val epochToProposalIdsLocal: Byte = 14
+//    val proposalVotingLocal: Byte = 15
+//    val epochToVersionIdsLocal: Byte = 16
+//    val versionIdToProposalLocal: Byte = 17
+//    val versionCounterLocal: Byte = 18
+//
+//    val idToProposalP2P: Byte = 19
+//    val epochToProposalIdsP2P: Byte = 20
+//    val proposalVotingP2P: Byte = 21
+//    val epochToVersionIdsP2P: Byte = 22
+//    val versionIdToProposalP2P: Byte = 23
+//    val versionCounterP2P: Byte = 24
   }
 }

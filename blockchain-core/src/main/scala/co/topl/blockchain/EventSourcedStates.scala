@@ -9,6 +9,7 @@ import co.topl.eventtree.EventSourcedState
 import co.topl.interpreters.BlockHeightTree
 import co.topl.ledger.interpreters.{BoxState, Mempool, RegistrationAccumulator}
 import co.topl.interpreters.TxIdToBlockIdTree
+import co.topl.consensus.interpreters.VersionsEventSourceState
 
 case class EventSourcedStates[F[_]](
   epochData:            EventSourcedState[F, EpochDataEventSourcedState.State[F], BlockId],
@@ -23,7 +24,9 @@ case class EventSourcedStates[F[_]](
   mempool:              EventSourcedState[F, Mempool.State[F], BlockId],
   registrationsLocal:   EventSourcedState[F, RegistrationAccumulator.State[F], BlockId],
   registrationsP2P:     EventSourcedState[F, RegistrationAccumulator.State[F], BlockId],
-  txIdToBlockIdTree:    EventSourcedState[F, TxIdToBlockIdTree.State[F], BlockId]
+  txIdToBlockIdTree:    EventSourcedState[F, TxIdToBlockIdTree.State[F], BlockId],
+  versionsLocal:        EventSourcedState[F, VersionsEventSourceState.VersionsData[F], BlockId],
+  versionsP2P:          EventSourcedState[F, VersionsEventSourceState.VersionsData[F], BlockId]
 ) {
 
   def updateLocalStatesTo(id: BlockId)(implicit fFunctor: Functor[F], fPar: Parallel[F]): F[Unit] =
@@ -36,7 +39,8 @@ case class EventSourcedStates[F[_]](
       boxStateLocal,
       mempool,
       registrationsLocal,
-      txIdToBlockIdTree
+      txIdToBlockIdTree,
+      versionsLocal
     ).parTraverse(_.stateAt(id).void).void
 
   def updateAllStatesTo(id: BlockId)(implicit fFunctor: Functor[F], fPar: Parallel[F]): F[Unit] =
@@ -47,6 +51,7 @@ case class EventSourcedStates[F[_]](
       // consensusDataP2P,
       epochBoundariesP2P,
       boxStateP2P,
-      registrationsP2P
+      registrationsP2P,
+      versionsP2P
     ).parTraverse(_.stateAt(id).void).void
 }
