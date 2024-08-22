@@ -39,6 +39,8 @@ object PeerSlotDataStore {
           ifTrue = true.pure[F],
           ifFalse = cache.get(id).map(_.isDefined)
         )
+
+      override def getAll(): F[Seq[(BlockId, SlotData)]] = slotStoreReader.getAll()
     }
   }
 }

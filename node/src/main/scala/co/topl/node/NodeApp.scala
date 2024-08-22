@@ -520,12 +520,15 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         dataStores.versioningDataStoresLocal.idToProposal,
         dataStores.versioningDataStoresLocal.epochToProposalIds,
         dataStores.versioningDataStoresLocal.proposalVoting,
+        dataStores.versioningDataStoresLocal.epochToCreatedVersionIds,
         dataStores.versioningDataStoresLocal.epochToVersionIds,
         dataStores.versioningDataStoresLocal.versionIdToProposal,
         dataStores.versioningDataStoresLocal.versionCounter,
+        dataStores.versioningDataStoresLocal.versionVoting,
         dataStores.epochData
       )
 
+      versionInfoLocal <- VersionInfo.make(dataStores.versioningDataStoresLocal.epochToActiveVersionStorage).toResource
       versionsLocal <- VersionsEventSourceState
         .make[F](
           currentEventIdGetterSetters.versionsLocal.get(),
@@ -536,6 +539,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           dataStores.headers.getOrRaise,
           dataStores.bodies.getOrRaise,
           dataStores.transactions.getOrRaise,
+          versionInfoLocal,
           ProposalConfig()
         )
         .toResource
@@ -544,12 +548,15 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         dataStores.versioningDataStoresP2P.idToProposal,
         dataStores.versioningDataStoresP2P.epochToProposalIds,
         dataStores.versioningDataStoresP2P.proposalVoting,
+        dataStores.versioningDataStoresP2P.epochToCreatedVersionIds,
         dataStores.versioningDataStoresP2P.epochToVersionIds,
         dataStores.versioningDataStoresP2P.versionIdToProposal,
         dataStores.versioningDataStoresP2P.versionCounter,
+        dataStores.versioningDataStoresP2P.versionVoting,
         dataStores.epochData
       )
 
+      versionInfoP2P <- VersionInfo.make(dataStores.versioningDataStoresP2P.epochToActiveVersionStorage).toResource
       versionsP2P <- VersionsEventSourceState
         .make[F](
           currentEventIdGetterSetters.versionsP2P.get(),
@@ -560,6 +567,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           dataStores.headers.getOrRaise,
           dataStores.bodies.getOrRaise,
           dataStores.transactions.getOrRaise,
+          versionInfoP2P,
           ProposalConfig()
         )
         .toResource

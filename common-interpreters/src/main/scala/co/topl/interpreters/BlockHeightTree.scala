@@ -20,7 +20,7 @@ object BlockHeightTree {
     blockTree:           ParentChildTree[F, BlockId],
     currentEventChanged: BlockId => F[Unit]
   ): F[ESS[F]] = {
-    val heightStore = slotDataStore.mapRead[BlockId, Long](identity, _.height)
+    val heightStore = slotDataStore.mapRead[BlockId, Long](identity, identity, _.height)
     EventSourcedState.OfTree.make[F, State[F], BlockId](
       Async[F].delay(store.get),
       initialEventId = initialEventId,

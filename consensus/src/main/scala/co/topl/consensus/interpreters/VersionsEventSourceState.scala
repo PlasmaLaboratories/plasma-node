@@ -3,13 +3,13 @@ package co.topl.consensus.interpreters
 import cats._
 import cats.implicits._
 import cats.effect.Async
-import co.topl.algebras.{Store, _}
+import co.topl.algebras._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.box.Value.UpdateProposal
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.consensus.models.BlockId
 import co.topl.eventtree.{EventSourcedState, ParentChildTree}
-import co.topl.models.{Epoch, _}
+import co.topl.models._
 import co.topl.node.models._
 import co.topl.typeclasses.implicits._
 import org.typelevel.log4cats.Logger
@@ -18,13 +18,17 @@ import co.topl.proto.node.EpochData
 import co.topl.algebras.ClockAlgebra.implicits._
 import co.topl.crypto.hash.Blake2b256
 import java.nio.ByteBuffer
+import co.topl.consensus.algebras.VersionInfoAlgebra
 
 case class ProposalConfig(
   proposalVotingMaxWindow: Int = 5,
   proposalVotingWindow:    Int = 2,
   // How many epochs shall pass before we could reuse proposal id
   proposalInactiveVotingWindow: Int = 1,
-  updateProposalPercentage:     Double = 0.1
+  updateProposalPercentage:     Double = 0.1,
+  versionVotingWindow:          Int = 2,
+  versionSwitchWindow:          Int = 2,
+  updateVersionPercentage:      Double = 0.9 // Shall be more than 50%
 )
 
 object VersionsEventSourceState {
@@ -32,7 +36,7 @@ object VersionsEventSourceState {
   case class VersionsData[F[_]](
     idToProposal: Store[F, ProposalId, UpdateProposal],
 
-    // List of all proposal which are ACTIVE (not created) during particular epoch
+    // List of all proposal which are ACTIVE (not necessary created) during particular epoch
     epochToProposalIds: Store[F, Epoch, Set[ProposalId]],
 
     // Votes count for proposal,
@@ -41,14 +45,22 @@ object VersionsEventSourceState {
     proposalVoting: Store[F, (Epoch, ProposalId), Long],
 
     // Map of epoch when version has been CREATED to version id
+    epochToCreatedVersionIds: Store[F, Epoch, Set[VersionId]],
+    // List of all versions which are have at least one vote during particular epoch
     epochToVersionIds:   Store[F, Epoch, Set[VersionId]],
     versionIdToProposal: Store[F, VersionId, UpdateProposal],
     versionCounter:      Store[F, Unit, VersionId],
-    epochData:           Store[F, Epoch, EpochData]
+    versionVoting:       Store[F, (Epoch, VersionId), Long],
+    // Describes from which era which version starts
+
+    epochData: Store[F, Epoch, EpochData]
   )
 
   def getProposalId(proposal: UpdateProposal): Int =
     ByteBuffer.wrap(new Blake2b256().hash(proposal.toByteArray)).getInt
+
+  private def getTargetEpoch(epoch: Epoch, config: ProposalConfig): Epoch =
+    epoch + config.versionSwitchWindow
 
   def make[F[_]: Async: Logger](
     currentBlockId:      F[BlockId],
@@ -56,16 +68,17 @@ object VersionsEventSourceState {
     currentEventChanged: BlockId => F[Unit],
     initialState:        F[VersionsData[F]],
     clock:               ClockAlgebra[F],
-    fetchBlockHeader:    BlockId => F[BlockHeader],
+    fetchHeader:         BlockId => F[BlockHeader],
     fetchBlockBody:      BlockId => F[BlockBody],
     fetchTransaction:    TransactionId => F[IoTransaction],
+    versionAlgebra:      VersionInfoAlgebra[F],
     config:              ProposalConfig
   ): F[EventSourcedState[F, VersionsData[F], BlockId]] =
     EventSourcedState.OfTree.make(
       initialState = initialState,
       initialEventId = currentBlockId,
-      applyEvent = new ApplyBlock(clock, fetchBlockHeader, fetchBlockBody, fetchTransaction, config),
-      unapplyEvent = new UnapplyBlock(clock, fetchBlockHeader, fetchBlockBody, fetchTransaction),
+      applyEvent = new ApplyBlock(clock, fetchHeader, fetchBlockBody, fetchTransaction, versionAlgebra, config),
+      unapplyEvent = new UnapplyBlock(clock, fetchHeader, fetchBlockBody, fetchTransaction, versionAlgebra, config),
       parentChildTree = parentChildTree,
       currentEventChanged
     )
@@ -75,6 +88,7 @@ object VersionsEventSourceState {
     fetchBlockHeader: BlockId => F[BlockHeader],
     fetchBlockBody:   BlockId => F[BlockBody],
     fetchTransaction: TransactionId => F[IoTransaction],
+    versionAlgebra:   VersionInfoAlgebra[F],
     config:           ProposalConfig
   ) extends ((VersionsData[F], BlockId) => F[VersionsData[F]]) {
 
@@ -89,8 +103,8 @@ object VersionsEventSourceState {
 
         _ <- if (currentEpoch != previousEpoch) epochBoundaryCrossed(state, previousEpoch, currentEpoch) else ().pure[F]
         _ <- applyNewProposals(state, blockId, currentEpoch)
-        _ <- applyVoting(state, header, currentEpoch) // we could vote for proposal in the same block
-
+        _ <- applyProposalVoting(state, header, currentEpoch) // we could create and vote for proposal in the same block
+        _ <- applyVersionVoting(state, header, currentEpoch)
       } yield state
 
     private def applyNewProposals(state: VersionsData[F], blockId: BlockId, currentEpoch: Epoch): F[Unit] =
@@ -122,18 +136,37 @@ object VersionsEventSourceState {
       state.proposalVoting.put((currentEpoch, id), 0)
     }
 
-    private def applyVoting(state: VersionsData[F], header: BlockHeader, currentEpoch: Epoch): F[Unit] =
+    private def applyProposalVoting(state: VersionsData[F], header: BlockHeader, currentEpoch: Epoch): F[Unit] =
       for {
         votedIdOpt <- header.getProposalVote.pure[F]
         _          <- votedIdOpt.traverse(votedId => state.proposalVoting.addOneVote((currentEpoch, votedId)))
       } yield ()
 
+    private def applyVersionVoting(state: VersionsData[F], header: BlockHeader, currentEpoch: Epoch): F[Unit] =
+      for {
+        votedVersionOpt <- header.getVersionVote.pure[F]
+        _ <- votedVersionOpt.traverse { version =>
+          state.epochToVersionIds.addIdToEpoch(currentEpoch, version) >>
+          state.versionVoting.createVoteAndAddOneVote((currentEpoch, version))
+        }
+      } yield ()
+
     private def epochBoundaryCrossed(state: VersionsData[F], previousEpoch: Epoch, currentEpoch: Epoch): F[Unit] =
-      Logger[F].info(show"Crossing epoch $previousEpoch for apply block") >>
-      state.epochToProposalIds.get(previousEpoch).flatMap {
-        case Some(proposalIds) => processPreviousEpochProposals(state, previousEpoch, currentEpoch, proposalIds)
-        case None              => ().pure[F]
-      }
+      for {
+        _             <- Logger[F].info(show"Crossing epoch $previousEpoch for apply block")
+        prevProposals <- state.epochToProposalIds.get(previousEpoch)
+        prevVersions  <- state.epochToVersionIds.get(previousEpoch)
+        _ <- Logger[F].info(show"Epoch $previousEpoch state: proposals: $prevProposals; versions $prevVersions;")
+
+        _ <- prevProposals match {
+          case Some(proposalIds) => processPreviousEpochProposals(state, previousEpoch, currentEpoch, proposalIds)
+          case None              => ().pure[F]
+        }
+        _ <- prevVersions match {
+          case Some(versionIds) => processPreviousEpochVersions(state, previousEpoch, currentEpoch, versionIds)
+          case None             => ().pure[F]
+        }
+      } yield ()
 
     private def processPreviousEpochProposals(
       state:         VersionsData[F],
@@ -155,7 +188,7 @@ object VersionsEventSourceState {
 
     private def getEpochsBlockCounts(state: VersionsData[F], votingRange: Seq[Epoch]): F[Seq[(Epoch, Long)]] =
       votingRange
-        .traverse(e => state.epochData.getOrRaise(e).map(d => e -> (d.endHeight - d.startHeight)))
+        .traverse(e => state.epochData.getOrRaise(e).map(d => e -> (1 + d.endHeight - d.startHeight)))
 
     // return voting result for proposal for "block count" epochs
     // Some(true) -- enough voting for proposal
@@ -170,7 +203,10 @@ object VersionsEventSourceState {
         .traverse { case (e, blockCount) =>
           state.proposalVoting
             .get((e, proposal))
-            .map(_.map(_ / blockCount.toDouble >= config.updateProposalPercentage))
+            .map(_.map(_ / blockCount.toDouble))
+            .flatTap(p => Logger[F].info(show"Voting result for proposal $proposal epoch $e: $p"))
+            .map(_.map(_ >= config.updateProposalPercentage))
+        // .map(_.map(_ / blockCount.toDouble >= config.updateProposalPercentage))
         }
         .map(percentageVotes => proposal -> percentageVotes)
 
@@ -215,9 +251,61 @@ object VersionsEventSourceState {
     ): F[Unit] =
       for {
         versionId <- state.versionCounter.getFreeVersion()
-        _         <- state.epochToVersionIds.addIdToEpoch(currentEpoch, versionId)
+        _         <- state.epochToCreatedVersionIds.addIdToEpoch(currentEpoch, versionId)
         _         <- state.versionIdToProposal.put(versionId, proposal)
         _         <- Logger[F].info(show"Created new version $versionId from proposal $proposalId")
+      } yield ()
+
+    private def processPreviousEpochVersions(
+      state:         VersionsData[F],
+      previousEpoch: Epoch,
+      currentEpoch:  Epoch,
+      versionIds:    Set[VersionId]
+    ): F[Unit] =
+      for {
+        votingWindow   <- getVersionVotingEpochs(previousEpoch).pure[F]
+        blocksInEpochs <- getEpochsBlockCounts(state, votingWindow)
+        versionResults <- versionIds.toList.sorted.traverse(getVersionResult(_, state, blocksInEpochs))
+        versionActions <- versionResults.map { case (id, votes) => id -> getResultForVersion(votes) }.pure[F]
+        newVersions    <- versionActions.collect { case (version, VersionAction.toActive) => version }.pure[F]
+        _ <- newVersions.ensuring(_.sizeIs < 2, show"More than one version became active: $newVersions").pure[F]
+        targetEpoch <- getTargetEpoch(currentEpoch, config).pure[F]
+        _           <- newVersions.traverse(doVersionAction(targetEpoch, _))
+      } yield ()
+
+    private def getVersionVotingEpochs(epoch: Epoch) =
+      Range.Long.inclusive(Math.max(0, epoch - config.versionVotingWindow), epoch, 1)
+
+    // return voting result for version for "block count" epochs
+    // true -- enough voting for version
+    // false -- not enough voting for version
+    private def getVersionResult(
+      version:     VersionId,
+      state:       VersionsData[F],
+      blocksCount: Seq[(Epoch, Long)]
+    ): F[(VersionId, Seq[Boolean])] =
+      blocksCount
+        .traverse { case (e, blockCount) =>
+          state.versionVoting
+            .get((e, version))
+            .map(_.getOrElse(0L) / blockCount.toDouble)
+            .flatTap(p => Logger[F].info(show"Voting result for version $version epoch $e: $p"))
+            .map(_ >= config.updateVersionPercentage)
+        }
+        .map(percentageVotes => version -> percentageVotes)
+
+    private def getResultForVersion(votes: Seq[Boolean]): VersionAction =
+      if (
+        votes.sizeIs >= config.versionVotingWindow &&
+        votes.takeRight(config.versionVotingWindow).forall(identity)
+      ) {
+        VersionAction.toActive
+      } else VersionAction.Keep
+
+    private def doVersionAction(targetEpoch: Epoch, version: VersionId): F[Unit] =
+      for {
+        _ <- Logger[F].info(show"Version $version passed voting. New version will be active from $targetEpoch epoch")
+        _ <- versionAlgebra.addVersionStartEpoch(targetEpoch, version)
       } yield ()
   }
 
@@ -229,13 +317,22 @@ object VersionsEventSourceState {
       case object Keep extends ProposalAction
       case object ToVersion extends ProposalAction
     }
+
+    sealed trait VersionAction
+
+    private object VersionAction {
+      case object Keep extends VersionAction
+      case object toActive extends VersionAction
+    }
   }
 
   private class UnapplyBlock[F[_]: MonadThrow: Logger](
     clock:            ClockAlgebra[F],
     fetchBlockHeader: BlockId => F[BlockHeader],
     fetchBlockBody:   BlockId => F[BlockBody],
-    fetchTransaction: TransactionId => F[IoTransaction]
+    fetchTransaction: TransactionId => F[IoTransaction],
+    versionAlgebra:   VersionInfoAlgebra[F],
+    config:           ProposalConfig
   ) extends ((VersionsData[F], BlockId) => F[VersionsData[F]]) {
 
     def apply(state: VersionsData[F], blockId: BlockId): F[VersionsData[F]] =
@@ -244,7 +341,8 @@ object VersionsEventSourceState {
         currentEpoch  <- clock.epochOf(header.slot)
         previousEpoch <- clock.epochOf(header.parentSlot)
         _             <- Logger[F].info(show"Unapply block $blockId of epoch $currentEpoch")
-        _             <- unapplyVoting(state, header, currentEpoch)
+        _             <- unapplyProposalVoting(state, header, currentEpoch)
+        _             <- unapplyVersionVoting(state, header, currentEpoch)
         _             <- unapplyNewProposals(state, blockId, currentEpoch)
         _             <- if (currentEpoch != previousEpoch) epochBoundaryCrossed(state, currentEpoch) else ().pure[F]
       } yield state
@@ -256,9 +354,14 @@ object VersionsEventSourceState {
         _            <- proposalsOpt.fold(().pure[F])(clearProposalsVoting(state, _, currentEpoch))
         _            <- state.epochToProposalIds.remove(currentEpoch)
 
-        versionsOpt <- state.epochToVersionIds.get(currentEpoch)
-        _           <- versionsOpt.fold(().pure[F])(clearVersions(state, _))
-        _           <- state.epochToVersionIds.remove(currentEpoch)
+        votedVersionsOpt <- state.epochToVersionIds.get(currentEpoch)
+        _                <- votedVersionsOpt.fold(().pure[F])(clearVotedVersions(state, currentEpoch, _))
+
+        createdVersionsOpt <- state.epochToCreatedVersionIds.get(currentEpoch)
+        _                  <- createdVersionsOpt.fold(().pure[F])(clearCreatedVersions(state, _))
+        _                  <- state.epochToCreatedVersionIds.remove(currentEpoch)
+
+        _ <- versionAlgebra.removeVersionStartEpoch(getTargetEpoch(currentEpoch, config))
       } yield ()
 
     private def clearProposalsVoting(
@@ -269,7 +372,15 @@ object VersionsEventSourceState {
       Logger[F].info(show"Going to unapply proposals $proposalIds from epoch $currentEpoch") >>
       proposalIds.toList.traverse(id => state.proposalVoting.deleteVoting(currentEpoch, id)).void
 
-    private def clearVersions(
+    private def clearVotedVersions(
+      state:        VersionsData[F],
+      currentEpoch: Epoch,
+      versionIds:   Set[ProposalId]
+    ): F[Unit] = versionIds.toList
+      .traverse(_ => state.epochToVersionIds.remove(currentEpoch))
+      .void
+
+    private def clearCreatedVersions(
       state:      VersionsData[F],
       versionIds: Set[ProposalId]
     ): F[Unit] = versionIds.toList
@@ -279,10 +390,16 @@ object VersionsEventSourceState {
       )
       .void
 
-    private def unapplyVoting(state: VersionsData[F], header: BlockHeader, currentEpoch: Epoch): F[Unit] =
+    private def unapplyProposalVoting(state: VersionsData[F], header: BlockHeader, currentEpoch: Epoch): F[Unit] =
       for {
         votedIdOpt <- header.getProposalVote.pure[F]
         _          <- votedIdOpt.traverse(votedId => state.proposalVoting.removeOneVote((currentEpoch, votedId)))
+      } yield ()
+
+    private def unapplyVersionVoting(state: VersionsData[F], header: BlockHeader, currentEpoch: Epoch): F[Unit] =
+      for {
+        votedVersionOpt <- header.getVersionVote.pure[F]
+        _               <- votedVersionOpt.traverse(vote => state.versionVoting.removeOneVote((currentEpoch, vote)))
       } yield ()
 
     private def unapplyNewProposals(state: VersionsData[F], blockId: BlockId, currentEpoch: Epoch): F[Unit] =
@@ -298,6 +415,7 @@ object VersionsEventSourceState {
           state.proposalVoting.deleteVoting((currentEpoch, id))
         }
       } yield ()
+
   }
 
   implicit class epochToTOps[F[_]: MonadThrow, T](storage: Store[F, Epoch, Set[T]]) {
@@ -315,12 +433,21 @@ object VersionsEventSourceState {
       } yield ()
   }
 
-  implicit class proposalVotingOps[F[_]: MonadThrow](storage: Store[F, (Epoch, ProposalId), Long]) {
+  implicit class proposalVotingOps[F[_]: MonadThrow: Logger](storage: Store[F, (Epoch, ProposalId), Long]) {
 
     def addOneVote(vote: (Epoch, ProposalId)): F[Unit] =
       for {
         currentVote <- storage.getOrRaise(vote)
         _           <- storage.put(vote, currentVote + 1)
+      } yield ()
+
+    def createVoteAndAddOneVote(vote: (Epoch, ProposalId)): F[Unit] =
+      for {
+        currentVote <- storage.get(vote).flatMap {
+          case Some(actualVote) => actualVote.pure[F]
+          case None             => Logger[F].info(show"Create vote for $vote") >> 0L.pure[F]
+        }
+        _ <- storage.put(vote, currentVote + 1)
       } yield ()
 
     def removeOneVote(vote: (Epoch, ProposalId)): F[Unit] =

@@ -1,5 +1,6 @@
 package co.topl.db.leveldb
 
+import cats.implicits._
 import cats.effect.{IO, Resource}
 import co.topl.algebras.testInterpreters.NoOpLogger
 import co.topl.codecs.bytes.typeclasses.Persistable
@@ -22,7 +23,7 @@ class LevelDbStoreSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
   implicit val logger: Logger[F] = new NoOpLogger[F]
 
   ResourceFixture[Path](Resource.make(Files[F].createTempDirectory)(Files[F].deleteRecursively))
-    .test("Save, Contains, Read, Delete") { testPath =>
+    .test("Save, Contains, Read, Delete, GetAll") { testPath =>
       LevelDbStore.makeFactory[F]().flatMap(LevelDbStore.makeDb[F](testPath, _)).use { dbUnderTest =>
         for {
           underTest <- LevelDbStore.make[F, SpecKey, SpecValue](dbUnderTest)
@@ -48,6 +49,19 @@ class LevelDbStoreSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
           _ <- underTest.contains(key).assertEquals(false)
           // Verify directly that it no longer exists
           _ <- IO.blocking(dbUnderTest.get(keyArray)).assertEquals(null)
+
+          // Verify get all
+          dataPut =
+            Seq(
+              SpecKey("10") -> SpecValue("10", 10),
+              SpecKey("11") -> SpecValue("11", 11),
+              SpecKey("12") -> SpecValue("12", 12),
+              SpecKey("13") -> SpecValue("13", 13),
+              SpecKey("14") -> SpecValue("14", 14)
+            )
+          _       <- dataPut.traverse { case (k, v) => underTest.put(k, v) }
+          dataGet <- underTest.getAll()
+          _       <- assert(dataPut == dataGet).pure[F]
         } yield ()
       }
     }

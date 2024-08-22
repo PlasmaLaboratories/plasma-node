@@ -47,12 +47,15 @@ trait DataStores[F[_]] {
 }
 
 case class VersioningDataStores[F[_]](
-  idToProposal:        Store[F, ProposalId, UpdateProposal],
-  epochToProposalIds:  Store[F, Epoch, Set[ProposalId]],
-  proposalVoting:      Store[F, (Epoch, ProposalId), Long],
-  epochToVersionIds:   Store[F, Epoch, Set[VersionId]],
-  versionIdToProposal: Store[F, VersionId, UpdateProposal],
-  versionCounter:      Store[F, Unit, VersionId]
+  idToProposal:                Store[F, ProposalId, UpdateProposal],
+  epochToProposalIds:          Store[F, Epoch, Set[ProposalId]],
+  proposalVoting:              Store[F, (Epoch, ProposalId), Long],
+  epochToVersionIds:           Store[F, Epoch, Set[VersionId]],
+  versionIdToProposal:         Store[F, VersionId, UpdateProposal],
+  versionCounter:              Store[F, Unit, VersionId],
+  epochToCreatedVersionIds:    Store[F, Epoch, Set[VersionId]],
+  versionVoting:               Store[F, (Epoch, VersionId), Long],
+  epochToActiveVersionStorage: Store[F, Epoch, VersionId]
 )
 
 case class DataStoresImpl[F[_]](

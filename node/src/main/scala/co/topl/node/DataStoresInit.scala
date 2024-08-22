@@ -69,6 +69,9 @@ object DataStoresInit {
     val epochToVersionIdsLocalDbName = "epoch-to-version-ids-local"
     val versionIdToProposalLocalDbName = "version-id-to-proposal-local"
     val versionCounterLocalDbName = "version-counter-local"
+    val epochToCreatedVersionIdsLocalDbName = "epoch-to-created-version-ids-local"
+    val versionVotingLocalDbName = "version-voting-local"
+    val epochToActiveVersionStorageLocalDbName = "epoch-to-active-version-storage-local"
 
     val idToProposalP2PDbName = "id-to-proposal-p2p"
     val epochToProposalIdsP2PDbName = "epoch-to-proposal-ids-p2p"
@@ -76,6 +79,9 @@ object DataStoresInit {
     val epochToVersionIdsP2PDbName = "epoch-to-version-ids-p2p"
     val versionIdToProposalP2PDbName = "version-id-to-proposal-p2p"
     val versionCounterP2PDbName = "version-counter-p2p"
+    val epochToCreatedVersionIdsP2PDbName = "epoch-to-created-version-ids-p2p"
+    val versionVotingP2PDbName = "version-voting-p2p"
+    val epochToActiveVersionStorageP2PDbName = "epoch-to-active-version-storage-p2p"
   }
 
   // scalastyle:off method.length
@@ -260,6 +266,22 @@ object DataStoresInit {
       )
       versionCounterLocal <- makeDb[F, Unit, VersionId](dataDir, levelDbFactory)(versionCounterLocalDbName)
 
+      epochToCreatedVersionIdsLocal <- makeCachedDb[F, Epoch, java.lang.Long, Set[VersionId]](dataDir, levelDbFactory)(
+        epochToCreatedVersionIdsLocalDbName,
+        appConfig.bifrost.cache.epochToCreatedVersion,
+        Long.box
+      )
+
+      versionVotingLocal <- makeCachedDb[F, (Epoch, VersionId), (Epoch, VersionId), Long](dataDir, levelDbFactory)(
+        versionVotingLocalDbName,
+        appConfig.bifrost.cache.versionVoting,
+        identity
+      )
+
+      epochToActiveVersionStorageLocal <- makeDb[F, Epoch, VersionId](dataDir, levelDbFactory)(
+        epochToActiveVersionStorageLocalDbName
+      )
+
       idToProposalP2P <- makeCachedDb[F, ProposalId, java.lang.Integer, UpdateProposal](dataDir, levelDbFactory)(
         idToProposalP2PDbName,
         appConfig.bifrost.cache.idToProposal,
@@ -288,13 +310,32 @@ object DataStoresInit {
 
       versionCounterP2P <- makeDb[F, Unit, VersionId](dataDir, levelDbFactory)(versionCounterP2PDbName)
 
+      epochToCreatedVersionIdsP2P <- makeCachedDb[F, Epoch, java.lang.Long, Set[VersionId]](dataDir, levelDbFactory)(
+        epochToCreatedVersionIdsP2PDbName,
+        appConfig.bifrost.cache.epochToCreatedVersion,
+        Long.box
+      )
+
+      versionVotingP2P <- makeCachedDb[F, (Epoch, VersionId), (Epoch, VersionId), Long](dataDir, levelDbFactory)(
+        versionVotingP2PDbName,
+        appConfig.bifrost.cache.versionVoting,
+        identity
+      )
+
+      epochToActiveVersionStorageP2P <- makeDb[F, Epoch, VersionId](dataDir, levelDbFactory)(
+        epochToActiveVersionStorageP2PDbName
+      )
+
       versioningDataStoresLocal = VersioningDataStores(
         idToProposalLocal,
         epochToProposalIdsLocal,
         proposalVotingLocal,
         epochToVersionIdsLocal,
         versionIdToProposalLocal,
-        versionCounterLocal
+        versionCounterLocal,
+        epochToCreatedVersionIdsLocal,
+        versionVotingLocal,
+        epochToActiveVersionStorageLocal
       )
       versioningDataStoresP2P = VersioningDataStores(
         idToProposalP2P,
@@ -302,7 +343,10 @@ object DataStoresInit {
         proposalVotingP2P,
         epochToVersionIdsP2P,
         versionIdToProposalP2P,
-        versionCounterP2P
+        versionCounterP2P,
+        epochToCreatedVersionIdsP2P,
+        versionVotingP2P,
+        epochToActiveVersionStorageP2P
       )
 
       dataStores = DataStoresImpl(
@@ -558,8 +602,10 @@ object DataStoresInit {
         bigBangBlock.header.id,
         (bigBangBlock.header.height, bigBangBlock.header.parentHeaderId)
       )
-      _ <- dataStores.versioningDataStoresLocal.versionCounter.put((), 0)
-      _ <- dataStores.versioningDataStoresP2P.versionCounter.put((), 0)
+      _ <- dataStores.versioningDataStoresLocal.versionCounter.put((), initialVersion + 1)
+      _ <- dataStores.versioningDataStoresP2P.versionCounter.put((), initialVersion + 1)
+      _ <- dataStores.versioningDataStoresLocal.epochToActiveVersionStorage.put(Long.MinValue, initialVersion)
+      _ <- dataStores.versioningDataStoresP2P.epochToActiveVersionStorage.put(Long.MinValue, initialVersion)
     } yield ()
 
   def repair[F[_]: Sync](dataStores: DataStores[F], bigBangBlock: FullBlock): F[Unit] =

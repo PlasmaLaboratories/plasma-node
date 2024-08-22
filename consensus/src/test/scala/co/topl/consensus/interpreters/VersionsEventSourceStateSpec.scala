@@ -28,12 +28,13 @@ import co.topl.brambl.generators.TransactionGenerator
 import co.topl.brambl.models.box.Value
 import co.topl.models.ModelGenerators._
 import co.topl.algebras.ClockAlgebra.implicits._
+import co.topl.consensus.algebras.VersionInfoAlgebra
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import co.topl.numerics.implicits._
 import co.topl.typeclasses.implicits._
 
-class VersionsEventSourceStateTest
+class VersionsEventSourceStateSpec
     extends CatsEffectSuite
     with ScalaCheckEffectSuite
     with AsyncMockFactory
@@ -41,16 +42,19 @@ class VersionsEventSourceStateTest
   type F[A] = IO[A]
   implicit val logger: Logger[F] = Slf4jLogger.getLoggerFromName[F](this.getClass.getName)
 
-  import VersionsEventSourceStateTest._
+  import VersionsEventSourceStateSpec._
 
   private val epochLen = 10L
-  private val initialVersion = 0
+  private val initialFreeVersion = 1
 
   private val defaultConfig = ProposalConfig(
     proposalVotingMaxWindow = 5,
     proposalVotingWindow = 2,
     proposalInactiveVotingWindow = 1,
-    updateProposalPercentage = 0.2
+    updateProposalPercentage = 0.2,
+    versionVotingWindow = 2,
+    versionSwitchWindow = 2,
+    updateVersionPercentage = 0.9
   )
 
   private val defaultClocks = new ClockAlgebra[F] {
@@ -69,20 +73,24 @@ class VersionsEventSourceStateTest
 
   private def makeInitialVersionsData[F[_]: Async](): F[VersionsEventSourceState.VersionsData[F]] =
     for {
-      idToProposal        <- TestStore.make[F, ProposalId, UpdateProposal]
-      epochToProposalIds  <- TestStore.make[F, Epoch, Set[ProposalId]]
-      proposalVoting      <- TestStore.make[F, (Epoch, ProposalId), Long]
-      epochToVersionIds   <- TestStore.make[F, Epoch, Set[VersionId]]
-      versionIdToProposal <- TestStore.make[F, VersionId, UpdateProposal]
-      versionCounter      <- TestStore.make[F, Unit, VersionId]
-      _                   <- versionCounter.put((), initialVersion)
+      idToProposal             <- TestStore.make[F, ProposalId, UpdateProposal]
+      epochToProposalIds       <- TestStore.make[F, Epoch, Set[ProposalId]]
+      proposalVoting           <- TestStore.make[F, (Epoch, ProposalId), Long]
+      epochToCreatedVersionIds <- TestStore.make[F, Epoch, Set[VersionId]]
+      epochToVersionIds        <- TestStore.make[F, Epoch, Set[VersionId]]
+      versionIdToProposal      <- TestStore.make[F, VersionId, UpdateProposal]
+      versionCounter           <- TestStore.make[F, Unit, VersionId]
+      versionVoting            <- TestStore.make[F, (Epoch, VersionId), Long]
+      _                        <- versionCounter.put((), initialFreeVersion)
     } yield VersionsEventSourceState.VersionsData(
       idToProposal,
       epochToProposalIds,
       proposalVoting,
+      epochToCreatedVersionIds,
       epochToVersionIds,
       versionIdToProposal,
       versionCounter,
+      versionVoting,
       makeEpochDataStore[F]
     )
 
@@ -102,6 +110,8 @@ class VersionsEventSourceStateTest
     override def put(id: Epoch, t: EpochData): F[Unit] = ???
 
     override def remove(id: Epoch): F[Unit] = ???
+
+    override def getAll(): F[Seq[(Epoch, EpochData)]] = ???
   }
 
   private def makeParentTree[F[_]: Async](chain: Seq[BlockHeader]): F[ParentChildTree[F, BlockId]] =
@@ -227,13 +237,25 @@ class VersionsEventSourceStateTest
     (
       EventSourcedState[F, VersionsEventSourceState.VersionsData[F], BlockId],
       VersionsEventSourceState.VersionsData[F],
-      Seq[BlockHeader]
+      Seq[BlockHeader],
+      TestStore[F, Epoch, VersionId]
     )
   ] = {
     val (headers, storages) = makeData(plan)
+
     for {
-      parentTree   <- makeParentTree[F](headers)
-      versionsData <- makeInitialVersionsData[F]()
+      parentTree     <- makeParentTree[F](headers)
+      versionsData   <- makeInitialVersionsData[F]()
+      versionStorage <- TestStore.make[F, Epoch, VersionId]
+      versionAlgebra: VersionInfoAlgebra[F] = new VersionInfoAlgebra[F] {
+
+        override def addVersionStartEpoch(epoch: Epoch, version: VersionId): F[Unit] =
+          versionStorage.put(epoch, version)
+
+        override def removeVersionStartEpoch(epoch: Epoch): F[Unit] = versionStorage.remove(epoch)
+
+        override def getVersionForEpoch(epoch: Epoch): F[VersionId] = ???
+      }
       initialState <- VersionsEventSourceState.make[F](
         headers.head.parentHeaderId.pure[F],
         parentTree,
@@ -243,23 +265,24 @@ class VersionsEventSourceStateTest
         id => storages.headers(id).pure[F],
         id => storages.body(id).pure[F],
         id => storages.tx(id).pure[F],
+        versionAlgebra,
         defaultConfig
       )
-    } yield (initialState, versionsData, headers)
+    } yield (initialState, versionsData, headers, versionStorage)
   }
 
-  test("Add proposal and vote in the same block") {
+  test("Add proposal and proposal vote in the same block") {
     withMock {
       val proposalPseudoId1 = 1
       val plan: List[(Seq[Int], Int, Int)] = List((Seq(proposalPseudoId1), 0, proposalPseudoId1))
 
       for {
-        (initialState, versionsData, headers) <- createDefaultVersionEventsAndChainFromPlan(plan)
-        initialData                           <- versionsData.makeCopy
+        (initialState, versionsData, headers, _) <- createDefaultVersionEventsAndChainFromPlan(plan)
+        initialData                              <- versionsData.makeCopy
 
         _             <- initialState.stateAt(headers.head.id)
         versionOfHead <- versionsData.versionCounter.getOrRaise(())
-        _             <- assert(versionOfHead == initialVersion).pure[F]
+        _             <- assert(versionOfHead == initialFreeVersion).pure[F]
         epochOfHead   <- defaultClocks.epochOf(headers.head.slot)
         epochToIds    <- versionsData.epochToProposalIds.getOrRaise(epochOfHead)
         _             <- assert(epochToIds.size == 1).pure[F]
@@ -285,12 +308,12 @@ class VersionsEventSourceStateTest
       val plan: List[(Seq[Int], Int, Int)] = List((Seq(p1, p2), 0, 0))
 
       for {
-        (initialState, versionsData, headers) <- createDefaultVersionEventsAndChainFromPlan(plan)
-        initialData                           <- versionsData.makeCopy
+        (initialState, versionsData, headers, _) <- createDefaultVersionEventsAndChainFromPlan(plan)
+        initialData                              <- versionsData.makeCopy
 
         _             <- initialState.stateAt(headers.head.id)
         versionOfHead <- versionsData.versionCounter.getOrRaise(())
-        _             <- assert(versionOfHead == initialVersion).pure[F]
+        _             <- assert(versionOfHead == initialFreeVersion).pure[F]
         epochOfHead   <- defaultClocks.epochOf(headers.head.slot)
         epochToIds    <- versionsData.epochToProposalIds.getOrRaise(epochOfHead)
         _             <- assert(epochToIds.size == 2).pure[F]
@@ -327,13 +350,13 @@ class VersionsEventSourceStateTest
       ) ++ noPlanForEpoch ++ noPlanForEpoch ++ noPlanForEpoch ++ noPlanForEpoch :+ noPlan
 
       for {
-        (initialState, versionsData, headers) <- createDefaultVersionEventsAndChainFromPlan(plan)
-        initialData                           <- versionsData.makeCopy
+        (initialState, versionsData, headers, _) <- createDefaultVersionEventsAndChainFromPlan(plan)
+        initialData                              <- versionsData.makeCopy
 
         atHeader1 = headers.init.last
         _             <- initialState.stateAt(atHeader1.id)
         versionOfHead <- versionsData.versionCounter.getOrRaise(())
-        _             <- assert(versionOfHead == initialVersion).pure[F]
+        _             <- assert(versionOfHead == initialFreeVersion).pure[F]
         header1Epoch  <- defaultClocks.epochOf(atHeader1.slot)
         epochToIds    <- versionsData.epochToProposalIds.getOrRaise(header1Epoch)
         _             <- assert(epochToIds.size == 1).pure[F]
@@ -343,10 +366,12 @@ class VersionsEventSourceStateTest
         _             <- assert(dataAtHeader1.proposalVotes((header1Epoch, proposalRealId)) == 0).pure[F]
         _             <- assert(initialData != dataAtHeader1).pure[F]
 
+        _ <- initialState.stateAt(headers(7).id)
+
         atHeader2 = headers.last
         _             <- initialState.stateAt(atHeader2.id)
         versionOfHead <- versionsData.versionCounter.getOrRaise(())
-        _             <- assert(versionOfHead == initialVersion).pure[F]
+        _             <- assert(versionOfHead == initialFreeVersion).pure[F]
         header2Epoch  <- defaultClocks.epochOf(atHeader2.slot)
         epochToIds    <- versionsData.epochToProposalIds.get(header2Epoch)
         _             <- assert(epochToIds.isEmpty).pure[F]
@@ -415,13 +440,13 @@ class VersionsEventSourceStateTest
         ) :+ noPlan
 
       for {
-        (initialState, versionsData, headers) <- createDefaultVersionEventsAndChainFromPlan(plan)
-        initialData                           <- versionsData.makeCopy
+        (initialState, versionsData, headers, _) <- createDefaultVersionEventsAndChainFromPlan(plan)
+        initialData                              <- versionsData.makeCopy
 
         atHeader1 = headers.init.last
         _             <- initialState.stateAt(atHeader1.id)
         versionOfHead <- versionsData.versionCounter.getOrRaise(())
-        _             <- assert(versionOfHead == initialVersion).pure[F]
+        _             <- assert(versionOfHead == initialFreeVersion).pure[F]
         header1Epoch  <- defaultClocks.epochOf(atHeader1.slot)
         epochToIds    <- versionsData.epochToProposalIds.getOrRaise(header1Epoch)
         _             <- assert(epochToIds.size == 1).pure[F]
@@ -431,62 +456,203 @@ class VersionsEventSourceStateTest
         _             <- assert(dataAtHeader1.proposalVotes((header1Epoch, proposalRealId)) == 2).pure[F]
         _             <- assert(initialData != dataAtHeader1).pure[F]
 
+        _ <- initialState.stateAt(headers(3).id)
+
         atHeader2 = headers.last
         _             <- initialState.stateAt(atHeader2.id)
         versionOfHead <- versionsData.versionCounter.getOrRaise(())
-        _             <- assert(versionOfHead == initialVersion + 1).pure[F]
+        _             <- assert(versionOfHead == initialFreeVersion + 1).pure[F]
         header2Epoch  <- defaultClocks.epochOf(atHeader2.slot)
         epochToIds    <- versionsData.epochToProposalIds.get(header2Epoch)
         _             <- assert(epochToIds.isEmpty).pure[F]
-        versions      <- versionsData.epochToVersionIds.getOrRaise(header2Epoch)
-        _             <- assert(versions.head == 0).pure[F]
+        versions      <- versionsData.epochToCreatedVersionIds.getOrRaise(header2Epoch)
+        _             <- assert(versions.head == initialFreeVersion).pure[F]
 
         dataAtHeader2 <- versionsData.makeCopy
         _             <- assert(!dataAtHeader2.proposalVotes.contains((header2Epoch, proposalRealId))).pure[F]
         _             <- assert(initialData != dataAtHeader2).pure[F]
 
+        _               <- initialState.stateAt(headers(7).id)
         _               <- initialState.stateAt(headers.head.parentHeaderId)
         dataAtPreHeader <- versionsData.makeCopy
         _               <- assert(initialData == dataAtPreHeader).pure[F]
       } yield ()
     }
   }
+
+  test("Make version from voted proposal, vote version to add version starts information") {
+    withMock {
+      val proposalPseudoId1 = 1
+      val plan: List[(Seq[Int], Int, Int)] = List(
+        (Seq(proposalPseudoId1), 0, proposalPseudoId1),
+        noPlan,
+        noPlan,
+        noPlan,
+        noPlan,
+        (Seq(), 0, proposalPseudoId1),
+        noPlan,
+        noPlan,
+        noPlan,
+        (Seq(), 0, proposalPseudoId1)
+      ) ++
+        List(
+          (Seq(), 0, proposalPseudoId1),
+          noPlan,
+          noPlan,
+          (Seq(), 0, proposalPseudoId1),
+          noPlan,
+          noPlan,
+          noPlan,
+          noPlan,
+          noPlan,
+          noPlan
+        ) ++
+        List(
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          noPlan,
+          noPlan,
+          noPlan
+        ) ++
+        List(
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          noPlan
+        ) ++
+        List(
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, 0)
+        ) :+ noPlan
+
+      for {
+        (initialState, versionsData, headers, epochToVersionStore) <- createDefaultVersionEventsAndChainFromPlan(plan)
+        initialData                                                <- versionsData.makeCopy
+        initialEpochVersion                                        <- epochToVersionStore.copyData
+
+        atHeader1 = headers(epochLen.toInt * 1)
+        _             <- initialState.stateAt(atHeader1.id)
+        versionOfHead <- versionsData.versionCounter.getOrRaise(())
+        _             <- assert(versionOfHead == initialFreeVersion).pure[F]
+        header1Epoch  <- defaultClocks.epochOf(atHeader1.slot)
+        epochToIds    <- versionsData.epochToProposalIds.getOrRaise(header1Epoch)
+        _             <- assert(epochToIds.head == getProposalIdByPseudoId(proposalPseudoId1)).pure[F]
+        dataAtHeader1 <- versionsData.makeCopy
+        epochToVer1   <- epochToVersionStore.copyData
+        _             <- assert(initialData != dataAtHeader1).pure[F]
+
+        newVersion = initialFreeVersion
+        atHeader2 = headers(epochLen.toInt * 2)
+        _              <- initialState.stateAt(atHeader2.id)
+        versionOfHead2 <- versionsData.versionCounter.getOrRaise(())
+        _              <- assert(versionOfHead2 == initialFreeVersion + 1).pure[F]
+        header2Epoch   <- defaultClocks.epochOf(atHeader2.slot)
+        epochToIds2    <- versionsData.epochToProposalIds.get(header2Epoch)
+        _              <- assert(epochToIds2.isEmpty).pure[F]
+        dataAtHeader2  <- versionsData.makeCopy
+        _ <- assert(dataAtHeader2.versionIdToProposal(newVersion) == getProposalByPseudoId(proposalPseudoId1))
+          .pure[F]
+        _           <- assert(dataAtHeader2.epochToCreatedVersionIds(header2Epoch).head == newVersion).pure[F]
+        epochToVer2 <- epochToVersionStore.copyData
+        _           <- assert(initialData != dataAtHeader2).pure[F]
+        _           <- assert(epochToVer1 == epochToVer2).pure[F]
+
+        atHeader3 = headers(epochLen.toInt * 4)
+        _              <- initialState.stateAt(atHeader3.id)
+        versionOfHead3 <- versionsData.versionCounter.getOrRaise(())
+        _              <- assert(versionOfHead3 == initialFreeVersion + 1).pure[F]
+        header3Epoch   <- defaultClocks.epochOf(atHeader3.slot)
+        epochToIds3    <- versionsData.epochToProposalIds.get(header3Epoch)
+        _              <- assert(epochToIds3.isEmpty).pure[F]
+        dataAtHeader3  <- versionsData.makeCopy
+        epochToIds3    <- versionsData.epochToProposalIds.get(header3Epoch)
+        _              <- assert(epochToIds3.isEmpty).pure[F]
+        epochToVer3    <- epochToVersionStore.copyData
+        _              <- assert(dataAtHeader3.epochToCreatedVersionIds(header2Epoch).head == newVersion).pure[F]
+        _              <- assert(dataAtHeader3.epochToCreatedVersionIds.get(header3Epoch).isEmpty).pure[F]
+        _              <- assert(epochToVer1 == epochToVer3).pure[F]
+        _              <- assert(initialData != dataAtHeader3).pure[F]
+
+        _            <- initialState.stateAt(headers.head.parentHeaderId)
+        initialData2 <- versionsData.makeCopy
+        _            <- assert(initialData == initialData2).pure[F]
+
+        atHeader4 = headers.last
+        _              <- initialState.stateAt(atHeader4.id)
+        versionOfHead4 <- versionsData.versionCounter.getOrRaise(())
+        _              <- assert(versionOfHead4 == initialFreeVersion + 1).pure[F]
+        header4Epoch   <- defaultClocks.epochOf(atHeader4.slot)
+        epochToIds4    <- versionsData.epochToProposalIds.get(header2Epoch)
+        _              <- assert(epochToIds4.isEmpty).pure[F]
+        versions4      <- versionsData.epochToCreatedVersionIds.getOrRaise(header2Epoch)
+        _              <- assert(versions4.head == newVersion).pure[F]
+        epochToVer4    <- epochToVersionStore.copyData
+        _              <- assert(epochToVer4(7) == newVersion).pure[F]
+
+        _                    <- initialState.stateAt(headers.head.parentHeaderId)
+        initialData3         <- versionsData.makeCopy
+        _                    <- assert(initialData == initialData3).pure[F]
+        initialEpochVersion3 <- epochToVersionStore.copyData
+        _                    <- assert(initialEpochVersion == initialEpochVersion3).pure[F]
+      } yield ()
+    }
+  }
+
 }
 
-object VersionsEventSourceStateTest {
+object VersionsEventSourceStateSpec {
 
   case class StoragesData(
-    proposalIdToProposal: Map[ProposalId, UpdateProposal],
-    epochToProposalIds:   Map[Epoch, Set[ProposalId]],
-    proposalVotes:        Map[(Epoch, ProposalId), Epoch],
-    epochToVersions:      Map[Epoch, Set[VersionId]],
-    versionIdToProposal:  Map[VersionId, UpdateProposal],
-    versionCounter:       Map[Unit, VersionId]
+    proposalIdToProposal:     Map[ProposalId, UpdateProposal],
+    epochToProposalIds:       Map[Epoch, Set[ProposalId]],
+    proposalVotes:            Map[(Epoch, ProposalId), Epoch],
+    epochToCreatedVersionIds: Map[Epoch, Set[VersionId]],
+    versionIdToProposal:      Map[VersionId, UpdateProposal],
+    versionCounter:           Map[Unit, VersionId],
+    epochToVersionIds:        Map[Epoch, Set[VersionId]]
   )
 
   implicit class VersionsDataOps[F[_]: Async](data: VersionsEventSourceState.VersionsData[F]) {
 
     private def getDataFromStorage[Key, T](storage: Store[F, Key, T]): F[Map[Key, T]] =
-      storage match {
-        case store: TestStore[F, Key, T] => store.copyData
-        case _                           => Map.empty[Key, T].pure[F]
-      }
+      storage.getAll().map(_.toMap)
 
     def makeCopy: F[StoragesData] =
       for {
-        idToProposal        <- getDataFromStorage[ProposalId, UpdateProposal](data.idToProposal)
-        epochToProposalIds  <- getDataFromStorage[Epoch, Set[ProposalId]](data.epochToProposalIds)
-        proposalVoting      <- getDataFromStorage[(Epoch, ProposalId), Long](data.proposalVoting)
-        epochToVersionIds   <- getDataFromStorage[Epoch, Set[VersionId]](data.epochToVersionIds)
-        versionIdToProposal <- getDataFromStorage[VersionId, UpdateProposal](data.versionIdToProposal)
-        versionCounter      <- getDataFromStorage[Unit, VersionId](data.versionCounter)
+        idToProposal             <- getDataFromStorage[ProposalId, UpdateProposal](data.idToProposal)
+        epochToProposalIds       <- getDataFromStorage[Epoch, Set[ProposalId]](data.epochToProposalIds)
+        proposalVoting           <- getDataFromStorage[(Epoch, ProposalId), Long](data.proposalVoting)
+        epochToCreatedVersionIds <- getDataFromStorage[Epoch, Set[VersionId]](data.epochToCreatedVersionIds)
+        versionIdToProposal      <- getDataFromStorage[VersionId, UpdateProposal](data.versionIdToProposal)
+        versionCounter           <- getDataFromStorage[Unit, VersionId](data.versionCounter)
+        epochToVersionsIds       <- getDataFromStorage[Epoch, Set[VersionId]](data.epochToVersionIds)
       } yield StoragesData(
         idToProposal,
         epochToProposalIds,
         proposalVoting,
-        epochToVersionIds,
+        epochToCreatedVersionIds,
         versionIdToProposal,
-        versionCounter
+        versionCounter,
+        epochToVersionsIds
       )
   }
 

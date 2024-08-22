@@ -223,6 +223,8 @@ object ApplicationConfig {
       registrationAccumulator: Cache.CacheConfig,
       txIdToBlockId:           Cache.CacheConfig,
       idToProposal:            Cache.CacheConfig,
+      epochToCreatedVersion:   Cache.CacheConfig,
+      versionVoting:           Cache.CacheConfig,
       epochToProposalIds:      Cache.CacheConfig,
       proposalVoting:          Cache.CacheConfig,
       epochToVersionIds:       Cache.CacheConfig,
