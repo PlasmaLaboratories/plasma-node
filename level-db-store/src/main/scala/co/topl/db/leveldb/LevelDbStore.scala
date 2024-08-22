@@ -14,6 +14,7 @@ import com.google.protobuf.ByteString
 import fs2.io.file._
 import org.iq80.leveldb.{Logger => _, _}
 import org.typelevel.log4cats.Logger
+import scala.collection.mutable
 
 import java.util.InputMismatchException
 
@@ -39,14 +40,7 @@ object LevelDbStore {
             .delay(id.persistedBytes.toByteArray)
             .flatMap(idB =>
               OptionT(useDb(db => Option(db.get(idB))))
-                .semiflatMap(array =>
-                  ByteString
-                    .copyFrom(array)
-                    .decodePersisted[Value]
-                    .leftMap(new InputMismatchException(_))
-                    .toEitherT[F]
-                    .rethrowT
-                )
+                .semiflatMap(array => getOrThrow[F, Value](array))
                 .value
             )
 
@@ -54,6 +48,27 @@ object LevelDbStore {
           Sync[F]
             .delay(id.persistedBytes.toByteArray)
             .flatMap(idB => useDb(_.get(idB) != null))
+
+        def getAll(): F[Seq[(Key, Value)]] =
+          useDb[Seq[(Key, Value)]] { db =>
+            val ro = new ReadOptions()
+            ro.snapshot(db.getSnapshot)
+            val iter = db.iterator(ro)
+            try {
+              iter.seekToFirst()
+              val bf = mutable.Buffer.empty[(Key, Value)]
+              while (iter.hasNext) {
+                val next = iter.next()
+                val keyOpt = getAsT[Key](next.getKey).toOption
+                val valueOpt = getAsT[Value](next.getValue).toOption
+                keyOpt.map2(valueOpt)((key, value) => bf += (key -> value))
+              }
+              bf.toSeq
+            } finally {
+              iter.close()
+              ro.snapshot().close()
+            }
+          }
 
         /**
          * Use the instance of the DB within a blocking F context
@@ -140,4 +155,14 @@ object LevelDbStore {
       }
       .map(_._2)
       .toResource
+
+  def getOrThrow[F[_]: Sync, T: Persistable](data: Array[Byte]): F[T] =
+    getAsT(data).toEitherT[F].rethrowT
+
+  def getAsT[T: Persistable](data: Array[Byte]): Either[InputMismatchException, T] =
+    ByteString
+      .copyFrom(data)
+      .decodePersisted[T]
+      .leftMap(new InputMismatchException(_))
+
 }

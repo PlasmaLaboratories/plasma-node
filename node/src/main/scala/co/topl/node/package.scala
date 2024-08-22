@@ -20,4 +20,7 @@ package object node {
   implicit class DataStoresOps[F[_]: MonadThrow](dataStores: DataStores[F]) {
     def canonicalHead: F[BlockId] = dataStores.currentEventIds.getOrRaise(Indices.CanonicalHead)
   }
+
+  // TODO move to other place?
+  val initialVersion = 1
 }

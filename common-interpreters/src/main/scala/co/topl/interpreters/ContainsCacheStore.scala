@@ -40,6 +40,8 @@ object ContainsCacheStore {
 
             def contains(id: Key): F[Boolean] =
               containsCache.cachingF(id)(ttl = None)(Sync[F].defer(underlying.contains(id)))
+
+            def getAll(): F[Seq[(Key, Value)]] = underlying.getAll()
           }
         )
     )

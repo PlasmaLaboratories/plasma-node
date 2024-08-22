@@ -66,6 +66,8 @@ object CacheStore {
                 case Some(_) => true.pure[F]
                 case None    => underlying.contains(id)
               }
+
+            def getAll(): F[Seq[(Key, Value)]] = underlying.getAll()
           }
         )
     )
