@@ -192,7 +192,47 @@ class NodeGrpcSpec extends CatsEffectSuite with ScalaCheckEffectSuite with Async
 
   }
 
-  // TODO: fetchBlockIdAtDepth has no unit testing
-  // TODO: currentMempool has no unit testing
+  test("The block ID at a depth can be retrieved") {
+    PropF.forAllF { (depth: Long, header: BlockHeader) =>
+      val blockId = header.id
+      withMock {
+        val interpreter = mock[NodeRpc[F, Stream[F, *]]]
+        val underTest = new NodeGrpc.Server.GrpcServerImpl[F](interpreter)
+
+        (interpreter.blockIdAtDepth _)
+          .expects(depth)
+          .once()
+          .returning(blockId.some.pure[F])
+
+        for {
+          res <- underTest.fetchBlockIdAtDepth(FetchBlockIdAtDepthReq(depth), new Metadata())
+          proto = res.blockId.get
+          _ = assert(blockId == proto)
+        } yield ()
+      }
+    }
+  }
+
+  test("Retrieve list of transactions from mempool") {
+    PropF.forAllF { (transactions: Set[IoTransaction]) =>
+      val ids = transactions.map(_.id)
+      withMock {
+        val interpreter = mock[NodeRpc[F, Stream[F, *]]]
+        val underTest = new NodeGrpc.Server.GrpcServerImpl[F](interpreter)
+
+        (interpreter.currentMempool _)
+          .expects()
+          .once()
+          .returning(ids.pure[F])
+
+        for {
+          res <- underTest.currentMempool(CurrentMempoolReq(), new Metadata())
+          proto = res.transactionIds.toList
+          _ = assert(ids.toList == proto)
+        } yield ()
+      }
+    }
+  }
+
   // TODO: synchronizationTraversal has no unit Testing
 }
