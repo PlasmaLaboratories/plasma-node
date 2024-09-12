@@ -48,6 +48,7 @@ trait DataStores[F[_]] {
 
 case class VersioningDataStores[F[_]](
   idToProposal:                Store[F, ProposalId, UpdateProposal],
+  epochToCreatedProposalIds:   Store[F, Epoch, Set[ProposalId]],
   epochToProposalIds:          Store[F, Epoch, Set[ProposalId]],
   proposalVoting:              Store[F, (Epoch, ProposalId), Long],
   epochToVersionIds:           Store[F, Epoch, Set[VersionId]],
@@ -138,8 +139,11 @@ class CurrentEventIdGetterSetters[F[_]: MonadThrow](store: Store[F, Byte, BlockI
   val mempool: CurrentEventIdGetterSetters.GetterSetter[F] =
     CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.Mempool)
 
-  val epochData: CurrentEventIdGetterSetters.GetterSetter[F] =
-    CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.EpochData)
+  val epochDataLocal: CurrentEventIdGetterSetters.GetterSetter[F] =
+    CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.EpochDataLocal)
+
+  val epochDataP2P: CurrentEventIdGetterSetters.GetterSetter[F] =
+    CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.EpochDataP2P)
 
   val registrationAccumulatorLocal: CurrentEventIdGetterSetters.GetterSetter[F] =
     CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.RegistrationAccumulatorLocal)
@@ -147,11 +151,17 @@ class CurrentEventIdGetterSetters[F[_]: MonadThrow](store: Store[F, Byte, BlockI
   val registrationAccumulatorP2P: CurrentEventIdGetterSetters.GetterSetter[F] =
     CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.RegistrationAccumulatorP2P)
 
-  val versionsLocal: CurrentEventIdGetterSetters.GetterSetter[F] =
-    CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.VersionsLocal)
+  val votingLocal: CurrentEventIdGetterSetters.GetterSetter[F] =
+    CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.VotingLocal)
 
-  val versionsP2P: CurrentEventIdGetterSetters.GetterSetter[F] =
-    CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.VersionsP2P)
+  val votingP2P: CurrentEventIdGetterSetters.GetterSetter[F] =
+    CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.VotingP2P)
+
+  val proposalLocal: CurrentEventIdGetterSetters.GetterSetter[F] =
+    CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.ProposalLocal)
+
+  val proposalP2P: CurrentEventIdGetterSetters.GetterSetter[F] =
+    CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.ProposalP2P)
 }
 
 object CurrentEventIdGetterSetters {
@@ -179,27 +189,17 @@ object CurrentEventIdGetterSetters {
     val BlockHeightTreeLocal: Byte = 3
     val BoxStateLocal: Byte = 4
     val Mempool: Byte = 5
-    val EpochData: Byte = 6
+    val EpochDataLocal: Byte = 6
     val RegistrationAccumulatorLocal: Byte = 7
     val ConsensusDataP2P: Byte = 8
     val EpochBoundariesP2P: Byte = 9
     val BlockHeightTreeP2P: Byte = 10
     val BoxStateP2P: Byte = 11
     val RegistrationAccumulatorP2P: Byte = 12
-    val VersionsLocal: Byte = 13
-    val VersionsP2P: Byte = 14
-//    val idToProposalLocal: Byte = 13
-//    val epochToProposalIdsLocal: Byte = 14
-//    val proposalVotingLocal: Byte = 15
-//    val epochToVersionIdsLocal: Byte = 16
-//    val versionIdToProposalLocal: Byte = 17
-//    val versionCounterLocal: Byte = 18
-//
-//    val idToProposalP2P: Byte = 19
-//    val epochToProposalIdsP2P: Byte = 20
-//    val proposalVotingP2P: Byte = 21
-//    val epochToVersionIdsP2P: Byte = 22
-//    val versionIdToProposalP2P: Byte = 23
-//    val versionCounterP2P: Byte = 24
+    val VotingLocal: Byte = 13
+    val VotingP2P: Byte = 14
+    val ProposalLocal: Byte = 15
+    val ProposalP2P: Byte = 16
+    val EpochDataP2P: Byte = 17
   }
 }

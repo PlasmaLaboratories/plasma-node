@@ -163,7 +163,7 @@ object BigBang {
     ).leftMap(new IllegalArgumentException(_)).rethrowT
 
   def extractProtocol(block: FullBlock): Either[String, ApplicationConfig.Bifrost.Protocol] =
-    block.fullBody.transactions.flatMap(_.outputs).map(_.value.value).flatMap(_.updateProposal).toList match {
+    block.fullBody.transactions.proposals match {
       case List(proposal) => updateProposalToProtocol(proposal)
       case Nil            => Left("Protocol not defined")
       case _              => Left("Multiple protocols defined")

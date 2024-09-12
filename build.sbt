@@ -469,6 +469,7 @@ lazy val consensus = project
   )
   .settings(scalamacrosParadiseSettings)
   .dependsOn(
+    ledger,
     models % "compile->compile;test->test",
     typeclasses,
     nodeCrypto,
@@ -580,7 +581,8 @@ lazy val ledger = project
     typeclasses,
     eventTree,
     munitScalamock % "test->test",
-    numerics
+    numerics,
+    tetraByteCodecs % "test->test"
   )
 
 lazy val blockchainCore = project

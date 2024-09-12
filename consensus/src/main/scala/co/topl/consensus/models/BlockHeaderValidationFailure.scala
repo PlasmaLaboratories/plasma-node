@@ -5,6 +5,8 @@ import legacyModels.Bytes
 import legacyModels.Eta
 import legacyModels.Slot
 import legacyModels.Timestamp
+import legacyModels.VersionId
+import legacyModels.ProposalId
 import legacyModels.utility.Ratio
 
 sealed abstract class BlockHeaderValidationFailure
@@ -48,4 +50,9 @@ object BlockHeaderValidationFailures {
 
   case class DuplicateEligibility(vrfVK: Bytes, slot: Slot) extends BlockHeaderValidationFailure
 
+  case class IncorrectVersionId(expected: VersionId, actual: VersionId) extends BlockHeaderValidationFailure
+
+  case class IncorrectVotedVersionId(vote: VersionId) extends BlockHeaderValidationFailure
+
+  case class IncorrectVotedProposalId(vote: ProposalId) extends BlockHeaderValidationFailure
 }

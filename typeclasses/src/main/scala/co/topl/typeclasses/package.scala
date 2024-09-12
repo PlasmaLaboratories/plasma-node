@@ -10,4 +10,5 @@ package object typeclasses {
       with ShowInstances
       with EqInstances
       with JsonInstances
+      with TransactionsOps
 }
