@@ -72,7 +72,7 @@ object DataStoresInit {
     val epochToCreatedVersionIdsLocalDbName = "epoch-to-created-version-ids-local"
     val versionVotingLocalDbName = "version-voting-local"
     val epochToActiveVersionStorageLocalDbName = "epoch-to-active-version-storage-local"
-
+    val epochToCreatedProposalIdsLocalDbName = "epoch-to-created-proposal-ids-local"
     val idToProposalP2PDbName = "id-to-proposal-p2p"
     val epochToProposalIdsP2PDbName = "epoch-to-proposal-ids-p2p"
     val proposalVotingP2PDbName = "proposal-voting-p2p"
@@ -82,6 +82,8 @@ object DataStoresInit {
     val epochToCreatedVersionIdsP2PDbName = "epoch-to-created-version-ids-p2p"
     val versionVotingP2PDbName = "version-voting-p2p"
     val epochToActiveVersionStorageP2PDbName = "epoch-to-active-version-storage-p2p"
+    val epochToCreatedProposalIdsP2PDbName = "epoch-to-created-proposal-ids-p2p"
+
   }
 
   // scalastyle:off method.length
@@ -282,6 +284,10 @@ object DataStoresInit {
         epochToActiveVersionStorageLocalDbName
       )
 
+      epochToCreatedProposalIdsLocal <- makeDb[F, Epoch, Set[ProposalId]](dataDir, levelDbFactory)(
+        epochToCreatedProposalIdsLocalDbName
+      )
+
       idToProposalP2P <- makeCachedDb[F, ProposalId, java.lang.Integer, UpdateProposal](dataDir, levelDbFactory)(
         idToProposalP2PDbName,
         appConfig.bifrost.cache.idToProposal,
@@ -326,8 +332,13 @@ object DataStoresInit {
         epochToActiveVersionStorageP2PDbName
       )
 
+      epochToCreatedProposalIdsP2P <- makeDb[F, Epoch, Set[ProposalId]](dataDir, levelDbFactory)(
+        epochToCreatedProposalIdsP2PDbName
+      )
+
       versioningDataStoresLocal = VersioningDataStores(
         idToProposalLocal,
+        epochToCreatedProposalIdsLocal,
         epochToProposalIdsLocal,
         proposalVotingLocal,
         epochToVersionIdsLocal,
@@ -337,8 +348,10 @@ object DataStoresInit {
         versionVotingLocal,
         epochToActiveVersionStorageLocal
       )
+
       versioningDataStoresP2P = VersioningDataStores(
         idToProposalP2P,
+        epochToCreatedProposalIdsP2P,
         epochToProposalIdsP2P,
         proposalVotingP2P,
         epochToVersionIdsP2P,
@@ -575,7 +588,7 @@ object DataStoresInit {
         CurrentEventIdGetterSetters.Indices.BoxStateLocal,
         CurrentEventIdGetterSetters.Indices.BoxStateP2P,
         CurrentEventIdGetterSetters.Indices.Mempool,
-        CurrentEventIdGetterSetters.Indices.EpochData,
+        CurrentEventIdGetterSetters.Indices.EpochDataLocal,
         CurrentEventIdGetterSetters.Indices.RegistrationAccumulatorLocal,
         CurrentEventIdGetterSetters.Indices.RegistrationAccumulatorP2P
       ).traverseTap(dataStores.currentEventIds.put(_, bigBangBlock.header.parentHeaderId))

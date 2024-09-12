@@ -348,7 +348,11 @@ object BlockChecker {
       .warnIfSlow(show"Header-Is-Verifiable blockId=${header.blockHeader.id}")
       .ifM(
         ifTrue = Logger[F].debug(show"Header ${header.blockHeader} could be validated") >> true.pure[F],
-        ifFalse = Logger[F].warn(show"Header ${header.blockHeader} can't be validated, drop header") >> false.pure[F]
+        ifFalse = {
+          val message = show"Header ${header.blockHeader} can't be validated yet, " +
+            show"blocks bodies from two previous epochs shall be validated first, drop header"
+          Logger[F].warn(message) >> false.pure[F]
+        }
       )
 
   private def knownBlockHeaderPredicate[F[_]: Async: Logger](

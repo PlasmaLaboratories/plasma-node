@@ -3,16 +3,16 @@ package co.topl.blockchain
 import cats.{Functor, Parallel}
 import cats.implicits._
 import co.topl.blockchain.interpreters.EpochDataEventSourcedState
-import co.topl.consensus.interpreters.{ConsensusDataEventSourcedState, EpochBoundariesEventSourcedState}
+import co.topl.consensus.interpreters._
 import co.topl.consensus.models.BlockId
 import co.topl.eventtree.EventSourcedState
 import co.topl.interpreters.BlockHeightTree
-import co.topl.ledger.interpreters.{BoxState, Mempool, RegistrationAccumulator}
+import co.topl.ledger.interpreters.{BoxState, Mempool, ProposalEventSourceState, RegistrationAccumulator}
 import co.topl.interpreters.TxIdToBlockIdTree
-import co.topl.consensus.interpreters.VersionsEventSourceState
 
 case class EventSourcedStates[F[_]](
-  epochData:            EventSourcedState[F, EpochDataEventSourcedState.State[F], BlockId],
+  epochDataLocal:       EventSourcedState[F, EpochDataEventSourcedState.State[F], BlockId],
+  epochDataP2P:         EventSourcedState[F, EpochDataEventSourcedState.State[F], BlockId],
   blockHeightsLocal:    EventSourcedState[F, BlockHeightTree.State[F], BlockId],
   blockHeightsP2P:      EventSourcedState[F, BlockHeightTree.State[F], BlockId],
   consensusDataLocal:   EventSourcedState[F, ConsensusDataEventSourcedState.ConsensusData[F], BlockId],
@@ -25,13 +25,15 @@ case class EventSourcedStates[F[_]](
   registrationsLocal:   EventSourcedState[F, RegistrationAccumulator.State[F], BlockId],
   registrationsP2P:     EventSourcedState[F, RegistrationAccumulator.State[F], BlockId],
   txIdToBlockIdTree:    EventSourcedState[F, TxIdToBlockIdTree.State[F], BlockId],
-  versionsLocal:        EventSourcedState[F, VersionsEventSourceState.VersionsData[F], BlockId],
-  versionsP2P:          EventSourcedState[F, VersionsEventSourceState.VersionsData[F], BlockId]
+  votingLocal:          EventSourcedState[F, VotingEventSourceState.VotingData[F], BlockId],
+  votingP2P:            EventSourcedState[F, VotingEventSourceState.VotingData[F], BlockId],
+  proposalLocal:        ProposalEventSourceState.ProposalEventSourceStateType[F],
+  proposalP2P:          ProposalEventSourceState.ProposalEventSourceStateType[F]
 ) {
 
   def updateLocalStatesTo(id: BlockId)(implicit fFunctor: Functor[F], fPar: Parallel[F]): F[Unit] =
     List(
-      epochData,
+      epochDataLocal,
       blockHeightsLocal,
       // This line is included but intentionally commented out due to the N-2 epoch nature of consensus data
       // consensusDataLocal,
@@ -40,18 +42,23 @@ case class EventSourcedStates[F[_]](
       mempool,
       registrationsLocal,
       txIdToBlockIdTree,
-      versionsLocal
+      votingLocal
+      // This line is included but intentionally commented out due to the N-2 epoch nature of consensus data
+      // proposalLocal
     ).parTraverse(_.stateAt(id).void).void
 
   def updateAllStatesTo(id: BlockId)(implicit fFunctor: Functor[F], fPar: Parallel[F]): F[Unit] =
     updateLocalStatesTo(id) &>
     List(
+      epochDataP2P,
       blockHeightsP2P,
       // This line is included but intentionally commented out due to the N-2 epoch nature of consensus data
       // consensusDataP2P,
       epochBoundariesP2P,
       boxStateP2P,
       registrationsP2P,
-      versionsP2P
+      votingP2P
+      // This line is included but intentionally commented out due to the N-2 epoch nature of consensus data
+      // proposalP2P
     ).parTraverse(_.stateAt(id).void).void
 }

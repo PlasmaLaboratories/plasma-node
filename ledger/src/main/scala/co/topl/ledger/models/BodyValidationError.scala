@@ -4,6 +4,7 @@ import cats.data.{NonEmptyChain, NonEmptySet}
 import co.topl.brambl.models.TransactionOutputAddress
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.brambl.validation.{TransactionAuthorizationError, TransactionSyntaxError}
+import co.topl.models.ProposalId
 
 sealed abstract class BodyValidationError
 
@@ -29,6 +30,10 @@ object BodySemanticErrors {
   case class TransactionRegistrationError(transaction: IoTransaction) extends BodySemanticError
 
   case class RewardTransactionError(transaction: IoTransaction) extends BodySemanticError
+
+  case class ProposalTransactionAlreadyUsedId(proposalId: ProposalId) extends BodySemanticError
+
+  case object DoubleProposalTransaction extends BodySemanticError
 }
 
 sealed trait BodySyntaxError extends BodyValidationError

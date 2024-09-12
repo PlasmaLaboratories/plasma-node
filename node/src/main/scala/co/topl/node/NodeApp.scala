@@ -42,7 +42,9 @@ import fs2.io.file.Path
 import kamon.Kamon
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import co.topl.consensus.interpreters.VersionsEventSourceState.VersionsData
+import co.topl.consensus.interpreters.VotingEventSourceState.VotingData
+import ProposalEventSourceState.ProposalData
+import co.topl.models.ProposalConfig
 
 import scala.concurrent.duration._
 import java.time.Instant
@@ -460,11 +462,11 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
 
       transactionRewardCalculator <- TransactionRewardCalculator.make[F]
 
-      epochDataEventSourcedState <- EpochDataEventSourcedState.make[F](
-        currentEventIdGetterSetters.epochData.get(),
+      epochDataEventSourcedStateLocal <- EpochDataEventSourcedState.make[F](
+        currentEventIdGetterSetters.epochDataLocal.get(),
         bigBangBlockId,
         blockIdTree,
-        currentEventIdGetterSetters.epochData.set,
+        currentEventIdGetterSetters.epochDataLocal.set,
         dataStores.epochData.pure[F],
         clock,
         dataStores.headers.getOrRaise,
@@ -475,8 +477,23 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         consensusDataStateLocal
       )
 
+      epochDataEventSourcedStateP2P <- EpochDataEventSourcedState.make[F](
+        currentEventIdGetterSetters.epochDataP2P.get(),
+        bigBangBlockId,
+        blockIdTree,
+        currentEventIdGetterSetters.epochDataP2P.set,
+        dataStores.epochData.pure[F],
+        clock,
+        dataStores.headers.getOrRaise,
+        dataStores.bodies.getOrRaise,
+        dataStores.transactions.getOrRaise,
+        transactionRewardCalculator,
+        epochBoundariesStateP2P,
+        consensusDataStateP2P
+      )
+
       epochData <- EpochDataInterpreter
-        .make[F](Sync[F].defer(localChain.head).map(_.slotId.blockId), epochDataEventSourcedState)
+        .make[F](Sync[F].defer(localChain.head).map(_.slotId.blockId), epochDataEventSourcedStateLocal)
 
       softwareVersion <- OptionT
         .whenF(appConfig.bifrost.versionInfo.enable)(
@@ -516,8 +533,27 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         appConfig.bifrost.mempool.protection
       )
 
-      versionsLocalInitialState = new VersionsData[F](
+      versionInfoLocal <- VersionInfo.make(dataStores.versioningDataStoresLocal.epochToActiveVersionStorage).toResource
+
+      proposalLocalInitialState = new ProposalData[F](
         dataStores.versioningDataStoresLocal.idToProposal,
+        dataStores.versioningDataStoresLocal.epochToCreatedProposalIds
+      )
+      proposalEventLocal <- ProposalEventSourceState
+        .make[F](
+          currentEventIdGetterSetters.proposalLocal.get(),
+          blockIdTree,
+          currentEventIdGetterSetters.proposalLocal.set,
+          proposalLocalInitialState.pure[F],
+          clock,
+          dataStores.headers.getOrRaise,
+          dataStores.bodies.getOrRaise,
+          dataStores.transactions.getOrRaise,
+          ProposalConfig()
+        )
+        .toResource
+
+      votingLocalInitialState = new VotingData[F](
         dataStores.versioningDataStoresLocal.epochToProposalIds,
         dataStores.versioningDataStoresLocal.proposalVoting,
         dataStores.versioningDataStoresLocal.epochToCreatedVersionIds,
@@ -525,27 +561,46 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         dataStores.versioningDataStoresLocal.versionIdToProposal,
         dataStores.versioningDataStoresLocal.versionCounter,
         dataStores.versioningDataStoresLocal.versionVoting,
-        dataStores.epochData
+        versionInfoLocal
       )
 
-      versionInfoLocal <- VersionInfo.make(dataStores.versioningDataStoresLocal.epochToActiveVersionStorage).toResource
-      versionsLocal <- VersionsEventSourceState
+      votingLocal <- VotingEventSourceState
         .make[F](
-          currentEventIdGetterSetters.versionsLocal.get(),
+          currentEventIdGetterSetters.votingLocal.get(),
           blockIdTree,
-          currentEventIdGetterSetters.versionsLocal.set,
-          versionsLocalInitialState.pure[F],
+          currentEventIdGetterSetters.votingLocal.set,
+          votingLocalInitialState.pure[F],
           clock,
           dataStores.headers.getOrRaise,
-          dataStores.bodies.getOrRaise,
-          dataStores.transactions.getOrRaise,
-          versionInfoLocal,
+          epochBoundariesStateLocal,
+          epochDataEventSourcedStateLocal,
+          proposalEventLocal,
+          bigBangBlock.header.id,
           ProposalConfig()
         )
         .toResource
 
-      versionsP2PInitialState = new VersionsData[F](
+      versionInfoP2P <- VersionInfo.make(dataStores.versioningDataStoresP2P.epochToActiveVersionStorage).toResource
+
+      proposalP2PInitialState = new ProposalData[F](
         dataStores.versioningDataStoresP2P.idToProposal,
+        dataStores.versioningDataStoresP2P.epochToCreatedProposalIds
+      )
+      proposalEventP2P <- ProposalEventSourceState
+        .make[F](
+          currentEventIdGetterSetters.proposalP2P.get(),
+          blockIdTree,
+          currentEventIdGetterSetters.proposalP2P.set,
+          proposalP2PInitialState.pure[F],
+          clock,
+          dataStores.headers.getOrRaise,
+          dataStores.bodies.getOrRaise,
+          dataStores.transactions.getOrRaise,
+          ProposalConfig()
+        )
+        .toResource
+
+      votingP2PInitialState = new VotingData[F](
         dataStores.versioningDataStoresP2P.epochToProposalIds,
         dataStores.versioningDataStoresP2P.proposalVoting,
         dataStores.versioningDataStoresP2P.epochToCreatedVersionIds,
@@ -553,27 +608,28 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         dataStores.versioningDataStoresP2P.versionIdToProposal,
         dataStores.versioningDataStoresP2P.versionCounter,
         dataStores.versioningDataStoresP2P.versionVoting,
-        dataStores.epochData
+        versionInfoP2P
       )
 
-      versionInfoP2P <- VersionInfo.make(dataStores.versioningDataStoresP2P.epochToActiveVersionStorage).toResource
-      versionsP2P <- VersionsEventSourceState
+      versionsP2P <- VotingEventSourceState
         .make[F](
-          currentEventIdGetterSetters.versionsP2P.get(),
+          currentEventIdGetterSetters.votingP2P.get(),
           blockIdTree,
-          currentEventIdGetterSetters.versionsP2P.set,
-          versionsP2PInitialState.pure[F],
+          currentEventIdGetterSetters.votingP2P.set,
+          votingP2PInitialState.pure[F],
           clock,
           dataStores.headers.getOrRaise,
-          dataStores.bodies.getOrRaise,
-          dataStores.transactions.getOrRaise,
-          versionInfoP2P,
+          epochBoundariesStateP2P,
+          epochDataEventSourcedStateP2P,
+          proposalEventP2P,
+          bigBangBlock.header.id,
           ProposalConfig()
         )
         .toResource
 
       eventSourcedStates = EventSourcedStates[F](
-        epochDataEventSourcedState,
+        epochDataEventSourcedStateLocal,
+        epochDataEventSourcedStateP2P,
         blockHeightTreeLocal,
         blockHeightTreeP2P,
         consensusDataStateLocal,
@@ -586,8 +642,10 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         registrationAccumulatorStateLocal,
         registrationAccumulatorStateP2P,
         txIdToBlockIdTree,
-        versionsLocal,
-        versionsP2P
+        votingLocal,
+        versionsP2P,
+        proposalEventLocal,
+        proposalEventP2P
       )
 
       _ <- Logger[F].info(show"Updating EventSourcedStates to id=$canonicalHeadId").toResource
