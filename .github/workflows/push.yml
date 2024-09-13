@@ -8,6 +8,9 @@ on:
 permissions:
   checks: write
   pull-requests: write
+  contents: read
+  packages: write
+  id-token: write
 
 jobs:
   sbt-build:
