@@ -69,8 +69,8 @@ lazy val nodeDockerSettings =
   dockerSettings ++ Seq(
     dockerExposedPorts := Seq(9084, 9085),
     Docker / packageName := "strata-node",
-    dockerExposedVolumes += "/strata-node",
-    dockerExposedVolumes += "/strata-node-staking",
+    dockerExposedVolumes += "/bifrost",
+    dockerExposedVolumes += "/bifrost-staking",
     dockerEnvVars ++= Map(
       "BIFROST_APPLICATION_DATA_DIR"    -> "/bifrost/data/{genesisBlockId}",
       "BIFROST_APPLICATION_STAKING_DIR" -> "/bifrost-staking/{genesisBlockId}",
