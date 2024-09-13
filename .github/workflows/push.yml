@@ -7,6 +7,10 @@ on:
       - "dev"
       - "release-**"
 
+permissions:
+  checks: write
+  pull-requests: write
+
 jobs:
   sbt-build:
     uses: ./.github/workflows/_sbt_build.yml
