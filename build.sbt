@@ -80,7 +80,7 @@ lazy val nodeDockerSettings =
       if (sys.env.get("DOCKER_PUBLISH_DEV_TAG").fold(false)(_.toBoolean))
         Seq(
           DockerAlias(Some("docker.io"), Some("stratalab"), "strata-node", Some("dev")),
-          DockerAlias(Some("ghcr.io"), Some("strata"), "strata-node", Some("dev"))
+          DockerAlias(Some("ghcr.io"), Some("stratalab"), "strata-node", Some("dev"))
         )
       else Seq()
       )
@@ -95,7 +95,7 @@ lazy val genusDockerSettings =
       if (sys.env.get("DOCKER_PUBLISH_DEV_TAG").fold(false)(_.toBoolean))
         Seq(
           DockerAlias(Some("docker.io"), Some("stratalab"), "strata-indexer", Some("dev")),
-          DockerAlias(Some("ghcr.io"), Some("strata"), "strata-indexer", Some("dev"))
+          DockerAlias(Some("ghcr.io"), Some("stratalab"), "strata-indexer", Some("dev"))
         )
       else Seq()
       )
