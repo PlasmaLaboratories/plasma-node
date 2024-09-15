@@ -7,14 +7,8 @@ import co.topl.algebras.ClockAlgebra
 import co.topl.brambl.validation.TransactionAuthorizationInterpreter
 import co.topl.brambl.validation.TransactionSyntaxInterpreter
 import co.topl.brambl.validation.algebras.TransactionSyntaxVerifier
-import co.topl.consensus.algebras.BlockHeaderToBodyValidationAlgebra
-import co.topl.consensus.algebras.BlockHeaderValidationAlgebra
-import co.topl.consensus.algebras.ConsensusValidationStateAlgebra
-import co.topl.consensus.algebras.EligibilityCacheAlgebra
-import co.topl.consensus.algebras.EtaCalculationAlgebra
-import co.topl.consensus.algebras.LeaderElectionValidationAlgebra
-import co.topl.consensus.interpreters.BlockHeaderToBodyValidation
-import co.topl.consensus.interpreters.BlockHeaderValidation
+import co.topl.consensus.algebras._
+import co.topl.consensus.interpreters._
 import co.topl.consensus.models.BlockId
 import co.topl.ledger.algebras._
 import co.topl.ledger.interpreters._
@@ -22,6 +16,11 @@ import co.topl.quivr.api.Verifier.instances.verifierInstance
 import co.topl.typeclasses.implicits._
 import co.topl.brambl.validation.algebras.TransactionAuthorizationVerifier
 import co.topl.algebras.Stats
+import co.topl.consensus.interpreters.VotingEventSourceState.VotingData
+import co.topl.eventtree.EventSourcedState
+import co.topl.ledger.interpreters.ProposalEventSourceState.ProposalEventSourceStateType
+import co.topl.models.ProposalConfig
+import org.typelevel.log4cats.Logger
 
 trait Validators[F[_]] {
   def header: BlockHeaderValidationAlgebra[F]
@@ -35,25 +34,31 @@ trait Validators[F[_]] {
   def boxState: BoxStateAlgebra[F]
   def registrationAccumulator: RegistrationAccumulatorAlgebra[F]
   def rewardCalculator: TransactionRewardCalculatorAlgebra
+  def blockHeaderVersionValidationAlgebra: BlockHeaderVersionValidationAlgebra[F]
+  def blockHeaderVotingValidationAlgebra: BlockHeaderVotingValidationAlgebra[F]
+  def bodyProposalValidationAlgebra: BodyProposalValidationAlgebra[F]
 }
 
 case class ValidatorsImpl[F[_]](
-  header:                   BlockHeaderValidationAlgebra[F],
-  headerToBody:             BlockHeaderToBodyValidationAlgebra[F],
-  transactionSyntax:        TransactionSyntaxVerifier[F],
-  transactionSemantics:     TransactionSemanticValidationAlgebra[F],
-  transactionAuthorization: TransactionAuthorizationVerifier[F],
-  bodySyntax:               BodySyntaxValidationAlgebra[F],
-  bodySemantics:            BodySemanticValidationAlgebra[F],
-  bodyAuthorization:        BodyAuthorizationValidationAlgebra[F],
-  boxState:                 BoxStateAlgebra[F],
-  registrationAccumulator:  RegistrationAccumulatorAlgebra[F],
-  rewardCalculator:         TransactionRewardCalculatorAlgebra
+  header:                              BlockHeaderValidationAlgebra[F],
+  headerToBody:                        BlockHeaderToBodyValidationAlgebra[F],
+  transactionSyntax:                   TransactionSyntaxVerifier[F],
+  transactionSemantics:                TransactionSemanticValidationAlgebra[F],
+  transactionAuthorization:            TransactionAuthorizationVerifier[F],
+  bodySyntax:                          BodySyntaxValidationAlgebra[F],
+  bodySemantics:                       BodySemanticValidationAlgebra[F],
+  bodyAuthorization:                   BodyAuthorizationValidationAlgebra[F],
+  boxState:                            BoxStateAlgebra[F],
+  registrationAccumulator:             RegistrationAccumulatorAlgebra[F],
+  rewardCalculator:                    TransactionRewardCalculatorAlgebra,
+  blockHeaderVersionValidationAlgebra: BlockHeaderVersionValidationAlgebra[F],
+  blockHeaderVotingValidationAlgebra:  BlockHeaderVotingValidationAlgebra[F],
+  bodyProposalValidationAlgebra:       BodyProposalValidationAlgebra[F]
 ) extends Validators[F]
 
 object Validators {
-
-  def make[F[_]: Async: Stats](
+  // scalastyle:off method.length
+  def make[F[_]: Async: Stats: Logger](
     cryptoResources:          CryptoResources[F],
     dataStores:               DataStores[F],
     bigBangBlockId:           BlockId,
@@ -63,7 +68,10 @@ object Validators {
     leaderElectionThreshold:  LeaderElectionValidationAlgebra[F],
     clockAlgebra:             ClockAlgebra[F],
     boxState:                 BoxStateAlgebra[F],
-    registrationAccumulator:  RegistrationAccumulatorAlgebra[F]
+    registrationAccumulator:  RegistrationAccumulatorAlgebra[F],
+    versionsEventSourceState: EventSourcedState[F, VotingData[F], BlockId],
+    proposalEventState:       ProposalEventSourceStateType[F],
+    config:                   ProposalConfig
   ): Resource[F, Validators[F]] =
     for {
       headerValidation <- BlockHeaderValidation
@@ -104,6 +112,25 @@ object Validators {
           transactionAuthorizationValidation
         )
         .toResource
+
+      blockHeaderVersionValidation <- BlockHeaderVersionValidation
+        .make[F](
+          clockAlgebra,
+          versionsEventSourceState
+        )
+        .toResource
+      blockHeaderVotingValidation <- BlockHeaderVotingValidation
+        .make[F](clockAlgebra, versionsEventSourceState)
+        .toResource
+      bodyProposalValidation <- BodyProposalValidation
+        .make[F](
+          clockAlgebra,
+          dataStores.transactions.getOrRaise,
+          proposalEventState,
+          config
+        )
+        .toResource
+
     } yield ValidatorsImpl(
       headerValidation,
       headerToBody,
@@ -115,6 +142,11 @@ object Validators {
       bodyAuthorizationValidation,
       boxState,
       registrationAccumulator,
-      rewardCalculator
+      rewardCalculator,
+      blockHeaderVersionValidation,
+      blockHeaderVotingValidation,
+      bodyProposalValidation
     )
+
+  // scalastyle:on method.length
 }
