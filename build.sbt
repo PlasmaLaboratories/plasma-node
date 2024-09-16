@@ -55,12 +55,12 @@ lazy val dockerSettings = Seq(
   dockerBaseImage := "eclipse-temurin:11-jre",
   dockerUpdateLatest := sys.env.get("DOCKER_PUBLISH_LATEST_TAG").fold(false)(_.toBoolean),
   dockerLabels ++= Map(
-    "bifrost.version" -> version.value
+    "strata-node.version" -> version.value
   ),
   dockerAliases := dockerAliases.value.flatMap { alias =>
     Seq(
-      alias.withRegistryHost(Some("docker.io/toplprotocol")),
-      alias.withRegistryHost(Some("ghcr.io/topl"))
+      alias.withRegistryHost(Some("docker.io/stratalab")),
+      alias.withRegistryHost(Some("ghcr.io/stratalab"))
     )
   }
 )
@@ -68,7 +68,7 @@ lazy val dockerSettings = Seq(
 lazy val nodeDockerSettings =
   dockerSettings ++ Seq(
     dockerExposedPorts := Seq(9084, 9085),
-    Docker / packageName := "bifrost-node",
+    Docker / packageName := "strata-node",
     dockerExposedVolumes += "/bifrost",
     dockerExposedVolumes += "/bifrost-staking",
     dockerEnvVars ++= Map(
@@ -79,8 +79,8 @@ lazy val nodeDockerSettings =
     dockerAliases ++= (
       if (sys.env.get("DOCKER_PUBLISH_DEV_TAG").fold(false)(_.toBoolean))
         Seq(
-          DockerAlias(Some("docker.io"), Some("toplprotocol"), "bifrost-node", Some("dev")),
-          DockerAlias(Some("ghcr.io"), Some("topl"), "bifrost-node", Some("dev"))
+          DockerAlias(Some("docker.io"), Some("stratalab"), "strata-node", Some("dev")),
+          DockerAlias(Some("ghcr.io"), Some("stratalab"), "strata-node", Some("dev"))
         )
       else Seq()
       )
@@ -89,13 +89,13 @@ lazy val nodeDockerSettings =
 lazy val genusDockerSettings =
   dockerSettings ++ Seq(
     dockerExposedPorts := Seq(9084),
-    Docker / packageName := "genus",
-    dockerExposedVolumes += "/genus",
+    Docker / packageName := "strata-indexer",
+    dockerExposedVolumes += "/indexer",
     dockerAliases ++= (
       if (sys.env.get("DOCKER_PUBLISH_DEV_TAG").fold(false)(_.toBoolean))
         Seq(
-          DockerAlias(Some("docker.io"), Some("toplprotocol"), "genus", Some("dev")),
-          DockerAlias(Some("ghcr.io"), Some("topl"), "genus", Some("dev"))
+          DockerAlias(Some("docker.io"), Some("stratalab"), "strata-indexer", Some("dev")),
+          DockerAlias(Some("ghcr.io"), Some("stratalab"), "strata-indexer", Some("dev"))
         )
       else Seq()
       )
