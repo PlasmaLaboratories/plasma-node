@@ -101,6 +101,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
 
       implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F].toResource
 
+      proposalConfig <- ProposalConfig().pure[F].toResource
       p2pSK <- OptionT(metadata.readP2PSK)
         .getOrElseF(
           random
@@ -409,30 +410,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           currentEventIdGetterSetters.registrationAccumulatorP2P.set,
           dataStores.registrationAccumulatorP2P.pure[F]
         )
-      validatorsLocal <- Validators.make[F](
-        cryptoResources,
-        dataStores,
-        bigBangBlockId,
-        eligibilityCache,
-        etaCalculation,
-        consensusValidationStateLocal,
-        leaderElection,
-        clock,
-        boxStateLocal,
-        registrationAccumulatorLocal
-      )
-      validatorsP2P <- Validators.make[F](
-        cryptoResources,
-        dataStores,
-        bigBangBlockId,
-        eligibilityCache,
-        etaCalculation,
-        consensusValidationStateP2P,
-        leaderElection,
-        clock,
-        boxStateP2P,
-        registrationAccumulatorP2P
-      )
+
       genusOpt <- OptionT
         .whenF(appConfig.genus.enable)(
           Genus
@@ -515,24 +493,6 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         costCalculator
       )
 
-      protectedMempool <- MempoolProtected.make(
-        mempool,
-        validatorsP2P.transactionSemantics,
-        validatorsP2P.transactionAuthorization,
-        currentEventIdGetterSetters.canonicalHead.get().flatMap(dataStores.headers.getOrRaise),
-        dataStores.transactions.getOrRaise,
-        transactionRewardCalculator,
-        costCalculator,
-        box =>
-          {
-            for {
-              blockId  <- OptionT(dataStores.txIdToBlockId.get(box.id))
-              slotData <- OptionT(dataStores.slotData.get(blockId))
-            } yield slotData.height
-          }.value,
-        appConfig.bifrost.mempool.protection
-      )
-
       versionInfoLocal <- VersionInfo.make(dataStores.versioningDataStoresLocal.epochToActiveVersionStorage).toResource
 
       proposalLocalInitialState = new ProposalData[F](
@@ -549,7 +509,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           dataStores.headers.getOrRaise,
           dataStores.bodies.getOrRaise,
           dataStores.transactions.getOrRaise,
-          ProposalConfig()
+          proposalConfig
         )
         .toResource
 
@@ -576,7 +536,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           epochDataEventSourcedStateLocal,
           proposalEventLocal,
           bigBangBlock.header.id,
-          ProposalConfig()
+          proposalConfig
         )
         .toResource
 
@@ -596,7 +556,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           dataStores.headers.getOrRaise,
           dataStores.bodies.getOrRaise,
           dataStores.transactions.getOrRaise,
-          ProposalConfig()
+          proposalConfig
         )
         .toResource
 
@@ -611,7 +571,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         versionInfoP2P
       )
 
-      versionsP2P <- VotingEventSourceState
+      votingP2P <- VotingEventSourceState
         .make[F](
           currentEventIdGetterSetters.votingP2P.get(),
           blockIdTree,
@@ -623,7 +583,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           epochDataEventSourcedStateP2P,
           proposalEventP2P,
           bigBangBlock.header.id,
-          ProposalConfig()
+          proposalConfig
         )
         .toResource
 
@@ -643,7 +603,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         registrationAccumulatorStateP2P,
         txIdToBlockIdTree,
         votingLocal,
-        versionsP2P,
+        votingP2P,
         proposalEventLocal,
         proposalEventP2P
       )
@@ -656,6 +616,56 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         .toResource
 
       p2pConfig = appConfig.bifrost.p2p
+
+      validatorsLocal <- Validators.make[F](
+        cryptoResources,
+        dataStores,
+        bigBangBlockId,
+        eligibilityCache,
+        etaCalculation,
+        consensusValidationStateLocal,
+        leaderElection,
+        clock,
+        boxStateLocal,
+        registrationAccumulatorLocal,
+        votingLocal,
+        proposalEventLocal,
+        proposalConfig
+      )
+
+      validatorsP2P <- Validators.make[F](
+        cryptoResources,
+        dataStores,
+        bigBangBlockId,
+        eligibilityCache,
+        etaCalculation,
+        consensusValidationStateP2P,
+        leaderElection,
+        clock,
+        boxStateP2P,
+        registrationAccumulatorP2P,
+        votingP2P,
+        proposalEventLocal,
+        proposalConfig
+      )
+
+      protectedMempool <- MempoolProtected.make(
+        mempool,
+        validatorsP2P.transactionSemantics,
+        validatorsP2P.transactionAuthorization,
+        currentEventIdGetterSetters.canonicalHead.get().flatMap(dataStores.headers.getOrRaise),
+        dataStores.transactions.getOrRaise,
+        transactionRewardCalculator,
+        costCalculator,
+        box =>
+          {
+            for {
+              blockId  <- OptionT(dataStores.txIdToBlockId.get(box.id))
+              slotData <- OptionT(dataStores.slotData.get(blockId))
+            } yield slotData.height
+          }.value,
+        appConfig.bifrost.mempool.protection
+      )
 
       localBlockchain = BlockchainCoreImpl(
         clock,

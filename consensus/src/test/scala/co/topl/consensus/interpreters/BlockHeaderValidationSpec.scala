@@ -11,7 +11,8 @@ import co.topl.brambl.syntax._
 import co.topl.codecs.bytes.tetra.instances._
 import co.topl.codecs.bytes.typeclasses.implicits._
 import co.topl.consensus.algebras._
-import co.topl.consensus.models._
+import co.topl.consensus.models.BlockHeaderValidationFailures.{IncorrectVersionId, IncorrectVotedVersionId}
+import co.topl.consensus.models.{BlockHeaderValidationFailure, _}
 import co.topl.consensus.thresholdEvidence
 import co.topl.crypto.generation.mnemonic.Entropy
 import co.topl.crypto.hash.Blake2b256
@@ -106,6 +107,11 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
       .expects(*)
       .once()
       .returning(child.slot.pure[F])
+
+    (() => clock.slotsPerEpoch)
+      .expects()
+      .anyNumberOfTimes()
+      .returning(Long.MaxValue.pure[F])
 
     (() => clock.forwardBiasedSlotWindow)
       .expects()
@@ -458,6 +464,144 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
       }
   }
 
+  test("incorrect version") {
+    PropF
+      .forAllF(genValid()) { case (parent, child, registration, eta, relativeStake) =>
+        withMock {
+          val consensusValidationState = mock[ConsensusValidationStateAlgebra[F]]
+          val etaInterpreter = mock[EtaCalculationAlgebra[F]]
+          val clockAlgebra = createDummyClockAlgebra(child)
+          val headerStore = simpleHeaderStore(child.parentHeaderId, parent)
+          val eligibilityCache = mock[EligibilityCacheAlgebra[F]]
+
+          (consensusValidationState
+            .staker(_: BlockId, _: Slot)(_: StakingAddress))
+            .expects(*, *, *)
+            .once()
+            .returning(ActiveStaker(registration, relativeStake.numerator).some.pure[F])
+
+          (etaInterpreter
+            .etaToBe(_: SlotId, _: Slot))
+            .expects(SlotId(parent.slot, parent.id), child.slot)
+            .anyNumberOfTimes()
+            .returning(eta.pure[F])
+
+          (consensusValidationState
+            .operatorRelativeStake(_: BlockId, _: Slot)(_: StakingAddress)(_: Monad[F]))
+            .expects(*, *, *, *)
+            .once()
+            .returning(relativeStake.some.pure[F])
+
+          (eligibilityCache
+            .tryInclude(_: BlockId, _: Bytes, _: Slot))
+            .expects(*, *, *)
+            .anyNumberOfTimes()
+            .returning(true.pure[F])
+
+          val blockHeaderVersionValidation: BlockHeaderVersionValidationAlgebra[F] =
+            mock[BlockHeaderVersionValidationAlgebra[F]]
+          (blockHeaderVersionValidation.validate _).expects(*).once().onCall { _: BlockHeader =>
+            Either.left[BlockHeaderValidationFailure, BlockHeader](IncorrectVersionId(0, 10)).pure[F]
+          }
+          val blockHeaderVotingValidation: BlockHeaderVotingValidationAlgebra[F] =
+            mock[BlockHeaderVotingValidationAlgebra[F]]
+          (blockHeaderVotingValidation.validate _).expects(*).never().onCall { header: BlockHeader =>
+            Either.right[BlockHeaderValidationFailure, BlockHeader](header).pure[F]
+          }
+
+          createValidation(
+            clock = clockAlgebra,
+            headerStore = headerStore,
+            consensusValidationState = consensusValidationState,
+            leaderElectionInterpreter = sharedLeaderElectionInterpreter(),
+            eligibilityCache = eligibilityCache,
+            ed25519VRFResource = sharedEd25519VRFResource(),
+            kesProductResource = sharedKesProductResource(),
+            ed25519Resource = sharedEd25519Resource(),
+            blake2b256Resource = sharedBlake2b256Resource(),
+            etaInterpreter = etaInterpreter,
+            blockHeaderVersionValidation = blockHeaderVersionValidation,
+            blockHeaderVotingValidation = blockHeaderVotingValidation
+          )
+            .evalMap(underTest =>
+              underTest
+                .validate(child)
+                .assertEquals(Either.left[BlockHeaderValidationFailure, BlockHeader](IncorrectVersionId(0, 10)))
+            )
+            .use_
+        }
+      }
+  }
+
+  test("incorrect voting") {
+    PropF
+      .forAllF(genValid()) { case (parent, child, registration, eta, relativeStake) =>
+        withMock {
+          val consensusValidationState = mock[ConsensusValidationStateAlgebra[F]]
+          val etaInterpreter = mock[EtaCalculationAlgebra[F]]
+          val clockAlgebra = createDummyClockAlgebra(child)
+          val headerStore = simpleHeaderStore(child.parentHeaderId, parent)
+          val eligibilityCache = mock[EligibilityCacheAlgebra[F]]
+
+          (consensusValidationState
+            .staker(_: BlockId, _: Slot)(_: StakingAddress))
+            .expects(*, *, *)
+            .once()
+            .returning(ActiveStaker(registration, relativeStake.numerator).some.pure[F])
+
+          (etaInterpreter
+            .etaToBe(_: SlotId, _: Slot))
+            .expects(SlotId(parent.slot, parent.id), child.slot)
+            .anyNumberOfTimes()
+            .returning(eta.pure[F])
+
+          (consensusValidationState
+            .operatorRelativeStake(_: BlockId, _: Slot)(_: StakingAddress)(_: Monad[F]))
+            .expects(*, *, *, *)
+            .once()
+            .returning(relativeStake.some.pure[F])
+
+          (eligibilityCache
+            .tryInclude(_: BlockId, _: Bytes, _: Slot))
+            .expects(*, *, *)
+            .anyNumberOfTimes()
+            .returning(true.pure[F])
+
+          val blockHeaderVersionValidation: BlockHeaderVersionValidationAlgebra[F] =
+            mock[BlockHeaderVersionValidationAlgebra[F]]
+          (blockHeaderVersionValidation.validate _).expects(*).once().onCall { header: BlockHeader =>
+            Either.right[BlockHeaderValidationFailure, BlockHeader](header).pure[F]
+          }
+          val blockHeaderVotingValidation: BlockHeaderVotingValidationAlgebra[F] =
+            mock[BlockHeaderVotingValidationAlgebra[F]]
+          (blockHeaderVotingValidation.validate _).expects(*).once().onCall { _: BlockHeader =>
+            Either.left[BlockHeaderValidationFailure, BlockHeader](IncorrectVotedVersionId(10)).pure[F]
+          }
+
+          createValidation(
+            clock = clockAlgebra,
+            headerStore = headerStore,
+            consensusValidationState = consensusValidationState,
+            leaderElectionInterpreter = sharedLeaderElectionInterpreter(),
+            eligibilityCache = eligibilityCache,
+            ed25519VRFResource = sharedEd25519VRFResource(),
+            kesProductResource = sharedKesProductResource(),
+            ed25519Resource = sharedEd25519Resource(),
+            blake2b256Resource = sharedBlake2b256Resource(),
+            etaInterpreter = etaInterpreter,
+            blockHeaderVersionValidation = blockHeaderVersionValidation,
+            blockHeaderVotingValidation = blockHeaderVotingValidation
+          )
+            .evalMap(underTest =>
+              underTest
+                .validate(child)
+                .assertEquals(Either.left[BlockHeaderValidationFailure, BlockHeader](IncorrectVotedVersionId(10)))
+            )
+            .use_
+        }
+      }
+  }
+
   // TODO: Fix this test, talk with Sean
   test("validate valid blocks") {
     PropF
@@ -493,6 +637,17 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
             .anyNumberOfTimes()
             .returning(true.pure[F])
 
+          val blockHeaderVersionValidation: BlockHeaderVersionValidationAlgebra[F] =
+            mock[BlockHeaderVersionValidationAlgebra[F]]
+          (blockHeaderVersionValidation.validate _).expects(*).once().onCall { header: BlockHeader =>
+            Either.right[BlockHeaderValidationFailure, BlockHeader](header).pure[F]
+          }
+          val blockHeaderVotingValidation: BlockHeaderVotingValidationAlgebra[F] =
+            mock[BlockHeaderVotingValidationAlgebra[F]]
+          (blockHeaderVotingValidation.validate _).expects(*).once().onCall { header: BlockHeader =>
+            Either.right[BlockHeaderValidationFailure, BlockHeader](header).pure[F]
+          }
+
           createValidation(
             clock = clockAlgebra,
             headerStore = headerStore,
@@ -503,7 +658,9 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
             kesProductResource = sharedKesProductResource(),
             ed25519Resource = sharedEd25519Resource(),
             blake2b256Resource = sharedBlake2b256Resource(),
-            etaInterpreter = etaInterpreter
+            etaInterpreter = etaInterpreter,
+            blockHeaderVersionValidation = blockHeaderVersionValidation,
+            blockHeaderVotingValidation = blockHeaderVotingValidation
           )
             .evalMap(underTest => underTest.validate(child).assertEquals(Right(child)))
             .use_
@@ -569,9 +726,13 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
     unsignedF(partialCertificate) -> ByteString.copyFrom(linearSKBytes)
   }
 
+  // scalastyle:off method.length
   private def genValid(
-    preSign:    UnsignedBlockHeader => UnsignedBlockHeader = identity,
-    parentSlot: Slot = 5000L
+    preSign:              UnsignedBlockHeader => UnsignedBlockHeader = identity,
+    parentSlot:           Slot = 5000L,
+    firstFreeVersion:     VersionId = 1,
+    availableProposalIds: Set[ProposalId] = Set(0),
+    headerVersion:        VersionId = 0
   ): Gen[(BlockHeader, BlockHeader, StakingRegistration, Eta, Ratio)] =
     for {
       parent      <- headerGen(slotGen = Gen.const[Long](parentSlot))
@@ -580,7 +741,9 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
       eta <- co.topl.models.ModelGenerators.etaGen // TODO replace model when validEligibilityCertificate is replaced
       relativeStake       <- co.topl.models.ModelGenerators.relativeStakeGen
       (vrfSecretBytes, _) <- Gen.const(Ed25519VRF.precomputed().generateRandom)
-      protocolVersion     <- Gen.const(ProtocolVersion(0, 0, 1))
+      versionVoting       <- Gen.chooseNum(0, firstFreeVersion - 1)
+      proposalVoting      <- Gen.atLeastOne(availableProposalIds).map(_.head)
+      protocolVersion     <- Gen.const(ProtocolVersion(headerVersion, versionVoting, proposalVoting))
     } yield {
       val (kesSK0, _) = new KesProduct().createKeyPair(Random.nextBytes(32), (9, 9), 0L)
       val poolVK = ByteString.copyFrom(Random.nextBytes(32))
@@ -648,6 +811,7 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
       (parent, child, registration, eta, relativeStake)
     }
 
+  // scalastyle:on method.length
   private def simpleHeaderStore(id: BlockId, header: BlockHeader) = {
     val store = mock[Store[F, BlockId, BlockHeader]]
     (store
@@ -658,22 +822,26 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
   }
 
   private def createValidation(
-    etaInterpreter:            EtaCalculationAlgebra[F] = mock[EtaCalculationAlgebra[F]],
-    consensusValidationState:  ConsensusValidationStateAlgebra[F] = mock[ConsensusValidationStateAlgebra[F]],
-    leaderElectionInterpreter: LeaderElectionValidationAlgebra[F] = mock[LeaderElectionValidationAlgebra[F]],
-    eligibilityCache:          EligibilityCacheAlgebra[F] = mock[EligibilityCacheAlgebra[F]],
-    clock:                     ClockAlgebra[F] = mock[ClockAlgebra[F]],
-    headerStore:               Store[F, BlockId, BlockHeader] = mock[Store[F, BlockId, BlockHeader]],
-    ed25519VRFResource:        Resource[F, Ed25519VRF] = Resource.never,
-    kesProductResource:        Resource[F, KesProduct] = Resource.never,
-    ed25519Resource:           Resource[F, Ed25519] = Resource.never,
-    blake2b256Resource:        Resource[F, Blake2b256] = Resource.never
+    etaInterpreter:               EtaCalculationAlgebra[F] = mock[EtaCalculationAlgebra[F]],
+    consensusValidationState:     ConsensusValidationStateAlgebra[F] = mock[ConsensusValidationStateAlgebra[F]],
+    leaderElectionInterpreter:    LeaderElectionValidationAlgebra[F] = mock[LeaderElectionValidationAlgebra[F]],
+    eligibilityCache:             EligibilityCacheAlgebra[F] = mock[EligibilityCacheAlgebra[F]],
+    blockHeaderVersionValidation: BlockHeaderVersionValidationAlgebra[F] = mock[BlockHeaderVersionValidationAlgebra[F]],
+    blockHeaderVotingValidation:  BlockHeaderVotingValidationAlgebra[F] = mock[BlockHeaderVotingValidationAlgebra[F]],
+    clock:                        ClockAlgebra[F] = mock[ClockAlgebra[F]],
+    headerStore:                  Store[F, BlockId, BlockHeader] = mock[Store[F, BlockId, BlockHeader]],
+    ed25519VRFResource:           Resource[F, Ed25519VRF] = Resource.never,
+    kesProductResource:           Resource[F, KesProduct] = Resource.never,
+    ed25519Resource:              Resource[F, Ed25519] = Resource.never,
+    blake2b256Resource:           Resource[F, Blake2b256] = Resource.never
   ): Resource[F, BlockHeaderValidationAlgebra[F]] =
     BlockHeaderValidation
       .make[F](
         etaInterpreter,
         consensusValidationState,
         leaderElectionInterpreter,
+        blockHeaderVersionValidation,
+        blockHeaderVotingValidation,
         eligibilityCache,
         clock,
         headerStore,

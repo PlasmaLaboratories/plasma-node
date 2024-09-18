@@ -10,10 +10,9 @@ import co.topl.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import co.topl.consensus.algebras._
 import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
 import co.topl.crypto.signing.Ed25519VRF
-import co.topl.ledger.algebras._
 import co.topl.ledger.implicits._
 import co.topl.ledger.interpreters.QuivrContext
-import co.topl.ledger.models.{BodyValidationError, StaticBodyValidationContext}
+import co.topl.ledger.models.{BodyProposalValidationContext, BodyValidationError, StaticBodyValidationContext}
 import co.topl.models.p2p._
 import co.topl.networking.fsnetwork.BlockChecker.Message._
 import co.topl.networking.fsnetwork.BlockApplyError.BodyApplyException.BodyValidationException
@@ -26,6 +25,7 @@ import co.topl.typeclasses.implicits._
 import fs2.Stream
 import org.typelevel.log4cats.Logger
 import org.apache.commons.lang3.exception.ExceptionUtils
+import co.topl.blockchain.Validators
 
 import scala.collection.Searching
 
@@ -70,10 +70,7 @@ object BlockChecker {
     headerStore:                 Store[F, BlockId, BlockHeader],
     bodyStore:                   Store[F, BlockId, BlockBody],
     chainSelection:              ChainSelectionAlgebra[F, BlockId, SlotData],
-    headerValidation:            BlockHeaderValidationAlgebra[F],
-    bodySyntaxValidation:        BodySyntaxValidationAlgebra[F],
-    bodySemanticValidation:      BodySemanticValidationAlgebra[F],
-    bodyAuthorizationValidation: BodyAuthorizationValidationAlgebra[F],
+    validators:                  Validators[F],
     chunkSize:                   Int,
     ed25519VRF:                  Resource[F, Ed25519VRF],
     bestKnownRemoteSlotDataOpt:  Option[BestChain],
@@ -102,10 +99,7 @@ object BlockChecker {
     slotDataStore:               Store[F, BlockId, SlotData],
     headerStore:                 Store[F, BlockId, BlockHeader],
     bodyStore:                   Store[F, BlockId, BlockBody],
-    headerValidation:            BlockHeaderValidationAlgebra[F],
-    bodySyntaxValidation:        BodySyntaxValidationAlgebra[F],
-    bodySemanticValidation:      BodySemanticValidationAlgebra[F],
-    bodyAuthorizationValidation: BodyAuthorizationValidationAlgebra[F],
+    validators:                  Validators[F],
     chainSelectionAlgebra:       ChainSelectionAlgebra[F, BlockId, SlotData],
     ed25519VRF:                  Resource[F, Ed25519VRF],
     p2pNetworkConfig:            P2PNetworkConfig,
@@ -120,10 +114,7 @@ object BlockChecker {
         headerStore,
         bodyStore,
         chainSelectionAlgebra,
-        headerValidation,
-        bodySyntaxValidation,
-        bodySemanticValidation,
-        bodyAuthorizationValidation,
+        validators,
         p2pNetworkConfig.networkProperties.chunkSize,
         ed25519VRF,
         bestChain,
@@ -343,7 +334,7 @@ object BlockChecker {
   private def headerCouldBeVerified[F[_]: Async: Logger](state: State[F], lastProcessedBody: SlotData)(
     header: UnverifiedBlockHeader
   ): F[Boolean] =
-    state.headerValidation
+    state.validators.header
       .couldBeValidated(header.blockHeader, lastProcessedBody)
       .warnIfSlow(show"Header-Is-Verifiable blockId=${header.blockHeader.id}")
       .ifM(
@@ -369,14 +360,16 @@ object BlockChecker {
     state: State[F]
   )(unverifiedBlockHeader: UnverifiedBlockHeader): F[BlockHeader] = {
     val id = unverifiedBlockHeader.blockHeader.id
-    Logger[F].debug(show"Validating remote header id=$id") >>
-    EitherT(
-      state.headerValidation
-        .validate(unverifiedBlockHeader.blockHeader)
-        .warnIfSlow(show"Header Verification blockId=$id")
-    )
-      .leftMap(HeaderValidationException(id, unverifiedBlockHeader.source, _))
-      .rethrowT
+    val res = for {
+      _ <- EitherT.liftF(Logger[F].debug(show"Validating remote header id=$id"))
+      header <- EitherT(
+        state.validators.header
+          .validate(unverifiedBlockHeader.blockHeader)
+          .warnIfSlow(show"Header Verification blockId=$id")
+      )
+    } yield header
+
+    res.leftMap(HeaderValidationException(id, unverifiedBlockHeader.source, _)).rethrowT
   }
 
   private def logHeaderValidationResult[F[_]: Logger](res: Either[HeaderApplyException, BlockHeader]) =
@@ -554,7 +547,7 @@ object BlockChecker {
     for {
       _ <- EitherT.liftF(Logger[F].debug(show"Validating syntax of body id=$blockId"))
       _ <- EitherT(
-        state.bodySyntaxValidation
+        state.validators.bodySyntax
           .validate(body)
           .map(_.toEither)
           .warnIfSlow(show"Body Syntax Validation blockId=$id")
@@ -562,16 +555,24 @@ object BlockChecker {
       _ <- EitherT.liftF(Logger[F].debug(show"Validating semantics of body id=$blockId"))
       validationContext = StaticBodyValidationContext(header.parentHeaderId, header.height, header.slot)
       _ <- EitherT(
-        state.bodySemanticValidation
+        state.validators.bodySemantics
           .validate(validationContext)(body)
           .map(_.toEither)
           .warnIfSlow(show"Body Semantics Validation blockId=$id")
       )
       _ <- EitherT.liftF(Logger[F].debug(show"Validating authorization of body id=$blockId"))
-      authValidation = state.bodyAuthorizationValidation
+      authValidation = state.validators.bodyAuthorization
         .validate(QuivrContext.forConstructedBlock(header, _))(body)
         .warnIfSlow(show"Body Authorization Validation blockId=$id")
       _ <- EitherT(authValidation.map(_.toEither.leftMap(e => e: NonEmptyChain[BodyValidationError])))
+      _ <- EitherT.liftF(Logger[F].debug(show"Validating proposal of body id=$blockId"))
+      proposalContext = BodyProposalValidationContext(id, header.slot)
+      _ <- EitherT(
+        state.validators.bodyProposalValidationAlgebra
+          .validate(proposalContext)(body)
+          .map(_.toEither)
+          .warnIfSlow(show"Body Proposal validation blockId=$id")
+      )
     } yield (blockId, block)
   }
 
@@ -616,7 +617,7 @@ object BlockChecker {
     slotDataStore: Store[F, BlockId, SlotData],
     slotData:      List[SlotData]
   ): BlockId => F[SlotData] = {
-    val sdMap = slotData.toList.map(sd => (sd.slotId.blockId, sd)).toMap
+    val sdMap = slotData.map(sd => (sd.slotId.blockId, sd)).toMap
     val mapFetcher = (id: BlockId) => sdMap.get(id).pure[F]
     val fetcher = (id: BlockId) =>
       mapFetcher(id).flatMap {
