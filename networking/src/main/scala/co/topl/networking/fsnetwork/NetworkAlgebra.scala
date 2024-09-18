@@ -24,6 +24,7 @@ import co.topl.node.models.BlockBody
 import com.github.benmanes.caffeine.cache.Caffeine
 import org.typelevel.log4cats.Logger
 import co.topl.algebras.Stats
+import co.topl.blockchain.Validators
 import co.topl.crypto.signing.Ed25519VRF
 
 // scalastyle:off parameter.number
@@ -49,18 +50,15 @@ trait NetworkAlgebra[F[_]] {
   ): Resource[F, PeersManagerActor[F]]
 
   def makeBlockChecker(
-    requestsProxy:               RequestsProxyActor[F],
-    localChain:                  LocalChainAlgebra[F],
-    slotDataStore:               Store[F, BlockId, SlotData],
-    headerStore:                 Store[F, BlockId, BlockHeader],
-    bodyStore:                   Store[F, BlockId, BlockBody],
-    headerValidation:            BlockHeaderValidationAlgebra[F],
-    bodySyntaxValidation:        BodySyntaxValidationAlgebra[F],
-    bodySemanticValidation:      BodySemanticValidationAlgebra[F],
-    bodyAuthorizationValidation: BodyAuthorizationValidationAlgebra[F],
-    chainSelectionAlgebra:       ChainSelectionAlgebra[F, BlockId, SlotData],
-    ed25519VRF:                  Resource[F, Ed25519VRF],
-    p2pNetworkConfig:            P2PNetworkConfig
+    requestsProxy:         RequestsProxyActor[F],
+    localChain:            LocalChainAlgebra[F],
+    slotDataStore:         Store[F, BlockId, SlotData],
+    headerStore:           Store[F, BlockId, BlockHeader],
+    bodyStore:             Store[F, BlockId, BlockBody],
+    validators:            Validators[F],
+    chainSelectionAlgebra: ChainSelectionAlgebra[F, BlockId, SlotData],
+    ed25519VRF:            Resource[F, Ed25519VRF],
+    p2pNetworkConfig:      P2PNetworkConfig
   ): Resource[F, BlockCheckerActor[F]]
 
   def makeRequestsProxy(
@@ -177,18 +175,15 @@ class NetworkAlgebraImpl[F[_]: Async: Parallel: Logger: DnsResolver: ReverseDnsR
   }
 
   override def makeBlockChecker(
-    requestsProxy:               RequestsProxyActor[F],
-    localChain:                  LocalChainAlgebra[F],
-    slotDataStore:               Store[F, BlockId, SlotData],
-    headerStore:                 Store[F, BlockId, BlockHeader],
-    bodyStore:                   Store[F, BlockId, BlockBody],
-    headerValidation:            BlockHeaderValidationAlgebra[F],
-    bodySyntaxValidation:        BodySyntaxValidationAlgebra[F],
-    bodySemanticValidation:      BodySemanticValidationAlgebra[F],
-    bodyAuthorizationValidation: BodyAuthorizationValidationAlgebra[F],
-    chainSelectionAlgebra:       ChainSelectionAlgebra[F, BlockId, SlotData],
-    ed25519VRF:                  Resource[F, Ed25519VRF],
-    p2pNetworkConfig:            P2PNetworkConfig
+    requestsProxy:         RequestsProxyActor[F],
+    localChain:            LocalChainAlgebra[F],
+    slotDataStore:         Store[F, BlockId, SlotData],
+    headerStore:           Store[F, BlockId, BlockHeader],
+    bodyStore:             Store[F, BlockId, BlockBody],
+    validators:            Validators[F],
+    chainSelectionAlgebra: ChainSelectionAlgebra[F, BlockId, SlotData],
+    ed25519VRF:            Resource[F, Ed25519VRF],
+    p2pNetworkConfig:      P2PNetworkConfig
   ): Resource[F, BlockCheckerActor[F]] =
     BlockChecker.makeActor(
       requestsProxy,
@@ -196,10 +191,7 @@ class NetworkAlgebraImpl[F[_]: Async: Parallel: Logger: DnsResolver: ReverseDnsR
       slotDataStore,
       headerStore,
       bodyStore,
-      headerValidation,
-      bodySyntaxValidation,
-      bodySemanticValidation,
-      bodyAuthorizationValidation,
+      validators,
       chainSelectionAlgebra,
       ed25519VRF,
       p2pNetworkConfig

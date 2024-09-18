@@ -34,29 +34,26 @@ trait Validators[F[_]] {
   def boxState: BoxStateAlgebra[F]
   def registrationAccumulator: RegistrationAccumulatorAlgebra[F]
   def rewardCalculator: TransactionRewardCalculatorAlgebra
-  def blockHeaderVersionValidationAlgebra: BlockHeaderVersionValidationAlgebra[F]
-  def blockHeaderVotingValidationAlgebra: BlockHeaderVotingValidationAlgebra[F]
   def bodyProposalValidationAlgebra: BodyProposalValidationAlgebra[F]
 }
 
 case class ValidatorsImpl[F[_]](
-  header:                              BlockHeaderValidationAlgebra[F],
-  headerToBody:                        BlockHeaderToBodyValidationAlgebra[F],
-  transactionSyntax:                   TransactionSyntaxVerifier[F],
-  transactionSemantics:                TransactionSemanticValidationAlgebra[F],
-  transactionAuthorization:            TransactionAuthorizationVerifier[F],
-  bodySyntax:                          BodySyntaxValidationAlgebra[F],
-  bodySemantics:                       BodySemanticValidationAlgebra[F],
-  bodyAuthorization:                   BodyAuthorizationValidationAlgebra[F],
-  boxState:                            BoxStateAlgebra[F],
-  registrationAccumulator:             RegistrationAccumulatorAlgebra[F],
-  rewardCalculator:                    TransactionRewardCalculatorAlgebra,
-  blockHeaderVersionValidationAlgebra: BlockHeaderVersionValidationAlgebra[F],
-  blockHeaderVotingValidationAlgebra:  BlockHeaderVotingValidationAlgebra[F],
-  bodyProposalValidationAlgebra:       BodyProposalValidationAlgebra[F]
+  header:                        BlockHeaderValidationAlgebra[F],
+  headerToBody:                  BlockHeaderToBodyValidationAlgebra[F],
+  transactionSyntax:             TransactionSyntaxVerifier[F],
+  transactionSemantics:          TransactionSemanticValidationAlgebra[F],
+  transactionAuthorization:      TransactionAuthorizationVerifier[F],
+  bodySyntax:                    BodySyntaxValidationAlgebra[F],
+  bodySemantics:                 BodySemanticValidationAlgebra[F],
+  bodyAuthorization:             BodyAuthorizationValidationAlgebra[F],
+  boxState:                      BoxStateAlgebra[F],
+  registrationAccumulator:       RegistrationAccumulatorAlgebra[F],
+  rewardCalculator:              TransactionRewardCalculatorAlgebra,
+  bodyProposalValidationAlgebra: BodyProposalValidationAlgebra[F]
 ) extends Validators[F]
 
 object Validators {
+
   // scalastyle:off method.length
   def make[F[_]: Async: Stats: Logger](
     cryptoResources:          CryptoResources[F],
@@ -74,11 +71,22 @@ object Validators {
     config:                   ProposalConfig
   ): Resource[F, Validators[F]] =
     for {
+      blockHeaderVersionValidation <- BlockHeaderVersionValidation
+        .make[F](
+          clockAlgebra,
+          versionsEventSourceState
+        )
+        .toResource
+      blockHeaderVotingValidation <- BlockHeaderVotingValidation
+        .make[F](clockAlgebra, versionsEventSourceState)
+        .toResource
       headerValidation <- BlockHeaderValidation
         .make[F](
           etaCalculation,
           consensusValidationState,
           leaderElectionThreshold,
+          blockHeaderVersionValidation,
+          blockHeaderVotingValidation,
           eligibilityCache,
           clockAlgebra,
           dataStores.headers,
@@ -112,16 +120,6 @@ object Validators {
           transactionAuthorizationValidation
         )
         .toResource
-
-      blockHeaderVersionValidation <- BlockHeaderVersionValidation
-        .make[F](
-          clockAlgebra,
-          versionsEventSourceState
-        )
-        .toResource
-      blockHeaderVotingValidation <- BlockHeaderVotingValidation
-        .make[F](clockAlgebra, versionsEventSourceState)
-        .toResource
       bodyProposalValidation <- BodyProposalValidation
         .make[F](
           clockAlgebra,
@@ -143,8 +141,6 @@ object Validators {
       boxState,
       registrationAccumulator,
       rewardCalculator,
-      blockHeaderVersionValidation,
-      blockHeaderVotingValidation,
       bodyProposalValidation
     )
 

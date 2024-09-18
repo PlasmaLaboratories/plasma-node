@@ -32,23 +32,27 @@ import scalacache.caffeine.CaffeineCache
 object BlockHeaderValidation {
 
   def make[F[_]: Async](
-    etaInterpreter:           EtaCalculationAlgebra[F],
-    consensusValidationState: ConsensusValidationStateAlgebra[F],
-    leaderElection:           LeaderElectionValidationAlgebra[F],
-    eligibilityCache:         EligibilityCacheAlgebra[F],
-    clockAlgebra:             ClockAlgebra[F],
-    blockHeaderStore:         Store[F, BlockId, BlockHeader],
-    bigBangBlockId:           BlockId,
-    ed25519VRFResource:       Resource[F, Ed25519VRF],
-    kesProductResource:       Resource[F, KesProduct],
-    ed25519Resource:          Resource[F, Ed25519],
-    blake2b256Resource:       Resource[F, Blake2b256]
+    etaInterpreter:               EtaCalculationAlgebra[F],
+    consensusValidationState:     ConsensusValidationStateAlgebra[F],
+    leaderElection:               LeaderElectionValidationAlgebra[F],
+    blockHeaderVersionValidation: BlockHeaderVersionValidationAlgebra[F],
+    blockHeaderVotingValidation:  BlockHeaderVotingValidationAlgebra[F],
+    eligibilityCache:             EligibilityCacheAlgebra[F],
+    clockAlgebra:                 ClockAlgebra[F],
+    blockHeaderStore:             Store[F, BlockId, BlockHeader],
+    bigBangBlockId:               BlockId,
+    ed25519VRFResource:           Resource[F, Ed25519VRF],
+    kesProductResource:           Resource[F, KesProduct],
+    ed25519Resource:              Resource[F, Ed25519],
+    blake2b256Resource:           Resource[F, Blake2b256]
   ): F[BlockHeaderValidationAlgebra[F]] =
     Async[F].delay(
       new Impl[F](
         etaInterpreter,
         consensusValidationState,
         leaderElection,
+        blockHeaderVersionValidation,
+        blockHeaderVotingValidation,
         eligibilityCache,
         clockAlgebra,
         blockHeaderStore,
@@ -61,17 +65,19 @@ object BlockHeaderValidation {
     )
 
   private class Impl[F[_]: Async](
-    etaInterpreter:           EtaCalculationAlgebra[F],
-    consensusValidationState: ConsensusValidationStateAlgebra[F],
-    leaderElection:           LeaderElectionValidationAlgebra[F],
-    eligibilityCache:         EligibilityCacheAlgebra[F],
-    clockAlgebra:             ClockAlgebra[F],
-    blockHeaderStore:         Store[F, BlockId, BlockHeader],
-    bigBangBlockId:           BlockId,
-    ed25519VRFResource:       Resource[F, Ed25519VRF],
-    kesProductResource:       Resource[F, KesProduct],
-    ed25519Resource:          Resource[F, Ed25519],
-    blake2b256Resource:       Resource[F, Blake2b256]
+    etaInterpreter:               EtaCalculationAlgebra[F],
+    consensusValidationState:     ConsensusValidationStateAlgebra[F],
+    leaderElection:               LeaderElectionValidationAlgebra[F],
+    blockHeaderVersionValidation: BlockHeaderVersionValidationAlgebra[F],
+    blockHeaderVotingValidation:  BlockHeaderVotingValidationAlgebra[F],
+    eligibilityCache:             EligibilityCacheAlgebra[F],
+    clockAlgebra:                 ClockAlgebra[F],
+    blockHeaderStore:             Store[F, BlockId, BlockHeader],
+    bigBangBlockId:               BlockId,
+    ed25519VRFResource:           Resource[F, Ed25519VRF],
+    kesProductResource:           Resource[F, KesProduct],
+    ed25519Resource:              Resource[F, Ed25519],
+    blake2b256Resource:           Resource[F, Blake2b256]
   ) extends BlockHeaderValidationAlgebra[F] {
 
     def couldBeValidated(header: BlockHeader, lastProcessedBodyInChain: SlotData): F[Boolean] =
@@ -100,6 +106,8 @@ object BlockHeaderValidation {
           _         <- vrfThresholdVerification(header, threshold, blake2b256Resource)
           _         <- EitherT.liftF(Async[F].cede)
           _         <- eligibilityVerification(header, threshold)
+          _         <- EitherT(blockHeaderVersionValidation.validate(header))
+          _         <- EitherT(blockHeaderVotingValidation.validate(header))
         } yield header
     }.value
 

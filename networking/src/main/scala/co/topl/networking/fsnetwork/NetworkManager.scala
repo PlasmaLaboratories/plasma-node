@@ -71,10 +71,7 @@ object NetworkManager {
         blockchain.dataStores.slotData,
         blockchain.dataStores.headers,
         blockchain.dataStores.bodies,
-        blockchain.validators.header,
-        blockchain.validators.bodySyntax,
-        blockchain.validators.bodySemantics,
-        blockchain.validators.bodyAuthorization,
+        blockchain.validators,
         blockchain.consensus.chainSelection,
         ed25519VRF,
         p2pNetworkConfig
