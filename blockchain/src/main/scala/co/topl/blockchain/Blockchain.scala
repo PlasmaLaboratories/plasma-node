@@ -226,7 +226,8 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
               localBlockchain.clock,
               blockPacker,
               localBlockchain.validators.rewardCalculator,
-              productionPermit
+              productionPermit,
+              eventSourcedStates.votingLocal
             )
           )
           block <- Stream.force(blockProducer.blocks)

@@ -10,7 +10,7 @@ import co.topl.brambl.models.box._
 import co.topl.brambl.models.transaction._
 import co.topl.brambl.syntax._
 import co.topl.catsutils._
-import co.topl.consensus.models.{BlockId, SlotData, SlotId, StakingAddress}
+import co.topl.consensus.models.{BlockId, ProtocolVersion, SlotData, SlotId, StakingAddress}
 import co.topl.ledger.algebras.TransactionRewardCalculatorAlgebra
 import co.topl.minting.algebras.{BlockPackerAlgebra, BlockProducerAlgebra, StakingAlgebra}
 import co.topl.minting.models.VrfHit
@@ -27,6 +27,8 @@ import quivr.models.SmallData
 
 import scala.concurrent.duration._
 import co.topl.algebras.Stats
+import co.topl.consensus.interpreters.VotingEventSourceState
+import co.topl.eventtree.EventSourcedState
 
 object BlockProducer {
 
@@ -51,7 +53,8 @@ object BlockProducer {
     clock:              ClockAlgebra[F],
     blockPacker:        BlockPackerAlgebra[F],
     rewardCalculator:   TransactionRewardCalculatorAlgebra,
-    constructionPermit: F[Unit]
+    constructionPermit: F[Unit],
+    votingLocal:        EventSourcedState[F, VotingEventSourceState.VotingData[F], BlockId]
   ): F[BlockProducerAlgebra[F]] =
     (staker.address, Ref.of(0L)).mapN((address, lastUsedSlotRef) =>
       new Impl[F](
@@ -62,7 +65,8 @@ object BlockProducer {
         blockPacker,
         rewardCalculator,
         lastUsedSlotRef,
-        constructionPermit
+        constructionPermit,
+        votingLocal
       )
     )
 
@@ -74,7 +78,8 @@ object BlockProducer {
     blockPacker:        BlockPackerAlgebra[F],
     rewardCalculator:   TransactionRewardCalculatorAlgebra,
     lastUsedSlotRef:    Ref[F, Slot],
-    constructionPermit: F[Unit]
+    constructionPermit: F[Unit],
+    votingLocal:        EventSourcedState[F, VotingEventSourceState.VotingData[F], BlockId]
   ) extends BlockProducerAlgebra[F] {
 
     implicit private val logger: SelfAwareStructuredLogger[F] =
@@ -133,16 +138,25 @@ object BlockProducer {
           show" parentSlot=${parentSlotData.slotId.slot}" +
           show" eligibilitySlot=${nextHit.slot}"
         )
+        parentId = parentSlotData.slotId.blockId
         // Assemble the transactions to be placed in our new block
-        fullBody <- packBlock(parentSlotData.slotId.blockId, parentSlotData.height + 1, nextHit.slot)
+        fullBody <- packBlock(parentId, parentSlotData.height + 1, nextHit.slot)
         // Assign the block's timestamp to the current time, unless it falls outside the window for the target slot
         timestamp <- (clock.slotToTimestamps(nextHit.slot), clock.currentTimestamp).mapN((boundary, currentTimestamp) =>
           currentTimestamp.min(boundary.last).max(boundary.head)
         )
+        epoch         <- clock.epochOf(nextHit.slot)
+        headerVersion <- votingLocal.useStateAt(parentId)(_.versionAlgebra.getVersionForEpoch(epoch))
+        protocolVersion = ProtocolVersion(headerVersion, 0, 0)
         blockMaker = prepareUnsignedBlock(parentSlotData, fullBody, timestamp, nextHit)
         eta: Eta = Sized.strictUnsafe[ByteString, Eta.Length](nextHit.cert.eta)
-        _           <- Logger[F].info("Certifying block")
-        maybeHeader <- staker.certifyBlock(parentSlotData.slotId, nextHit.slot, blockMaker, eta)
+        _ <- Logger[F].info("Certifying block")
+        maybeHeader <-
+          staker
+            .certifyBlock(parentSlotData.slotId, nextHit.slot, blockMaker, eta)
+            .map(
+              _.map(_.copy(version = protocolVersion))
+            ) // Protocol version shall be part of UnsignedBlockHeader instead
         result <- OptionT
           .fromOption[F](maybeHeader)
           .map(FullBlock(_, fullBody))
