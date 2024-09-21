@@ -8,7 +8,7 @@ import co.topl.brambl.generators.ModelGenerators._
 import co.topl.brambl.models.box.{FungibilityType, QuantityDescriptorType}
 import co.topl.brambl.models.{GroupId, LockAddress, SeriesId}
 import co.topl.brambl.syntax._
-import co.topl.consensus.models.{BlockHeader, BlockId, SlotData, StakingAddress}
+import co.topl.consensus.models.{BlockHeader, BlockId, ProtocolVersion, SlotData, StakingAddress}
 import co.topl.ledger.algebras.TransactionRewardCalculatorAlgebra
 import co.topl.ledger.models.{AssetId, RewardQuantities}
 import co.topl.minting.algebras.{BlockPackerAlgebra, StakingAlgebra}
@@ -26,6 +26,10 @@ import org.scalamock.munit.AsyncMockFactory
 import scala.collection.immutable.NumericRange
 import scala.concurrent.duration._
 import co.topl.algebras.Stats.Implicits._
+import co.topl.consensus.interpreters.VotingEventSourceState
+import co.topl.consensus.interpreters.VotingEventSourceState.VotingData
+import co.topl.eventtree.EventSourcedState
+import co.topl.models.VersionId
 
 class BlockProducerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]
@@ -51,16 +55,19 @@ class BlockProducerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with 
             VrfHit(arbitraryEligibilityCertificate.arbitrary.first, parentSlotData.slotId.slot + 1, ratioGen.first)
           val staker = mock[StakingAlgebra[F]]
 
+          val version = 1
+          val protocolVersion = ProtocolVersion(version, 0, 0)
           (() => staker.address).expects().once().returning(stakingAddress.pure[F])
           (staker.elect _)
             .expects(parentSlotData.slotId, parentSlotData.slotId.slot + 1)
             .once()
             .returning(vrfHit.some.pure[F])
+          val modifiedOutputHeader = outputHeader.copy(version = protocolVersion)
           (staker
             .certifyBlock(_, _, _, _))
             .expects(parentSlotData.slotId, vrfHit.slot, *, *)
             .once()
-            .returning(outputHeader.some.pure[F])
+            .returning(modifiedOutputHeader.some.pure[F])
 
           if (outputBody.transactions.nonEmpty)
             (() => staker.rewardAddress)
@@ -80,6 +87,13 @@ class BlockProducerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with 
             .expects()
             .once()
             .returning(55L.pure[F])
+
+          val eventSource = mock[EventSourcedState[F, VotingEventSourceState.VotingData[F], BlockId]]
+          (eventSource
+            .useStateAt(_: BlockId)(_: VotingData[F] => F[VersionId]))
+            .expects(*, *)
+            .anyNumberOfTimes()
+            .returns(version.pure[F])
 
           val assetId1 = AssetId(
             groupId = GroupId(ByteString.copyFrom(Array.fill[Byte](32)(1))).some,
@@ -113,7 +127,8 @@ class BlockProducerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with 
               clock,
               blockPacker,
               rewardCalculator,
-              ().pure[F]
+              ().pure[F],
+              eventSource
             )
             resultFiber <- Async[F].start(Stream.force(underTest.blocks).enqueueNoneTerminated(results).compile.drain)
             _ = (clock.delayedUntilSlot(_)).expects(vrfHit.slot).once().returning(clockDeferment.get)
@@ -123,7 +138,7 @@ class BlockProducerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with 
             // during the certification process, and we rely on mocks for that)
             result <- results.take
             _ = assert(result.isDefined)
-            _ = assert(result.get.header == outputHeader)
+            _ = assert(result.get.header == modifiedOutputHeader)
             _ = assert(result.get.fullBody.transactions == outputBody.transactions)
             _ = if (outputBody.transactions.nonEmpty) {
               val rewardTx = result.get.fullBody.rewardTransaction.get
