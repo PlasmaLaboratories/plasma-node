@@ -10,7 +10,7 @@ on:
         type: string
       java-versions:
         description: 'List of Java versions to target.'
-        default: "['11']"
+        default: "['21']"
         required: false
         type: string
       preserve-cache-between-runs:
@@ -38,6 +38,12 @@ jobs:
         with:
           fetch-depth: 0 # Need full history to update last modified time.
           submodules: true
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
 
       - name: git-restore-mtime
         uses: chetan/git-restore-mtime-action@v1
