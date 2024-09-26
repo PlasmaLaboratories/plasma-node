@@ -72,13 +72,14 @@ class BlockHeaderVersionValidationTest extends CatsEffectSuite with ScalaCheckEf
 
   test("Header version validation shall be done according to version information") {
     withMock {
+      val maxVersion = 1000
       for {
         versionStore      <- TestStore.make[F, Epoch, VersionId]
         _                 <- versionStore.put(Long.MinValue, -1)
         _                 <- versionStore.put(0, 1)
         _                 <- versionStore.put(10, 2)
         votingState       <- makeVotingEventSource(versionStore)
-        versionValidation <- BlockHeaderVersionValidation.make(defaultClocks, votingState)
+        versionValidation <- BlockHeaderVersionValidation.make(defaultClocks, votingState, maxVersion)
         block1 = headerInEpochWithVersion(-1)
         res1 <- versionValidation.validate(block1)
         _    <- assert(res1 == Left(IncorrectVersionId(-1, 0))).pure[F]
@@ -102,6 +103,15 @@ class BlockHeaderVersionValidationTest extends CatsEffectSuite with ScalaCheckEf
         block6 = headerInEpochWithVersion(10, 2)
         res6 <- versionValidation.validate(block6)
         _    <- assert(res6 == Right(block6)).pure[F]
+
+        block7 = headerInEpochWithVersion(10, maxVersion)
+        res7 <- versionValidation.validate(block7)
+        _    <- assert(res7 == Left(IncorrectVersionId(2, 1000))).pure[F] // but supported check pass
+
+        block8 = headerInEpochWithVersion(10, maxVersion + 1)
+        res8 <- versionValidation.validate(block8)
+        _    <- Logger[F].error(s"$res8")
+        _    <- assert(res8 == Left(UnsupportedVersionId(maxVersion + 1, maxVersion))).pure[F]
       } yield ()
     }
   }

@@ -630,7 +630,8 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         registrationAccumulatorLocal,
         votingLocal,
         proposalEventLocal,
-        proposalConfig
+        proposalConfig,
+        appConfig.bifrost.maxSupportedVersion
       )
 
       validatorsP2P <- Validators.make[F](
@@ -646,7 +647,8 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         registrationAccumulatorP2P,
         votingP2P,
         proposalEventLocal,
-        proposalConfig
+        proposalConfig,
+        appConfig.bifrost.maxSupportedVersion
       )
 
       protectedMempool <- MempoolProtected.make(

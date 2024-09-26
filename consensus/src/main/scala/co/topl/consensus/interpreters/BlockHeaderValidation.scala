@@ -90,6 +90,7 @@ object BlockHeaderValidation {
       if (header.id === bigBangBlockId) EitherT.rightT[F, BlockHeaderValidationFailure](header)
       else
         for {
+          _         <- EitherT(blockHeaderVersionValidation.validate(header))
           parent    <- EitherT.liftF(blockHeaderStore.getOrRaise(header.parentHeaderId))
           _         <- EitherT.liftF(Async[F].cede)
           _         <- statelessVerification(header, parent)
@@ -106,7 +107,6 @@ object BlockHeaderValidation {
           _         <- vrfThresholdVerification(header, threshold, blake2b256Resource)
           _         <- EitherT.liftF(Async[F].cede)
           _         <- eligibilityVerification(header, threshold)
-          _         <- EitherT(blockHeaderVersionValidation.validate(header))
           _         <- EitherT(blockHeaderVotingValidation.validate(header))
         } yield header
     }.value

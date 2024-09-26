@@ -50,6 +50,8 @@ object BlockHeaderValidationFailures {
 
   case class DuplicateEligibility(vrfVK: Bytes, slot: Slot) extends BlockHeaderValidationFailure
 
+  case class UnsupportedVersionId(actual: VersionId, maxSupported: VersionId) extends BlockHeaderValidationFailure
+
   case class IncorrectVersionId(expected: VersionId, actual: VersionId) extends BlockHeaderValidationFailure
 
   case class IncorrectVotedVersionId(vote: VersionId) extends BlockHeaderValidationFailure
