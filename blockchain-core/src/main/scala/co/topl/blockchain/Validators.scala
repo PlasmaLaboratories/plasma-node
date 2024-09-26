@@ -20,6 +20,7 @@ import co.topl.consensus.interpreters.VotingEventSourceState.VotingData
 import co.topl.eventtree.EventSourcedState
 import co.topl.ledger.interpreters.ProposalEventSourceState.ProposalEventSourceStateType
 import co.topl.models.ProposalConfig
+import co.topl.models.VersionId
 import org.typelevel.log4cats.Logger
 
 trait Validators[F[_]] {
@@ -68,13 +69,15 @@ object Validators {
     registrationAccumulator:  RegistrationAccumulatorAlgebra[F],
     versionsEventSourceState: EventSourcedState[F, VotingData[F], BlockId],
     proposalEventState:       ProposalEventSourceStateType[F],
-    config:                   ProposalConfig
+    config:                   ProposalConfig,
+    maxSupportedVersion:      VersionId
   ): Resource[F, Validators[F]] =
     for {
       blockHeaderVersionValidation <- BlockHeaderVersionValidation
         .make[F](
           clockAlgebra,
-          versionsEventSourceState
+          versionsEventSourceState,
+          maxSupportedVersion
         )
         .toResource
       blockHeaderVotingValidation <- BlockHeaderVotingValidation

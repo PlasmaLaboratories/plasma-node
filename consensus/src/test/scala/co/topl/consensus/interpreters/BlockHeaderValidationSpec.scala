@@ -121,6 +121,14 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
     clock
   }
 
+  def defaultBlockHeaderVersionValidation: BlockHeaderVersionValidationAlgebra[F] = {
+    val validator = mock[BlockHeaderVersionValidationAlgebra[F]]
+    (validator.validate _).expects(*).anyNumberOfTimes().onCall { header: BlockHeader =>
+      Either.right[BlockHeaderValidationFailure, BlockHeader](header).pure[F]
+    }
+    validator
+  }
+
   test("invalidate blocks with non-forward slot") {
     PropF.forAllF(genValid(u => u.copy(slot = 0L))) { case (parent, child, _, _: Eta, _: Ratio) =>
       withMock {
@@ -470,14 +478,12 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
         withMock {
           val consensusValidationState = mock[ConsensusValidationStateAlgebra[F]]
           val etaInterpreter = mock[EtaCalculationAlgebra[F]]
-          val clockAlgebra = createDummyClockAlgebra(child)
-          val headerStore = simpleHeaderStore(child.parentHeaderId, parent)
           val eligibilityCache = mock[EligibilityCacheAlgebra[F]]
 
           (consensusValidationState
             .staker(_: BlockId, _: Slot)(_: StakingAddress))
             .expects(*, *, *)
-            .once()
+            .never()
             .returning(ActiveStaker(registration, relativeStake.numerator).some.pure[F])
 
           (etaInterpreter
@@ -489,7 +495,7 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
           (consensusValidationState
             .operatorRelativeStake(_: BlockId, _: Slot)(_: StakingAddress)(_: Monad[F]))
             .expects(*, *, *, *)
-            .once()
+            .never()
             .returning(relativeStake.some.pure[F])
 
           (eligibilityCache
@@ -510,8 +516,6 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
           }
 
           createValidation(
-            clock = clockAlgebra,
-            headerStore = headerStore,
             consensusValidationState = consensusValidationState,
             leaderElectionInterpreter = sharedLeaderElectionInterpreter(),
             eligibilityCache = eligibilityCache,
@@ -826,7 +830,7 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
     consensusValidationState:     ConsensusValidationStateAlgebra[F] = mock[ConsensusValidationStateAlgebra[F]],
     leaderElectionInterpreter:    LeaderElectionValidationAlgebra[F] = mock[LeaderElectionValidationAlgebra[F]],
     eligibilityCache:             EligibilityCacheAlgebra[F] = mock[EligibilityCacheAlgebra[F]],
-    blockHeaderVersionValidation: BlockHeaderVersionValidationAlgebra[F] = mock[BlockHeaderVersionValidationAlgebra[F]],
+    blockHeaderVersionValidation: BlockHeaderVersionValidationAlgebra[F] = defaultBlockHeaderVersionValidation,
     blockHeaderVotingValidation:  BlockHeaderVotingValidationAlgebra[F] = mock[BlockHeaderVotingValidationAlgebra[F]],
     clock:                        ClockAlgebra[F] = mock[ClockAlgebra[F]],
     headerStore:                  Store[F, BlockId, BlockHeader] = mock[Store[F, BlockId, BlockHeader]],
