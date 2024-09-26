@@ -589,8 +589,13 @@ object DataStoresInit {
         CurrentEventIdGetterSetters.Indices.BoxStateP2P,
         CurrentEventIdGetterSetters.Indices.Mempool,
         CurrentEventIdGetterSetters.Indices.EpochDataLocal,
+        CurrentEventIdGetterSetters.Indices.EpochDataP2P,
         CurrentEventIdGetterSetters.Indices.RegistrationAccumulatorLocal,
-        CurrentEventIdGetterSetters.Indices.RegistrationAccumulatorP2P
+        CurrentEventIdGetterSetters.Indices.RegistrationAccumulatorP2P,
+        CurrentEventIdGetterSetters.Indices.VotingLocal,
+        CurrentEventIdGetterSetters.Indices.VotingP2P,
+        CurrentEventIdGetterSetters.Indices.ProposalLocal,
+        CurrentEventIdGetterSetters.Indices.ProposalP2P
       ).traverseTap(dataStores.currentEventIds.put(_, bigBangBlock.header.parentHeaderId))
       _ <- dataStores.slotData.put(
         bigBangBlock.header.id,
