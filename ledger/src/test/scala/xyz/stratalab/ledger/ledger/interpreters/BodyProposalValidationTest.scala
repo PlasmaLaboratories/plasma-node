@@ -23,7 +23,7 @@ import xyz.stratalab.ledger.interpreters.ProposalEventSourceState.ProposalData
 import xyz.stratalab.ledger.models._
 import xyz.stratalab.models.ModelGenerators._
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.models.{emptyVersion, proposalDelta, Epoch, ProposalConfig, ProposalId, Slot, Timestamp}
+import xyz.stratalab.models.{Epoch, ProposalConfig, ProposalId, Slot, Timestamp, emptyVersion, proposalDelta}
 
 import scala.collection.immutable.NumericRange
 import scala.collection.mutable
