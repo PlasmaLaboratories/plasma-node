@@ -16,7 +16,6 @@ import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
 import xyz.stratalab.ledger.interpreters.ProposalEventSourceState
 import xyz.stratalab.ledger.interpreters.ProposalEventSourceState.{ProposalData, ProposalEventSourceStateType}
 import xyz.stratalab.models._
-import xyz.stratalab.typeclasses.ShowInstances.showBlockId
 import xyz.stratalab.typeclasses.implicits._
 
 object VotingEventSourceState {

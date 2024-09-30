@@ -25,6 +25,7 @@ import xyz.stratalab.common.application.IOBaseApp
 import xyz.stratalab.config.ApplicationConfig
 import xyz.stratalab.config.ApplicationConfig.Bifrost.KnownPeer
 import xyz.stratalab.consensus._
+import xyz.stratalab.consensus.interpreters.VotingEventSourceState.VotingData
 import xyz.stratalab.consensus.interpreters._
 import xyz.stratalab.consensus.models.VrfConfig
 import xyz.stratalab.eventtree.ParentChildTree
@@ -33,7 +34,9 @@ import xyz.stratalab.grpc.HealthCheckGrpc
 import xyz.stratalab.healthcheck.HealthCheck
 import xyz.stratalab.interpreters._
 import xyz.stratalab.ledger.LedgerImpl
+import xyz.stratalab.ledger.interpreters.ProposalEventSourceState.ProposalData
 import xyz.stratalab.ledger.interpreters._
+import xyz.stratalab.models.ProposalConfig
 import xyz.stratalab.models.p2p._
 import xyz.stratalab.models.utility.HasLength.instances.byteStringLength
 import xyz.stratalab.models.utility._
@@ -46,9 +49,6 @@ import xyz.stratalab.version.VersionReplicator
 
 import java.time.Instant
 import scala.concurrent.duration._
-import xyz.stratalab.models.ProposalConfig
-import xyz.stratalab.ledger.interpreters.ProposalEventSourceState.ProposalData
-import xyz.stratalab.consensus.interpreters.VotingEventSourceState.VotingData
 
 object NodeApp extends AbstractNodeApp
 
@@ -214,7 +214,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           .toResource
       _ <- Logger[F]
         .info(
-          s"Protocol" +
+          "Protocol" +
           s" epochLength=${bigBangProtocol.epochLength}" +
           s" operationalPeriodLength=${bigBangProtocol.operationalPeriodLength}" +
           s" chainSelectionSWindow=${bigBangProtocol.chainSelectionSWindow}" +

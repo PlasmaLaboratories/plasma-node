@@ -1,44 +1,41 @@
 package xyz.stratalab.consensus.interpreters
 
-import cats.effect.Async
+import cats.effect.{Async, IO}
 import cats.implicits._
-import cats.effect.IO
-import co.topl.consensus.models._
-import xyz.stratalab.eventtree.EventSourcedState
-import xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryHeader
-import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
-import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.algebras.{ClockAlgebra, Store}
-import xyz.stratalab.models.{ProposalId, Slot, Timestamp, VersionId}
-import xyz.stratalab.algebras.testInterpreters.TestStore
+import co.topl.brambl.generators.TransactionGenerator
 import co.topl.brambl.models.TransactionId
+import co.topl.brambl.models.box.Value
 import co.topl.brambl.models.box.Value.UpdateProposal
 import co.topl.brambl.models.transaction._
-import co.topl.proto.node.EpochData
-import xyz.stratalab.models._
-import xyz.stratalab.ledger.interpreters.ProposalEventSourceState._
-import xyz.stratalab.ledger.interpreters.ProposalEventSourceState
-import scala.util.Random
-import scala.collection.mutable
-import scala.collection.immutable.NumericRange
-import scala.concurrent.duration.FiniteDuration
-import xyz.stratalab.eventtree.ParentChildTree
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.codecs.bytes.tetra.ModelGenerators._
-import co.topl.brambl.generators.TransactionGenerator
-import co.topl.brambl.models.box.Value
-import xyz.stratalab.models.ModelGenerators._
-import xyz.stratalab.algebras.ClockAlgebra.implicits._
-import xyz.stratalab.consensus.algebras.VersionInfoAlgebra
+import co.topl.consensus.models.{BlockHeader, BlockId, _}
 import co.topl.crypto.signing.Ed25519VRF
+import co.topl.node.models.BlockBody
+import co.topl.proto.node.EpochData
+import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
+import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
+import xyz.stratalab.algebras.ClockAlgebra.implicits._
+import xyz.stratalab.algebras.testInterpreters.TestStore
+import xyz.stratalab.algebras.{ClockAlgebra, Store}
+import xyz.stratalab.codecs.bytes.tetra.ModelGenerators._
+import xyz.stratalab.codecs.bytes.tetra.instances._
+import xyz.stratalab.consensus._
+import xyz.stratalab.consensus.algebras.VersionInfoAlgebra
+import xyz.stratalab.consensus.interpreters.VotingEventSourceState
+import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
+import xyz.stratalab.ledger.interpreters.ProposalEventSourceState
+import xyz.stratalab.ledger.interpreters.ProposalEventSourceState._
+import xyz.stratalab.models.ModelGenerators._
+import xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryHeader
+import xyz.stratalab.models.{ProposalId, Slot, Timestamp, VersionId, _}
 import xyz.stratalab.numerics.implicits._
 import xyz.stratalab.typeclasses.implicits._
-import xyz.stratalab.consensus._
-import xyz.stratalab.consensus.interpreters.VotingEventSourceState
-import co.topl.consensus.models.{BlockHeader, BlockId, SlotData, SlotId}
-import co.topl.node.models.BlockBody
+
+import scala.collection.immutable.NumericRange
+import scala.collection.mutable
+import scala.concurrent.duration.FiniteDuration
+import scala.util.Random
 
 class VotingEventSourceStateSpec
     extends CatsEffectSuite

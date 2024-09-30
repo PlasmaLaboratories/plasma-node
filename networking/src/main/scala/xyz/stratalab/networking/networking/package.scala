@@ -40,7 +40,7 @@ package object networking {
     def asRemoteAddress: RemoteAddress = RemoteAddress(address.host.toUriString, address.port.value)
   }
 
-  implicit class SocketOps[F[_]](val socket: Socket[F]) extends AnyVal {
+  implicit class SocketOps[F[_]](private val socket: Socket[F]) extends AnyVal {
 
     /**
      * Calling Socket.read(numberOfBytes) may not return all `numberOfBytes`. This situation needs to be checked,

@@ -4,7 +4,11 @@ import cats.implicits._
 import cats.{Functor, Parallel}
 import co.topl.consensus.models.BlockId
 import xyz.stratalab.blockchain.interpreters.EpochDataEventSourcedState
-import xyz.stratalab.consensus.interpreters.{ConsensusDataEventSourcedState, EpochBoundariesEventSourcedState, VotingEventSourceState}
+import xyz.stratalab.consensus.interpreters.{
+  ConsensusDataEventSourcedState,
+  EpochBoundariesEventSourcedState,
+  VotingEventSourceState
+}
 import xyz.stratalab.eventtree.EventSourcedState
 import xyz.stratalab.interpreters.{BlockHeightTree, TxIdToBlockIdTree}
 import xyz.stratalab.ledger.interpreters.{BoxState, Mempool, ProposalEventSourceState, RegistrationAccumulator}

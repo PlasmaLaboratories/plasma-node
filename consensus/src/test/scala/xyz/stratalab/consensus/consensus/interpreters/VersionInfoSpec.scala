@@ -1,7 +1,7 @@
 package xyz.stratalab.consensus.interpreters
 
-import cats.implicits._
 import cats.effect.IO
+import cats.implicits._
 import co.topl.brambl.generators.TransactionGenerator
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory

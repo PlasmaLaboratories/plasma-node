@@ -5,7 +5,7 @@ import cats.implicits._
 import fs2.io.file.{Files, Path}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.typelevel.log4cats.Logger
-import scodec.{Codec, codecs}
+import scodec.{codecs, Codec}
 import xyz.stratalab.algebras.testInterpreters.NoOpLogger
 import xyz.stratalab.codecs.bytes.typeclasses.Persistable
 import xyz.stratalab.codecs.bytes.typeclasses.implicits._

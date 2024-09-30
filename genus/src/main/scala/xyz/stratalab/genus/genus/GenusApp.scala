@@ -6,7 +6,7 @@ import cats.implicits.showInterpolator
 import co.topl.node.services.NodeRpcFs2Grpc
 import com.typesafe.config.Config
 import kamon.Kamon
-import mainargs.{Flag, ParserForClass, arg, main}
+import mainargs.{arg, main, Flag, ParserForClass}
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import pureconfig.ConfigSource
