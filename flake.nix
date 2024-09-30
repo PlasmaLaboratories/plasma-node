@@ -6,7 +6,7 @@
 
   outputs = { self, nixpkgs }:
     let
-      javaVersion = 11;
+      javaVersion = 21;
       overlays = [
         (final: prev: rec {
           jdk = prev."jdk${toString javaVersion}";
