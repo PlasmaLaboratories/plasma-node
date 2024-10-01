@@ -36,7 +36,7 @@ package object utility {
     j.toScala
   }
 
-  implicit class BlockBodyOps(val body: BlockBody) extends AnyVal {
+  implicit class BlockBodyOps(private val body: BlockBody) extends AnyVal {
 
     /**
      * Return all Transaction IDs in this block, including the reward transaction ID if provided
@@ -45,7 +45,7 @@ package object utility {
 
   }
 
-  implicit class FullBlockBodyOps(val body: FullBlockBody) extends AnyVal {
+  implicit class FullBlockBodyOps(private val body: FullBlockBody) extends AnyVal {
 
     /**
      * Return all Transactions in this block, including the reward transaction if provided
