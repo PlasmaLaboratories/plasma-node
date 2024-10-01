@@ -27,7 +27,7 @@ import xyz.stratalab.networking.blockchain.BlockchainPeerClient
 import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
 import xyz.stratalab.networking.fsnetwork.PeerMempoolTransactionSyncTest.F
 import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
-import xyz.stratalab.networking.fsnetwork.TestHelper.{arbitraryHost, BlockBodyOrTransactionErrorByName}
+import xyz.stratalab.networking.fsnetwork.TestHelper.{BlockBodyOrTransactionErrorByName, arbitraryHost}
 
 import java.util.concurrent.atomic.AtomicBoolean
 import scala.concurrent.duration._

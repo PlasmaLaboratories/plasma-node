@@ -39,7 +39,7 @@ import xyz.stratalab.models.p2p._
 import xyz.stratalab.networking.blockchain.{BlockchainPeerClient, NetworkProtocolVersions}
 import xyz.stratalab.networking.fsnetwork.ActorPeerHandlerBridgeAlgebraTest._
 import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
-import xyz.stratalab.networking.fsnetwork.TestHelper.{arbitraryHost, BlockBodyOrTransactionErrorByName}
+import xyz.stratalab.networking.fsnetwork.TestHelper.{BlockBodyOrTransactionErrorByName, arbitraryHost}
 import xyz.stratalab.networking.p2p.{ConnectedPeer, DisconnectedPeer, PeerConnectionChange}
 import xyz.stratalab.typeclasses.implicits._
 
