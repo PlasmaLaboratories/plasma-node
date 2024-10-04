@@ -1,9 +1,9 @@
 package xyz.stratalab.blockchain
 
 import cats.effect.{Async, Resource}
-import co.topl.proto.node.NodeConfig
 import fs2.Stream
 import xyz.stratalab.algebras.ProtocolConfigurationAlgebra
+import xyz.stratalab.proto.node.NodeConfig
 
 /**
  * Emits a stream of node protocol configs.

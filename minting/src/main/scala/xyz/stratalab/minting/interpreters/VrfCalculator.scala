@@ -3,13 +3,13 @@ package xyz.stratalab.minting.interpreters
 import cats.effect._
 import cats.effect.implicits.effectResourceOps
 import cats.implicits._
-import co.topl.crypto.signing.Ed25519VRF
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.google.protobuf.ByteString
 import scalacache.Entry
 import scalacache.caffeine.CaffeineCache
 import xyz.stratalab.codecs.bytes.typeclasses.implicits._
 import xyz.stratalab.consensus.models.VrfArgument
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.minting.algebras.VrfCalculatorAlgebra
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility.HasLength.instances._

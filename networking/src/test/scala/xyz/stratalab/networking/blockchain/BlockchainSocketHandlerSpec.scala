@@ -3,12 +3,12 @@ package xyz.stratalab.networking.blockchain
 import cats.effect.IO
 import cats.effect.std.{Mutex, Queue}
 import cats.implicits._
-import co.topl.consensus.models.{BlockHeader, BlockId}
 import fs2.Stream
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.codecs.bytes.typeclasses.Transmittable
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
 import xyz.stratalab.models.Bytes
 import xyz.stratalab.models.ModelGenerators.GenHelper
 import xyz.stratalab.models.generators.consensus.ModelGenerators._

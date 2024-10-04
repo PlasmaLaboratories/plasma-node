@@ -4,22 +4,22 @@ import cats.data.EitherT
 import cats.effect._
 import cats.effect.implicits._
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
-import co.topl.brambl.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
-import co.topl.consensus.models.BlockId
-import co.topl.node.models.FullBlockBody
 import fs2._
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
 import xyz.stratalab.algebras.ContextlessValidationAlgebra
+import xyz.stratalab.consensus.models.BlockId
 import xyz.stratalab.ledger.algebras._
 import xyz.stratalab.ledger.implicits._
 import xyz.stratalab.ledger.interpreters.{QuivrContext, RegistrationAccumulator}
 import xyz.stratalab.ledger.models.{MempoolGraph, TransactionSemanticError}
 import xyz.stratalab.minting.algebras.BlockPackerAlgebra
 import xyz.stratalab.models._
+import xyz.stratalab.node.models.FullBlockBody
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
 import xyz.stratalab.typeclasses.implicits._
 
 import scala.collection.immutable.ListSet
@@ -62,7 +62,7 @@ object BlockPacker {
   ) extends BlockPackerAlgebra[F] {
 
     implicit private val logger: SelfAwareStructuredLogger[F] =
-      Slf4jLogger.getLoggerFromName[F]("Bifrost.BlockPacker")
+      Slf4jLogger.getLoggerFromName[F]("Node.BlockPacker")
 
     def blockImprover(
       parentBlockId: BlockId,
@@ -347,7 +347,7 @@ object BlockPackerValidation {
   ): Resource[F, BlockPackerValidation[F]] = {
 
     implicit val logger: SelfAwareStructuredLogger[F] =
-      Slf4jLogger.getLoggerFromName[F]("Bifrost.BlockPackerValidation")
+      Slf4jLogger.getLoggerFromName[F]("Node.BlockPackerValidation")
     Resource.pure((transaction: IoTransaction, height: Long, slot: Slot) =>
       (
         EitherT(transactionDataValidation.validate(transaction).map(_.toEither)).leftMap(_.show) >>

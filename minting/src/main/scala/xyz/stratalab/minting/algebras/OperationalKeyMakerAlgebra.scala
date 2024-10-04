@@ -1,6 +1,6 @@
 package xyz.stratalab.minting.algebras
 
-import co.topl.consensus.models.SlotId
+import xyz.stratalab.consensus.models.SlotId
 import xyz.stratalab.minting.models.OperationalKeyOut
 import xyz.stratalab.models.{Eta, Slot}
 

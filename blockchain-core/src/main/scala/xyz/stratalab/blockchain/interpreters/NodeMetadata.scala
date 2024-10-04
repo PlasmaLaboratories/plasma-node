@@ -3,13 +3,13 @@ package xyz.stratalab.blockchain.interpreters
 import cats.Monad
 import cats.data.OptionT
 import cats.effect.Resource
-import co.topl.brambl.models.TransactionId
-import co.topl.consensus.models.BlockId
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
 import xyz.stratalab.algebras.Store
 import xyz.stratalab.blockchain.algebras.NodeMetadataAlgebra
+import xyz.stratalab.consensus.models.BlockId
 import xyz.stratalab.models.Bytes
+import xyz.stratalab.sdk.models.TransactionId
 
 import java.nio.charset.StandardCharsets
 

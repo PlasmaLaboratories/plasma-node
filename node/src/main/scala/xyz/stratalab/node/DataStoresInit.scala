@@ -5,14 +5,6 @@ import cats.data.NonEmptySet
 import cats.effect._
 import cats.effect.implicits._
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.box.Value.UpdateProposal
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
-import co.topl.consensus.models._
-import co.topl.crypto.signing.Ed25519VRF
-import co.topl.node.models._
-import co.topl.proto.node.EpochData
 import com.google.protobuf.ByteString
 import fs2.io.file.{Files, Path}
 import org.iq80.leveldb.DBFactory
@@ -25,6 +17,8 @@ import xyz.stratalab.codecs.bytes.typeclasses.Persistable
 import xyz.stratalab.config.ApplicationConfig
 import xyz.stratalab.consensus._
 import xyz.stratalab.consensus.interpreters.BlockHeaderToBodyValidation
+import xyz.stratalab.consensus.models._
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.db.leveldb.LevelDbStore
 import xyz.stratalab.interpreters.CacheStore
 import xyz.stratalab.interpreters.ContainsCacheStore._
@@ -32,6 +26,12 @@ import xyz.stratalab.models.p2p._
 import xyz.stratalab.models.utility._
 import xyz.stratalab.models.{Epoch, ProposalId, VersionId}
 import xyz.stratalab.networking.fsnetwork._
+import xyz.stratalab.node.models._
+import xyz.stratalab.proto.node.EpochData
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 import DataStoresInit.DataStoreNames._
@@ -97,49 +97,49 @@ object DataStoresInit {
    */
   def create[F[_]: Async: Logger](appConfig: ApplicationConfig)(genesisId: BlockId): Resource[F, DataStores[F]] =
     for {
-      dataDir        <- Path(interpolateBlockId(genesisId)(appConfig.bifrost.data.directory)).pure[F].toResource
+      dataDir        <- Path(interpolateBlockId(genesisId)(appConfig.node.data.directory)).pure[F].toResource
       levelDbFactory <- buildLevelDbFactory(appConfig)
       _              <- Files.forAsync[F].createDirectories(dataDir).toResource
       _              <- Logger[F].info(show"Using dataDir=$dataDir").toResource
       parentChildTree <- makeCachedDb[F, BlockId, ByteString, (Long, BlockId)](dataDir, levelDbFactory)(
         parentChildTreeDbName,
-        appConfig.bifrost.cache.parentChildTree,
+        appConfig.node.cache.parentChildTree,
         _.value
       )
       currentEventIds <- makeDb[F, Byte, BlockId](dataDir, levelDbFactory)(currentEventIdsDbName)
       slotDataStore <- makeCachedDbWithContainsCache[F, BlockId, ByteString, SlotData](dataDir, levelDbFactory)(
         slotDataStoreDbName,
-        appConfig.bifrost.cache.slotData,
+        appConfig.node.cache.slotData,
         _.value,
-        appConfig.bifrost.cache.containsCacheSize
+        appConfig.node.cache.containsCacheSize
       )
       blockHeaderStore <- makeCachedDbWithContainsCache[F, BlockId, ByteString, BlockHeader](dataDir, levelDbFactory)(
         blockHeaderStoreDbName,
-        appConfig.bifrost.cache.headers,
+        appConfig.node.cache.headers,
         _.value,
-        appConfig.bifrost.cache.containsCacheSize
+        appConfig.node.cache.containsCacheSize
       )
       blockBodyStore <- makeCachedDbWithContainsCache[F, BlockId, ByteString, BlockBody](dataDir, levelDbFactory)(
         blockBodyStoreDbName,
-        appConfig.bifrost.cache.bodies,
+        appConfig.node.cache.bodies,
         _.value,
-        appConfig.bifrost.cache.containsCacheSize
+        appConfig.node.cache.containsCacheSize
       )
       transactionStore <- makeCachedDbWithContainsCache[F, TransactionId, ByteString, IoTransaction](
         dataDir,
         levelDbFactory
       )(
         transactionStoreDbName,
-        appConfig.bifrost.cache.transactions,
+        appConfig.node.cache.transactions,
         _.value,
-        appConfig.bifrost.cache.containsCacheSize
+        appConfig.node.cache.containsCacheSize
       )
       spendableBoxIdsStoreLocal <- makeCachedDb[F, TransactionId, ByteString, NonEmptySet[Short]](
         dataDir,
         levelDbFactory
       )(
         spendableBoxIdsStoreLocalDbName,
-        appConfig.bifrost.cache.spendableBoxIds,
+        appConfig.node.cache.spendableBoxIds,
         _.value
       )
       spendableBoxIdsStoreP2P <- makeCachedDb[F, TransactionId, ByteString, NonEmptySet[Short]](
@@ -147,27 +147,27 @@ object DataStoresInit {
         levelDbFactory
       )(
         spendableBoxIdsStoreP2PDbName,
-        appConfig.bifrost.cache.spendableBoxIds,
+        appConfig.node.cache.spendableBoxIds,
         _.value
       )
       epochBoundariesStoreLocal <- makeCachedDb[F, Long, java.lang.Long, BlockId](dataDir, levelDbFactory)(
         epochBoundariesStoreLocalDbName,
-        appConfig.bifrost.cache.epochBoundaries,
+        appConfig.node.cache.epochBoundaries,
         Long.box
       )
       epochBoundariesStoreP2P <- makeCachedDb[F, Long, java.lang.Long, BlockId](dataDir, levelDbFactory)(
         epochBoundariesStoreP2PDbName,
-        appConfig.bifrost.cache.epochBoundaries,
+        appConfig.node.cache.epochBoundaries,
         Long.box
       )
       operatorStakesStoreLocal <- makeCachedDb[F, StakingAddress, StakingAddress, BigInt](dataDir, levelDbFactory)(
         operatorStakesStoreLocalDbName,
-        appConfig.bifrost.cache.operatorStakes,
+        appConfig.node.cache.operatorStakes,
         identity
       )
       operatorStakesStoreP2P <- makeCachedDb[F, StakingAddress, StakingAddress, BigInt](dataDir, levelDbFactory)(
         operatorStakesStoreP2PDbName,
-        appConfig.bifrost.cache.operatorStakes,
+        appConfig.node.cache.operatorStakes,
         identity
       )
       activeStakeStoreLocal   <- makeDb[F, Unit, BigInt](dataDir, levelDbFactory)(activeStakeStoreLocalDbName)
@@ -181,7 +181,7 @@ object DataStoresInit {
         ActiveStaker
       ](dataDir, levelDbFactory)(
         registrationsStoreLocalDbName,
-        appConfig.bifrost.cache.registrations,
+        appConfig.node.cache.registrations,
         identity
       )
       registrationsStoreP2P <- makeCachedDb[
@@ -191,22 +191,22 @@ object DataStoresInit {
         ActiveStaker
       ](dataDir, levelDbFactory)(
         registrationsStoreP2PDbName,
-        appConfig.bifrost.cache.registrations,
+        appConfig.node.cache.registrations,
         identity
       )
       blockHeightTreeStoreLocal <- makeCachedDb[F, Long, java.lang.Long, BlockId](dataDir, levelDbFactory)(
         blockHeightTreeStoreLocalDbName,
-        appConfig.bifrost.cache.blockHeightTree,
+        appConfig.node.cache.blockHeightTree,
         Long.box
       )
       blockHeightTreeStoreP2P <- makeCachedDb[F, Long, java.lang.Long, BlockId](dataDir, levelDbFactory)(
         blockHeightTreeStoreP2PDbName,
-        appConfig.bifrost.cache.blockHeightTree,
+        appConfig.node.cache.blockHeightTree,
         Long.box
       )
       epochDataStore <- makeCachedDb[F, Long, java.lang.Long, EpochData](dataDir, levelDbFactory)(
         epochDataStoreDbName,
-        appConfig.bifrost.cache.epochData,
+        appConfig.node.cache.epochData,
         Long.box
       )
       registrationAccumulatorStoreLocal <- makeCachedDb[
@@ -216,7 +216,7 @@ object DataStoresInit {
         Unit
       ](dataDir, levelDbFactory)(
         registrationAccumulatorStoreLocalDbName,
-        appConfig.bifrost.cache.registrationAccumulator,
+        appConfig.node.cache.registrationAccumulator,
         identity
       )
       registrationAccumulatorStoreP2P <- makeCachedDb[
@@ -226,7 +226,7 @@ object DataStoresInit {
         Unit
       ](dataDir, levelDbFactory)(
         registrationAccumulatorStoreP2PDbName,
-        appConfig.bifrost.cache.registrationAccumulator,
+        appConfig.node.cache.registrationAccumulator,
         identity
       )
       knownRemotePeersStore <- makeDb[F, Unit, Seq[KnownRemotePeer]](dataDir, levelDbFactory)(
@@ -235,29 +235,29 @@ object DataStoresInit {
       metadataStore <- makeDb[F, Array[Byte], Array[Byte]](dataDir, levelDbFactory)(metadataStoreDbName)
       txIdToBlockId <- makeCachedDb[F, TransactionId, ByteString, BlockId](dataDir, levelDbFactory)(
         txIdToBlockIdDbName,
-        appConfig.bifrost.cache.txIdToBlockId,
+        appConfig.node.cache.txIdToBlockId,
         _.value
       )
 
       idToProposalLocal <- makeCachedDb[F, ProposalId, java.lang.Integer, UpdateProposal](dataDir, levelDbFactory)(
         idToProposalLocalDbName,
-        appConfig.bifrost.cache.idToProposal,
+        appConfig.node.cache.idToProposal,
         Int.box
       )
 
       epochToProposalIdsLocal <- makeCachedDb[F, Epoch, java.lang.Long, Set[ProposalId]](dataDir, levelDbFactory)(
         epochToProposalIdsLocalDbName,
-        appConfig.bifrost.cache.epochToProposalIds,
+        appConfig.node.cache.epochToProposalIds,
         Long.box
       )
       proposalVotingLocal <- makeCachedDb[F, (Epoch, ProposalId), (Epoch, ProposalId), Long](dataDir, levelDbFactory)(
         proposalVotingLocalDbName,
-        appConfig.bifrost.cache.proposalVoting,
+        appConfig.node.cache.proposalVoting,
         identity
       )
       epochToVersionIdsLocal <- makeCachedDb[F, Epoch, java.lang.Long, Set[VersionId]](dataDir, levelDbFactory)(
         epochToVersionIdsLocalDbName,
-        appConfig.bifrost.cache.epochToVersionIds,
+        appConfig.node.cache.epochToVersionIds,
         Long.box
       )
       versionIdToProposalLocal <- makeCachedDb[F, VersionId, java.lang.Integer, UpdateProposal](
@@ -265,20 +265,20 @@ object DataStoresInit {
         levelDbFactory
       )(
         versionIdToProposalLocalDbName,
-        appConfig.bifrost.cache.versionIdToProposal,
+        appConfig.node.cache.versionIdToProposal,
         Int.box
       )
       versionCounterLocal <- makeDb[F, Unit, VersionId](dataDir, levelDbFactory)(versionCounterLocalDbName)
 
       epochToCreatedVersionIdsLocal <- makeCachedDb[F, Epoch, java.lang.Long, Set[VersionId]](dataDir, levelDbFactory)(
         epochToCreatedVersionIdsLocalDbName,
-        appConfig.bifrost.cache.epochToCreatedVersion,
+        appConfig.node.cache.epochToCreatedVersion,
         Long.box
       )
 
       versionVotingLocal <- makeCachedDb[F, (Epoch, VersionId), (Epoch, VersionId), Long](dataDir, levelDbFactory)(
         versionVotingLocalDbName,
-        appConfig.bifrost.cache.versionVoting,
+        appConfig.node.cache.versionVoting,
         identity
       )
 
@@ -292,27 +292,27 @@ object DataStoresInit {
 
       idToProposalP2P <- makeCachedDb[F, ProposalId, java.lang.Integer, UpdateProposal](dataDir, levelDbFactory)(
         idToProposalP2PDbName,
-        appConfig.bifrost.cache.idToProposal,
+        appConfig.node.cache.idToProposal,
         Int.box
       )
       epochToProposalIdsP2P <- makeCachedDb[F, Epoch, java.lang.Long, Set[ProposalId]](dataDir, levelDbFactory)(
         epochToProposalIdsP2PDbName,
-        appConfig.bifrost.cache.epochToProposalIds,
+        appConfig.node.cache.epochToProposalIds,
         Long.box
       )
       proposalVotingP2P <- makeCachedDb[F, (Epoch, ProposalId), (Epoch, ProposalId), Long](dataDir, levelDbFactory)(
         proposalVotingP2PDbName,
-        appConfig.bifrost.cache.proposalVoting,
+        appConfig.node.cache.proposalVoting,
         identity
       )
       epochToVersionIdsP2P <- makeCachedDb[F, Epoch, java.lang.Long, Set[VersionId]](dataDir, levelDbFactory)(
         epochToVersionIdsP2PDbName,
-        appConfig.bifrost.cache.epochToVersionIds,
+        appConfig.node.cache.epochToVersionIds,
         Long.box
       )
       versionIdToProposalP2P <- makeCachedDb[F, VersionId, java.lang.Integer, UpdateProposal](dataDir, levelDbFactory)(
         versionIdToProposalP2PDbName,
-        appConfig.bifrost.cache.versionIdToProposal,
+        appConfig.node.cache.versionIdToProposal,
         Int.box
       )
 
@@ -320,13 +320,13 @@ object DataStoresInit {
 
       epochToCreatedVersionIdsP2P <- makeCachedDb[F, Epoch, java.lang.Long, Set[VersionId]](dataDir, levelDbFactory)(
         epochToCreatedVersionIdsP2PDbName,
-        appConfig.bifrost.cache.epochToCreatedVersion,
+        appConfig.node.cache.epochToCreatedVersion,
         Long.box
       )
 
       versionVotingP2P <- makeCachedDb[F, (Epoch, VersionId), (Epoch, VersionId), Long](dataDir, levelDbFactory)(
         versionVotingP2PDbName,
-        appConfig.bifrost.cache.versionVoting,
+        appConfig.node.cache.versionVoting,
         identity
       )
 
@@ -412,13 +412,13 @@ object DataStoresInit {
       parentChildTree <- makeDb[F, BlockId, (Long, BlockId)](dataDir, levelDbFactory)(parentChildTreeDbName)
       slotDataStore <- makeCachedDb[F, BlockId, ByteString, SlotData](dataDir, levelDbFactory)(
         slotDataStoreDbName,
-        appConfig.bifrost.cache.slotData,
+        appConfig.node.cache.slotData,
         _.value
       )
       blockHeaderStore <- makeDb[F, BlockId, BlockHeader](dataDir, levelDbFactory)(blockHeaderStoreDbName)
       blockBodyStore <- makeCachedDb[F, BlockId, ByteString, BlockBody](dataDir, levelDbFactory)(
         blockBodyStoreDbName,
-        appConfig.bifrost.cache.slotData,
+        appConfig.node.cache.slotData,
         _.value
       )
       transactionStore <- makeDb[F, TransactionId, IoTransaction](dataDir, levelDbFactory)(transactionStoreDbName)
@@ -445,8 +445,8 @@ object DataStoresInit {
   def initializeData[F[_]: Async: Logger](
     appConfig: ApplicationConfig
   ): Resource[F, (FullBlock, DataStores[F])] =
-    appConfig.bifrost.bigBang match {
-      case privateBigBang: ApplicationConfig.Bifrost.BigBangs.Private =>
+    appConfig.node.bigBang match {
+      case privateBigBang: ApplicationConfig.Node.BigBangs.Private =>
         for {
           testnetStakerInitializers <- Sync[F]
             .delay(PrivateTestnet.stakerInitializers(privateBigBang.timestamp, privateBigBang.stakerCount))
@@ -459,7 +459,7 @@ object DataStoresInit {
                   testnetStakerInitializers,
                   privateBigBang.stakes,
                   PrivateTestnet.DefaultProtocolVersion,
-                  appConfig.bifrost.protocols(0)
+                  appConfig.node.protocols(0)
                 )
             )
             .toResource
@@ -474,14 +474,14 @@ object DataStoresInit {
             .traverse(index =>
               PrivateTestnet
                 .writeStaker[F](
-                  Path(interpolateBlockId(bigBangBlock.header.id)(appConfig.bifrost.staking.directory)),
+                  Path(interpolateBlockId(bigBangBlock.header.id)(appConfig.node.staking.directory)),
                   testnetStakerInitializers(index),
                   privateBigBang.stakes.fold(PrivateTestnet.defaultStake(privateBigBang.stakerCount))(_.apply(index))
                 )
                 .toResource
             )
         } yield (bigBangBlock, dataStores)
-      case publicBigBang: ApplicationConfig.Bifrost.BigBangs.Public =>
+      case publicBigBang: ApplicationConfig.Node.BigBangs.Public =>
         DataStoresInit
           .create[F](appConfig)(publicBigBang.genesisId)
           .flatMap(dataStores =>
@@ -515,9 +515,9 @@ object DataStoresInit {
 
   private def buildLevelDbFactory[F[_]: Async: Logger](appConfig: ApplicationConfig): Resource[F, DBFactory] =
     for {
-      databaseType <- appConfig.bifrost.data.databaseType
+      databaseType <- appConfig.node.data.databaseType
         .pure[F]
-        .ensure(new IllegalArgumentException(s"Invalid databaseType=${appConfig.bifrost.data.databaseType}"))(dbType =>
+        .ensure(new IllegalArgumentException(s"Invalid databaseType=${appConfig.node.data.databaseType}"))(dbType =>
           Set(DatabaseTypes.LevelDbJni, DatabaseTypes.LevelDbJava).contains(dbType)
         )
         .toResource
@@ -534,7 +534,7 @@ object DataStoresInit {
     dbFactory: DBFactory
   )(
     name:         String,
-    cacheConfig:  ApplicationConfig.Bifrost.Cache.CacheConfig,
+    cacheConfig:  ApplicationConfig.Node.Cache.CacheConfig,
     makeCacheKey: Key => CacheKey
   ): Resource[F, Store[F, Key, Value]] =
     makeDb[F, Key, Value](dataDir, dbFactory)(name)
@@ -552,7 +552,7 @@ object DataStoresInit {
     dbFactory: DBFactory
   )(
     name:              String,
-    cacheConfig:       ApplicationConfig.Bifrost.Cache.CacheConfig,
+    cacheConfig:       ApplicationConfig.Node.Cache.CacheConfig,
     makeCacheKey:      Key => CacheKey,
     containsCacheSize: Long
   ): Resource[F, Store[F, Key, Value]] =

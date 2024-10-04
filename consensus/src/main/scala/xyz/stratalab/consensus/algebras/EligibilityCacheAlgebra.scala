@@ -1,6 +1,6 @@
 package xyz.stratalab.consensus.algebras
 
-import co.topl.consensus.models.BlockId
+import xyz.stratalab.consensus.models.BlockId
 import xyz.stratalab.models.{Bytes, Slot}
 
 /**

@@ -1,8 +1,8 @@
-package co.topl.crypto.signing
+package xyz.stratalab.crypto.signing
 
-import co.topl.crypto.generation.EntropyToSeed
-import co.topl.crypto.generation.mnemonic.Entropy
-import co.topl.crypto.signing.eddsa.ECVRF25519
+import xyz.stratalab.crypto.generation.EntropyToSeed
+import xyz.stratalab.crypto.generation.mnemonic.Entropy
+import xyz.stratalab.crypto.signing.eddsa.ECVRF25519
 
 import java.security.SecureRandom
 

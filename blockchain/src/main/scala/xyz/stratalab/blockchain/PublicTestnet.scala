@@ -1,14 +1,14 @@
 package xyz.stratalab.blockchain
 
-import co.topl.brambl.models.box.Value.UpdateProposal
 import xyz.stratalab.config.ApplicationConfig
+import xyz.stratalab.sdk.models.box.Value.UpdateProposal
 
 import scala.concurrent.duration._
 
 object PublicTestnet {
 
-  val DefaultProtocol: ApplicationConfig.Bifrost.Protocol =
-    ApplicationConfig.Bifrost.Protocol(
+  val DefaultProtocol: ApplicationConfig.Node.Protocol =
+    ApplicationConfig.Node.Protocol(
       minAppVersion = "2.0.0",
       fEffective = xyz.stratalab.models.utility.Ratio(12, 100),
       vrfLddCutoff = 15,

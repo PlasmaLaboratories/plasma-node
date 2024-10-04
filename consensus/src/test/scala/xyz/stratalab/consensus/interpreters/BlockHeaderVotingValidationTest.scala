@@ -2,8 +2,6 @@ package xyz.stratalab.consensus.interpreters
 
 import cats.effect.IO
 import cats.implicits._
-import co.topl.brambl.models.box.Value.UpdateProposal
-import co.topl.consensus.models._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
@@ -11,12 +9,13 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.ClockAlgebra
 import xyz.stratalab.algebras.testInterpreters._
 import xyz.stratalab.consensus.interpreters.VotingEventSourceState.VotingData
-import xyz.stratalab.consensus.models.BlockHeaderValidationFailure
 import xyz.stratalab.consensus.models.BlockHeaderValidationFailures._
+import xyz.stratalab.consensus.models.{BlockHeaderValidationFailure, _}
 import xyz.stratalab.eventtree.EventSourcedState
 import xyz.stratalab.models.ModelGenerators.GenHelper
 import xyz.stratalab.models._
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
+import xyz.stratalab.sdk.models.box.Value.UpdateProposal
 
 import scala.collection.immutable.NumericRange
 import scala.concurrent.duration.FiniteDuration

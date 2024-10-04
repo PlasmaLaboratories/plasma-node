@@ -5,22 +5,22 @@ import cats.effect.kernel.Sync
 import cats.effect.{Async, Deferred, Resource}
 import cats.implicits._
 import cats.{Monad, MonadThrow}
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import co.topl.crypto.signing.Ed25519VRF
-import co.topl.node.models.{KnownHost, _}
 import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.Stats
 import xyz.stratalab.blockchain.BlockchainCore
-import xyz.stratalab.config.ApplicationConfig.Bifrost.NetworkProperties
+import xyz.stratalab.config.ApplicationConfig.Node.NetworkProperties
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.models.p2p._
 import xyz.stratalab.networking.blockchain.{BlockchainPeerClient, BlockchainPeerHandlerAlgebra}
 import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
 import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
 import xyz.stratalab.networking.p2p.{ConnectedPeer, DisconnectedPeer, PeerConnectionChange}
+import xyz.stratalab.node.models.{KnownHost, _}
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
 import xyz.stratalab.typeclasses.implicits._
 
 object ActorPeerHandlerBridgeAlgebra {
@@ -37,7 +37,7 @@ object ActorPeerHandlerBridgeAlgebra {
     ed25519VRF:              Resource[F, Ed25519VRF],
     networkCommands:         Topic[F, NetworkCommands]
   ): Resource[F, BlockchainPeerHandlerAlgebra[F]] = {
-    implicit val logger: Logger[F] = Slf4jLogger.getLoggerFromName("Bifrost.P2P")
+    implicit val logger: Logger[F] = Slf4jLogger.getLoggerFromName("Node.P2P")
 
     val networkAlgebra = new NetworkAlgebraImpl[F](blockchain.clock)
     val networkManager =

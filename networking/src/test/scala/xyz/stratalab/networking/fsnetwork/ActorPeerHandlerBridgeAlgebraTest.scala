@@ -5,16 +5,6 @@ import cats.effect.kernel.Sync
 import cats.effect.{Async, IO, Ref, Resource}
 import cats.implicits._
 import cats.{Applicative, MonadThrow}
-import co.topl.brambl.generators.ModelGenerators.arbitraryIoTransaction
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.models.{Datum, TransactionId}
-import co.topl.brambl.syntax.ioTransactionAsTransactionSyntaxOps
-import co.topl.brambl.validation.TransactionSyntaxError
-import co.topl.brambl.validation.algebras.TransactionSyntaxVerifier
-import co.topl.consensus.models._
-import co.topl.crypto.signing.Ed25519VRF
-import co.topl.node.models._
-import co.topl.quivr.runtime.DynamicContext
 import fs2.Stream
 import fs2.concurrent.Topic
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -24,10 +14,11 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.Stats.Implicits._
 import xyz.stratalab.algebras.testInterpreters.TestStore
 import xyz.stratalab.blockchain.{BlockchainCore, DataStores, Validators}
-import xyz.stratalab.config.ApplicationConfig.Bifrost.NetworkProperties
+import xyz.stratalab.config.ApplicationConfig.Node.NetworkProperties
 import xyz.stratalab.consensus.Consensus
 import xyz.stratalab.consensus.algebras.{ChainSelectionAlgebra, _}
-import xyz.stratalab.consensus.models.{BlockHeaderToBodyValidationFailure, BlockHeaderValidationFailure}
+import xyz.stratalab.consensus.models.{BlockHeaderToBodyValidationFailure, BlockHeaderValidationFailure, _}
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.interpreters.SchedulerClock
 import xyz.stratalab.ledger.Ledger
@@ -41,6 +32,14 @@ import xyz.stratalab.networking.fsnetwork.ActorPeerHandlerBridgeAlgebraTest._
 import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
 import xyz.stratalab.networking.fsnetwork.TestHelper.{BlockBodyOrTransactionErrorByName, arbitraryHost}
 import xyz.stratalab.networking.p2p.{ConnectedPeer, DisconnectedPeer, PeerConnectionChange}
+import xyz.stratalab.node.models._
+import xyz.stratalab.quivr.runtime.DynamicContext
+import xyz.stratalab.sdk.generators.ModelGenerators.arbitraryIoTransaction
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.models.{Datum, TransactionId}
+import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
+import xyz.stratalab.sdk.validation.TransactionSyntaxError
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import xyz.stratalab.typeclasses.implicits._
 
 import java.time.Instant

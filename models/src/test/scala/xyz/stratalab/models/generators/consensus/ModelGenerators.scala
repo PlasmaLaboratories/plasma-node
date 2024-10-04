@@ -1,9 +1,9 @@
 package xyz.stratalab.models.generators.consensus
 
 import cats.data.{Chain, NonEmptyChain}
-import co.topl.consensus.models._
 import com.google.protobuf.ByteString
 import org.scalacheck.{Arbitrary, Gen}
+import xyz.stratalab.consensus.models._
 import xyz.stratalab.models.generators.common.ModelGenerators._
 import xyz.stratalab.models.utility._
 

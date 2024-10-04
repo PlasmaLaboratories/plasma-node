@@ -3,20 +3,20 @@ package xyz.stratalab.blockchain
 import cats.effect.implicits._
 import cats.effect.{Async, Resource}
 import cats.implicits._
-import co.topl.brambl.validation.algebras.{TransactionAuthorizationVerifier, TransactionSyntaxVerifier}
-import co.topl.brambl.validation.{TransactionAuthorizationInterpreter, TransactionSyntaxInterpreter}
-import co.topl.consensus.models.BlockId
-import co.topl.quivr.api.Verifier.instances.verifierInstance
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.algebras.{ClockAlgebra, Stats}
 import xyz.stratalab.consensus.algebras._
 import xyz.stratalab.consensus.interpreters.VotingEventSourceState.VotingData
 import xyz.stratalab.consensus.interpreters._
+import xyz.stratalab.consensus.models.BlockId
 import xyz.stratalab.eventtree.EventSourcedState
 import xyz.stratalab.ledger.algebras._
 import xyz.stratalab.ledger.interpreters.ProposalEventSourceState.ProposalEventSourceStateType
 import xyz.stratalab.ledger.interpreters._
 import xyz.stratalab.models.{ProposalConfig, VersionId}
+import xyz.stratalab.quivr.api.Verifier.instances.verifierInstance
+import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionSyntaxVerifier}
+import xyz.stratalab.sdk.validation.{TransactionAuthorizationInterpreter, TransactionSyntaxInterpreter}
 import xyz.stratalab.typeclasses.implicits._
 
 trait Validators[F[_]] {

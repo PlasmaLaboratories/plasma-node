@@ -5,17 +5,17 @@ import cats.effect.implicits._
 import cats.effect.std.{Mutex, Queue}
 import cats.effect.{Async, Deferred, Resource}
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import co.topl.node.models._
 import fs2._
 import xyz.stratalab.codecs.bytes.tetra.TetraScodecCodecs._
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.codecs.bytes.typeclasses.Transmittable
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
 import xyz.stratalab.models.Bytes
 import xyz.stratalab.networking.multiplexer.{MultiplexedBuffer, MultiplexedReaderWriter}
 import xyz.stratalab.networking.p2p.ConnectedPeer
+import xyz.stratalab.node.models._
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
 
 import scala.concurrent.duration.FiniteDuration
 import scala.language.implicitConversions

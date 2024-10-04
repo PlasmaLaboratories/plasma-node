@@ -3,19 +3,19 @@ package xyz.stratalab.ledger.interpreters
 import cats.data.{NonEmptyChain, Validated, ValidatedNec}
 import cats.effect.Sync
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.box.Value.UpdateProposal
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.consensus.models.BlockId
-import co.topl.node.models.BlockBody
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.algebras.ClockAlgebra
 import xyz.stratalab.algebras.ClockAlgebra.implicits._
+import xyz.stratalab.consensus.models.BlockId
 import xyz.stratalab.ledger.algebras.BodyProposalValidationAlgebra
 import xyz.stratalab.ledger.interpreters.ProposalEventSourceState._
 import xyz.stratalab.ledger.models.BodySemanticErrors._
 import xyz.stratalab.ledger.models._
 import xyz.stratalab.models.{Epoch, _}
+import xyz.stratalab.node.models.BlockBody
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.transaction.IoTransaction
 import xyz.stratalab.typeclasses.implicits._
 
 object BodyProposalValidation {

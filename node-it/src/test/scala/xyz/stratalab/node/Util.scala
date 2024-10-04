@@ -7,20 +7,20 @@ import cats.effect.std.SecureRandom
 import cats.implicits._
 import xyz.stratalab.algebras.{NodeRpc, SynchronizationTraversalSteps}
 import xyz.stratalab.blockchain.{BigBang, PrivateTestnet, StakerInitializers, StakingInit}
-import co.topl.brambl.models._
-import co.topl.brambl.models.box.Value
-import co.topl.brambl.models.transaction.{IoTransaction, UnspentTransactionOutput}
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.models._
+import xyz.stratalab.sdk.models.box.Value
+import xyz.stratalab.sdk.models.transaction.{IoTransaction, UnspentTransactionOutput}
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import xyz.stratalab.config.ApplicationConfig
-import co.topl.consensus.models.{BlockId, ProtocolVersion}
-import co.topl.genus.services._
+import xyz.stratalab.consensus.models.{BlockId, ProtocolVersion}
+import xyz.stratalab.indexer.services._
 import xyz.stratalab.grpc.makeChannel
 import xyz.stratalab.interpreters.NodeRpcOps.clientAsNodeRpcApi
 import xyz.stratalab.models.utility._
-import co.topl.node.models.{BlockBody, FullBlock}
-import co.topl.node.services.NetworkControlRpcFs2Grpc
-import xyz.stratalab.transactiongenerator.interpreters.GenusWalletInitializer
+import xyz.stratalab.node.models.{BlockBody, FullBlock}
+import xyz.stratalab.node.services.NetworkControlRpcFs2Grpc
+import xyz.stratalab.transactiongenerator.interpreters.IndexerWalletInitializer
 import xyz.stratalab.transactiongenerator.models._
 import xyz.stratalab.typeclasses.implicits._
 import com.comcast.ip4s.Port
@@ -34,7 +34,7 @@ import org.http4s.ember.server._
 import org.http4s.server.Router
 import quivr.models.Int128
 import xyz.stratalab.models.p2p.HostId
-import co.topl.node.services._
+import xyz.stratalab.node.services._
 
 import java.nio.charset.StandardCharsets
 import scala.concurrent.duration._
@@ -223,15 +223,15 @@ object Util {
       .lastOrError
       .assert
 
-  def awaitGenusReady(blockService: BlockServiceFs2Grpc[F, Metadata]): F[Unit] =
+  def awaitIndexerReady(blockService: BlockServiceFs2Grpc[F, Metadata]): F[Unit] =
     blockService
       .getBlockByHeight(GetBlockByHeightRequest(ChainDistance(1)), new Metadata())
       .void
-      .handleErrorWith(_ => Async[F].delayBy(awaitGenusReady(blockService), 1.seconds))
+      .handleErrorWith(_ => Async[F].delayBy(awaitIndexerReady(blockService), 1.seconds))
 
-  def makeWallet[F[_]: Async](genusRpc: TransactionServiceFs2Grpc[F, Metadata]): Resource[F, Wallet] =
-    GenusWalletInitializer.make[F](genusRpc).flatMap(w => w.initialize.toResource).flatMap {
-      case w if w.spendableBoxes.isEmpty => makeWallet(genusRpc)
+  def makeWallet[F[_]: Async](indexerRpc: TransactionServiceFs2Grpc[F, Metadata]): Resource[F, Wallet] =
+    IndexerWalletInitializer.make[F](indexerRpc).flatMap(w => w.initialize.toResource).flatMap {
+      case w if w.spendableBoxes.isEmpty => makeWallet(indexerRpc)
       case w                             => w.pure[F].toResource
     }
 }
@@ -241,7 +241,7 @@ case class TestnetConfig(
   stakers:       List[(StakerInitializers.Operator, Int128)],
   unstakedTopls: List[UnspentTransactionOutput],
   lvls:          List[UnspentTransactionOutput],
-  protocol:      ApplicationConfig.Bifrost.Protocol
+  protocol:      ApplicationConfig.Node.Protocol
 ) {
 
   val protocolUtxo: UnspentTransactionOutput =
@@ -264,7 +264,7 @@ case class TestnetConfig(
 trait NodeControlRpc[F[_]] {
   def getHostId(): F[HostId]
   def forgetPeer(hostId: HostId): F[Unit]
-  def addPeer(ip: String, port: Int, HostIdOpt: Option[HostId]): F[Unit]
+  def addPeer(ip:        String, port: Int, HostIdOpt: Option[HostId]): F[Unit]
 }
 
 object NetworkControlClient {

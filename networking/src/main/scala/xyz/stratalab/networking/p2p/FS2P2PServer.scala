@@ -5,13 +5,13 @@ import cats.effect.implicits._
 import cats.effect.std.Random
 import cats.effect.{Async, Resource}
 import cats.implicits._
-import co.topl.crypto.signing.Ed25519
 import com.comcast.ip4s._
 import fs2.Stream
 import fs2.concurrent.Topic
 import fs2.io.net._
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
+import xyz.stratalab.crypto.signing.Ed25519
 import xyz.stratalab.models.Bytes
 import xyz.stratalab.models.p2p._
 import xyz.stratalab.networking.SocketAddressOps
@@ -29,7 +29,7 @@ object FS2P2PServer {
     ed25519Resource:         Resource[F, Ed25519]
   ): Resource[F, P2PServer[F]] =
     for {
-      implicit0(logger: Logger[F]) <- Slf4jLogger.fromName("Bifrost.P2P").toResource
+      implicit0(logger: Logger[F]) <- Slf4jLogger.fromName("Node.P2P").toResource
       _                            <- eventLogger(peersStatusChangesTopic)
       sockets                      <- socketsStream[F](host, port)
       peerInfoExtractor <- PeerIdentity

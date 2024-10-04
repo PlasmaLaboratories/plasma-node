@@ -2,21 +2,21 @@ package xyz.stratalab.transactiongenerator.interpreters
 
 import cats.effect._
 import cats.implicits._
-import co.topl.brambl.models.box.Box
-import co.topl.genus.services.{QueryByLockAddressRequest, TransactionServiceFs2Grpc, TxoState}
 import io.grpc.Metadata
+import xyz.stratalab.indexer.services.{QueryByLockAddressRequest, TransactionServiceFs2Grpc, TxoState}
+import xyz.stratalab.sdk.models.box.Box
 import xyz.stratalab.transactiongenerator.algebras.WalletInitializer
 import xyz.stratalab.transactiongenerator.models.Wallet
 
-object GenusWalletInitializer {
+object IndexerWalletInitializer {
 
-  def make[F[_]: Async](genusRpc: TransactionServiceFs2Grpc[F, Metadata]): Resource[F, WalletInitializer[F]] =
+  def make[F[_]: Async](indexerRpc: TransactionServiceFs2Grpc[F, Metadata]): Resource[F, WalletInitializer[F]] =
     Resource.pure[F, WalletInitializer[F]](
       new WalletInitializer[F] {
 
         def initialize: F[Wallet] =
           emptyWallet.propositions.keys.toList.foldLeftM(emptyWallet)((wallet, address) =>
-            genusRpc
+            indexerRpc
               .getTxosByLockAddress(
                 QueryByLockAddressRequest(address, None, TxoState.UNSPENT),
                 new Metadata()

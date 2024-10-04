@@ -4,13 +4,13 @@ import cats.MonadThrow
 import cats.effect.implicits._
 import cats.effect.{Async, Resource, Sync}
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.consensus.models.{BlockId, StakingAddress}
-import co.topl.node.models.BlockBody
 import xyz.stratalab.algebras.Store
+import xyz.stratalab.consensus.models.{BlockId, StakingAddress}
 import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
 import xyz.stratalab.ledger.algebras.RegistrationAccumulatorAlgebra
+import xyz.stratalab.node.models.BlockBody
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
 import xyz.stratalab.typeclasses.implicits._
 
 /**

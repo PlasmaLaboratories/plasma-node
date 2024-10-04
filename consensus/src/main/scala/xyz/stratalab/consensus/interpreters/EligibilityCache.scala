@@ -3,10 +3,10 @@ package xyz.stratalab.consensus.interpreters
 import cats.effect._
 import cats.effect.implicits._
 import cats.implicits._
-import co.topl.consensus.models._
 import com.google.protobuf.ByteString
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.consensus.algebras.EligibilityCacheAlgebra
+import xyz.stratalab.consensus.models._
 import xyz.stratalab.models._
 import xyz.stratalab.typeclasses.implicits._
 

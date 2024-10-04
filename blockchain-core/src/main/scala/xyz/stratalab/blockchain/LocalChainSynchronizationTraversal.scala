@@ -1,9 +1,9 @@
 package xyz.stratalab.blockchain
 
 import cats.effect.Async
-import co.topl.consensus.models.BlockId
 import fs2.{Chunk, Pipe, Pull, Stream}
 import xyz.stratalab.algebras.{SynchronizationTraversal, SynchronizationTraversalStep, SynchronizationTraversalSteps}
+import xyz.stratalab.consensus.models.BlockId
 import xyz.stratalab.eventtree.ParentChildTree
 
 /**

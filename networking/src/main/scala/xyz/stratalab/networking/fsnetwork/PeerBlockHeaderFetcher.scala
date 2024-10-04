@@ -5,9 +5,6 @@ import cats.data.{NonEmptyChain, OptionT}
 import cats.effect.kernel.{Async, Fiber}
 import cats.effect.{Resource, Spawn}
 import cats.implicits._
-import co.topl.consensus.models.{BlockId, SlotData}
-import co.topl.crypto.signing.Ed25519VRF
-import co.topl.node.models.BlockBody
 import fs2.Stream
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.actor.{Actor, Fsm}
@@ -16,6 +13,8 @@ import xyz.stratalab.catsutils.faAsFAClockOps
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.consensus._
 import xyz.stratalab.consensus.algebras.{ChainSelectionAlgebra, LocalChainAlgebra}
+import xyz.stratalab.consensus.models.{BlockId, SlotData}
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.models.p2p._
 import xyz.stratalab.networking.blockchain.BlockchainPeerClient
@@ -25,6 +24,7 @@ import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
 import xyz.stratalab.networking.fsnetwork.PeerBlockHeaderFetcher.CompareResult._
 import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
 import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
+import xyz.stratalab.node.models.BlockBody
 import xyz.stratalab.typeclasses.implicits._
 
 object PeerBlockHeaderFetcher {

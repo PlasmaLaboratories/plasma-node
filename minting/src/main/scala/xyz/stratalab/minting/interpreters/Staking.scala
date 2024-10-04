@@ -3,10 +3,6 @@ package xyz.stratalab.minting.interpreters
 import cats.data.OptionT
 import cats.effect._
 import cats.implicits._
-import co.topl.brambl.models.LockAddress
-import co.topl.consensus.models._
-import co.topl.crypto.hash.Blake2b256
-import co.topl.crypto.signing.Ed25519
 import com.google.protobuf.ByteString
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
@@ -15,10 +11,14 @@ import xyz.stratalab.catsutils._
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.codecs.bytes.typeclasses.implicits._
 import xyz.stratalab.consensus.algebras._
+import xyz.stratalab.consensus.models._
 import xyz.stratalab.consensus.thresholdEvidence
+import xyz.stratalab.crypto.hash.Blake2b256
+import xyz.stratalab.crypto.signing.Ed25519
 import xyz.stratalab.minting.algebras._
 import xyz.stratalab.minting.models.VrfHit
 import xyz.stratalab.models._
+import xyz.stratalab.sdk.models.LockAddress
 import xyz.stratalab.typeclasses.implicits._
 
 object Staking {
@@ -43,7 +43,7 @@ object Staking {
         new StakingAlgebra[F] {
 
           implicit private val logger: SelfAwareStructuredLogger[F] =
-            Slf4jLogger.getLoggerFromName[F]("Bifrost.Staking")
+            Slf4jLogger.getLoggerFromName[F]("Node.Staking")
           val address: F[StakingAddress] = a.pure[F]
           val rewardAddress: F[LockAddress] = _rewardAddress.pure[F]
 
@@ -78,7 +78,7 @@ object Staking {
                 show" stakingAddress=$a"
               _ <- OptionT.liftF(
                 Stats[F].recordGauge(
-                  "bifrost_staking_is_eligible",
+                  "node_staking_is_eligible",
                   "Boolean indicating if the staker is eligible in the current operational period.",
                   Map(),
                   if (isLeader) 1L else 0L
@@ -86,7 +86,7 @@ object Staking {
               )
               _ <- OptionT.liftF(
                 Stats[F].recordGauge(
-                  "bifrost_staking_relative_stake",
+                  "node_staking_relative_stake",
                   "Percentage of stake owned by the operator at the given slot.",
                   Map(),
                   (relativeStake.numerator / relativeStake.denominator).toLong

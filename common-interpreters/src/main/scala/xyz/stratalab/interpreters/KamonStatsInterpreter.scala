@@ -22,8 +22,8 @@ import xyz.stratalab.algebras.Stats
  * implicit0(metrics: Stats[F]) <- KamonStatsRef.make[F]
  *
  * Use:
- * Stats[F].incrementCounter("bifrost_counter", "description", Map("attributeKey" -> "attributeValue"))
- * Stats[F].recordGauge("bifrost_gauge", "description", Map("attributeKey" -> "attributeValue"))
+ * Stats[F].incrementCounter("node_counter", "description", Map("attributeKey" -> "attributeValue"))
+ * Stats[F].recordGauge("node_gauge", "description", Map("attributeKey" -> "attributeValue"))
  */
 object KamonStatsRef {
 

@@ -4,17 +4,17 @@ import cats.data.EitherT
 import cats.effect._
 import cats.effect.implicits._
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax.ioTransactionAsTransactionSyntaxOps
-import co.topl.brambl.validation.algebras.TransactionCostCalculator
-import co.topl.consensus.models.BlockId
-import co.topl.node.models.BlockBody
 import fs2.concurrent.Topic
 import xyz.stratalab.algebras.{ClockAlgebra, Stats}
+import xyz.stratalab.consensus.models.BlockId
 import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
 import xyz.stratalab.ledger.algebras.{MempoolAlgebra, TransactionRewardCalculatorAlgebra}
 import xyz.stratalab.ledger.models.MempoolGraph
+import xyz.stratalab.node.models.BlockBody
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
+import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
 import xyz.stratalab.typeclasses.implicits._
 
 object Mempool {
@@ -61,7 +61,7 @@ object Mempool {
                 for {
                   _ <- expireTransaction(transaction)
                   _ <- Stats[F].incrementCounter(
-                    "bifrost_mempool_transaction_expired",
+                    "node_mempool_transaction_expired",
                     "Counter when a transaction is expired from the mempool",
                     Map()
                   )
@@ -113,7 +113,7 @@ object Mempool {
                 EitherT(for {
                   adoptionsTopic <- adoptionsTopic.publish1(transactionId)
                   _ <- Stats[F].incrementCounter(
-                    "bifrost_mempool_transaction_published",
+                    "node_mempool_transaction_published",
                     "Counter when a transaction is published to the mempool topic",
                     Map()
                   )
@@ -126,7 +126,7 @@ object Mempool {
         def remove(transactionId: TransactionId): F[Unit] = for {
           _ <- fetchTransaction(transactionId).flatMap(removeWithExpiration)
           _ <- Stats[F].incrementCounter(
-            "bifrost_mempool_transaction_removed",
+            "node_mempool_transaction_removed",
             "Counter when a transaction is removed from the mempool",
             Map()
           )

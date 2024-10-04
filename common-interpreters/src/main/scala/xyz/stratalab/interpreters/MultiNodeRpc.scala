@@ -4,14 +4,14 @@ import cats.Foldable
 import cats.effect.Async
 import cats.effect.std.{Random, SecureRandom}
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.consensus.models.{BlockHeader, BlockId}
-import co.topl.node.models.BlockBody
-import co.topl.proto.node.{EpochData, NodeConfig}
 import fs2.Stream
 import xyz.stratalab.algebras.{NodeRpc, SynchronizationTraversalStep}
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
 import xyz.stratalab.models.Epoch
+import xyz.stratalab.node.models.BlockBody
+import xyz.stratalab.proto.node.{EpochData, NodeConfig}
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
 
 object MultiNodeRpc {
 

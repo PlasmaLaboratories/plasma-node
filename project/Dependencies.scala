@@ -11,8 +11,8 @@ object Dependencies {
   val orientDbVersion = "3.2.29"
   val ioGrpcVersion = "1.64.0"
   val http4sVersion = "0.23.26"
-  val protobufSpecsVersion = "2.0.0-beta3+3-bd44cc82-SNAPSHOT"
-  val bramblScVersion = "2.0.0-beta3+3-de74a6dd-SNAPSHOT"
+  val protobufSpecsVersion = "0.0.0+240-846957c2-SNAPSHOT"
+  val strataSdkVersion = "0.0.0+251-6feff317-SNAPSHOT"
 
   val catsSlf4j =
     "org.typelevel" %% "log4cats-slf4j" % "2.7.0"
@@ -107,12 +107,12 @@ object Dependencies {
     "org.http4s" %% "http4s-ember-server" % http4sVersion
   )
 
-  val bramblScCrypto = "co.topl" %% "crypto"     % bramblScVersion
-  val bramblScSdk = "co.topl"    %% "brambl-sdk" % bramblScVersion
-  val quivr4s = "co.topl"        %% "quivr4s"    % bramblScVersion
+  val bramblScCrypto = "xyz.stratalab" %% "crypto"     % strataSdkVersion
+  val bramblScSdk = "xyz.stratalab"    %% "strata-sdk" % strataSdkVersion
+  val quivr4s = "xyz.stratalab"        %% "quivr4s"    % strataSdkVersion
 
   val protobufSpecs: Seq[ModuleID] = Seq(
-    "co.topl" %% "protobuf-fs2" % protobufSpecsVersion
+    "xyz.stratalab" %% "protobuf-fs2" % protobufSpecsVersion
   )
 
   val ipaddress = "com.github.seancfoley" % "ipaddress" % "5.5.0"
@@ -235,7 +235,7 @@ object Dependencies {
     scodec ++
     cats
 
-  lazy val toplGrpc: Seq[ModuleID] =
+  lazy val grpc: Seq[ModuleID] =
     cats ++
     catsEffect ++
     mUnitTest ++
@@ -263,7 +263,7 @@ object Dependencies {
       // Add jna
     )
 
-  lazy val genus: Seq[ModuleID] =
+  lazy val indexer: Seq[ModuleID] =
     logging ++
     orientDb ++
     mUnitTest

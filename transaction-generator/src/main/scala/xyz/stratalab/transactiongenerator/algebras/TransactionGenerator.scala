@@ -1,6 +1,6 @@
 package xyz.stratalab.transactiongenerator.algebras
 
-import co.topl.brambl.models.transaction.IoTransaction
+import xyz.stratalab.sdk.models.transaction.IoTransaction
 
 /**
  * Responsible for the creation of (test/artificial) Transactions.  The Transactions should be valid,

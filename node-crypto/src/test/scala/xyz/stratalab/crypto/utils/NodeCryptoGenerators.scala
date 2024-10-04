@@ -1,7 +1,7 @@
-package co.topl.crypto.utils
+package xyz.stratalab.crypto.utils
 
-import co.topl.crypto.models._
 import org.scalacheck.{Arbitrary, Gen}
+import xyz.stratalab.crypto.models._
 
 object NodeCryptoGenerators {
   def genRandomlySizedByteArray: Gen[Array[Byte]] = Gen.listOf(Arbitrary.arbitrary[Byte]).map(_.toArray)

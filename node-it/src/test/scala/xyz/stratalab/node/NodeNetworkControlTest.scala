@@ -5,8 +5,8 @@ import cats.effect._
 import cats.effect.implicits._
 import cats.implicits._
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import co.topl.consensus.models.BlockId
-import co.topl.genus.services._
+import xyz.stratalab.consensus.models.BlockId
+import xyz.stratalab.indexer.services._
 import xyz.stratalab.grpc.NodeGrpc
 import xyz.stratalab.interpreters.NodeRpcOps.clientAsNodeRpcApi
 import xyz.stratalab.node.Util._
@@ -35,7 +35,7 @@ class NodeNetworkControlTest extends CatsEffectSuite {
   test("Two block-producing nodes that maintain consensus") {
     def configNodeA(dataDir: Path, stakingDir: Path, genesisBlockId: BlockId, genesisSourcePath: String): String =
       s"""
-         |bifrost:
+         |node:
          |  data:
          |    directory: $dataDir
          |  staking:
@@ -53,13 +53,13 @@ class NodeNetworkControlTest extends CatsEffectSuite {
          |  mempool:
          |    protection:
          |      enabled: false
-         |genus:
+         |indexer:
          |  enable: true
          |""".stripMargin
 
     def configNodeB(dataDir: Path, stakingDir: Path, genesisBlockId: BlockId, genesisSourcePath: String): String =
       s"""
-         |bifrost:
+         |node:
          |  data:
          |    directory: $dataDir
          |  staking:
@@ -78,7 +78,7 @@ class NodeNetworkControlTest extends CatsEffectSuite {
          |  mempool:
          |    protection:
          |      enabled: false
-         |genus:
+         |indexer:
          |  enable: false
          |""".stripMargin
 
@@ -123,11 +123,11 @@ class NodeNetworkControlTest extends CatsEffectSuite {
               rpcClients = List(rpcClientA, rpcClientB)
               implicit0(logger: Logger[F]) <- Slf4jLogger.fromName[F]("NodeNetworkControlTest").toResource
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
-              genusChannelA                <- xyz.stratalab.grpc.makeChannel[F](nodeAIp, nodeARpcPort, tls = false)
-              genusTxServiceA              <- TransactionServiceFs2Grpc.stubResource[F](genusChannelA)
-              genusBlockServiceA           <- BlockServiceFs2Grpc.stubResource[F](genusChannelA)
-              _                            <- awaitGenusReady(genusBlockServiceA).timeout(45.seconds).toResource
-              wallet                       <- makeWallet(genusTxServiceA)
+              indexerChannelA                <- xyz.stratalab.grpc.makeChannel[F](nodeAIp, nodeARpcPort, tls = false)
+              indexerTxServiceA              <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
+              indexerBlockServiceA           <- BlockServiceFs2Grpc.stubResource[F](indexerChannelA)
+              _                            <- awaitIndexerReady(indexerBlockServiceA).timeout(45.seconds).toResource
+              wallet                       <- makeWallet(indexerTxServiceA)
               _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
 
               // check consensus

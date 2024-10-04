@@ -3,10 +3,6 @@ package xyz.stratalab.consensus.interpreters
 import cats.effect.IO
 import cats.effect.implicits._
 import cats.implicits._
-import co.topl.brambl.utils.CatsUnsafeResource
-import co.topl.consensus.models.{BlockHeader, BlockId, SlotData, SlotId}
-import co.topl.crypto.hash.{Blake2b256, Blake2b512}
-import co.topl.crypto.signing.Ed25519VRF
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.Gen
@@ -15,13 +11,16 @@ import xyz.stratalab.algebras.ClockAlgebra
 import xyz.stratalab.algebras.Stats.Implicits._
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.codecs.bytes.typeclasses.implicits._
-import xyz.stratalab.consensus.models.VrfArgument
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData, SlotId, VrfArgument}
 import xyz.stratalab.consensus.{rhoToRhoNonceHash, _}
+import xyz.stratalab.crypto.hash.{Blake2b256, Blake2b512}
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.models.ModelGenerators._
 import xyz.stratalab.models._
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
 import xyz.stratalab.models.utility.HasLength.instances.byteStringLength
 import xyz.stratalab.models.utility._
+import xyz.stratalab.sdk.utils.CatsUnsafeResource
 
 class EtaCalculationSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

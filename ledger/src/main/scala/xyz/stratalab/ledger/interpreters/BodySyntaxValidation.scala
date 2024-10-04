@@ -4,14 +4,14 @@ import cats.data.{EitherT, NonEmptySet, ValidatedNec}
 import cats.effect.Sync
 import cats.implicits._
 import cats.{Foldable, Order, Parallel}
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.models.{TransactionId, TransactionOutputAddress}
-import co.topl.brambl.validation.algebras.TransactionSyntaxVerifier
-import co.topl.node.models.BlockBody
 import com.google.protobuf.ByteString
 import xyz.stratalab.algebras.Stats
 import xyz.stratalab.ledger.algebras._
 import xyz.stratalab.ledger.models._
+import xyz.stratalab.node.models.BlockBody
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.models.{TransactionId, TransactionOutputAddress}
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import xyz.stratalab.typeclasses.implicits._
 
 import scala.collection.immutable.SortedSet
@@ -115,7 +115,7 @@ object BodySyntaxValidation {
                   _             <- cond(!maximumReward.isEmpty)
                   _ <- EitherT.liftF(
                     Stats[F].recordHistogram(
-                      "bifrost_max_reward_lvl",
+                      "node_max_reward_lvl",
                       "Maximum reward in lvls.",
                       Map(),
                       maximumReward.lvl.toLong
@@ -123,7 +123,7 @@ object BodySyntaxValidation {
                   )
                   _ <- EitherT.liftF(
                     Stats[F].recordHistogram(
-                      "bifrost_max_reward_topl",
+                      "node_max_reward_topl",
                       "Maximum reward in topls.",
                       Map(),
                       maximumReward.topl.toLong
@@ -133,7 +133,7 @@ object BodySyntaxValidation {
                   _ <- cond(maximumReward.lvl >= claimedLvls)
                   _ <- EitherT.liftF(
                     Stats[F].recordHistogram(
-                      "bifrost_claimed_lvls",
+                      "node_claimed_lvls",
                       "Lvls claimed via transaction rewards.",
                       Map(),
                       claimedLvls.toLong
@@ -143,7 +143,7 @@ object BodySyntaxValidation {
                   _ <- cond(maximumReward.topl >= claimedTopls)
                   _ <- EitherT.liftF(
                     Stats[F].recordHistogram(
-                      "bifrost_claimed_topls",
+                      "node_claimed_topls",
                       "Topls claimed via transaction rewards.",
                       Map(),
                       claimedTopls.toLong
@@ -152,7 +152,7 @@ object BodySyntaxValidation {
                   claimedAssets = TransactionRewardCalculator.sumAssets(rewardTransaction.outputs)(_.value)
                   _ <- EitherT.liftF(
                     Stats[F].recordHistogram(
-                      "bifrost_claimed_assets",
+                      "node_claimed_assets",
                       "Assets claimed via transaction rewards.",
                       Map(),
                       claimedAssets.size.toLong

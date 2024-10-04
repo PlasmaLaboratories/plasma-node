@@ -5,19 +5,19 @@ import cats.data._
 import cats.effect._
 import cats.effect.std.Console
 import cats.implicits._
-import co.topl.brambl.models.LockAddress
-import co.topl.brambl.models.box.Value
-import co.topl.brambl.models.box.Value.UpdateProposal
-import co.topl.brambl.models.transaction.UnspentTransactionOutput
-import co.topl.brambl.syntax._
-import co.topl.consensus.models.BlockId
-import co.topl.node.models.{BlockBody, FullBlock}
 import com.google.protobuf.ByteString
 import com.google.protobuf.duration.Duration
 import fs2.io.file.Path
 import quivr.models.{Int128, Ratio}
 import xyz.stratalab.blockchain._
 import xyz.stratalab.codecs.bytes.tetra.instances._
+import xyz.stratalab.consensus.models.BlockId
+import xyz.stratalab.node.models.{BlockBody, FullBlock}
+import xyz.stratalab.sdk.models.LockAddress
+import xyz.stratalab.sdk.models.box.Value
+import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.transaction.UnspentTransactionOutput
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 import java.nio.charset.StandardCharsets
@@ -38,7 +38,7 @@ object InitNetworkHelpers {
           StageResultT.liftF(PrivateTestnet.HeightLockOneSpendingAddress.some.pure[F])
         case lockAddressStr =>
           EitherT
-            .fromEither[StageResultT[F, *]](co.topl.brambl.codecs.AddressCodecs.decodeAddress(lockAddressStr))
+            .fromEither[StageResultT[F, *]](xyz.stratalab.sdk.codecs.AddressCodecs.decodeAddress(lockAddressStr))
             .leftSemiflatTap(error => writeMessage(s"Invalid Lock Address. reason=$error input=$lockAddressStr"))
             .toOption
             .value
@@ -278,7 +278,7 @@ object InitNetworkHelpers {
   def saveConfig[F[_]: Async: Console](dir: Path, genesisId: BlockId): StageResultT[F, Unit] =
     for {
       configContents <-
-        show"""bifrost:
+        show"""node:
               |  big-bang:
               |    type: public
               |    genesis-id: $genesisId

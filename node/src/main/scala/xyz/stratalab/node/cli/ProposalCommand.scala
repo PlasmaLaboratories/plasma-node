@@ -2,14 +2,14 @@ package xyz.stratalab.node.cli
 
 import cats.effect.Async
 import cats.effect.std.Console
-import co.topl.brambl.models.box.Value
-import co.topl.brambl.models.box.Value.UpdateProposal
-import co.topl.brambl.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
-import co.topl.brambl.models.{Datum, Event, LockAddress}
 import com.google.protobuf.duration.Duration
 import fs2.io.file.Path
 import quivr.models.Ratio
 import xyz.stratalab.node.cli.ProposalCommand.Messages
+import xyz.stratalab.sdk.models.box.Value
+import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
+import xyz.stratalab.sdk.models.{Datum, Event, LockAddress}
 
 object ProposalCommand {
 

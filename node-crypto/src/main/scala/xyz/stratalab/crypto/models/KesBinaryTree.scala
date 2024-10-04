@@ -1,4 +1,4 @@
-package co.topl.crypto.models
+package xyz.stratalab.crypto.models
 
 sealed trait KesBinaryTree
 

@@ -1,10 +1,10 @@
 package xyz.stratalab.blockchain
 
-import co.topl.consensus.models.BlockId
 import fs2.Stream
 import xyz.stratalab.algebras.{ClockAlgebra, ProtocolConfigurationAlgebra}
 import xyz.stratalab.blockchain.algebras.EpochDataAlgebra
 import xyz.stratalab.consensus.Consensus
+import xyz.stratalab.consensus.models.BlockId
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.ledger.Ledger
 

@@ -2,11 +2,11 @@ package xyz.stratalab.networking.blockchain
 
 import cats.effect.{Async, Resource}
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.consensus.models._
-import co.topl.node.models._
+import xyz.stratalab.consensus.models._
 import xyz.stratalab.networking.multiplexer.MultiplexedBuffer
+import xyz.stratalab.node.models._
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
 
 /**
  * Holds several instances of MultiplexedBuffers, specific to blockchain purposes

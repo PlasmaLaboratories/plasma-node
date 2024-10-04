@@ -2,21 +2,21 @@ package xyz.stratalab.networking.fsnetwork
 
 import cats.data.NonEmptyChain
 import cats.implicits._
-import co.topl.brambl.generators.TransactionGenerator
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
-import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import co.topl.node.models.{BlockBody, KnownHost}
 import com.google.protobuf.ByteString
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalamock.function.FunctionAdapter1
 import org.scalamock.handlers.{CallHandler1, CallHandler2, CallHandler3}
 import xyz.stratalab.codecs.bytes.tetra.instances._
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
 import xyz.stratalab.models.ModelGenerators.GenHelper
 import xyz.stratalab.models.generators.consensus.ModelGenerators
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
 import xyz.stratalab.models.p2p._
 import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
+import xyz.stratalab.node.models.{BlockBody, KnownHost}
+import xyz.stratalab.sdk.generators.TransactionGenerator
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 import scala.annotation.tailrec

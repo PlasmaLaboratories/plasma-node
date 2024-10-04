@@ -6,7 +6,7 @@ import xyz.stratalab.models.utility.Ratio
 import scala.language.implicitConversions
 
 trait NumberOps {
-  import co.topl.brambl.syntax._
+  import xyz.stratalab.sdk.syntax._
 
   implicit def intAsInt128(int: Int): Int128 =
     BigInt(int)

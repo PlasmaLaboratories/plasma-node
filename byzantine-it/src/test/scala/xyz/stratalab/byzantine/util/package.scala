@@ -1,15 +1,15 @@
 package xyz.stratalab.byzantine
 
-import xyz.stratalab.algebras.ToplGenusRpc
+import xyz.stratalab.algebras.IndexerRpc
 import com.spotify.docker.client.DockerClient
 import scala.language.implicitConversions
 
 package object util {
 
-  implicit def rpcToGenusRpcApi[F[_]](rpc: ToplGenusRpc[F]): GenusRpcApi[F] =
-    new GenusRpcApi(rpc)
+  implicit def rpcToIndexerRpcApi[F[_]](rpc: IndexerRpc[F]): IndexerRpcApi[F] =
+    new IndexerRpcApi(rpc)
 
-  implicit def nodeToDockerApi(node: BifrostDockerNode)(implicit
+  implicit def nodeToDockerApi(node: DockerNode)(implicit
     dockerClient: DockerClient
   ): NodeDockerApi =
     new NodeDockerApi(node.containerId)

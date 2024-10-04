@@ -1,7 +1,7 @@
 package xyz.stratalab.ledger
 
-import co.topl.brambl.validation.algebras._
 import xyz.stratalab.ledger.algebras._
+import xyz.stratalab.sdk.validation.algebras._
 
 trait Ledger[F[_]] {
   def transactionSyntaxValidation: TransactionSyntaxVerifier[F]

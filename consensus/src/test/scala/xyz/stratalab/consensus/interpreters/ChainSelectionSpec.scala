@@ -2,20 +2,20 @@ package xyz.stratalab.consensus.interpreters
 
 import cats.effect.IO
 import cats.implicits._
-import co.topl.brambl.utils.CatsUnsafeResource
-import co.topl.consensus.models._
-import co.topl.crypto.hash.Blake2b512
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.algebras.Stats.Implicits._
+import xyz.stratalab.consensus.models._
 import xyz.stratalab.consensus.rhoToRhoTestHash
+import xyz.stratalab.crypto.hash.Blake2b512
 import xyz.stratalab.models.ModelGenerators._
 import xyz.stratalab.models._
 import xyz.stratalab.models.generators.common.ModelGenerators._
 import xyz.stratalab.models.utility.HasLength.instances._
 import xyz.stratalab.models.utility.Lengths._
 import xyz.stratalab.models.utility.{Lengths, Sized}
+import xyz.stratalab.sdk.utils.CatsUnsafeResource
 
 class ChainSelectionSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

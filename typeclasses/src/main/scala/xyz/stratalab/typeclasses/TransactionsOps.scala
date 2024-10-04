@@ -1,7 +1,7 @@
 package xyz.stratalab.typeclasses
 
-import co.topl.brambl.models.box.Value.UpdateProposal
-import co.topl.brambl.models.transaction.IoTransaction
+import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.transaction.IoTransaction
 
 trait TransactionsOps {
 

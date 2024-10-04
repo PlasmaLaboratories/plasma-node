@@ -1,10 +1,10 @@
 package xyz.stratalab.models
 
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.node.models.{BlockBody, FullBlockBody}
 import com.google.protobuf.ByteString
 import scodec.bits.ByteVector
+import xyz.stratalab.node.models.{BlockBody, FullBlockBody}
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
 
 import scala.language.implicitConversions
 

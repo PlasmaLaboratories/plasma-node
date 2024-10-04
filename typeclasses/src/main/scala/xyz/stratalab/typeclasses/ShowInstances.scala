@@ -2,16 +2,16 @@ package xyz.stratalab.typeclasses
 
 import cats.Show
 import cats.implicits._
-import co.topl.brambl.models.box.{Box, Value}
-import co.topl.brambl.models.transaction.SpentTransactionOutput
-import co.topl.brambl.models.{GroupId, SeriesId, TransactionId, TransactionOutputAddress}
-import co.topl.consensus.models.{BlockHeader, SlotId, StakingAddress}
-import co.topl.node.models.BlockBody
 import com.google.protobuf.ByteString
 import quivr.models.Int128
 import xyz.stratalab.codecs.bytes.tetra.instances._
+import xyz.stratalab.consensus.models.{BlockHeader, SlotId, StakingAddress}
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility._
+import xyz.stratalab.node.models.BlockBody
+import xyz.stratalab.sdk.models.box.{Box, Value}
+import xyz.stratalab.sdk.models.transaction.SpentTransactionOutput
+import xyz.stratalab.sdk.models.{GroupId, SeriesId, TransactionId, TransactionOutputAddress}
 
 import java.time.Instant
 
@@ -26,7 +26,7 @@ trait ShowInstances {
   implicit val showIoTransactionId: Show[TransactionId] =
     t => show"t_${t.value: Bytes}"
 
-  implicit val showBlockId: Show[co.topl.consensus.models.BlockId] =
+  implicit val showBlockId: Show[xyz.stratalab.consensus.models.BlockId] =
     b => show"b_${b.value: Bytes}"
 
   implicit val showConsensusSlotId: Show[SlotId] =

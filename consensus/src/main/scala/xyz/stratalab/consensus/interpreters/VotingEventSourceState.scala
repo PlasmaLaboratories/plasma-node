@@ -3,19 +3,19 @@ package xyz.stratalab.consensus.interpreters
 import cats._
 import cats.effect.Async
 import cats.implicits._
-import co.topl.brambl.models.box.Value.UpdateProposal
-import co.topl.consensus.models.{BlockHeader, BlockId}
-import co.topl.proto.node.EpochData
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.algebras.ClockAlgebra.implicits._
 import xyz.stratalab.algebras.StoreOps._
 import xyz.stratalab.algebras._
 import xyz.stratalab.consensus.algebras.VersionInfoAlgebra
 import xyz.stratalab.consensus.interpreters.EpochBoundariesEventSourcedState.EpochBoundaries
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
 import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
 import xyz.stratalab.ledger.interpreters.ProposalEventSourceState
 import xyz.stratalab.ledger.interpreters.ProposalEventSourceState.{ProposalData, ProposalEventSourceStateType}
 import xyz.stratalab.models._
+import xyz.stratalab.proto.node.EpochData
+import xyz.stratalab.sdk.models.box.Value.UpdateProposal
 import xyz.stratalab.typeclasses.implicits._
 
 object VotingEventSourceState {

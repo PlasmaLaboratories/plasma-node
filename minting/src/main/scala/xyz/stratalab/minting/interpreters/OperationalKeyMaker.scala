@@ -5,10 +5,6 @@ import cats.data._
 import cats.effect.implicits._
 import cats.effect.{Async, Deferred, MonadCancelThrow, Ref, Resource, Sync}
 import cats.implicits._
-import co.topl.consensus.models._
-import co.topl.crypto.generation.mnemonic.Entropy
-import co.topl.crypto.models.SecretKeyKesProduct
-import co.topl.crypto.signing._
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
 import org.typelevel.log4cats.Logger
@@ -18,6 +14,9 @@ import xyz.stratalab.algebras._
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.consensus.algebras.{ConsensusValidationStateAlgebra, LeaderElectionValidationAlgebra}
 import xyz.stratalab.consensus.models.{VrfConfig, _}
+import xyz.stratalab.crypto.generation.mnemonic.Entropy
+import xyz.stratalab.crypto.models.SecretKeyKesProduct
+import xyz.stratalab.crypto.signing._
 import xyz.stratalab.minting.algebras._
 import xyz.stratalab.minting.models.OperationalKeyOut
 import xyz.stratalab.models._

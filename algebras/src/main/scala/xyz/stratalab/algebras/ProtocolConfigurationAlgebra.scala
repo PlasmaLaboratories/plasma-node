@@ -1,6 +1,6 @@
 package xyz.stratalab.algebras
 
-import co.topl.proto.node.NodeConfig
+import xyz.stratalab.proto.node.NodeConfig
 
 /**
  * Configuration Rpc

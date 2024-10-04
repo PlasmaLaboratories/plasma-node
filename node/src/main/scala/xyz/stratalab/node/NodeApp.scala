@@ -5,10 +5,6 @@ import cats.effect.implicits._
 import cats.effect.std.{Random, SecureRandom}
 import cats.effect.{Async, IO, Resource, Sync}
 import cats.implicits._
-import co.topl.brambl.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
-import co.topl.consensus.models.BlockId
-import co.topl.crypto.hash.Blake2b512
-import co.topl.crypto.signing.Ed25519
 import com.google.protobuf.ByteString
 import com.typesafe.config.Config
 import fs2.io.file.Path
@@ -23,15 +19,17 @@ import xyz.stratalab.catsutils._
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.common.application.IOBaseApp
 import xyz.stratalab.config.ApplicationConfig
-import xyz.stratalab.config.ApplicationConfig.Bifrost.KnownPeer
+import xyz.stratalab.config.ApplicationConfig.Node.KnownPeer
 import xyz.stratalab.consensus._
 import xyz.stratalab.consensus.interpreters.VotingEventSourceState.VotingData
 import xyz.stratalab.consensus.interpreters._
-import xyz.stratalab.consensus.models.VrfConfig
+import xyz.stratalab.consensus.models.{BlockId, VrfConfig}
+import xyz.stratalab.crypto.hash.Blake2b512
+import xyz.stratalab.crypto.signing.Ed25519
 import xyz.stratalab.eventtree.ParentChildTree
-import xyz.stratalab.genus._
 import xyz.stratalab.grpc.HealthCheckGrpc
 import xyz.stratalab.healthcheck.HealthCheck
+import xyz.stratalab.indexer._
 import xyz.stratalab.interpreters._
 import xyz.stratalab.ledger.LedgerImpl
 import xyz.stratalab.ledger.interpreters.ProposalEventSourceState.ProposalData
@@ -44,6 +42,7 @@ import xyz.stratalab.networking.p2p.LocalPeer
 import xyz.stratalab.node.ApplicationConfigOps._
 import xyz.stratalab.node.cli.ConfiguredCliApp
 import xyz.stratalab.numerics.interpreters.{ExpInterpreter, Log1pInterpreter}
+import xyz.stratalab.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
 import xyz.stratalab.typeclasses.implicits._
 import xyz.stratalab.version.VersionReplicator
 
@@ -68,7 +67,7 @@ abstract class AbstractNodeApp
 }
 
 object AbstractNodeApp {
-  final val ConfigFileEnvironmentVariable = "BIFROST_CONFIG_FILE"
+  final val ConfigFileEnvironmentVariable = "NODE_CONFIG_FILE"
 }
 
 class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
@@ -81,7 +80,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
   private def applicationResource: Resource[F, Unit] =
     for {
       implicit0(syncF: Async[F])   <- Resource.pure(implicitly[Async[F]])
-      implicit0(logger: Logger[F]) <- Resource.pure(Slf4jLogger.getLoggerFromName[F]("Bifrost.Node"))
+      implicit0(logger: Logger[F]) <- Resource.pure(Slf4jLogger.getLoggerFromName[F]("Node.Node"))
 
       _ <- Sync[F].delay(LoggingUtils.initialize(args)).toResource
       _ <- Logger[F].info(show"Launching node with args=$args").toResource
@@ -122,7 +121,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         .toResource
 
       localPeer = LocalPeer(
-        RemoteAddress(appConfig.bifrost.p2p.bindHost, appConfig.bifrost.p2p.bindPort),
+        RemoteAddress(appConfig.node.p2p.bindHost, appConfig.node.p2p.bindPort),
         p2pVK,
         p2pSK
       )
@@ -131,7 +130,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
       bigBangSlotData <- dataStores.slotData.getOrRaise(bigBangBlockId).toResource
       _ <- Logger[F].info(show"Big Bang Block id=$bigBangBlockId timestamp=${bigBangBlock.header.timestamp}").toResource
 
-      stakingDir = Path(interpolateBlockId(bigBangBlockId)(appConfig.bifrost.staking.directory))
+      stakingDir = Path(interpolateBlockId(bigBangBlockId)(appConfig.node.staking.directory))
       _ <- Logger[F].info(show"Using stakingDir=$stakingDir").toResource
 
       currentEventIdGetterSetters = new CurrentEventIdGetterSetters[F](dataStores.currentEventIds)
@@ -198,7 +197,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           .pure[F]
           .rethrow
           .flatMap(protocol =>
-            appConfig.bifrost
+            appConfig.node
               .protocols(0)
               .epochLengthOverride
               .foldLeftM(
@@ -206,7 +205,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
               )((protocol, lengthOverride) =>
                 Logger[F].warn(s"Overriding epoch length to $lengthOverride slots") >>
                 protocol
-                  .copy(epochLengthOverride = appConfig.bifrost.protocols(0).epochLengthOverride)
+                  .copy(epochLengthOverride = appConfig.node.protocols(0).epochLengthOverride)
                   .pure[F]
               )
           )
@@ -228,7 +227,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         bigBangProtocol.vrfAmplitude
       )
       ntpClockSkewer <- NtpClockSkewer
-        .make[F](appConfig.bifrost.ntp.server, appConfig.bifrost.ntp.refreshInterval, appConfig.bifrost.ntp.timeout)
+        .make[F](appConfig.node.ntp.server, appConfig.node.ntp.refreshInterval, appConfig.node.ntp.timeout)
       clock <- SchedulerClock.make[F](
         bigBangProtocol.slotDuration,
         bigBangProtocol.epochLength,
@@ -341,8 +340,8 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
                 StakingInit
                   .makeStakingFromDisk(
                     stakingDir,
-                    appConfig.bifrost.staking.rewardAddress,
-                    appConfig.bifrost.staking.stakingAddress,
+                    appConfig.node.staking.rewardAddress,
+                    appConfig.node.staking.stakingAddress,
                     clock,
                     etaCalculation,
                     consensusValidationStateLocal,
@@ -363,11 +362,11 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
 
       eligibilityCache <-
         EligibilityCache
-          .make[F](appConfig.bifrost.cache.eligibilities.maximumEntries.toInt)
+          .make[F](appConfig.node.cache.eligibilities.maximumEntries.toInt)
           .evalTap(
             EligibilityCache.repopulate(
               _,
-              appConfig.bifrost.cache.eligibilities.maximumEntries.toInt,
+              appConfig.node.cache.eligibilities.maximumEntries.toInt,
               canonicalHead,
               dataStores.headers.getOrRaise
             )
@@ -411,26 +410,26 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           dataStores.registrationAccumulatorP2P.pure[F]
         )
 
-      genusOpt <- OptionT
-        .whenF(appConfig.genus.enable)(
-          Genus
+      indexerOpt <- OptionT
+        .whenF(appConfig.indexer.enable)(
+          Indexer
             .make[F](
-              appConfig.bifrost.rpc.bindHost,
-              appConfig.bifrost.rpc.bindPort,
+              appConfig.node.rpc.bindHost,
+              appConfig.node.rpc.bindPort,
               nodeRpcTls = false,
-              Some(appConfig.genus.orientDbDirectory)
+              Some(appConfig.indexer.orientDbDirectory)
                 .filterNot(_.isEmpty)
                 .getOrElse(dataStores.baseDirectory./("orient-db").toString),
-              appConfig.genus.orientDbPassword
+              appConfig.indexer.orientDbPassword
             )
         )
         .value
-      genusServices <- genusOpt.toList.flatTraverse(genus =>
-        GenusGrpc.Server.services(
-          genus.blockFetcher,
-          genus.transactionFetcher,
-          genus.vertexFetcher,
-          genus.valueFetcher
+      indexerServices <- indexerOpt.toList.flatTraverse(indexer =>
+        IndexerGrpc.Server.services(
+          indexer.blockFetcher,
+          indexer.transactionFetcher,
+          indexer.vertexFetcher,
+          indexer.valueFetcher
         )
       )
       healthCheck    <- HealthCheck.make[F]()
@@ -474,8 +473,8 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         .make[F](Sync[F].defer(localChain.head).map(_.slotId.blockId), epochDataEventSourcedStateLocal)
 
       softwareVersion <- OptionT
-        .whenF(appConfig.bifrost.versionInfo.enable)(
-          VersionReplicator.make[F](metadata, appConfig.bifrost.versionInfo.uri)
+        .whenF(appConfig.node.versionInfo.enable)(
+          VersionReplicator.make[F](metadata, appConfig.node.versionInfo.uri)
         )
         .value
 
@@ -488,7 +487,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         currentEventIdGetterSetters.mempool.set,
         clock,
         id => Logger[F].info(show"Expiring transaction id=$id"),
-        appConfig.bifrost.mempool.defaultExpirationSlots,
+        appConfig.node.mempool.defaultExpirationSlots,
         transactionRewardCalculator,
         costCalculator
       )
@@ -615,7 +614,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         .warnIfSlow("EventSourcedStates Update", 5.seconds)
         .toResource
 
-      p2pConfig = appConfig.bifrost.p2p
+      p2pConfig = appConfig.node.p2p
 
       validatorsLocal <- Validators.make[F](
         cryptoResources,
@@ -631,7 +630,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         votingLocal,
         proposalEventLocal,
         proposalConfig,
-        appConfig.bifrost.maxSupportedVersion
+        appConfig.node.maxSupportedVersion
       )
 
       validatorsP2P <- Validators.make[F](
@@ -648,7 +647,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         votingP2P,
         proposalEventLocal,
         proposalConfig,
-        appConfig.bifrost.maxSupportedVersion
+        appConfig.node.maxSupportedVersion
       )
 
       protectedMempool <- MempoolProtected.make(
@@ -666,7 +665,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
               slotData <- OptionT(dataStores.slotData.get(blockId))
             } yield slotData.height
           }.value,
-        appConfig.bifrost.mempool.protection
+        appConfig.node.mempool.protection
       )
 
       localBlockchain = BlockchainCoreImpl(
@@ -741,20 +740,20 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           eventSourcedStates,
           localPeer,
           p2pConfig.knownPeers,
-          appConfig.bifrost.rpc.bindHost,
-          appConfig.bifrost.rpc.bindPort,
-          appConfig.bifrost.rpc.networkControl,
-          genusServices ::: healthServices,
+          appConfig.node.rpc.bindHost,
+          appConfig.node.rpc.bindPort,
+          appConfig.node.rpc.networkControl,
+          indexerServices ::: healthServices,
           (p2pConfig.publicHost, p2pConfig.publicPort).mapN(KnownPeer),
           p2pConfig.networkProperties,
-          appConfig.bifrost.bigBang match {
-            case p: ApplicationConfig.Bifrost.BigBangs.Private => p.regtestEnabled
-            case _                                             => false
+          appConfig.node.bigBang match {
+            case p: ApplicationConfig.Node.BigBangs.Private => p.regtestEnabled
+            case _                                          => false
           }
         )
-        .parProduct(genusOpt.traverse(Replicator.background[F]).void)
+        .parProduct(indexerOpt.traverse(Replicator.background[F]).void)
         .parProduct(
-          softwareVersion.traverse(VersionReplicator.background[F](_, appConfig.bifrost.versionInfo.period)).void
+          softwareVersion.traverse(VersionReplicator.background[F](_, appConfig.node.versionInfo.period)).void
         )
     } yield ()
   // scalastyle:on method.length

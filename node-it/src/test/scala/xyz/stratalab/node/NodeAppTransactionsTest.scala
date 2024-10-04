@@ -5,10 +5,10 @@ import cats.effect.implicits._
 import cats.effect.std.{Random, SecureRandom}
 import cats.implicits._
 import xyz.stratalab.algebras.NodeRpc
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
-import co.topl.consensus.models.BlockId
-import co.topl.genus.services._
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.consensus.models.BlockId
+import xyz.stratalab.indexer.services._
 import xyz.stratalab.grpc.NodeGrpc
 import xyz.stratalab.interpreters.NodeRpcOps.clientAsNodeRpcApi
 import xyz.stratalab.node.Util._
@@ -21,8 +21,8 @@ import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import cats.data.Chain
-import co.topl.brambl.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
-import co.topl.brambl.validation.algebras.TransactionCostCalculator
+import xyz.stratalab.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
+import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
 import xyz.stratalab.ledger.models._
 
 import scala.concurrent.duration._
@@ -50,7 +50,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
     useMempoolForSemanticIfLess: Double = 100
   ): String =
     s"""
-       |bifrost:
+       |node:
        |  data:
        |    directory: $dataDir
        |  staking:
@@ -70,7 +70,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
        |      protection-enabled-threshold-percent: 0
        |      max-mempool-size: $maxMempoolSize
        |      use-mempool-for-semantic-threshold-percent: $useMempoolForSemanticIfLess
-       |genus:
+       |indexer:
        |  enable: true
        |""".stripMargin
 
@@ -84,7 +84,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
     useMempoolForSemanticIfLess: Double = 100
   ): String =
     s"""
-       |bifrost:
+       |node:
        |  data:
        |    directory: $dataDir
        |  staking:
@@ -105,7 +105,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
        |      protection-enabled-threshold-percent: 0
        |      max-mempool-size: $maxMempoolSize
        |      use-mempool-for-semantic-threshold-percent: $useMempoolForSemanticIfLess
-       |genus:
+       |indexer:
        |  enable: false
        |""".stripMargin
 
@@ -154,11 +154,11 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               rpcClients = List(rpcClientA, rpcClientB)
               implicit0(logger: Logger[F]) <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
-              genusChannelA                <- xyz.stratalab.grpc.makeChannel[F]("127.0.0.2", rpcPortA, tls = false)
-              genusTxServiceA              <- TransactionServiceFs2Grpc.stubResource[F](genusChannelA)
-              genusBlockServiceA           <- BlockServiceFs2Grpc.stubResource[F](genusChannelA)
-              _                            <- awaitGenusReady(genusBlockServiceA).timeout(45.seconds).toResource
-              wallet                       <- makeWallet(genusTxServiceA)
+              indexerChannelA                <- xyz.stratalab.grpc.makeChannel[F]("127.0.0.2", rpcPortA, tls = false)
+              indexerTxServiceA              <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
+              indexerBlockServiceA           <- BlockServiceFs2Grpc.stubResource[F](indexerChannelA)
+              _                            <- awaitIndexerReady(indexerBlockServiceA).timeout(45.seconds).toResource
+              wallet                       <- makeWallet(indexerTxServiceA)
               _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
               implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F].toResource
 
@@ -242,15 +242,15 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               rpcClients = List(rpcClientA, rpcClientB)
               implicit0(logger: Logger[F]) <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
-              genusChannelA                <- xyz.stratalab.grpc.makeChannel[F]("127.0.0.4", rpcPortA, tls = false)
-              genusTxServiceA              <- TransactionServiceFs2Grpc.stubResource[F](genusChannelA)
-              genusBlockServiceA           <- BlockServiceFs2Grpc.stubResource[F](genusChannelA)
-              _                            <- awaitGenusReady(genusBlockServiceA).timeout(45.seconds).toResource
+              indexerChannelA                <- xyz.stratalab.grpc.makeChannel[F]("127.0.0.4", rpcPortA, tls = false)
+              indexerTxServiceA              <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
+              indexerBlockServiceA           <- BlockServiceFs2Grpc.stubResource[F](indexerChannelA)
+              _                            <- awaitIndexerReady(indexerBlockServiceA).timeout(45.seconds).toResource
               implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F].toResource
 
               _ <- rpcClients.parTraverse(fetchUntilHeight(_, height)).toResource
 
-              wallet <- makeWallet(genusTxServiceA)
+              wallet <- makeWallet(indexerTxServiceA)
               _      <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
               transactionGenerator <-
                 Fs2TransactionGenerator
@@ -356,14 +356,14 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               rpcClients = List(rpcClientA, rpcClientB)
               implicit0(logger: Logger[F]) <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
-              genusChannelA                <- xyz.stratalab.grpc.makeChannel[F]("127.0.0.6", rpcPortA, tls = false)
-              genusTxServiceA              <- TransactionServiceFs2Grpc.stubResource[F](genusChannelA)
-              genusBlockServiceA           <- BlockServiceFs2Grpc.stubResource[F](genusChannelA)
-              _                            <- awaitGenusReady(genusBlockServiceA).timeout(45.seconds).toResource
+              indexerChannelA                <- xyz.stratalab.grpc.makeChannel[F]("127.0.0.6", rpcPortA, tls = false)
+              indexerTxServiceA              <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
+              indexerBlockServiceA           <- BlockServiceFs2Grpc.stubResource[F](indexerChannelA)
+              _                            <- awaitIndexerReady(indexerBlockServiceA).timeout(45.seconds).toResource
 
               _ <- rpcClients.parTraverse(fetchUntilHeight(_, height)).toResource
 
-              wallet                       <- makeWallet(genusTxServiceA)
+              wallet                       <- makeWallet(indexerTxServiceA)
               _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
               implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F].toResource
 

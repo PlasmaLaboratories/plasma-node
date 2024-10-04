@@ -5,13 +5,13 @@ import cats.data.{NonEmptyChain, Validated}
 import cats.effect.IO
 import cats.effect.kernel.Async
 import cats.implicits._
-import co.topl.consensus.models.{BlockId, SlotData, SlotId}
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.algebras.Stats.Implicits._
 import xyz.stratalab.consensus.algebras.ChainSelectionAlgebra
+import xyz.stratalab.consensus.models.{BlockId, SlotData, SlotId}
 import xyz.stratalab.eventtree.EventSourcedState
 import xyz.stratalab.models.ModelGenerators._
 import xyz.stratalab.models.generators.common.ModelGenerators.genSizedStrictByteString

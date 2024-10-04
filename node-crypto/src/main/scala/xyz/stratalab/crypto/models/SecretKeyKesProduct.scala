@@ -1,4 +1,4 @@
-package co.topl.crypto.models
+package xyz.stratalab.crypto.models
 
 case class SecretKeyKesProduct(
   superTree:    KesBinaryTree, // Hour hand
