@@ -14,6 +14,10 @@ import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGenerator}
 import xyz.stratalab.sdk.models.Event.SeriesPolicy
 import xyz.stratalab.sdk.models.TransactionOutputAddress
 import xyz.stratalab.sdk.syntax.seriesPolicyAsSeriesPolicySyntaxOps
+import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGenerator}
+import xyz.stratalab.sdk.models.Event.SeriesPolicy
+import xyz.stratalab.sdk.models.TransactionOutputAddress
+import xyz.stratalab.sdk.syntax.seriesPolicyAsSeriesPolicySyntaxOps
 
 import scala.jdk.CollectionConverters._
 

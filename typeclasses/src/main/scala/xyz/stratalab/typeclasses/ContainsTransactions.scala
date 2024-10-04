@@ -8,6 +8,10 @@ import xyz.stratalab.crypto.accumulators.LeafData
 import xyz.stratalab.crypto.accumulators.merkle.MerkleTree
 import xyz.stratalab.crypto.hash.digest.{Digest, Digest32, InvalidDigestFailure}
 import xyz.stratalab.crypto.hash.{Blake2b, Blake2bHash}
+import xyz.stratalab.crypto.accumulators.LeafData
+import xyz.stratalab.crypto.accumulators.merkle.MerkleTree
+import xyz.stratalab.crypto.hash.digest.{Digest, Digest32, InvalidDigestFailure}
+import xyz.stratalab.crypto.hash.{Blake2b, Blake2bHash}
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility.HasLength.instances._
 import xyz.stratalab.models.utility.Lengths._
