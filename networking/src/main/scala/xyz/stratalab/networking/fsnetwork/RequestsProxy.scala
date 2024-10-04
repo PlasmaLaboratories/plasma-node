@@ -3,8 +3,6 @@ package xyz.stratalab.networking.fsnetwork
 import cats.data.{NonEmptyChain, OptionT}
 import cats.effect.{Async, Resource}
 import cats.implicits._
-import co.topl.consensus.models.{BlockHeader, BlockId, SlotData, SlotId}
-import co.topl.node.models.BlockBody
 import com.github.benmanes.caffeine.cache.{Cache, Caffeine}
 import org.typelevel.log4cats.Logger
 import scalacache.Entry
@@ -12,11 +10,13 @@ import scalacache.caffeine.CaffeineCache
 import xyz.stratalab.actor.{Actor, Fsm}
 import xyz.stratalab.algebras.Store
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData, SlotId}
 import xyz.stratalab.models.p2p._
 import xyz.stratalab.networking.fsnetwork.BlockChecker.BlockCheckerActor
 import xyz.stratalab.networking.fsnetwork.BlockDownloadError.{BlockBodyOrTransactionError, BlockHeaderDownloadError}
 import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
 import xyz.stratalab.networking.fsnetwork.RequestsProxy.Message._
+import xyz.stratalab.node.models.BlockBody
 import xyz.stratalab.typeclasses.implicits._
 
 import scala.annotation.nowarn

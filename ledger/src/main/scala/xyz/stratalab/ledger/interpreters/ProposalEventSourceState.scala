@@ -3,18 +3,18 @@ package xyz.stratalab.ledger.interpreters
 import cats._
 import cats.effect.Async
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.box.Value.UpdateProposal
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.consensus.models.{BlockHeader, BlockId}
-import co.topl.crypto.hash.Blake2b256
-import co.topl.node.models._
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.algebras.ClockAlgebra.implicits._
 import xyz.stratalab.algebras.StoreOps._
 import xyz.stratalab.algebras._
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
+import xyz.stratalab.crypto.hash.Blake2b256
 import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
 import xyz.stratalab.models._
+import xyz.stratalab.node.models._
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.transaction.IoTransaction
 import xyz.stratalab.typeclasses.implicits._
 
 import java.nio.ByteBuffer

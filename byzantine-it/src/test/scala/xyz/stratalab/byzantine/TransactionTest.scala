@@ -5,11 +5,11 @@ import cats.effect.Async
 import cats.implicits._
 import xyz.stratalab.algebras.NodeRpc
 import xyz.stratalab.blockchain.PrivateTestnet
-import co.topl.brambl.builders.locks.PropositionTemplate
-import co.topl.brambl.models._
-import co.topl.brambl.models.box._
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.builders.locks.PropositionTemplate
+import xyz.stratalab.sdk.models._
+import xyz.stratalab.sdk.models.box._
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.byzantine.transactions.{Locks, TransactionFactory, Wallet}
 import xyz.stratalab.byzantine.util._
 import xyz.stratalab.interpreters.NodeRpcOps._
@@ -64,17 +64,17 @@ class TransactionTest extends IntegrationSuite {
         node1 <- dockerSupport.createNode(
           "TransactionTest-node1",
           "TransactionTest",
-          TestNodeConfig(genusEnabled = true)
+          TestNodeConfig(indexerEnabled = true)
         )
         _ <- node1.startContainer[F].toResource
 
         node1Client  <- node1.rpcClient[F](node1.config.rpcPort, tls = false)
-        genus1Client <- node1.rpcGenusClient[F](node1.config.rpcPort, tls = false)
+        indexer1Client <- node1.rpcIndexerClient[F](node1.config.rpcPort, tls = false)
         _            <- node1Client.waitForRpcStartUp.toResource
-        _            <- genus1Client.waitForRpcStartUp.toResource
+        _            <- indexer1Client.waitForRpcStartUp.toResource
 
-        _             <- Logger[F].info("Fetching genesis block Genus Grpc Client").toResource
-        blockResponse <- genus1Client.blockIdAtHeight(1).toResource
+        _             <- Logger[F].info("Fetching genesis block Indexer Grpc Client").toResource
+        blockResponse <- indexer1Client.blockIdAtHeight(1).toResource
         // blockResponse transactions outputs(10000000 TOPL and 10000000 LVL)
         genesisToplTx = blockResponse.block.fullBody.transactions(0) // 10000000 TOPL
         genesisLvlTx = blockResponse.block.fullBody.transactions(1) // 10000000 LVL

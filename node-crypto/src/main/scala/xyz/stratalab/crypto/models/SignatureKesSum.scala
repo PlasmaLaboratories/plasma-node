@@ -1,4 +1,4 @@
-package co.topl.crypto.models
+package xyz.stratalab.crypto.models
 
 case class SignatureKesSum(
   verificationKey: Array[Byte],

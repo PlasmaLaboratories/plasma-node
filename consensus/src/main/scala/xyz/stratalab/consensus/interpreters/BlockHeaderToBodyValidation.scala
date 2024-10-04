@@ -2,12 +2,12 @@ package xyz.stratalab.consensus.interpreters
 
 import cats.effect.kernel.Sync
 import cats.implicits.{catsSyntaxApplicativeId, catsSyntaxEq}
-import co.topl.node.models.Block
 import xyz.stratalab.consensus.algebras.BlockHeaderToBodyValidationAlgebra
 import xyz.stratalab.consensus.models.BlockHeaderToBodyValidationFailure
 import xyz.stratalab.consensus.models.BlockHeaderToBodyValidationFailure.IncorrectTxRoot
 import xyz.stratalab.models.utility.HasLength.instances._
 import xyz.stratalab.models.utility._
+import xyz.stratalab.node.models.Block
 import xyz.stratalab.typeclasses.implicits._
 
 object BlockHeaderToBodyValidation {

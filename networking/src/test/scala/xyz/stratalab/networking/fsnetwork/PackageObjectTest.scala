@@ -4,7 +4,6 @@ import cats.data.NonEmptyChain
 import cats.effect.IO
 import cats.implicits._
 import cats.{MonadThrow, Show}
-import co.topl.consensus.models.{BlockId, SlotData}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.Gen
 import org.scalacheck.effect.PropF
@@ -12,6 +11,7 @@ import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.SelfAwareStructuredLogger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.Store
+import xyz.stratalab.consensus.models.{BlockId, SlotData}
 import xyz.stratalab.models.ModelGenerators.GenHelper
 import xyz.stratalab.models.generators.consensus.ModelGenerators
 import xyz.stratalab.networking.fsnetwork.BlockCheckerTest.F

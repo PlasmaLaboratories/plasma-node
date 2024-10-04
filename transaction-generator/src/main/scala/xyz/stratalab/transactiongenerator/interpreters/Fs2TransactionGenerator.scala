@@ -5,19 +5,19 @@ import cats.effect._
 import cats.effect.std.Random
 import cats.implicits._
 import cats.{Applicative, Monad}
-import co.topl.brambl.common.ContainsSignable._
-import co.topl.brambl.common.ContainsSignable.instances._
-import co.topl.brambl.models.box._
-import co.topl.brambl.models.transaction._
-import co.topl.brambl.models.{Datum, Event, TransactionOutputAddress}
-import co.topl.brambl.syntax._
-import co.topl.brambl.validation.algebras.TransactionCostCalculator
-import co.topl.quivr.api.Prover
 import com.google.protobuf.ByteString
 import fs2._
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import quivr.models.SmallData
+import xyz.stratalab.quivr.api.Prover
+import xyz.stratalab.sdk.common.ContainsSignable._
+import xyz.stratalab.sdk.common.ContainsSignable.instances._
+import xyz.stratalab.sdk.models.box._
+import xyz.stratalab.sdk.models.transaction._
+import xyz.stratalab.sdk.models.{Datum, Event, TransactionOutputAddress}
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
 import xyz.stratalab.transactiongenerator.algebras.TransactionGenerator
 import xyz.stratalab.transactiongenerator.models.Wallet
 import xyz.stratalab.typeclasses.implicits._

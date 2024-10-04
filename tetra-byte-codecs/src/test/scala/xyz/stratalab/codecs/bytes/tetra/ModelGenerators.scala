@@ -1,14 +1,14 @@
 package xyz.stratalab.codecs.bytes.tetra
 
 import cats.data.NonEmptyChain
-import co.topl.brambl.generators.ModelGenerators.arbitraryIoTransaction
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax.TransactionSyntax
-import co.topl.consensus.models.{BlockHeader, ProtocolVersion, SlotData}
-import co.topl.node.models.BlockBody
 import org.scalacheck.{Arbitrary, Gen}
 import xyz.stratalab.codecs.bytes.tetra.instances._
+import xyz.stratalab.consensus.models.{BlockHeader, ProtocolVersion, SlotData}
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
+import xyz.stratalab.node.models.BlockBody
+import xyz.stratalab.sdk.generators.ModelGenerators.arbitraryIoTransaction
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.syntax.TransactionSyntax
 
 import scala.annotation.tailrec
 

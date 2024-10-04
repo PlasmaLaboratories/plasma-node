@@ -1,7 +1,7 @@
 package xyz.stratalab.minting.models
 
-import co.topl.consensus.models._
 import com.google.protobuf.ByteString
+import xyz.stratalab.consensus.models._
 import xyz.stratalab.models.Slot
 
 case class OperationalKeyOut(

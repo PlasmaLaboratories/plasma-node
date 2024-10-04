@@ -4,11 +4,6 @@ import cats.data.NonEmptyChain
 import cats.effect.{IO, Resource}
 import cats.implicits._
 import cats.{MonadThrow, Show}
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.validation.algebras.TransactionCostCalculator
-import co.topl.consensus.models._
-import co.topl.node.models.{BlockBody, CurrentKnownHostsReq, CurrentKnownHostsRes, KnownHost}
 import fs2._
 import fs2.concurrent.Topic
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -19,6 +14,7 @@ import xyz.stratalab.algebras.Store
 import xyz.stratalab.blockchain.{BlockchainCore, DataStores}
 import xyz.stratalab.consensus.Consensus
 import xyz.stratalab.consensus.algebras.LocalChainAlgebra
+import xyz.stratalab.consensus.models._
 import xyz.stratalab.ledger.Ledger
 import xyz.stratalab.ledger.algebras.{MempoolAlgebra, TransactionRewardCalculatorAlgebra}
 import xyz.stratalab.ledger.models.{MempoolGraph, RewardQuantities}
@@ -30,6 +26,10 @@ import xyz.stratalab.networking.fsnetwork.RemotePeer
 import xyz.stratalab.networking.fsnetwork.TestHelper._
 import xyz.stratalab.networking.p2p.PeerConnectionChanges.RemotePeerApplicationLevel
 import xyz.stratalab.networking.p2p.{ConnectedPeer, PeerConnectionChange}
+import xyz.stratalab.node.models.{BlockBody, CurrentKnownHostsReq, CurrentKnownHostsRes, KnownHost}
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
 
 import scala.concurrent.duration._
 

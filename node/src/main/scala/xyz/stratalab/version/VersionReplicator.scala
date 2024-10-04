@@ -54,7 +54,7 @@ object VersionReplicator {
           lsv <- interpreter.fetchLatestSoftwareVersion()
 
           /**
-           * current log: INFO  Bifrost.Node - Software Version:[2.0.0-alpha10-59-49f994b7-20231129-1055] - Latest:[Some("v2.0.0-alpha10")]
+           * current log: INFO  Node.Node - Software Version:[2.0.0-alpha10-59-49f994b7-20231129-1055] - Latest:[Some("v2.0.0-alpha10")]
            * We could raise a warning when current < latest, (patch, minor or mayor), do it later when alpha, beta pattern is deprecated
            *  - 2.0.0 < "v2.0.1"
            *  - 2.0.0 < "v2.1.0"

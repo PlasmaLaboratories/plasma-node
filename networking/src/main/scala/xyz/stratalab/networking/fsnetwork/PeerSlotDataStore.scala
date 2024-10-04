@@ -2,11 +2,11 @@ package xyz.stratalab.networking.fsnetwork
 
 import cats.effect.Sync
 import cats.implicits._
-import co.topl.consensus.models.{BlockId, SlotData}
 import com.github.benmanes.caffeine.cache.Caffeine
 import scalacache.Entry
 import scalacache.caffeine.CaffeineCache
 import xyz.stratalab.algebras.{Store, StoreReader}
+import xyz.stratalab.consensus.models.{BlockId, SlotData}
 
 case class PeerSlotDataStoreConfig(cacheSize: Long)
 

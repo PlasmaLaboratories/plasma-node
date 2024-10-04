@@ -5,12 +5,12 @@ import cats.effect.implicits._
 import cats.effect.kernel.Sync
 import cats.effect.{Async, Ref, Resource}
 import cats.implicits._
-import co.topl.consensus.models._
 import fs2.concurrent.Topic
 import org.typelevel.log4cats._
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.Stats
 import xyz.stratalab.consensus.algebras._
+import xyz.stratalab.consensus.models._
 import xyz.stratalab.eventtree.EventSourcedState
 import xyz.stratalab.typeclasses.implicits._
 
@@ -32,7 +32,7 @@ object LocalChain {
       new LocalChainAlgebra[F] {
 
         implicit private val logger: SelfAwareStructuredLogger[F] =
-          Slf4jLogger.getLoggerFromName[F]("Bifrost.LocalChain")
+          Slf4jLogger.getLoggerFromName[F]("Node.LocalChain")
 
         def isWorseThan(newHeadChain: NonEmptyChain[SlotData]): F[Boolean] = {
           val idToSd = newHeadChain.map(sd => (sd.slotId.blockId, sd)).toList.toMap
@@ -55,13 +55,13 @@ object LocalChain {
             onAdopted(slotData.slotId.blockId) >>
             headRef.set(slotData) >>
             Stats[F].recordGauge(
-              "bifrost_block_adoptions_height",
+              "node_block_adoptions_height",
               "Block adoptions",
               Map(),
               slotData.height
             ) >>
             Stats[F].recordGauge(
-              "bifrost_block_adoptions_slot",
+              "node_block_adoptions_slot",
               "Block adoptions",
               Map(),
               slotData.slotId.slot

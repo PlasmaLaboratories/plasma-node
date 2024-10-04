@@ -1,6 +1,6 @@
 package xyz.stratalab.ledger.algebras
 
-import co.topl.consensus.models.{BlockId, StakingAddress}
+import xyz.stratalab.consensus.models.{BlockId, StakingAddress}
 
 trait RegistrationAccumulatorAlgebra[F[_]] {
 

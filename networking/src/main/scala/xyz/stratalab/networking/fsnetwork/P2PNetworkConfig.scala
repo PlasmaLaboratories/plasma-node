@@ -1,6 +1,6 @@
 package xyz.stratalab.networking.fsnetwork
 
-import xyz.stratalab.config.ApplicationConfig.Bifrost.NetworkProperties
+import xyz.stratalab.config.ApplicationConfig.Node.NetworkProperties
 
 import scala.concurrent.duration.{FiniteDuration, MILLISECONDS}
 

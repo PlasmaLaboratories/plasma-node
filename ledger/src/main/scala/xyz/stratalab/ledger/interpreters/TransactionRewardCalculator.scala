@@ -1,10 +1,10 @@
 package xyz.stratalab.ledger.interpreters
 
 import cats.effect._
-import co.topl.brambl.models.box.Value
-import co.topl.brambl.models.transaction.IoTransaction
 import xyz.stratalab.ledger.algebras.TransactionRewardCalculatorAlgebra
 import xyz.stratalab.ledger.models.{AssetId, RewardQuantities}
+import xyz.stratalab.sdk.models.box.Value
+import xyz.stratalab.sdk.models.transaction.IoTransaction
 
 /**
  * Implements a TransactionRewardCalculator which groups fungible token types and subtracts their output quantities

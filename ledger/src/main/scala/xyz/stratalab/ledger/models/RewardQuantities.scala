@@ -2,9 +2,9 @@ package xyz.stratalab.ledger.models
 
 import cats.implicits._
 import cats.{Monoid, Show}
-import co.topl.brambl.models.box.{FungibilityType, QuantityDescriptorType}
-import co.topl.brambl.models.{GroupId, SeriesId}
 import xyz.stratalab.models.Bytes
+import xyz.stratalab.sdk.models.box.{FungibilityType, QuantityDescriptorType}
+import xyz.stratalab.sdk.models.{GroupId, SeriesId}
 import xyz.stratalab.typeclasses.implicits._
 
 case class RewardQuantities(

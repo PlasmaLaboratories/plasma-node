@@ -14,7 +14,7 @@ class IdleApp(appConfig: ApplicationConfig) {
   type F[+A] = IO[A]
 
   implicit private val logger: Logger[F] =
-    Slf4jLogger.getLoggerFromName[F]("Bifrost.Idle")
+    Slf4jLogger.getLoggerFromName[F]("Node.Idle")
 
   def run: F[Unit] =
     (
@@ -24,7 +24,7 @@ class IdleApp(appConfig: ApplicationConfig) {
         _ <- Resource.make(Logger[F].info("Launching healthcheck"))(_ => Logger[F].info("Healthcheck terminated"))
         healthCheck    <- HealthCheck.make[F]()
         healthServices <- HealthCheckGrpc.Server.services(healthCheck.healthChecker)
-        _ <- NodeGrpc.Server.serve[F](appConfig.bifrost.rpc.bindHost, appConfig.bifrost.rpc.bindPort)(healthServices)
+        _ <- NodeGrpc.Server.serve[F](appConfig.node.rpc.bindHost, appConfig.node.rpc.bindPort)(healthServices)
         _ <- Logger[F].info(show"Waiting forever...").toResource
         _ <- Resource.never[F, Unit]
       } yield ()

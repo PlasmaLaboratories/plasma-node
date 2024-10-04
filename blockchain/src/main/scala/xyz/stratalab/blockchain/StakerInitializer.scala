@@ -1,18 +1,17 @@
 package xyz.stratalab.blockchain
 
 import cats.implicits._
-import co.topl.brambl.models._
-import co.topl.brambl.models.box._
-import co.topl.brambl.models.transaction.{IoTransaction, UnspentTransactionOutput}
-import co.topl.consensus.models._
-import co.topl.crypto.hash.Blake2b256
-import co.topl.crypto.models.SecretKeyKesProduct
-import co.topl.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
 import com.google.protobuf.ByteString
 import quivr.models._
 import xyz.stratalab.consensus.models._
+import xyz.stratalab.crypto.hash.Blake2b256
+import xyz.stratalab.crypto.models.SecretKeyKesProduct
+import xyz.stratalab.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility._
+import xyz.stratalab.sdk.models._
+import xyz.stratalab.sdk.models.box._
+import xyz.stratalab.sdk.models.transaction.{IoTransaction, UnspentTransactionOutput}
 
 /**
  * Represents the data required to initialize a new staking.  This includes the necessary secret keys, plus their

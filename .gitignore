@@ -11,6 +11,7 @@
 out/
 *.iml
 localVersion.sbt
+project/metals.sbt
 
 # scala build folders
 target

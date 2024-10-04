@@ -4,11 +4,6 @@ import cats.MonadThrow
 import cats.data.{EitherT, NonEmptyChain, OptionT}
 import cats.effect.{Async, Resource}
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.validation.algebras.TransactionSyntaxVerifier
-import co.topl.consensus.models.{BlockHeader, BlockId}
-import co.topl.node.models.{Block, BlockBody}
 import fs2.Stream
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.actor.{Actor, Fsm}
@@ -16,12 +11,17 @@ import xyz.stratalab.algebras.Store
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import xyz.stratalab.consensus.algebras.BlockHeaderToBodyValidationAlgebra
 import xyz.stratalab.consensus.models.BlockHeaderToBodyValidationFailure.IncorrectTxRoot
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
 import xyz.stratalab.models.p2p._
 import xyz.stratalab.networking.blockchain.BlockchainPeerClient
 import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
 import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError._
 import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
 import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
+import xyz.stratalab.node.models.{Block, BlockBody}
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import xyz.stratalab.typeclasses.implicits._
 
 object PeerBlockBodyFetcher {

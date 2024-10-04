@@ -2,10 +2,10 @@ package xyz.stratalab.consensus.interpreters
 
 import cats.implicits._
 import cats.{Applicative, MonadThrow}
-import co.topl.consensus.models.{ActiveStaker, BlockId, StakingAddress}
 import xyz.stratalab.algebras.ClockAlgebra.implicits._
 import xyz.stratalab.algebras._
 import xyz.stratalab.consensus.algebras.ConsensusValidationStateAlgebra
+import xyz.stratalab.consensus.models.{ActiveStaker, BlockId, StakingAddress}
 import xyz.stratalab.eventtree.EventSourcedState
 import xyz.stratalab.models._
 

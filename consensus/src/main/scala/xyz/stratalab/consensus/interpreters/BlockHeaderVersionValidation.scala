@@ -3,13 +3,12 @@ package xyz.stratalab.consensus.interpreters
 import cats.data._
 import cats.effect.kernel.Async
 import cats.implicits._
-import co.topl.consensus.models.{BlockHeader, BlockId}
 import xyz.stratalab.algebras.ClockAlgebra
 import xyz.stratalab.algebras.ClockAlgebra.implicits._
 import xyz.stratalab.consensus.algebras._
 import xyz.stratalab.consensus.interpreters.VotingEventSourceState.VotingData
-import xyz.stratalab.consensus.models.BlockHeaderValidationFailure
 import xyz.stratalab.consensus.models.BlockHeaderValidationFailures._
+import xyz.stratalab.consensus.models.{BlockHeader, BlockHeaderValidationFailure, BlockId}
 import xyz.stratalab.eventtree.EventSourcedState
 import xyz.stratalab.models.VersionId
 

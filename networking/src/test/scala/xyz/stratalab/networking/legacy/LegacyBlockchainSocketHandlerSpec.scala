@@ -3,8 +3,6 @@ package xyz.stratalab.networking.legacy
 import cats.Applicative
 import cats.effect.IO
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.consensus.models.BlockId
 import fs2._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
@@ -12,9 +10,11 @@ import org.scalacheck.{Arbitrary, Gen}
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
+import xyz.stratalab.consensus.models.BlockId
 import xyz.stratalab.networking.NetworkGen._
 import xyz.stratalab.networking.blockchain.BlockchainPeerServerAlgebra
 import xyz.stratalab.networking.p2p.ConnectedPeer
+import xyz.stratalab.sdk.models.TransactionId
 
 import scala.collection.immutable.SortedSet
 

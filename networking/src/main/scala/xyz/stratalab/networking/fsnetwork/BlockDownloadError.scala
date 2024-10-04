@@ -2,11 +2,11 @@ package xyz.stratalab.networking.fsnetwork
 
 import cats.data.NonEmptyChain
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.validation.TransactionSyntaxError
-import co.topl.consensus.models.BlockId
+import xyz.stratalab.consensus.models.BlockId
 import xyz.stratalab.ledger.implicits._
 import xyz.stratalab.models.TxRoot
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.validation.TransactionSyntaxError
 import xyz.stratalab.typeclasses.implicits._
 
 sealed abstract class BlockDownloadError extends Exception {

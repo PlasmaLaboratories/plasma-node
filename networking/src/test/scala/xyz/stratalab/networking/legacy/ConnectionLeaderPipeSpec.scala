@@ -3,10 +3,10 @@ package xyz.stratalab.networking.legacy
 import cats.effect.IO
 import cats.effect.std.Random
 import cats.implicits._
-import co.topl.crypto.hash.Blake2b256
 import fs2.Chunk
 import munit.CatsEffectSuite
 import org.scalamock.munit.AsyncMockFactory
+import xyz.stratalab.crypto.hash.Blake2b256
 import xyz.stratalab.networking._
 
 class ConnectionLeaderPipeSpec extends CatsEffectSuite with AsyncMockFactory {

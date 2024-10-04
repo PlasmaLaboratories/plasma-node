@@ -1,12 +1,12 @@
 package xyz.stratalab.codecs.bytes.tetra
 
 import cats.implicits._
-import co.topl.consensus.models.BlockId
 import com.google.protobuf.ByteString
 import scalapb.{GeneratedMessage, GeneratedMessageCompanion}
 import scodec.Codec
 import scodec.codecs._
 import xyz.stratalab.codecs.bytes.typeclasses.Transmittable
+import xyz.stratalab.consensus.models.BlockId
 import xyz.stratalab.models.utility.Ratio
 
 import scala.util.Try

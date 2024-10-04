@@ -1,8 +1,8 @@
-package co.topl.crypto.signing.kes
+package xyz.stratalab.crypto.signing.kes
 
-import co.topl.crypto.models.KesBinaryTree
-import co.topl.crypto.models.KesBinaryTree.{Empty, MerkleNode, SigningLeaf}
-import co.topl.crypto.signing.kes.KesEd25519Blake2b256
+import xyz.stratalab.crypto.models.KesBinaryTree
+import xyz.stratalab.crypto.models.KesBinaryTree.{Empty, MerkleNode, SigningLeaf}
+import xyz.stratalab.crypto.signing.kes.KesEd25519Blake2b256
 
 import java.security.SecureRandom
 

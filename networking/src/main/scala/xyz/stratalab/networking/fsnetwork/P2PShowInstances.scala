@@ -2,15 +2,15 @@ package xyz.stratalab.networking.fsnetwork
 
 import cats.Show
 import cats.implicits.showInterpolator
-import co.topl.node.models._
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.config.ApplicationConfig.Bifrost.NetworkProperties
+import xyz.stratalab.config.ApplicationConfig.Node.NetworkProperties
 import xyz.stratalab.consensus.models.{BlockHeaderToBodyValidationFailure, BlockHeaderValidationFailure}
 import xyz.stratalab.models.p2p._
 import xyz.stratalab.models.utility.byteStringToByteVector
 import xyz.stratalab.networking.fsnetwork.NetworkQualityError._
 import xyz.stratalab.networking.fsnetwork.PeersManager.Message.PingPongMessagePing
 import xyz.stratalab.networking.p2p.ConnectedPeer
+import xyz.stratalab.node.models._
 import xyz.stratalab.typeclasses.implicits._
 
 import java.time._

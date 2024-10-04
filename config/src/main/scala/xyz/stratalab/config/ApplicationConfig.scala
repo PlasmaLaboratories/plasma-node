@@ -1,41 +1,41 @@
 package xyz.stratalab.config
 
-import co.topl.brambl.models.LockAddress
-import co.topl.consensus.models.{BlockId, StakingAddress}
-import co.topl.proto.node.NodeConfig
 import monocle.macros.Lenses
+import xyz.stratalab.consensus.models.{BlockId, StakingAddress}
 import xyz.stratalab.models.Slot
 import xyz.stratalab.models.utility.Ratio
 import xyz.stratalab.numerics.implicits._
+import xyz.stratalab.proto.node.NodeConfig
+import xyz.stratalab.sdk.models.LockAddress
 
 import scala.concurrent.duration._
 
 // $COVERAGE-OFF$
 @Lenses
 case class ApplicationConfig(
-  bifrost: ApplicationConfig.Bifrost,
-  genus:   ApplicationConfig.Genus,
+  node:    ApplicationConfig.Node,
+  indexer: ApplicationConfig.Indexer,
   kamon:   ApplicationConfig.Kamon
 )
 
 object ApplicationConfig {
 
   @Lenses
-  case class Bifrost(
-    data:                Bifrost.Data,
-    staking:             Bifrost.Staking,
-    p2p:                 Bifrost.P2P,
-    rpc:                 Bifrost.RPC,
-    mempool:             Bifrost.Mempool,
-    bigBang:             Bifrost.BigBang,
+  case class Node(
+    data:                Node.Data,
+    staking:             Node.Staking,
+    p2p:                 Node.P2P,
+    rpc:                 Node.RPC,
+    mempool:             Node.Mempool,
+    bigBang:             Node.BigBang,
     maxSupportedVersion: Int = 1,
-    protocols:           Map[Slot, Bifrost.Protocol],
-    cache:               Bifrost.Cache,
-    ntp:                 Bifrost.Ntp,
-    versionInfo:         Bifrost.VersionInfo
+    protocols:           Map[Slot, Node.Protocol],
+    cache:               Node.Cache,
+    ntp:                 Node.Ntp,
+    versionInfo:         Node.VersionInfo
   )
 
-  object Bifrost {
+  object Node {
 
     @Lenses
     case class Data(directory: String, databaseType: String)
@@ -112,7 +112,7 @@ object ApplicationConfig {
 
     case class MempoolProtection(
       enabled: Boolean = false,
-      // Use size in some abstract units which are used in co.topl.brambl.validation.algebras.TransactionCostCalculator
+      // Use size in some abstract units which are used in xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
       maxMempoolSize: Long = 1024 * 1024 * 20,
 
       // do not perform mempool checks
@@ -249,7 +249,7 @@ object ApplicationConfig {
   }
 
   @Lenses
-  case class Genus(
+  case class Indexer(
     enable:            Boolean,
     orientDbDirectory: String,
     orientDbPassword:  String

@@ -3,16 +3,16 @@ package xyz.stratalab.blockchain
 import cats.MonadThrow
 import cats.data.NonEmptySet
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.box.Value.UpdateProposal
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.consensus.models._
-import co.topl.node.models._
-import co.topl.proto.node.EpochData
 import fs2.io.file.Path
 import xyz.stratalab.algebras.Store
+import xyz.stratalab.consensus.models._
 import xyz.stratalab.models.p2p._
 import xyz.stratalab.models.{Epoch, ProposalId, VersionId}
+import xyz.stratalab.node.models._
+import xyz.stratalab.proto.node.EpochData
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.transaction.IoTransaction
 
 trait DataStores[F[_]] {
   def baseDirectory: Path

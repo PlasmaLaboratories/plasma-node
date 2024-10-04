@@ -1,7 +1,7 @@
 package xyz.stratalab.codecs.bytes.tetra
 
-import co.topl.consensus.models.{BlockHeader, BlockId}
-import co.topl.crypto.hash.Blake2b256
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
+import xyz.stratalab.crypto.hash.Blake2b256
 
 import scala.language.implicitConversions
 

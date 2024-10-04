@@ -5,9 +5,6 @@ import cats.effect.kernel.Sync
 import cats.effect.{Async, IO, Resource}
 import cats.implicits._
 import cats.{Applicative, MonadThrow, Show}
-import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import co.topl.crypto.signing.Ed25519VRF
-import co.topl.node.models.BlockBody
 import fs2.Stream
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.Gen
@@ -17,6 +14,8 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.{ClockAlgebra, Store}
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.consensus.algebras.{ChainSelectionAlgebra, LocalChainAlgebra}
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.models.ModelGenerators.GenHelper
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
@@ -28,6 +27,7 @@ import xyz.stratalab.networking.fsnetwork.PeerBlockHeaderFetcherTest.{BlockHeade
 import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
 import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
 import xyz.stratalab.networking.fsnetwork.TestHelper._
+import xyz.stratalab.node.models.BlockBody
 
 import scala.collection.mutable
 import scala.concurrent.duration.{FiniteDuration, MILLISECONDS}

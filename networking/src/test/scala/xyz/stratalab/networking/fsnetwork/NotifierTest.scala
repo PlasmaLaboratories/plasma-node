@@ -7,7 +7,7 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.SelfAwareStructuredLogger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.config.ApplicationConfig.Bifrost.NetworkProperties
+import xyz.stratalab.config.ApplicationConfig.Node.NetworkProperties
 import xyz.stratalab.networking.fsnetwork.NotifierTest.{F, defaultP2PConfig}
 import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
 

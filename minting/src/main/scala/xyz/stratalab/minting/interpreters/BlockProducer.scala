@@ -3,12 +3,6 @@ package xyz.stratalab.minting.interpreters
 import cats.data.OptionT
 import cats.effect._
 import cats.implicits._
-import co.topl.brambl.models._
-import co.topl.brambl.models.box._
-import co.topl.brambl.models.transaction._
-import co.topl.brambl.syntax._
-import co.topl.consensus.models.{BlockId, ProtocolVersion, SlotData, SlotId, StakingAddress}
-import co.topl.node.models.{BlockBody, FullBlock, FullBlockBody}
 import com.google.protobuf.ByteString
 import fs2._
 import org.typelevel.log4cats.slf4j.Slf4jLogger
@@ -18,6 +12,7 @@ import xyz.stratalab.algebras.ClockAlgebra.implicits._
 import xyz.stratalab.algebras.{ClockAlgebra, Stats}
 import xyz.stratalab.catsutils._
 import xyz.stratalab.consensus.interpreters.VotingEventSourceState
+import xyz.stratalab.consensus.models.{BlockId, ProtocolVersion, SlotData, SlotId, StakingAddress}
 import xyz.stratalab.eventtree.EventSourcedState
 import xyz.stratalab.ledger.algebras.TransactionRewardCalculatorAlgebra
 import xyz.stratalab.minting.algebras.{BlockPackerAlgebra, BlockProducerAlgebra, StakingAlgebra}
@@ -25,6 +20,11 @@ import xyz.stratalab.minting.models.VrfHit
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility.HasLength.instances.byteStringLength
 import xyz.stratalab.models.utility.Sized
+import xyz.stratalab.node.models.{BlockBody, FullBlock, FullBlockBody}
+import xyz.stratalab.sdk.models._
+import xyz.stratalab.sdk.models.box._
+import xyz.stratalab.sdk.models.transaction._
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 import scala.concurrent.duration._
@@ -82,7 +82,7 @@ object BlockProducer {
   ) extends BlockProducerAlgebra[F] {
 
     implicit private val logger: SelfAwareStructuredLogger[F] =
-      Slf4jLogger.getLoggerFromName[F]("Bifrost.BlockProducer")
+      Slf4jLogger.getLoggerFromName[F]("Node.BlockProducer")
 
     val blocks: F[Stream[F, FullBlock]] =
       Sync[F].delay(
@@ -164,7 +164,7 @@ object BlockProducer {
               .delay(BlockBody(block.fullBody.transactions.map(_.id), block.fullBody.rewardTransaction.map(_.id)))
               .flatMap(body => Logger[F].info(show"Minted header=${block.header} body=$body")) >>
             Stats[F].recordHistogram(
-              "bifrost_blocks_minted",
+              "node_blocks_minted",
               "Blocks minted",
               Map(),
               block.header.height

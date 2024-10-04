@@ -1,8 +1,8 @@
 package xyz.stratalab.ledger.models
 
-import co.topl.brambl.models.TransactionOutputAddress
-import co.topl.brambl.models.transaction.{Schedule, SpentTransactionOutput}
 import xyz.stratalab.models.Slot
+import xyz.stratalab.sdk.models.TransactionOutputAddress
+import xyz.stratalab.sdk.models.transaction.{Schedule, SpentTransactionOutput}
 
 sealed abstract class TransactionSemanticError
 

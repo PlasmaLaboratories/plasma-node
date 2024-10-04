@@ -2,13 +2,13 @@ package xyz.stratalab.node
 
 import cats.Show
 import cats.implicits._
-import co.topl.brambl.models.LockAddress
-import co.topl.consensus.models.StakingAddress
 import com.google.protobuf.ByteString
 import mainargs._
 import monocle.macros.{GenLens, Lenses}
 import monocle.syntax.all._
 import xyz.stratalab.common.application.{ContainsDebugFlag, ContainsUserConfigs}
+import xyz.stratalab.consensus.models.StakingAddress
+import xyz.stratalab.sdk.models.LockAddress
 
 // $COVERAGE-OFF$
 
@@ -89,7 +89,7 @@ object Args {
     )
     knownPeers:  Option[String] = None,
     testnetArgs: PrivateTestnetArgs,
-    genusArgs:   GenusArgs
+    indexerArgs: IndexerArgs
   )
 
   @main @Lenses
@@ -113,11 +113,11 @@ object Args {
   )
 
   @main @Lenses
-  case class GenusArgs(
+  case class IndexerArgs(
     @arg(
-      doc = "Disables the Genus server and Genus gRPC services"
+      doc = "Disables the Indexer server and Indexer gRPC services"
     )
-    disableGenus: Flag,
+    disableIndexer: Flag,
     @arg(
       doc = "The directory to use when saving/reading graph data"
     )
@@ -152,7 +152,7 @@ object Args {
 
   implicit val showArgs: Show[Args] = {
     val base = Show.fromToString[Args]
-    val sanitizer = GenLens[Args](_.runtime.genusArgs.orientDbPassword).replace(Some("SANITIZED"))
+    val sanitizer = GenLens[Args](_.runtime.indexerArgs.orientDbPassword).replace(Some("SANITIZED"))
     args => base.show(sanitizer(args))
   }
 
@@ -162,7 +162,7 @@ object Args {
     override def read(strs: Seq[String]): Either[String, LockAddress] =
       strs.headOption
         .toRight("No value")
-        .flatMap(co.topl.brambl.codecs.AddressCodecs.decodeAddress(_).leftMap(_.toString))
+        .flatMap(xyz.stratalab.sdk.codecs.AddressCodecs.decodeAddress(_).leftMap(_.toString))
   }
 
   implicit object ParserStakingAddress extends TokensReader.Simple[StakingAddress] {
@@ -171,7 +171,7 @@ object Args {
     override def read(strs: Seq[String]): Either[String, StakingAddress] =
       strs.headOption
         .toRight("No value")
-        .flatMap(co.topl.brambl.utils.Encoding.decodeFromBase58(_).leftMap(_.toString))
+        .flatMap(xyz.stratalab.sdk.utils.Encoding.decodeFromBase58(_).leftMap(_.toString))
         .map(array => StakingAddress(ByteString.copyFrom(array)))
   }
 
@@ -181,8 +181,8 @@ object Args {
   implicit val parserPrivateTestnetArgs: ParserForClass[PrivateTestnetArgs] =
     ParserForClass[PrivateTestnetArgs]
 
-  implicit val parserGenusArgs: ParserForClass[GenusArgs] =
-    ParserForClass[GenusArgs]
+  implicit val parserIndexerArgs: ParserForClass[IndexerArgs] =
+    ParserForClass[IndexerArgs]
 
   implicit val parserStartup: ParserForClass[Startup] =
     ParserForClass[Startup]

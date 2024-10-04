@@ -1,15 +1,15 @@
-package co.topl.crypto.signing
+package xyz.stratalab.crypto.signing
 
 import cats.effect.IO
 import cats.implicits._
-import co.topl.crypto.generation.mnemonic.Entropy
-import co.topl.crypto.utils.EntropySupport._
-import co.topl.crypto.utils._
 import io.circe.generic.semiauto.deriveDecoder
 import io.circe.{Decoder, HCursor}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import scodec.bits.ByteVector
+import xyz.stratalab.crypto.generation.mnemonic.Entropy
+import xyz.stratalab.crypto.utils.EntropySupport._
+import xyz.stratalab.crypto.utils._
 
 import java.nio.charset.StandardCharsets
 

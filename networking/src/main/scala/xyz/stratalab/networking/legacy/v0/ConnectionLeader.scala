@@ -4,8 +4,8 @@ import cats.MonadThrow
 import cats.effect.Async
 import cats.effect.std.Random
 import cats.implicits._
-import co.topl.crypto.hash.Blake2b256
 import fs2.Chunk
+import xyz.stratalab.crypto.hash.Blake2b256
 import xyz.stratalab.networking.encodeInt
 
 /**

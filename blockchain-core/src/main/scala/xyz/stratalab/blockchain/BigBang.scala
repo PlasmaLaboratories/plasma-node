@@ -4,23 +4,23 @@ import cats.Parallel
 import cats.data.{EitherT, ReaderT}
 import cats.effect.Sync
 import cats.implicits._
-import co.topl.brambl.models._
-import co.topl.brambl.models.box.Value
-import co.topl.brambl.models.transaction._
-import co.topl.brambl.syntax._
-import co.topl.consensus.models._
-import co.topl.crypto.hash.Blake2b256
-import co.topl.node.models._
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.codecs.bytes.typeclasses.Transmittable
 import xyz.stratalab.config.ApplicationConfig
 import xyz.stratalab.consensus.algebras.BlockHeaderToBodyValidationAlgebra
+import xyz.stratalab.consensus.models._
+import xyz.stratalab.crypto.hash.Blake2b256
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility.HasLength.instances.byteStringLength
 import xyz.stratalab.models.utility._
+import xyz.stratalab.node.models._
 import xyz.stratalab.numerics.implicits._
+import xyz.stratalab.sdk.models._
+import xyz.stratalab.sdk.models.box.Value
+import xyz.stratalab.sdk.models.transaction._
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 /**
@@ -162,14 +162,14 @@ object BigBang {
       } yield fullBlock
     ).leftMap(new IllegalArgumentException(_)).rethrowT
 
-  def extractProtocol(block: FullBlock): Either[String, ApplicationConfig.Bifrost.Protocol] =
+  def extractProtocol(block: FullBlock): Either[String, ApplicationConfig.Node.Protocol] =
     block.fullBody.transactions.proposals match {
       case List(proposal) => updateProposalToProtocol(proposal)
       case Nil            => Left("Protocol not defined")
       case _              => Left("Multiple protocols defined")
     }
 
-  def updateProposalToProtocol(proposal: Value.UpdateProposal): Either[String, ApplicationConfig.Bifrost.Protocol] =
+  def updateProposalToProtocol(proposal: Value.UpdateProposal): Either[String, ApplicationConfig.Node.Protocol] =
     for {
       fEffective            <- proposal.fEffective.toRight("Missing fEffective")
       vrfLddCutoff          <- proposal.vrfLddCutoff.toRight("Missing vrfLddCutoff")
@@ -186,7 +186,7 @@ object BigBang {
       )
       kesKeyHours   <- proposal.kesKeyHours.toRight("Missing kesKeyHours")
       kesKeyMinutes <- proposal.kesKeyMinutes.toRight("Missing kesKeyMinutes")
-    } yield ApplicationConfig.Bifrost.Protocol(
+    } yield ApplicationConfig.Node.Protocol(
       "2.0.0",
       fEffective,
       vrfLddCutoff,
@@ -203,10 +203,10 @@ object BigBang {
       None
     )
 
-  def protocolToValue(protocol: ApplicationConfig.Bifrost.Protocol): Value =
+  def protocolToValue(protocol: ApplicationConfig.Node.Protocol): Value =
     Value.defaultInstance.withUpdateProposal(protocolToUpdateProposal(protocol))
 
-  def protocolToUpdateProposal(protocol: ApplicationConfig.Bifrost.Protocol): Value.UpdateProposal =
+  def protocolToUpdateProposal(protocol: ApplicationConfig.Node.Protocol): Value.UpdateProposal =
     Value.UpdateProposal(
       label = "genesis",
       fEffective = (protocol.fEffective: quivr.models.Ratio).some,

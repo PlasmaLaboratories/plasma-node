@@ -3,14 +3,6 @@ package xyz.stratalab.ledger.interpreters
 import cats.data.ValidatedNec
 import cats.effect.IO
 import cats.implicits._
-import co.topl.brambl.generators.ModelGenerators._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.box.Value
-import co.topl.brambl.models.box.Value.UpdateProposal
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
-import co.topl.consensus.models.BlockId
-import co.topl.node.models.BlockBody
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
@@ -18,12 +10,20 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.ClockAlgebra
 import xyz.stratalab.algebras.testInterpreters.TestStore
 import xyz.stratalab.codecs.bytes.tetra.ModelGenerators.arbitraryTxsAndBlock
+import xyz.stratalab.consensus.models.BlockId
 import xyz.stratalab.eventtree.EventSourcedState
 import xyz.stratalab.ledger.interpreters.ProposalEventSourceState.ProposalData
 import xyz.stratalab.ledger.models._
 import xyz.stratalab.models.ModelGenerators._
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
 import xyz.stratalab.models.{Epoch, ProposalConfig, ProposalId, Slot, Timestamp, emptyVersion, proposalDelta}
+import xyz.stratalab.node.models.BlockBody
+import xyz.stratalab.sdk.generators.ModelGenerators._
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.box.Value
+import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.syntax._
 
 import scala.collection.immutable.NumericRange
 import scala.collection.mutable
@@ -91,9 +91,9 @@ class BodyProposalValidationTest extends CatsEffectSuite with ScalaCheckEffectSu
   }
 
   def txWithProposal(pseudoProposalId: Int): IoTransaction = {
-    val valueValueProposal: co.topl.brambl.models.box.Value.Value =
+    val valueValueProposal: xyz.stratalab.sdk.models.box.Value.Value =
       Value.Value.UpdateProposal(getProposalByPseudoId(pseudoProposalId))
-    val value: co.topl.brambl.models.box.Value = new co.topl.brambl.models.box.Value(value = valueValueProposal)
+    val value: xyz.stratalab.sdk.models.box.Value = new xyz.stratalab.sdk.models.box.Value(value = valueValueProposal)
     val unspentOutputWithProposal = arbitraryUnspentTransactionOutput.arbitrary.first.copy(value = value)
     val transaction = arbitraryIoTransaction.arbitrary.first
     transaction.copy(outputs = transaction.outputs :+ unspentOutputWithProposal)

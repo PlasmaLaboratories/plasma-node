@@ -2,17 +2,17 @@ package xyz.stratalab.networking.legacy
 
 import cats.effect.{Async, Resource}
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import co.topl.node.models._
 import fs2._
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.codecs.bytes.tetra.instances._
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
 import xyz.stratalab.networking.blockchain.{BlockchainPeerClient, BlockchainPeerServerAlgebra}
 import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
 import xyz.stratalab.networking.legacy.NetworkTypeTags._
 import xyz.stratalab.networking.p2p.ConnectedPeer
+import xyz.stratalab.node.models._
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
 import xyz.stratalab.typeclasses.implicits._
 
 object LegacyBlockchainSocketHandler {

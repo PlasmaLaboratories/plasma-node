@@ -5,11 +5,11 @@ import cats.effect._
 import cats.effect.implicits._
 import cats.effect.std.{Mutex, Random}
 import cats.implicits._
-import co.topl.crypto.signing.Ed25519
 import fs2._
 import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
+import xyz.stratalab.crypto.signing.Ed25519
 import xyz.stratalab.networking.legacy.{ConnectionLeader, LegacyBlockchainSocketHandler}
 import xyz.stratalab.networking.multiplexer.MultiplexedReaderWriter
 import xyz.stratalab.networking.p2p._
@@ -43,7 +43,7 @@ object BlockchainNetwork {
     networkTimeout:          FiniteDuration
   ): Resource[F, P2PServer[F]] =
     for {
-      implicit0(logger: Logger[F]) <- Slf4jLogger.fromName("Bifrost.P2P.Blockchain").toResource
+      implicit0(logger: Logger[F]) <- Slf4jLogger.fromName("Node.P2P.Blockchain").toResource
       p2pServer <- FS2P2PServer.make[F](
         host,
         bindPort,

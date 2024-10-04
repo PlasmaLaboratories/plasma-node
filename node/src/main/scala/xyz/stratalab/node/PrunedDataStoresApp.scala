@@ -4,10 +4,6 @@ import cats.effect.kernel.Async
 import cats.effect.std.Queue
 import cats.effect.{IO, Resource}
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.consensus.models._
-import co.topl.node.models._
 import fs2.io.file.{Files, Path}
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
@@ -15,7 +11,11 @@ import xyz.stratalab.algebras.Store
 import xyz.stratalab.blockchain.{DataStores, PrunedDataStores}
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.config.ApplicationConfig
+import xyz.stratalab.consensus.models._
 import xyz.stratalab.models.utility._
+import xyz.stratalab.node.models._
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
 import xyz.stratalab.typeclasses.implicits._
 
 import DataStoresInit.DataStoreNames._
@@ -31,12 +31,12 @@ class PrunedDataStoresApp(appConfig: ApplicationConfig, prunedDataStorePath: Str
   private def prunedAppResource: Resource[F, Unit] =
     for {
       implicit0(syncF: Async[F])   <- Resource.pure(implicitly[Async[F]])
-      implicit0(logger: Logger[F]) <- Resource.pure(Slf4jLogger.getLoggerFromName[F]("Bifrost.Prune"))
+      implicit0(logger: Logger[F]) <- Resource.pure(Slf4jLogger.getLoggerFromName[F]("Node.Prune"))
       _                            <- log("Launching in prune data stores operation mode")
 
       (bigBangBlock, dataStores) <- DataStoresInit
         .initializeData(appConfig)
-        .onError(_ => log(s"Failed to load db from ${appConfig.bifrost.data.directory}"))
+        .onError(_ => log(s"Failed to load db from ${appConfig.node.data.directory}"))
       genesisId   <- Resource.pure(bigBangBlock.header.id)
       sourcePath  <- Resource.pure(dataStores.baseDirectory)
       _           <- log(show"Successfully loaded blockchain data from $sourcePath")

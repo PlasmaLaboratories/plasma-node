@@ -1,11 +1,11 @@
 package xyz.stratalab.blockchain
 
 import cats.effect.IO
-import co.topl.consensus.models.{BlockId, SlotData}
 import fs2.{Chunk, Stream}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import xyz.stratalab.algebras.SynchronizationTraversalSteps.{Applied, Unapplied}
+import xyz.stratalab.consensus.models.{BlockId, SlotData}
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
 import xyz.stratalab.typeclasses.implicits._

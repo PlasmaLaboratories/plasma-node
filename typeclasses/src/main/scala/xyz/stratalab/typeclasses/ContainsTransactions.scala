@@ -3,20 +3,20 @@ package xyz.stratalab.typeclasses
 import cats.Foldable
 import cats.data.ValidatedNec
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
-import co.topl.crypto.accumulators.LeafData
-import co.topl.crypto.accumulators.merkle.MerkleTree
-import co.topl.crypto.hash.digest.{Digest, Digest32, InvalidDigestFailure}
-import co.topl.crypto.hash.{Blake2b, Blake2bHash}
-import co.topl.node.models.FullBlockBody
 import com.google.protobuf.ByteString
 import simulacrum.{op, typeclass}
+import xyz.stratalab.crypto.accumulators.LeafData
+import xyz.stratalab.crypto.accumulators.merkle.MerkleTree
+import xyz.stratalab.crypto.hash.digest.{Digest, Digest32, InvalidDigestFailure}
+import xyz.stratalab.crypto.hash.{Blake2b, Blake2bHash}
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility.HasLength.instances._
 import xyz.stratalab.models.utility.Lengths._
 import xyz.stratalab.models.utility._
+import xyz.stratalab.node.models.FullBlockBody
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.syntax._
 
 @typeclass trait ContainsTransactionIds[T] {
   @op("transactionIds") def transactionIds(t: T): Seq[TransactionId]
@@ -43,7 +43,7 @@ object ContainsTransactionIds {
 
   trait Instances {
 
-    implicit val blockNodeBody: ContainsTransactionIds[co.topl.node.models.BlockBody] = _.allTransactionIds
+    implicit val blockNodeBody: ContainsTransactionIds[xyz.stratalab.node.models.BlockBody] = _.allTransactionIds
 
     implicit def containsTxToContainTxsId[G: ContainsTransactions]: ContainsTransactionIds[G] = txs =>
       implicitly[ContainsTransactions[G]].transactionsOf(txs).map(_.id)

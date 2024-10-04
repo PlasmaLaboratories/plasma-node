@@ -3,12 +3,6 @@ package xyz.stratalab.minting.interpreters
 import cats.effect.std.Queue
 import cats.effect.{Async, IO}
 import cats.implicits._
-import co.topl.brambl.generators.ModelGenerators._
-import co.topl.brambl.models.box.{FungibilityType, QuantityDescriptorType}
-import co.topl.brambl.models.{GroupId, LockAddress, SeriesId}
-import co.topl.brambl.syntax._
-import co.topl.consensus.models.{BlockHeader, BlockId, ProtocolVersion, SlotData, StakingAddress}
-import co.topl.node.models.{FullBlock, FullBlockBody}
 import com.google.protobuf.ByteString
 import fs2._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -18,6 +12,7 @@ import xyz.stratalab.algebras.ClockAlgebra
 import xyz.stratalab.algebras.Stats.Implicits._
 import xyz.stratalab.consensus.interpreters.VotingEventSourceState.VotingData
 import xyz.stratalab.consensus.interpreters._
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId, ProtocolVersion, SlotData, StakingAddress}
 import xyz.stratalab.eventtree.EventSourcedState
 import xyz.stratalab.ledger.algebras.TransactionRewardCalculatorAlgebra
 import xyz.stratalab.ledger.models.{AssetId, RewardQuantities}
@@ -27,6 +22,11 @@ import xyz.stratalab.models.ModelGenerators._
 import xyz.stratalab.models.VersionId
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
 import xyz.stratalab.models.generators.node.ModelGenerators._
+import xyz.stratalab.node.models.{FullBlock, FullBlockBody}
+import xyz.stratalab.sdk.generators.ModelGenerators._
+import xyz.stratalab.sdk.models.box.{FungibilityType, QuantityDescriptorType}
+import xyz.stratalab.sdk.models.{GroupId, LockAddress, SeriesId}
+import xyz.stratalab.sdk.syntax._
 
 import scala.collection.immutable.NumericRange
 import scala.concurrent.duration._
