@@ -7,7 +7,7 @@ val scala213 = "2.13.13"
 
 inThisBuild(
   List(
-    organization := "co.topl",
+    organization := "xyz.stratalab",
     scalaVersion := scala213,
     versionScheme := Some("early-semver"),
     dynverSeparator := "-",
@@ -48,7 +48,7 @@ lazy val commonSettings = Seq(
   addCompilerPlugin("org.typelevel" % "kind-projector"     % "0.13.3" cross CrossVersion.full),
   addCompilerPlugin("com.olegpy"   %% "better-monadic-for" % "0.3.1"),
   testFrameworks += TestFrameworks.MUnit,
-  dependencyOverrides ++= Dependencies.protobufSpecs ++ Seq(Dependencies.quivr4s)
+  dependencyOverrides ++= Dependencies.protobufSpecs ++ Seq(Dependencies.quivr4s),
 )
 
 lazy val dockerSettings = Seq(
@@ -219,14 +219,14 @@ lazy val node = project
   .settings(
     name := "bifrost-node",
     commonSettings,
-    assemblySettings("co.topl.node.NodeApp"),
+    assemblySettings("xyz.stratalab.node.NodeApp"),
     assemblyJarName := s"bifrost-node-${version.value}.jar",
     nodeDockerSettings,
     crossScalaVersions := Seq(scala213),
-    Compile / mainClass := Some("co.topl.node.NodeApp"),
+    Compile / mainClass := Some("xyz.stratalab.node.NodeApp"),
     publish / skip := true,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.node",
+    buildInfoPackage := "xyz.stratalab.buildinfo.node",
     libraryDependencies ++= Dependencies.node
   )
   .settings(
@@ -268,14 +268,14 @@ lazy val networkDelayer = project
     name := "network-delayer",
     commonSettings,
     coverageEnabled := false,
-    assemblySettings("co.topl.networkdelayer.NetworkDelayer"),
+    assemblySettings("xyz.stratalab.networkdelayer.NetworkDelayer"),
     assemblyJarName := s"network-delayer-${version.value}.jar",
     networkDelayerDockerSettings,
     crossScalaVersions := Seq(scala213),
-    Compile / mainClass := Some("co.topl.networkdelayer.NetworkDelayer"),
+    Compile / mainClass := Some("xyz.stratalab.networkdelayer.NetworkDelayer"),
     publish / skip := true,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.networkdelayer",
+    buildInfoPackage := "xyz.stratalab.buildinfo.networkdelayer",
     libraryDependencies ++= Dependencies.networkDelayer
   )
   .enablePlugins(BuildInfoPlugin, JavaAppPackaging, DockerPlugin)
@@ -288,14 +288,14 @@ lazy val testnetSimulationOrchestrator = project
     name := "testnet-simulation-orchestrator",
     commonSettings,
     coverageEnabled := false,
-    assemblySettings("co.topl.testnetsimulationorchestrator.app.Orchestrator"),
+    assemblySettings("xyz.stratalab.testnetsimulationorchestrator.app.Orchestrator"),
     assemblyJarName := s"testnet-simulation-orchestrator-${version.value}.jar",
     testnetSimulationOrchestratorDockerSettings,
     crossScalaVersions := Seq(scala213),
-    Compile / mainClass := Some("co.topl.testnetsimulationorchestrator.app.Orchestrator"),
+    Compile / mainClass := Some("xyz.stratalab.testnetsimulationorchestrator.app.Orchestrator"),
     publish / skip := true,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.testnetsimulationorchestator",
+    buildInfoPackage := "xyz.stratalab.buildinfo.testnetsimulationorchestator",
     libraryDependencies ++= Dependencies.testnetSimulationOrchestator
   )
   .enablePlugins(BuildInfoPlugin, JavaAppPackaging, DockerPlugin)
@@ -320,7 +320,7 @@ lazy val models = project
     name := "models",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.models"
+    buildInfoPackage := "xyz.stratalab.buildinfo.models"
   )
   .settings(scalamacrosParadiseSettings)
   .settings(
@@ -335,7 +335,7 @@ lazy val numerics = project
     name := "numerics",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.numerics"
+    buildInfoPackage := "xyz.stratalab.buildinfo.numerics"
   )
   .settings(scalamacrosParadiseSettings)
   .settings(libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.scalacache)
@@ -349,7 +349,7 @@ lazy val eventTree = project
     commonSettings,
     crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.eventtree"
+    buildInfoPackage := "xyz.stratalab.buildinfo.eventtree"
   )
   .settings(libraryDependencies ++= Dependencies.eventTree)
   .settings(scalamacrosParadiseSettings)
@@ -362,7 +362,7 @@ lazy val byteCodecs = project
     name := "byte-codecs",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.codecs.bytes"
+    buildInfoPackage := "xyz.stratalab.buildinfo.codecs.bytes"
   )
   .settings(
     libraryDependencies ++= Dependencies.byteCodecs ++ Dependencies.protobufSpecs
@@ -377,7 +377,7 @@ lazy val tetraByteCodecs = project
     name := "tetra-byte-codecs",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.codecs.bytes.tetra"
+    buildInfoPackage := "xyz.stratalab.buildinfo.codecs.bytes.tetra"
   )
   .settings(libraryDependencies ++= Dependencies.munitScalamock ++ Dependencies.protobufSpecs)
   .settings(scalamacrosParadiseSettings)
@@ -394,7 +394,7 @@ lazy val typeclasses: Project = project
     name := "typeclasses",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.typeclasses"
+    buildInfoPackage := "xyz.stratalab.buildinfo.typeclasses"
   )
   .settings(
     libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.logging
@@ -409,7 +409,7 @@ lazy val algebras = project
     name := "algebras",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.algebras"
+    buildInfoPackage := "xyz.stratalab.buildinfo.algebras"
   )
   .settings(libraryDependencies ++= Dependencies.algebras)
   .settings(scalamacrosParadiseSettings)
@@ -422,7 +422,7 @@ lazy val actor = project
     name := "actor",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.actor"
+    buildInfoPackage := "xyz.stratalab.buildinfo.actor"
   )
   .settings(libraryDependencies ++= Dependencies.actor)
   .dependsOn(
@@ -437,7 +437,7 @@ lazy val commonInterpreters = project
     commonSettings,
     crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.commoninterpreters"
+    buildInfoPackage := "xyz.stratalab.buildinfo.commoninterpreters"
   )
   .settings(libraryDependencies ++= Dependencies.commonInterpreters)
   .settings(scalamacrosParadiseSettings)
@@ -461,7 +461,7 @@ lazy val consensus = project
     commonSettings,
     crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.consensus"
+    buildInfoPackage := "xyz.stratalab.buildinfo.consensus"
   )
   .settings(libraryDependencies ++= Dependencies.mUnitTest)
   .settings(
@@ -489,7 +489,7 @@ lazy val minting = project
     commonSettings,
     crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.minting"
+    buildInfoPackage := "xyz.stratalab.buildinfo.minting"
   )
   .settings(libraryDependencies ++= Dependencies.minting)
   .settings(scalamacrosParadiseSettings)
@@ -514,7 +514,7 @@ lazy val networking = project
     commonSettings,
     crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.networking"
+    buildInfoPackage := "xyz.stratalab.buildinfo.networking"
   )
   .settings(libraryDependencies ++= Dependencies.networking)
   .settings(scalamacrosParadiseSettings)
@@ -545,7 +545,7 @@ lazy val transactionGenerator = project
     coverageEnabled := false,
     crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.transactiongenerator"
+    buildInfoPackage := "xyz.stratalab.buildinfo.transactiongenerator"
   )
   .settings(libraryDependencies ++= Dependencies.transactionGenerator)
   .settings(scalamacrosParadiseSettings)
@@ -571,7 +571,7 @@ lazy val ledger = project
     commonSettings,
     crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.ledger"
+    buildInfoPackage := "xyz.stratalab.buildinfo.ledger"
   )
   .settings(libraryDependencies ++= Dependencies.ledger)
   .settings(scalamacrosParadiseSettings)
@@ -593,7 +593,7 @@ lazy val blockchainCore = project
     commonSettings,
     crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.blockchaincore"
+    buildInfoPackage := "xyz.stratalab.buildinfo.blockchaincore"
   )
   .settings(libraryDependencies ++= Dependencies.blockchain)
   .settings(scalamacrosParadiseSettings)
@@ -619,7 +619,7 @@ lazy val blockchain = project
     commonSettings,
     crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.blockchain"
+    buildInfoPackage := "xyz.stratalab.buildinfo.blockchain"
   )
   .settings(libraryDependencies ++= Dependencies.blockchain)
   .settings(scalamacrosParadiseSettings)
@@ -678,7 +678,7 @@ lazy val nodeCrypto = project
     name := "node-crypto",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.nodecrypto",
+    buildInfoPackage := "xyz.stratalab.buildinfo.nodecrypto",
     libraryDependencies ++= Dependencies.crypto
   )
 
@@ -689,7 +689,7 @@ lazy val catsUtils = project
     name := "cats-utils",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.catsUtils",
+    buildInfoPackage := "xyz.stratalab.buildinfo.catsUtils",
     libraryDependencies ++= Dependencies.catsUtils
   )
   .settings(scalamacrosParadiseSettings)
@@ -703,7 +703,7 @@ lazy val genus = project
     publish / skip := true,
     crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "co.topl.buildinfo.genus",
+    buildInfoPackage := "xyz.stratalab.buildinfo.genus",
     libraryDependencies ++= Dependencies.genus
   )
   .settings(genusDockerSettings)
