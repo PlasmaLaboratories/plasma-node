@@ -14,7 +14,7 @@ import xyz.stratalab.ledger.models._
 import xyz.stratalab.models.{Epoch, _}
 import xyz.stratalab.node.models.BlockBody
 import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.box.Value.ConfigProposal
 import xyz.stratalab.sdk.models.transaction.IoTransaction
 import xyz.stratalab.typeclasses.implicits._
 
@@ -50,7 +50,7 @@ object BodyProposalValidation {
         def checkBodyWithProposals(
           blockId:      BlockId,
           body:         BlockBody,
-          proposals:    List[UpdateProposal],
+          proposals:    List[ConfigProposal],
           currentEpoch: Epoch
         ): F[ValidatedNec[BodyValidationError, BlockBody]] =
           for {

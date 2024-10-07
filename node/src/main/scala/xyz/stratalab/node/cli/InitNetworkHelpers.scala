@@ -12,10 +12,11 @@ import quivr.models.{Int128, Ratio}
 import xyz.stratalab.blockchain._
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.consensus.models.BlockId
+import xyz.stratalab.models.protocol.{ConfigConverter, ConfigGenesis}
 import xyz.stratalab.node.models.{BlockBody, FullBlock}
 import xyz.stratalab.sdk.models.LockAddress
 import xyz.stratalab.sdk.models.box.Value
-import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.box.Value.ConfigProposal
 import xyz.stratalab.sdk.models.transaction.UnspentTransactionOutput
 import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
@@ -157,7 +158,7 @@ object InitNetworkHelpers {
     }).untilDefinedM
   }
 
-  def readProtocolSettings[F[_]: Sync: Console]: StageResultT[F, UpdateProposal] =
+  def readProtocolSettings[F[_]: Sync: Console]: StageResultT[F, ConfigProposal] =
     readYesNo("Do you want to customize the protocol settings?", No.some)(
       ifYes =
         for {
@@ -221,22 +222,24 @@ object InitNetworkHelpers {
             List("9"),
             PublicTestnet.DefaultProtocol.kesKeyMinutes.show
           )
-        } yield UpdateProposal(
-          "genesis",
-          fEffective.some,
-          vrfLddCutoff.some,
-          vrfPrecision.some,
-          vrfBaselineDifficulty.some,
-          vrfAmplitude.some,
-          chainSelectionKLookback.some,
-          slotDuration.some,
-          forwardBiasedSlotWindow.some,
-          operationalPeriodsPerEpoch.some,
-          kesKeyHours.some,
-          kesKeyMinutes.some,
-          slotGapLeaderElection.some
+        } yield ConfigConverter.pack[ConfigGenesis](
+          ConfigGenesis(
+            "genesis",
+            fEffective,
+            vrfLddCutoff,
+            vrfPrecision,
+            vrfBaselineDifficulty,
+            vrfAmplitude,
+            chainSelectionKLookback,
+            slotDuration,
+            forwardBiasedSlotWindow,
+            operationalPeriodsPerEpoch,
+            kesKeyHours,
+            kesKeyMinutes,
+            slotGapLeaderElection
+          )
         ),
-      ifNo = StageResultT.liftF(PublicTestnet.DefaultUpdateProposal.pure[F])
+      ifNo = StageResultT.liftF(PublicTestnet.DefaultConfigProposal.pure[F])
     )
 
   def saveGenesisBlock[F[_]: Async: Console](dir: Path)(block: FullBlock): StageResultT[F, Unit] =

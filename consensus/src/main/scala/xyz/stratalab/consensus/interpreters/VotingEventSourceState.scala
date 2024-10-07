@@ -15,7 +15,7 @@ import xyz.stratalab.ledger.interpreters.ProposalEventSourceState
 import xyz.stratalab.ledger.interpreters.ProposalEventSourceState.{ProposalData, ProposalEventSourceStateType}
 import xyz.stratalab.models._
 import xyz.stratalab.proto.node.EpochData
-import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.box.Value.ConfigProposal
 import xyz.stratalab.typeclasses.implicits._
 
 object VotingEventSourceState {
@@ -33,7 +33,7 @@ object VotingEventSourceState {
     epochToCreatedVersionIds: Store[F, Epoch, Set[VersionId]],
     // List of all versions which are have at least one vote during particular epoch
     epochToVersionIds:   Store[F, Epoch, Set[VersionId]],
-    versionIdToProposal: Store[F, VersionId, UpdateProposal],
+    versionIdToProposal: Store[F, VersionId, ConfigProposal],
     versionCounter:      Store[F, Unit, VersionId],
     versionVoting:       Store[F, (Epoch, VersionId), Long],
     // Describes from which era which version starts
@@ -187,7 +187,7 @@ object VotingEventSourceState {
             .get((e, proposal))
             .map(_.map(_ / blockCount.toDouble))
             .flatTap(p => Logger[F].debug(show"Voting result for proposal $proposal epoch $e: $p"))
-            .map(_.map(_ >= config.updateProposalPercentage))
+            .map(_.map(_ >= config.configProposalPercentage))
         }
         .map(percentageVotes => proposal -> percentageVotes)
 
@@ -231,7 +231,7 @@ object VotingEventSourceState {
       state:        VotingData[F],
       currentEpoch: Epoch,
       proposalId:   ProposalId,
-      proposal:     UpdateProposal
+      proposal:     ConfigProposal
     ): F[Unit] =
       for {
         versionId <- state.versionCounter.getFreeVersion()

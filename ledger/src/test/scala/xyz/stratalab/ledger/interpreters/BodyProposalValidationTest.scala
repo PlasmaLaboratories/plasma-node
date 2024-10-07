@@ -16,12 +16,15 @@ import xyz.stratalab.ledger.interpreters.ProposalEventSourceState.ProposalData
 import xyz.stratalab.ledger.models._
 import xyz.stratalab.models.ModelGenerators._
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
+import xyz.stratalab.models.protocol.RatioCodec.ratioToProtoRatio
+import xyz.stratalab.models.protocol.{ConfigConverter, ConfigGenesis}
+import xyz.stratalab.models.utility.Ratio
 import xyz.stratalab.models.{Epoch, ProposalConfig, ProposalId, Slot, Timestamp, emptyVersion, proposalDelta}
 import xyz.stratalab.node.models.BlockBody
 import xyz.stratalab.sdk.generators.ModelGenerators._
 import xyz.stratalab.sdk.models.TransactionId
 import xyz.stratalab.sdk.models.box.Value
-import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.box.Value.ConfigProposal
 import xyz.stratalab.sdk.models.transaction.IoTransaction
 import xyz.stratalab.sdk.syntax._
 
@@ -53,7 +56,7 @@ class BodyProposalValidationTest extends CatsEffectSuite with ScalaCheckEffectSu
     proposalVotingMaxWindow = 5,
     proposalVotingWindow = 2,
     proposalInactiveVotingWindow = 1,
-    updateProposalPercentage = 0.2,
+    configProposalPercentage = 0.2,
     versionVotingWindow = 2,
     versionSwitchWindow = 2,
     updateVersionPercentage = 0.9
@@ -64,7 +67,7 @@ class BodyProposalValidationTest extends CatsEffectSuite with ScalaCheckEffectSu
   ): F[ProposalData[F]] =
     for {
       pseudoIds    <- epochToCreatedProposalIdsData.flatMap { case (_, ids) => ids }.pure[F]
-      idToProposal <- TestStore.make[F, ProposalId, UpdateProposal]
+      idToProposal <- TestStore.make[F, ProposalId, ConfigProposal]
       _ <- pseudoIds.traverse { id =>
         idToProposal.put(getProposalIdByPseudoId(id), getProposalByPseudoId(id))
       }
@@ -92,17 +95,36 @@ class BodyProposalValidationTest extends CatsEffectSuite with ScalaCheckEffectSu
 
   def txWithProposal(pseudoProposalId: Int): IoTransaction = {
     val valueValueProposal: xyz.stratalab.sdk.models.box.Value.Value =
-      Value.Value.UpdateProposal(getProposalByPseudoId(pseudoProposalId))
+      Value.Value.ConfigProposal(getProposalByPseudoId(pseudoProposalId))
     val value: xyz.stratalab.sdk.models.box.Value = new xyz.stratalab.sdk.models.box.Value(value = valueValueProposal)
     val unspentOutputWithProposal = arbitraryUnspentTransactionOutput.arbitrary.first.copy(value = value)
     val transaction = arbitraryIoTransaction.arbitrary.first
     transaction.copy(outputs = transaction.outputs :+ unspentOutputWithProposal)
   }
 
-  val pseudoIdToProposal: mutable.Map[Int, UpdateProposal] = mutable.Map.empty
+  val pseudoIdToProposal: mutable.Map[Int, ConfigProposal] = mutable.Map.empty
 
-  def getProposalByPseudoId(pseudoId: Int): UpdateProposal =
-    pseudoIdToProposal.getOrElseUpdate(pseudoId, UpdateProposal(label = pseudoId.toString))
+  private val defaultGenesisConfig = ConfigGenesis(
+    label = "",
+    Ratio(56, 89),
+    45,
+    99,
+    Ratio(99, 56),
+    Ratio(66, 7),
+    100,
+    com.google.protobuf.duration.Duration(56, 9),
+    55,
+    9,
+    13,
+    4,
+    1000
+  )
+
+  def getProposalByPseudoId(pseudoId: Int): ConfigProposal =
+    pseudoIdToProposal.getOrElseUpdate(
+      pseudoId,
+      ConfigConverter.pack[ConfigGenesis](defaultGenesisConfig.copy(label = pseudoId.toString))
+    )
 
   val pseudoIdToProposalId: mutable.Map[Int, Int] = mutable.Map.empty
 
