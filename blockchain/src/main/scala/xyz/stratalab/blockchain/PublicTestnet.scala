@@ -1,7 +1,7 @@
 package xyz.stratalab.blockchain
 
 import xyz.stratalab.config.ApplicationConfig
-import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.box.Value.ConfigProposal
 
 import scala.concurrent.duration._
 
@@ -25,7 +25,7 @@ object PublicTestnet {
       epochLengthOverride = None
     )
 
-  val DefaultUpdateProposal: UpdateProposal =
-    BigBang.protocolToUpdateProposal(DefaultProtocol)
+  val DefaultConfigProposal: ConfigProposal =
+    BigBang.protocolToConfigProposal(DefaultProtocol)
 
 }

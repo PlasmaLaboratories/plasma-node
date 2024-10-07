@@ -43,7 +43,7 @@ package object models {
     proposalVotingWindow:    Int = 2,
     // How many epochs shall pass before we could reuse proposal id
     proposalInactiveVotingWindow: Int = 1,
-    updateProposalPercentage:     Double = 0.1,
+    configProposalPercentage:     Double = 0.1,
     versionVotingWindow:          Int = 2,
     versionSwitchWindow:          Int = 2,
     updateVersionPercentage:      Double = 0.9 // Shall be more than 50%

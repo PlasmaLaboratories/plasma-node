@@ -13,7 +13,7 @@ import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
 import xyz.stratalab.models._
 import xyz.stratalab.node.models._
 import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.box.Value.ConfigProposal
 import xyz.stratalab.sdk.models.transaction.IoTransaction
 import xyz.stratalab.typeclasses.implicits._
 
@@ -23,12 +23,12 @@ object ProposalEventSourceState {
   type ProposalEventSourceStateType[F[_]] = EventSourcedState[F, ProposalData[F], BlockId]
 
   case class ProposalData[F[_]](
-    idToProposal:              Store[F, ProposalId, UpdateProposal],
+    idToProposal:              Store[F, ProposalId, ConfigProposal],
     epochToCreatedProposalIds: Store[F, Epoch, Set[ProposalId]]
   )
 
-  def getProposalId(proposal: UpdateProposal): ProposalId =
-    ByteBuffer.wrap(new Blake2b256().hash(proposal.toByteArray)).getInt
+  def getProposalId(proposal: ConfigProposal): ProposalId =
+    Math.abs(ByteBuffer.wrap(new Blake2b256().hash(proposal.toByteArray)).getInt)
 
   def make[F[_]: Async: Logger](
     currentBlockId:      F[BlockId],
@@ -94,18 +94,18 @@ object ProposalEventSourceState {
     private def applyNewProposal(
       state:               ProposalData[F],
       activeProposalEpoch: Epoch,
-      updateProposal:      UpdateProposal,
+      configProposal:      ConfigProposal,
       previousEpochs:      Map[Epoch, Set[ProposalId]]
     ): F[Unit] = {
-      val id = getProposalId(updateProposal)
+      val id = getProposalId(configProposal)
 
       // Check that there is no active other proposal with the same id within proposalInactiveVotingWindow
       val sameProposalIdError =
         new IllegalStateException(show"Received proposal with the same id $id within ${previousEpochs.keySet}")
       MonadThrow[F].ensure(().pure[F])(sameProposalIdError)(_ => !previousEpochs.exists(_._2.contains(id))) >>
       Logger[F].info(show"Received new proposal with id $id active starting from $activeProposalEpoch epoch") >>
-      Logger[F].info(show"Proposal id $id with data $updateProposal") >>
-      state.idToProposal.put(id, updateProposal) >>
+      Logger[F].info(show"Proposal id $id with data $configProposal") >>
+      state.idToProposal.put(id, configProposal) >>
       state.epochToCreatedProposalIds.addIdToEpoch(activeProposalEpoch, id)
     }
   }
@@ -141,5 +141,5 @@ object ProposalEventSourceState {
       } yield ()
   }
 
-  implicit val updateProposalShow: Show[UpdateProposal] = proposal => proposal.toString
+  implicit val configProposalShow: Show[ConfigProposal] = proposal => proposal.toString
 }

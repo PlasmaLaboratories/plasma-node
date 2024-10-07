@@ -5,9 +5,9 @@ import cats.effect.std.Console
 import com.google.protobuf.duration.Duration
 import fs2.io.file.Path
 import quivr.models.Ratio
+import xyz.stratalab.models.protocol.{ConfigConverter, ConfigGenesis}
 import xyz.stratalab.node.cli.ProposalCommand.Messages
 import xyz.stratalab.sdk.models.box.Value
-import xyz.stratalab.sdk.models.box.Value.UpdateProposal
 import xyz.stratalab.sdk.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
 import xyz.stratalab.sdk.models.{Datum, Event, LockAddress}
 
@@ -38,34 +38,36 @@ private class ProposalCommandImpl[F[_]: Async](implicit c: Console[F]) {
     for {
       _ <- writeMessage[F](Messages.intro)
 
-      label                      <- readParameter[F, String]("label <required>", List("Update Slot duration"))
-      fEffective                 <- readOptionalParameter[F, Ratio]("f-effective", List("15/100"))
-      vrfLddCutoff               <- readOptionalParameter[F, Int]("vrf-ldd-cutoff", List("50"))
-      vrfPrecision               <- readOptionalParameter[F, Int]("vrf-precision", List("40"))
-      vrfBaselineDifficulty      <- readOptionalParameter[F, Ratio]("vrf-baseline-difficulty", List("1/20"))
-      vrfAmplitude               <- readOptionalParameter[F, Ratio]("vrf-amplitude", List("1/2"))
-      chainSelectionKLookback    <- readOptionalParameter[F, Long]("chain-selection-k-lookback", List("50"))
-      slotDuration               <- readOptionalParameter[F, Duration]("slot-duration", List("1000 milli"))
-      forwardBiasedSlotWindow    <- readOptionalParameter[F, Long]("forward-biased-slot-window", List("50"))
-      operationalPeriodsPerEpoch <- readOptionalParameter[F, Long]("operational-periods-per-epoch", List("2"))
-      kesKeyHours                <- readOptionalParameter[F, Int]("kes-key-hours", List("2"))
-      kesKeyMinutes              <- readOptionalParameter[F, Int]("kes-key-minutes", List("9"))
-      slotGapLeaderElection      <- readOptionalParameter[F, Long]("slot-gap-leader-election", List("0"))
+      label                   <- readParameter[F, String]("label <required>", List("Update Slot duration"))
+      fEffective              <- readDefaultedOptional[F, Ratio]("f-effective", List("15/100"), "12/100")
+      vrfLddCutoff            <- readDefaultedOptional[F, Int]("vrf-ldd-cutoff", List("50"), "15")
+      vrfPrecision            <- readDefaultedOptional[F, Int]("vrf-precision", List("40"), "40")
+      vrfBaselineDifficulty   <- readDefaultedOptional[F, Ratio]("vrf-baseline-difficulty", List("1/20"), "5/100")
+      vrfAmplitude            <- readDefaultedOptional[F, Ratio]("vrf-amplitude", List("1/2"), "50, 100")
+      slotGapLeaderElection   <- readDefaultedOptional[F, Long]("slot-gap-leader-election", List("0"), "0")
+      chainSelectionKLookback <- readDefaultedOptional[F, Long]("chain-selection-k-lookback", List("50"), "5184")
+      slotDuration            <- readDefaultedOptional[F, Duration]("slot-duration", List("1000 milli"), "1000 milli")
+      forwardBiasedSlotWindow <- readDefaultedOptional[F, Long]("forward-biased-slot-window", List("50"), "50")
+      operationalPeriodsPerEpoch <- readDefaultedOptional[F, Long]("operational-periods-per-epoch", List("2"), "25")
+      kesKeyHours                <- readDefaultedOptional[F, Int]("kes-key-hours", List("2"), "9")
+      kesKeyMinutes              <- readDefaultedOptional[F, Int]("kes-key-minutes", List("9"), "9")
 
-      proposal = UpdateProposal(
-        label,
-        fEffective,
-        vrfLddCutoff,
-        vrfPrecision,
-        vrfBaselineDifficulty,
-        vrfAmplitude,
-        chainSelectionKLookback,
-        slotDuration,
-        forwardBiasedSlotWindow,
-        operationalPeriodsPerEpoch,
-        kesKeyHours,
-        kesKeyMinutes,
-        slotGapLeaderElection
+      proposal = ConfigConverter.pack[ConfigGenesis](
+        ConfigGenesis(
+          label,
+          fEffective,
+          vrfLddCutoff,
+          vrfPrecision,
+          vrfBaselineDifficulty,
+          vrfAmplitude,
+          chainSelectionKLookback,
+          slotDuration,
+          forwardBiasedSlotWindow,
+          operationalPeriodsPerEpoch,
+          kesKeyHours,
+          kesKeyMinutes,
+          slotGapLeaderElection
+        )
       )
 
       lockAddress <- readParameter[F, LockAddress](
@@ -77,7 +79,7 @@ private class ProposalCommandImpl[F[_]: Async](implicit c: Console[F]) {
       //      _ <- requiresBramblCli // TODO refactor this method and print this message for BramblCLI
 
       unspentTransactionOutput =
-        UnspentTransactionOutput(lockAddress, Value.defaultInstance.withUpdateProposal(proposal))
+        UnspentTransactionOutput(lockAddress, Value.defaultInstance.withConfigProposal(proposal))
 
       transaction = IoTransaction(datum =
         Datum.IoTransaction(

@@ -12,8 +12,8 @@ object Dependencies {
   val orientDbVersion = "3.2.29"
   val ioGrpcVersion = "1.64.0"
   val http4sVersion = "0.23.26"
-  val protobufSpecsVersion = "0.0.0+240-846957c2-SNAPSHOT"
-  val strataSdkVersion = "0.0.0+251-6feff317-SNAPSHOT"
+  val protobufSpecsVersion = "0.1.0+1-c1f6cfc1-SNAPSHOT"
+  val strataSdkVersion = "0.0.0+252-20864ede-SNAPSHOT"
 
   val catsSlf4j =
     "org.typelevel" %% "log4cats-slf4j" % "2.7.0"
@@ -136,6 +136,9 @@ object Dependencies {
 
   val grpcServices = "io.grpc" % "grpc-services" % ioGrpcVersion
 
+  val jacksonScala = "com.fasterxml.jackson.module"   %% "jackson-module-scala"             % "2.18.0"
+  val jacksonScalaReflection = "com.github.pjfanning" %% "jackson-scala-reflect-extensions" % "2.16.0"
+
   val node: Seq[ModuleID] =
     Seq(
       catsSlf4j,
@@ -207,7 +210,8 @@ object Dependencies {
   lazy val models: Seq[ModuleID] =
     cats ++ simulacrum ++ newType ++ scodec ++ protobufSpecs ++
     Seq(bramblScSdk, bramblScSdk.classifier("tests") % Test) ++
-    Seq(quivr4s, quivr4s.classifier("tests") % Test)
+    Seq(quivr4s, quivr4s.classifier("tests") % Test) ++
+    Seq(jacksonScala, jacksonScalaReflection)
 
   lazy val consensus: Seq[ModuleID] =
     Dependencies.mUnitTest ++ externalCrypto ++ catsEffect ++ logging ++ scalacache

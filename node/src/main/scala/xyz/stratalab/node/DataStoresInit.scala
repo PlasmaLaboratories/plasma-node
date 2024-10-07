@@ -29,7 +29,7 @@ import xyz.stratalab.networking.fsnetwork._
 import xyz.stratalab.node.models._
 import xyz.stratalab.proto.node.EpochData
 import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.box.Value.ConfigProposal
 import xyz.stratalab.sdk.models.transaction.IoTransaction
 import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
@@ -239,7 +239,7 @@ object DataStoresInit {
         _.value
       )
 
-      idToProposalLocal <- makeCachedDb[F, ProposalId, java.lang.Integer, UpdateProposal](dataDir, levelDbFactory)(
+      idToProposalLocal <- makeCachedDb[F, ProposalId, java.lang.Integer, ConfigProposal](dataDir, levelDbFactory)(
         idToProposalLocalDbName,
         appConfig.node.cache.idToProposal,
         Int.box
@@ -260,7 +260,7 @@ object DataStoresInit {
         appConfig.node.cache.epochToVersionIds,
         Long.box
       )
-      versionIdToProposalLocal <- makeCachedDb[F, VersionId, java.lang.Integer, UpdateProposal](
+      versionIdToProposalLocal <- makeCachedDb[F, VersionId, java.lang.Integer, ConfigProposal](
         dataDir,
         levelDbFactory
       )(
@@ -290,7 +290,7 @@ object DataStoresInit {
         epochToCreatedProposalIdsLocalDbName
       )
 
-      idToProposalP2P <- makeCachedDb[F, ProposalId, java.lang.Integer, UpdateProposal](dataDir, levelDbFactory)(
+      idToProposalP2P <- makeCachedDb[F, ProposalId, java.lang.Integer, ConfigProposal](dataDir, levelDbFactory)(
         idToProposalP2PDbName,
         appConfig.node.cache.idToProposal,
         Int.box
@@ -310,7 +310,7 @@ object DataStoresInit {
         appConfig.node.cache.epochToVersionIds,
         Long.box
       )
-      versionIdToProposalP2P <- makeCachedDb[F, VersionId, java.lang.Integer, UpdateProposal](dataDir, levelDbFactory)(
+      versionIdToProposalP2P <- makeCachedDb[F, VersionId, java.lang.Integer, ConfigProposal](dataDir, levelDbFactory)(
         versionIdToProposalP2PDbName,
         appConfig.node.cache.versionIdToProposal,
         Int.box
