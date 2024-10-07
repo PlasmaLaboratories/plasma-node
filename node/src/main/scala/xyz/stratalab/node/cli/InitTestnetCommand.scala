@@ -121,7 +121,7 @@ class InitTestnetCommandImpl[F[_]: Async: Console](appConfig: ApplicationConfig)
       timestamp        <- readTimestamp.map(_.toMillis)
       protocolUtxo = UnspentTransactionOutput(
         PrivateTestnet.HeightLockOneSpendingAddress,
-        Value.defaultInstance.withUpdateProposal(protocolSettings)
+        Value.defaultInstance.withConfigProposal(protocolSettings)
       )
       tokenTransaction =
         IoTransaction(

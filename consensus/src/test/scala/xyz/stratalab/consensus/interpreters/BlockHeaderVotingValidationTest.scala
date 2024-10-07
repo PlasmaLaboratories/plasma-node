@@ -15,7 +15,7 @@ import xyz.stratalab.eventtree.EventSourcedState
 import xyz.stratalab.models.ModelGenerators.GenHelper
 import xyz.stratalab.models._
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.box.Value.ConfigProposal
 
 import scala.collection.immutable.NumericRange
 import scala.concurrent.duration.FiniteDuration
@@ -49,7 +49,7 @@ class BlockHeaderVotingValidationTest extends CatsEffectSuite with ScalaCheckEff
       _                        <- availableProposals.traverse(d => proposalVoting.put(d, 0))
       epochToCreatedVersionIds <- TestStore.make[F, Epoch, Set[VersionId]]
       epochToVersionIds        <- TestStore.make[F, Epoch, Set[VersionId]]
-      versionIdToProposal      <- TestStore.make[F, VersionId, UpdateProposal]
+      versionIdToProposal      <- TestStore.make[F, VersionId, ConfigProposal]
       versionCounter           <- TestStore.make[F, Unit, VersionId]
       _                        <- versionCounter.put((), nextFreeVersion)
       versionVoting            <- TestStore.make[F, (Epoch, VersionId), Long]

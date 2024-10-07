@@ -13,6 +13,7 @@ import xyz.stratalab.consensus.algebras.BlockHeaderToBodyValidationAlgebra
 import xyz.stratalab.consensus.models._
 import xyz.stratalab.crypto.hash.Blake2b256
 import xyz.stratalab.models._
+import xyz.stratalab.models.protocol.{ConfigConverter, ConfigGenesis}
 import xyz.stratalab.models.utility.HasLength.instances.byteStringLength
 import xyz.stratalab.models.utility._
 import xyz.stratalab.node.models._
@@ -164,62 +165,53 @@ object BigBang {
 
   def extractProtocol(block: FullBlock): Either[String, ApplicationConfig.Node.Protocol] =
     block.fullBody.transactions.proposals match {
-      case List(proposal) => updateProposalToProtocol(proposal)
+      case List(proposal) => configProposalToProtocol(proposal)
       case Nil            => Left("Protocol not defined")
       case _              => Left("Multiple protocols defined")
     }
 
-  def updateProposalToProtocol(proposal: Value.UpdateProposal): Either[String, ApplicationConfig.Node.Protocol] =
-    for {
-      fEffective            <- proposal.fEffective.toRight("Missing fEffective")
-      vrfLddCutoff          <- proposal.vrfLddCutoff.toRight("Missing vrfLddCutoff")
-      vrfPrecision          <- proposal.vrfPrecision.toRight("Missing vrfPrecision")
-      vrfBaselineDifficulty <- proposal.vrfBaselineDifficulty.toRight("Missing vrfBaselineDifficulty")
-      vrfAmplitude          <- proposal.vrfAmplitude.toRight("Missing vrfAmplitude")
-      // TODO Temporary solution shall be changed as soon as we relaunch toplnet
-      slotGapLeaderElection <- proposal.slotGapLeaderElection.toRight("Missing slotGapLeaderElection").recover(_ => 0L)
-      chainSelectionKLookback <- proposal.chainSelectionKLookback.toRight("Missing chainSelectionKLookback")
-      slotDuration            <- proposal.slotDuration.toRight("Missing slotDuration")
-      forwardBiasedSlotWindow <- proposal.forwardBiasedSlotWindow.toRight("Missing forwardBiasedSlotWindow")
-      operationalPeriodsPerEpoch <- proposal.operationalPeriodsPerEpoch.toRight(
-        "Missing operationalPeriodsPerEpoch"
-      )
-      kesKeyHours   <- proposal.kesKeyHours.toRight("Missing kesKeyHours")
-      kesKeyMinutes <- proposal.kesKeyMinutes.toRight("Missing kesKeyMinutes")
-    } yield ApplicationConfig.Node.Protocol(
-      "2.0.0",
-      fEffective,
-      vrfLddCutoff,
-      vrfPrecision,
-      vrfBaselineDifficulty,
-      vrfAmplitude,
-      slotGapLeaderElection,
-      chainSelectionKLookback,
-      slotDuration,
-      forwardBiasedSlotWindow,
-      operationalPeriodsPerEpoch,
-      kesKeyHours,
-      kesKeyMinutes,
-      None
-    )
+  def configProposalToProtocol(proposal: Value.ConfigProposal): Either[String, ApplicationConfig.Node.Protocol] =
+    ConfigConverter
+      .extract[ConfigGenesis](proposal)
+      .map { config =>
+        ApplicationConfig.Node.Protocol(
+          "2.0.0",
+          config.fEffective,
+          config.vrfLddCutoff,
+          config.vrfPrecision,
+          config.vrfBaselineDifficulty,
+          config.vrfAmplitude,
+          config.slotGapLeaderElection,
+          config.chainSelectionKLookback,
+          config.slotDuration,
+          config.forwardBiasedSlotWindow,
+          config.operationalPeriodsPerEpoch,
+          config.kesKeyHours,
+          config.kesKeyMinutes,
+          None
+        )
+      }
+      .leftMap(_.toString)
 
   def protocolToValue(protocol: ApplicationConfig.Node.Protocol): Value =
-    Value.defaultInstance.withUpdateProposal(protocolToUpdateProposal(protocol))
+    Value.defaultInstance.withConfigProposal(protocolToConfigProposal(protocol))
 
-  def protocolToUpdateProposal(protocol: ApplicationConfig.Node.Protocol): Value.UpdateProposal =
-    Value.UpdateProposal(
+  def protocolToConfigProposal(protocol: ApplicationConfig.Node.Protocol): Value.ConfigProposal = {
+    val genesisConfig = ConfigGenesis(
       label = "genesis",
-      fEffective = (protocol.fEffective: quivr.models.Ratio).some,
-      vrfLddCutoff = protocol.vrfLddCutoff.some,
-      vrfPrecision = protocol.vrfPrecision.some,
-      vrfBaselineDifficulty = (protocol.vrfBaselineDifficulty: quivr.models.Ratio).some,
-      vrfAmplitude = (protocol.vrfAmplitude: quivr.models.Ratio).some,
-      chainSelectionKLookback = protocol.chainSelectionKLookback.some,
-      slotDuration = (protocol.slotDuration: com.google.protobuf.duration.Duration).some,
-      forwardBiasedSlotWindow = protocol.forwardBiasedSlotWindow.some,
-      operationalPeriodsPerEpoch = protocol.operationalPeriodsPerEpoch.some,
-      kesKeyHours = protocol.kesKeyHours.some,
-      kesKeyMinutes = protocol.kesKeyMinutes.some,
-      slotGapLeaderElection = protocol.slotGapLeaderElection.some
+      fEffective = protocol.fEffective: quivr.models.Ratio,
+      vrfLddCutoff = protocol.vrfLddCutoff,
+      vrfPrecision = protocol.vrfPrecision,
+      vrfBaselineDifficulty = protocol.vrfBaselineDifficulty: quivr.models.Ratio,
+      vrfAmplitude = protocol.vrfAmplitude: quivr.models.Ratio,
+      chainSelectionKLookback = protocol.chainSelectionKLookback,
+      slotDuration = protocol.slotDuration: com.google.protobuf.duration.Duration,
+      forwardBiasedSlotWindow = protocol.forwardBiasedSlotWindow,
+      operationalPeriodsPerEpoch = protocol.operationalPeriodsPerEpoch,
+      kesKeyHours = protocol.kesKeyHours,
+      kesKeyMinutes = protocol.kesKeyMinutes,
+      slotGapLeaderElection = protocol.slotGapLeaderElection
     )
+    ConfigConverter.pack[ConfigGenesis](genesisConfig)
+  }
 }

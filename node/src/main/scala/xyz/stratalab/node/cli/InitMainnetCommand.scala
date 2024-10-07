@@ -113,7 +113,7 @@ class InitMainnetCommandImpl[F[_]: Async: Console](appConfig: ApplicationConfig)
       timestamp                <- readTimestamp.map(_.toMillis)
       protocolUtxo = UnspentTransactionOutput(
         InitMainnetCommand.UnspendableLockAddress,
-        Value.defaultInstance.withUpdateProposal(protocolSettings)
+        Value.defaultInstance.withConfigProposal(protocolSettings)
       )
       tokenTransaction =
         IoTransaction(

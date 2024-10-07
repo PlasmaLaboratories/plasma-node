@@ -11,7 +11,7 @@ import xyz.stratalab.models.{Epoch, ProposalId, VersionId}
 import xyz.stratalab.node.models._
 import xyz.stratalab.proto.node.EpochData
 import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.box.Value.ConfigProposal
 import xyz.stratalab.sdk.models.transaction.IoTransaction
 
 trait DataStores[F[_]] {
@@ -47,12 +47,12 @@ trait DataStores[F[_]] {
 }
 
 case class VersioningDataStores[F[_]](
-  idToProposal:                Store[F, ProposalId, UpdateProposal],
+  idToProposal:                Store[F, ProposalId, ConfigProposal],
   epochToCreatedProposalIds:   Store[F, Epoch, Set[ProposalId]],
   epochToProposalIds:          Store[F, Epoch, Set[ProposalId]],
   proposalVoting:              Store[F, (Epoch, ProposalId), Long],
   epochToVersionIds:           Store[F, Epoch, Set[VersionId]],
-  versionIdToProposal:         Store[F, VersionId, UpdateProposal],
+  versionIdToProposal:         Store[F, VersionId, ConfigProposal],
   versionCounter:              Store[F, Unit, VersionId],
   epochToCreatedVersionIds:    Store[F, Epoch, Set[VersionId]],
   versionVoting:               Store[F, (Epoch, VersionId), Long],

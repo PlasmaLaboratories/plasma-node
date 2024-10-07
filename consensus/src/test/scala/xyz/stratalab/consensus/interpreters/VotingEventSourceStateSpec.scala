@@ -21,6 +21,8 @@ import xyz.stratalab.ledger.interpreters.ProposalEventSourceState
 import xyz.stratalab.ledger.interpreters.ProposalEventSourceState._
 import xyz.stratalab.models.ModelGenerators._
 import xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryHeader
+import xyz.stratalab.models.protocol.{ConfigConverter, ConfigGenesis}
+import xyz.stratalab.models.utility.Ratio
 import xyz.stratalab.models.{ProposalId, Slot, Timestamp, VersionId, _}
 import xyz.stratalab.node.models.BlockBody
 import xyz.stratalab.numerics.implicits._
@@ -28,7 +30,7 @@ import xyz.stratalab.proto.node.EpochData
 import xyz.stratalab.sdk.generators.TransactionGenerator
 import xyz.stratalab.sdk.models.TransactionId
 import xyz.stratalab.sdk.models.box.Value
-import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.box.Value.ConfigProposal
 import xyz.stratalab.sdk.models.transaction._
 import xyz.stratalab.typeclasses.implicits._
 
@@ -55,7 +57,7 @@ class VotingEventSourceStateSpec
     proposalVotingMaxWindow = 5,
     proposalVotingWindow = 2,
     proposalInactiveVotingWindow = 1,
-    updateProposalPercentage = 0.2,
+    configProposalPercentage = 0.2,
     versionVotingWindow = 2,
     versionSwitchWindow = 2,
     updateVersionPercentage = 0.9
@@ -83,7 +85,7 @@ class VotingEventSourceStateSpec
       proposalVoting           <- TestStore.make[F, (Epoch, ProposalId), Long]
       epochToCreatedVersionIds <- TestStore.make[F, Epoch, Set[VersionId]]
       epochToVersionIds        <- TestStore.make[F, Epoch, Set[VersionId]]
-      versionIdToProposal      <- TestStore.make[F, VersionId, UpdateProposal]
+      versionIdToProposal      <- TestStore.make[F, VersionId, ConfigProposal]
       versionCounter           <- TestStore.make[F, Unit, VersionId]
       versionVoting            <- TestStore.make[F, (Epoch, VersionId), Long]
       _                        <- versionCounter.put((), initialFreeVersion)
@@ -144,7 +146,7 @@ class VotingEventSourceStateSpec
 
   private def makeBlocksStorages(
     chain:        Seq[BlockHeader],
-    proposalsMap: Map[BlockId, Seq[UpdateProposal]]
+    proposalsMap: Map[BlockId, Seq[ConfigProposal]]
   ): BlocksStorages = {
     val blocksStorages = BlocksStorages(mutable.Map.empty, mutable.Map.empty, mutable.Map.empty)
 
@@ -165,8 +167,8 @@ class VotingEventSourceStateSpec
     blocksStorages
   }
 
-  private def addProposalToBlock(blockId: BlockId, proposal: UpdateProposal, storages: BlocksStorages): Unit = {
-    val valueValueProposal: xyz.stratalab.sdk.models.box.Value.Value = Value.Value.UpdateProposal(proposal)
+  private def addProposalToBlock(blockId: BlockId, proposal: ConfigProposal, storages: BlocksStorages): Unit = {
+    val valueValueProposal: xyz.stratalab.sdk.models.box.Value.Value = Value.Value.ConfigProposal(proposal)
     val value: xyz.stratalab.sdk.models.box.Value = new xyz.stratalab.sdk.models.box.Value(value = valueValueProposal)
     val unspentOutputWithProposal = arbitraryUnspentTransactionOutput.arbitrary.first.copy(value = value)
     val transaction = arbitraryIoTransaction.arbitrary.first
@@ -190,18 +192,18 @@ class VotingEventSourceStateSpec
   // For list:
   // position in list -- position in chain
   // first argument -- proposal pseudo id in particular block where
-  //   real id = VersionsEventSourceState.getProposalId(UpdateProposal(label = pseudoId.toString))
+  //   real id = VersionsEventSourceState.getProposalId(ConfigProposal(label = pseudoId.toString))
   // second argument -- voted version in block
   // third argument -- voted proposal id in block
   def makeData(plan: List[(Seq[Int], Int, Int)]): (Seq[BlockHeader], BlocksStorages) = {
     val rootBlock: BlockHeader = blockWithVersions(arbitraryHeader.arbitrary.first, -1, 0, 0, 0)
-    val initialAcc = Seq.empty[(BlockHeader, Seq[UpdateProposal])]
+    val initialAcc = Seq.empty[(BlockHeader, Seq[ConfigProposal])]
     val blockChainWithProposals = plan.zipWithIndex.foldLeft(initialAcc) {
       case (acc, ((proposals, versionVote, proposalVote), index)) =>
         val parent = acc.lastOption.fold(rootBlock)(_._1)
         val header = blockWithVersions(parent, index, 0, versionVote, getProposalIdByPseudoId(proposalVote))
-        val updateProposals = proposals.map(getProposalByPseudoId)
-        acc :+ (header, updateProposals)
+        val configProposals = proposals.map(getProposalByPseudoId)
+        acc :+ (header, configProposals)
     }
 
     val chain = blockChainWithProposals.map(_._1)
@@ -230,10 +232,29 @@ class VotingEventSourceStateSpec
       .first
       .embedId
 
-  val pseudoIdToProposal: mutable.Map[Int, UpdateProposal] = mutable.Map.empty
+  val pseudoIdToProposal: mutable.Map[Int, ConfigProposal] = mutable.Map.empty
 
-  def getProposalByPseudoId(pseudoId: Int): UpdateProposal =
-    pseudoIdToProposal.getOrElseUpdate(pseudoId, UpdateProposal(label = pseudoId.toString))
+  private val defaultGenesisConfig = ConfigGenesis(
+    label = "",
+    Ratio(56, 89),
+    45,
+    99,
+    Ratio(99, 56),
+    Ratio(66, 7),
+    100,
+    com.google.protobuf.duration.Duration(56, 9),
+    55,
+    9,
+    13,
+    4,
+    1000
+  )
+
+  def getProposalByPseudoId(pseudoId: Int): ConfigProposal =
+    pseudoIdToProposal.getOrElseUpdate(
+      pseudoId,
+      ConfigConverter.pack[ConfigGenesis](defaultGenesisConfig.copy(label = pseudoId.toString))
+    )
 
   val pseudoIdToProposalId: mutable.Map[Int, Int] = mutable.Map.empty
 
@@ -274,7 +295,7 @@ class VotingEventSourceStateSpec
           id => storages.headers(id).slotData.pure[F]
         )
 
-      idToProposal              <- TestStore.make[F, ProposalId, UpdateProposal]
+      idToProposal              <- TestStore.make[F, ProposalId, ConfigProposal]
       epochToCreatedProposalIds <- TestStore.make[F, Epoch, Set[ProposalId]]
       proposalData = ProposalData(idToProposal, epochToCreatedProposalIds)
       proposalState <- ProposalEventSourceState.make[F](
@@ -810,7 +831,7 @@ object VotingEventSourceStateSpec {
     proposalVoting:           Map[(Epoch, ProposalId), Long],
     epochToCreatedVersionIds: Map[Epoch, Set[VersionId]],
     epochToVersionIds:        Map[Epoch, Set[VersionId]],
-    versionIdToProposal:      Map[VersionId, UpdateProposal],
+    versionIdToProposal:      Map[VersionId, ConfigProposal],
     versionCounter:           Map[Unit, VersionId],
     versionVoting:            Map[(Epoch, VersionId), Long]
   )
@@ -826,7 +847,7 @@ object VotingEventSourceStateSpec {
         proposalVoting           <- getDataFromStorage[F, (Epoch, ProposalId), Long](data.proposalVoting)
         epochToCreatedVersionIds <- getDataFromStorage[F, Epoch, Set[VersionId]](data.epochToCreatedVersionIds)
         epochToVersionIds        <- getDataFromStorage[F, Epoch, Set[VersionId]](data.epochToVersionIds)
-        versionIdToProposal      <- getDataFromStorage[F, VersionId, UpdateProposal](data.versionIdToProposal)
+        versionIdToProposal      <- getDataFromStorage[F, VersionId, ConfigProposal](data.versionIdToProposal)
         versionCounter           <- getDataFromStorage[F, Unit, VersionId](data.versionCounter)
         versionVoting            <- getDataFromStorage[F, (Epoch, VersionId), Long](data.versionVoting)
       } yield StoragesData(
@@ -841,7 +862,7 @@ object VotingEventSourceStateSpec {
   }
 
   case class ProposalsDataStorages(
-    idToProposal:              Map[ProposalId, UpdateProposal],
+    idToProposal:              Map[ProposalId, ConfigProposal],
     epochToCreatedProposalIds: Map[Epoch, Set[ProposalId]]
   )
 
@@ -849,7 +870,7 @@ object VotingEventSourceStateSpec {
 
     def makeCopy: F[ProposalsDataStorages] =
       for {
-        idToProposal              <- getDataFromStorage[F, ProposalId, UpdateProposal](data.idToProposal)
+        idToProposal              <- getDataFromStorage[F, ProposalId, ConfigProposal](data.idToProposal)
         epochToCreatedProposalIds <- getDataFromStorage[F, Epoch, Set[ProposalId]](data.epochToCreatedProposalIds)
       } yield ProposalsDataStorages(
         idToProposal,
