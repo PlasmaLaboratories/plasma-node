@@ -1,7 +1,6 @@
 -Xmx3G
 -Xms1G
 -Xss32M
--Dstorage.diskCache.bufferSize=512
+-Dstorage.diskCache.bufferSize=4096
 -Denvironment.dumpCfgAtStartup=false
 -Dmemory.useUnsafe=false
--Dstorage.diskCache.bufferSize=4096
