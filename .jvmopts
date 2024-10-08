@@ -2,3 +2,6 @@
 -Xms1G
 -Xss32M
 -Dstorage.diskCache.bufferSize=512
+-Denvironment.dumpCfgAtStartup=false
+-Dmemory.useUnsafe=false
+-Dstorage.diskCache.bufferSize=4096
