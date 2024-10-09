@@ -147,15 +147,10 @@ object BlockProducer {
         epoch         <- clock.epochOf(nextHit.slot)
         headerVersion <- votingLocal.useStateAt(parentId)(_.versionAlgebra.getVersionForEpoch(epoch))
         protocolVersion = ProtocolVersion(headerVersion, 0, 0)
-        blockMaker = prepareUnsignedBlock(parentSlotData, fullBody, timestamp, nextHit)
+        blockMaker = prepareUnsignedBlock(parentSlotData, fullBody, timestamp, nextHit, protocolVersion)
         eta: Eta = Sized.strictUnsafe[ByteString, Eta.Length](nextHit.cert.eta)
-        _ <- Logger[F].info("Certifying block")
-        maybeHeader <-
-          staker
-            .certifyBlock(parentSlotData.slotId, nextHit.slot, blockMaker, eta)
-            .map(
-              _.map(_.copy(version = protocolVersion))
-            ) // Protocol version shall be part of UnsignedBlockHeader instead
+        _           <- Logger[F].info("Certifying block")
+        maybeHeader <- staker.certifyBlock(parentSlotData.slotId, nextHit.slot, blockMaker, eta)
         result <- OptionT
           .fromOption[F](maybeHeader)
           .map(FullBlock(_, fullBody))
@@ -306,10 +301,11 @@ object BlockProducer {
      * After the block body has been constructed, prepare a Block Header for signing
      */
     private def prepareUnsignedBlock(
-      parentSlotData: SlotData,
-      body:           FullBlockBody,
-      timestamp:      Timestamp,
-      nextHit:        VrfHit
+      parentSlotData:  SlotData,
+      body:            FullBlockBody,
+      timestamp:       Timestamp,
+      nextHit:         VrfHit,
+      protocolVersion: ProtocolVersion
     ): UnsignedBlockHeader.PartialOperationalCertificate => UnsignedBlockHeader =
       (partialOperationalCertificate: UnsignedBlockHeader.PartialOperationalCertificate) =>
         UnsignedBlockHeader(
@@ -323,7 +319,8 @@ object BlockProducer {
           eligibilityCertificate = nextHit.cert,
           partialOperationalCertificate = partialOperationalCertificate,
           metadata = ByteString.EMPTY,
-          address = stakerAddress
+          address = stakerAddress,
+          protocolVersion = protocolVersion
         )
   }
 

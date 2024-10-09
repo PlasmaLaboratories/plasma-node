@@ -41,7 +41,8 @@ package object consensus {
           blockHeader.operationalCertificate.childVK
         ),
         blockHeader.metadata,
-        blockHeader.address
+        blockHeader.address,
+        blockHeader.version
       )
   }
 

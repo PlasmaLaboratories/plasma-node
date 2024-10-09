@@ -34,8 +34,7 @@ object Staking {
     ed25519Resource:          Resource[F, Ed25519],
     blake2b256Resource:       Resource[F, Blake2b256],
     vrfCalculator:            VrfCalculatorAlgebra[F],
-    leaderElectionValidation: LeaderElectionValidationAlgebra[F],
-    protocolVersion:          ProtocolVersion
+    leaderElectionValidation: LeaderElectionValidationAlgebra[F]
   ): Resource[F, StakingAlgebra[F]] =
     Resource
       .pure {
@@ -155,7 +154,7 @@ object Staking {
                     operationalCertificate,
                     unsignedBlock.metadata,
                     unsignedBlock.address,
-                    protocolVersion
+                    unsignedBlock.protocolVersion
                   )
                 } yield header
             }.value
