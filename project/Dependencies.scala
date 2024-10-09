@@ -47,10 +47,6 @@ object Dependencies {
     "io.circe" %% "circe-generic" % circeVersion
   )
 
-  val newType: Seq[ModuleID] = Seq(
-    "io.estatico" %% "newtype" % "0.4.4"
-  )
-
   val monitoring: Seq[ModuleID] = Seq(
     "io.kamon" %% "kamon-system-metrics" % kamonVersion,
     "io.kamon" %% "kamon-cats-io-3"      % kamonVersion,
@@ -68,10 +64,6 @@ object Dependencies {
 
   val scalacache: Seq[ModuleID] = Seq(
     "com.github.cb372" %% "scalacache-caffeine" % "1.0.0-M6"
-  )
-
-  val simulacrum: Seq[ModuleID] = Seq(
-    "org.typelevel" %% "simulacrum" % simulacrumVersion
   )
 
   val externalCrypto: Seq[ModuleID] = Seq(
@@ -184,7 +176,7 @@ object Dependencies {
 
   val commonApplication: Seq[ModuleID] =
     cats ++ catsEffect ++ mainargs ++ logging ++ monocle ++
-    simulacrum ++ http4s ++ Seq(
+    http4s ++ Seq(
       catsSlf4j,
       pureConfig,
       circeYaml
@@ -205,7 +197,7 @@ object Dependencies {
     cats ++ catsEffect ++ logging ++ Seq(fs2Core, fs2IO, fs2ReactiveStreams) ++ mUnitTest
 
   lazy val models: Seq[ModuleID] =
-    cats ++ simulacrum ++ newType ++ scodec ++ protobufSpecs ++
+    cats ++ scodec ++ protobufSpecs ++
     Seq(bramblScSdk, bramblScSdk.classifier("tests") % Test) ++
     Seq(quivr4s, quivr4s.classifier("tests") % Test)
 
@@ -241,7 +233,6 @@ object Dependencies {
 
   lazy val byteCodecs: Seq[sbt.ModuleID] =
     munitScalamock ++
-    simulacrum ++
     scodec ++
     cats
 
@@ -276,8 +267,7 @@ object Dependencies {
   lazy val genus: Seq[ModuleID] =
     logging ++
     orientDb ++
-    mUnitTest ++
-    simulacrum
+    mUnitTest
 
   lazy val munitScalamock: Seq[sbt.ModuleID] =
     mUnitTest

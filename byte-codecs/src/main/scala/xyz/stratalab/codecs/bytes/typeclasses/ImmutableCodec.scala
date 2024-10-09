@@ -3,7 +3,6 @@ package xyz.stratalab.codecs.bytes.typeclasses
 import cats.implicits._
 import scodec.bits.ByteVector
 import scodec.{Attempt, Codec, Decoder, Encoder}
-import simulacrum.{op, typeclass}
 
 import scala.language.implicitConversions
 
@@ -13,9 +12,24 @@ import scala.language.implicitConversions
  *
  * @tparam T the value that this typeclass is defined for
  */
-@typeclass trait ImmutableCodec[T] extends ImmutableEncoder[T] with ImmutableDecoder[T]
+trait ImmutableCodec[T] extends ImmutableEncoder[T] with ImmutableDecoder[T]
 
 object ImmutableCodec {
+
+  def apply[A](implicit instance: ImmutableCodec[A]): ImmutableCodec[A] = instance
+
+  trait Ops[A] {
+    def typeClassInstance: ImmutableCodec[A]
+    def self: A
+  }
+
+  trait ToImmutableCodecOps {
+
+    implicit def toSemigroupOps[A](target: A)(implicit tc: ImmutableCodec[A]): Ops[A] = new Ops[A] {
+      val self = target
+      val typeClassInstance = tc
+    }
+  }
 
   def fromScodecCodec[T: Codec]: ImmutableCodec[T] =
     new ImmutableCodec[T] {
@@ -26,17 +40,33 @@ object ImmutableCodec {
     }
 }
 
-@typeclass trait ImmutableEncoder[T] {
+trait ImmutableEncoder[T] {
 
   /**
    * Gets the byte representation of the value that should be persisted to a data store.
    * @param value the value to convert into bytes
    * @return an array of bytes representing the value which should then be persisted as-is
    */
-  @op("immutableBytes") def immutableBytes(value: T): ByteVector
+  def immutableBytes(value: T): ByteVector
 }
 
 object ImmutableEncoder {
+
+  def apply[A](implicit instance: ImmutableEncoder[A]): ImmutableEncoder[A] = instance
+
+  trait Ops[A] {
+    def typeClassInstance: ImmutableEncoder[A]
+    def self: A
+    def immutableBytes: ByteVector = typeClassInstance.immutableBytes(self)
+  }
+
+  trait ToImmutableEncoderOps {
+
+    implicit def toImmutableEncoderOps[A](target: A)(implicit tc: ImmutableEncoder[A]): Ops[A] = new Ops[A] {
+      val self: A = target
+      val typeClassInstance: ImmutableEncoder[A] = tc
+    }
+  }
 
   def fromScodecEncoder[T: Encoder]: ImmutableEncoder[T] =
     t =>
@@ -46,7 +76,7 @@ object ImmutableEncoder {
       }
 }
 
-@typeclass trait ImmutableDecoder[T] {
+trait ImmutableDecoder[T] {
 
   /**
    * Attempts to decode a value of type `T` from a given array of bytes.
@@ -59,6 +89,21 @@ object ImmutableEncoder {
 }
 
 object ImmutableDecoder {
+
+  def apply[A](implicit instance: ImmutableDecoder[A]): ImmutableDecoder[A] = instance
+
+  trait Ops[A] {
+    def typeClassInstance: ImmutableDecoder[A]
+    def self: A
+  }
+
+  trait ToImmutableDecoderOps {
+
+    implicit def toImmutableDecoderOps[A](target: A)(implicit tc: ImmutableDecoder[A]): Ops[A] = new Ops[A] {
+      val self = target
+      val typeClassInstance = tc
+    }
+  }
 
   def fromScodecDecoder[T: Decoder]: ImmutableDecoder[T] =
     t => Decoder[T].decodeValue(t.toBitVector).toEither.leftMap(e => e.messageWithContext)

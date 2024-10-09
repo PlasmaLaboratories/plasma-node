@@ -2,7 +2,8 @@ package xyz.stratalab.codecs.bytes.typeclasses
 
 import com.google.protobuf.ByteString
 import scodec.{Attempt, Encoder}
-import simulacrum.{op, typeclass}
+
+import scala.language.implicitConversions
 
 /**
  * Typeclass for encoding a value into its bytes representation for use with presenting to user or for debugging.
@@ -14,7 +15,7 @@ import simulacrum.{op, typeclass}
  *
  * @tparam T the type that can be encoded into byte data for debugging or presentation
  */
-@typeclass trait BinaryShow[T] {
+trait BinaryShow[T] {
 
   /**
    * Encodes a value into its byte representation for debugging,
@@ -27,12 +28,27 @@ import simulacrum.{op, typeclass}
    * @param value the value to encode into bytes
    * @return the bytes-representation of the value.
    */
-  @op("showBytes") def encodeAsBytes(value: T): ByteString
+  def encodeAsBytes(value: T): ByteString
 
   def map[A](transform: A => T): BinaryShow[A] = (value: A) => encodeAsBytes(transform(value))
 }
 
 object BinaryShow {
+
+  def apply[A](implicit instance: BinaryShow[A]): BinaryShow[A] = instance
+
+  trait Ops[A] {
+    def typeClassInstance: BinaryShow[A]
+    def self: A
+  }
+
+  trait ToBinaryShowOps {
+
+    implicit def toBinaryShowOps[A](target: A)(implicit tc: BinaryShow[A]): Ops[A] = new Ops[A] {
+      val self: A = target
+      val typeClassInstance: BinaryShow[A] = tc
+    }
+  }
 
   /**
    * Implements an instance of `BinaryShow` for a type `T` using the `encode` function from an instance of
