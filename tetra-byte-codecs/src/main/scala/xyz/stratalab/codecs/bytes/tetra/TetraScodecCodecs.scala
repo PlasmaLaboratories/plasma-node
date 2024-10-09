@@ -151,7 +151,8 @@ trait TetraScodecCodecs {
       consensusEligibilityCertificateCodec ::
       partialOperationalCertificateCodec ::
       byteStringCodec :: // metadata
-      stakingAddressCodec // address
+      stakingAddressCodec :: // address
+      versionCodec
   ).as[UnsignedBlockHeader]
 
   implicit val slotIdCodec: Codec[SlotId] = (

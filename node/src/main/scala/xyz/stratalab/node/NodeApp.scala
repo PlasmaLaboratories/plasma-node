@@ -349,7 +349,6 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
                     cryptoResources,
                     bigBangProtocol,
                     vrfConfig,
-                    bigBangBlock.header.version,
                     metadata,
                     localChain,
                     dataStores.headers.getOrRaise,
