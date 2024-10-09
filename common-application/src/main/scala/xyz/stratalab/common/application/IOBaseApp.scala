@@ -138,12 +138,18 @@ object IOBaseApp {
       ConfigSource.string(data)
 }
 
-@simulacrum.typeclass
 trait ContainsUserConfigs[Args] {
   def userConfigsOf(args: Args): List[String]
 }
 
-@simulacrum.typeclass
+object ContainsUserConfigs {
+  def apply[A](implicit instance: ContainsUserConfigs[A]): ContainsUserConfigs[A] = instance
+}
+
 trait ContainsDebugFlag[Args] {
   def debugFlagOf(args: Args): Boolean
+}
+
+object ContainsDebugFlag {
+  def apply[A](implicit instance: ContainsDebugFlag[A]): ContainsDebugFlag[A] = instance
 }
