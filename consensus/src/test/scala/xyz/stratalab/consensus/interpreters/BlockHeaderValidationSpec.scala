@@ -799,7 +799,8 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
               eligibilityCertificate = eligibilityCertificate,
               partialOperationalCertificate = partial,
               metadata = ByteString.EMPTY,
-              address = stakingAddress
+              address = stakingAddress,
+              protocolVersion = protocolVersion
             ),
           kesSK0
         )
@@ -828,7 +829,7 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
           operationalCertificate = operationalCertificate,
           metadata = unsigned.metadata,
           address = unsigned.address,
-          version = protocolVersion
+          version = unsigned.protocolVersion
         )
 
       (parent, child, registration, eta, relativeStake)

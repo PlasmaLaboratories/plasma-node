@@ -4,7 +4,7 @@ import cats.data.{NonEmptyChain, NonEmptyList}
 import com.google.protobuf.ByteString
 import org.scalacheck.rng.Seed
 import org.scalacheck.{Arbitrary, Gen}
-import xyz.stratalab.consensus.models.StakingAddress
+import xyz.stratalab.consensus.models.{ProtocolVersion, StakingAddress}
 import xyz.stratalab.models.generators.common.ModelGenerators.genSizedStrictByteString
 import xyz.stratalab.models.utility.HasLength.instances._
 import xyz.stratalab.models.utility.Lengths._
@@ -40,6 +40,13 @@ trait ModelGenerators {
   def networkPrefixGen: Gen[NetworkPrefix] =
     byteGen.map(NetworkPrefix(_))
 
+  def protocolVersion: Gen[ProtocolVersion] =
+    for {
+      version       <- Gen.chooseNum(1, 100)
+      votedVersion  <- Gen.chooseNum(1, 100)
+      votedProposal <- Gen.chooseNum(0, 100)
+    } yield ProtocolVersion(version, votedVersion, votedProposal)
+
   def partialOperationalCertificateGen: Gen[UnsignedBlockHeader.PartialOperationalCertificate] =
     for {
       parentVK <- xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryVerificationKeyKesProduct.arbitrary
@@ -63,20 +70,22 @@ trait ModelGenerators {
       partialOperationalCertificateGen,
     metadataGen: Gen[ByteString] = genSizedStrictByteString[Lengths.`32`.type]().map(_.data),
     addressGen: Gen[StakingAddress] =
-      xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryStakingAddress.arbitrary
+      xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryStakingAddress.arbitrary,
+    protocolVersionGen: Gen[ProtocolVersion] = protocolVersion
   ): Gen[UnsignedBlockHeader] =
     for {
-      parentHeaderID <- parentHeaderIdGen
-      parentSlot     <- parentSlotGen
-      txRoot         <- txRootGen
-      bloomFilter    <- bloomFilterGen
-      timestamp      <- timestampGen
-      height         <- heightGen
-      slot           <- slotGen
-      vrfCertificate <- eligibilityCertificateGen
-      kesCertificate <- partialOperationalCertificateGen
-      metadata       <- metadataGen
-      address        <- addressGen
+      parentHeaderID  <- parentHeaderIdGen
+      parentSlot      <- parentSlotGen
+      txRoot          <- txRootGen
+      bloomFilter     <- bloomFilterGen
+      timestamp       <- timestampGen
+      height          <- heightGen
+      slot            <- slotGen
+      vrfCertificate  <- eligibilityCertificateGen
+      kesCertificate  <- partialOperationalCertificateGen
+      metadata        <- metadataGen
+      address         <- addressGen
+      protocolVersion <- protocolVersionGen
     } yield UnsignedBlockHeader(
       parentHeaderID,
       parentSlot,
@@ -88,7 +97,8 @@ trait ModelGenerators {
       vrfCertificate,
       kesCertificate,
       metadata,
-      address
+      address,
+      protocolVersion
     )
 
   def byteGen: Gen[Byte] = Gen.choose[Byte](Byte.MinValue, Byte.MaxValue)

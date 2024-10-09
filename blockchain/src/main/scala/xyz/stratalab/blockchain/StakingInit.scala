@@ -71,7 +71,6 @@ object StakingInit {
     cryptoResources:          CryptoResources[F],
     protocol:                 ApplicationConfig.Node.Protocol,
     vrfConfig:                VrfConfig,
-    protocolVersion:          ProtocolVersion,
     metadata:                 NodeMetadataAlgebra[F],
     localChain:               LocalChainAlgebra[F],
     fetchHeader:              BlockId => F[BlockHeader],
@@ -146,7 +145,6 @@ object StakingInit {
         cryptoResources,
         protocol,
         vrfConfig,
-        protocolVersion,
         metadata,
         localChain,
         fetchHeader,
@@ -171,7 +169,6 @@ object StakingInit {
     cryptoResources:          CryptoResources[F],
     protocol:                 ApplicationConfig.Node.Protocol,
     vrfConfig:                VrfConfig,
-    protocolVersion:          ProtocolVersion,
     metadata:                 NodeMetadataAlgebra[F],
     localChain:               LocalChainAlgebra[F],
     fetchHeader:              BlockId => F[BlockHeader],
@@ -268,8 +265,7 @@ object StakingInit {
         cryptoResources.ed25519,
         cryptoResources.blake2b256,
         vrfCalculator,
-        leaderElectionThreshold,
-        protocolVersion
+        leaderElectionThreshold
       )
     } yield staking
 

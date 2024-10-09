@@ -97,8 +97,7 @@ class StakingSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncM
               ed25519Resource = null,
               blake2b256Resource = Resource.pure(new Blake2b256),
               vrfCalculator,
-              leaderElectionValidation,
-              ProtocolVersion(0, 0, 1)
+              leaderElectionValidation
             )
 
           testProof <- vrfCalculator.proofForSlot(slot, eta).toResource
@@ -142,8 +141,7 @@ class StakingSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncM
               ed25519Resource = null,
               blake2b256Resource = null,
               vrfCalculator = null,
-              leaderElectionValidation = null,
-              ProtocolVersion(0, 0, 1)
+              leaderElectionValidation = null
             )
 
           _ <- staking
