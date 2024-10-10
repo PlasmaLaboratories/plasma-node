@@ -12,16 +12,17 @@ import co.topl.crypto.hash.digest.{Digest, Digest32, InvalidDigestFailure}
 import co.topl.crypto.hash.{Blake2b, Blake2bHash}
 import co.topl.node.models.FullBlockBody
 import com.google.protobuf.ByteString
-import simulacrum.{op, typeclass}
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility.HasLength.instances._
 import xyz.stratalab.models.utility.Lengths._
 import xyz.stratalab.models.utility._
 
-@typeclass trait ContainsTransactionIds[T] {
-  @op("transactionIds") def transactionIds(t: T): Seq[TransactionId]
+import scala.language.implicitConversions
 
-  @op("merkleTree") def merkleTreeOf(t: T): MerkleTree[Blake2b, Digest32] = {
+trait ContainsTransactionIds[T] {
+  def transactionIds(t: T): Seq[TransactionId]
+
+  def merkleTreeOf(t: T): MerkleTree[Blake2b, Digest32] = {
     // The current MerkleTree implementation will, by default, use a shared digest and hash instance,
     // which introduces thread-safety issues.  We need to create a new instance for each call to avoid it.
     implicit val digest: Digest[Digest32] = new Digest[Digest32] {
@@ -35,11 +36,31 @@ import xyz.stratalab.models.utility._
     MerkleTree[Blake2b, Digest32](transactionIds(t).map(id => LeafData(id.value.toByteArray)))
   }
 
-  @op("merkleTreeRootHash") def merkleTreeRootHashOf(t: T): TxRoot =
+  def merkleTreeRootHashOf(t: T): TxRoot =
     Sized.strictUnsafe[Bytes, Lengths.`32`.type](ByteString.copyFrom(merkleTreeOf(t).rootHash.value))
 }
 
 object ContainsTransactionIds {
+
+  def apply[A](implicit instance: ContainsTransactionIds[A]): ContainsTransactionIds[A] = instance
+
+  trait Ops[A] {
+    def typeClassInstance: ContainsTransactionIds[A]
+    def self: A
+    def transactionIds: Seq[TransactionId] = typeClassInstance.transactionIds(self)
+    def merkleTree: MerkleTree[Blake2b, Digest32] = typeClassInstance.merkleTreeOf(self)
+    def merkleTreeRootHash: TxRoot = typeClassInstance.merkleTreeRootHashOf(self)
+
+  }
+
+  trait ToContainsTransactionIdsOps {
+
+    implicit def toContainsTransactionIdsOps[A](target: A)(implicit tc: ContainsTransactionIds[A]): Ops[A] =
+      new Ops[A] {
+        val self: A = target
+        val typeClassInstance: ContainsTransactionIds[A] = tc
+      }
+  }
 
   trait Instances {
 
@@ -55,15 +76,31 @@ object ContainsTransactionIds {
 /**
  * Satisfies that T contains transactions
  */
-@typeclass trait ContainsTransactions[T] {
-  @op("transactions") def transactionsOf(t: T): Seq[IoTransaction]
+trait ContainsTransactions[T] {
+  def transactionsOf(t: T): Seq[IoTransaction]
 
-  @op("bloomFilter") def bloomFilterOf(@annotation.nowarn t: T): BloomFilter =
+  def bloomFilterOf(@annotation.nowarn t: T): BloomFilter =
     // TODO
     Sized.strictUnsafe[Bytes, Lengths.`256`.type](ByteString.copyFrom(Array.fill[Byte](256)(1)))
 }
 
 object ContainsTransactions {
+
+  def apply[A](implicit instance: ContainsTransactions[A]): ContainsTransactions[A] = instance
+
+  trait Ops[A] {
+    def typeClassInstance: ContainsTransactions[A]
+    def self: A
+    def bloomFilter: BloomFilter = typeClassInstance.bloomFilterOf(self)
+  }
+
+  trait ToContainsTransactionsOps {
+
+    implicit def toContainsTransactionsOps[A](target: A)(implicit tc: ContainsTransactions[A]): Ops[A] = new Ops[A] {
+      val self: A = target
+      val typeClassInstance: ContainsTransactions[A] = tc
+    }
+  }
 
   trait Instances {
 

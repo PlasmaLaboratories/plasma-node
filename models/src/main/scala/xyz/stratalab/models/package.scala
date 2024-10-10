@@ -1,10 +1,7 @@
 package xyz.stratalab
 
 import com.google.protobuf.ByteString
-import io.estatico.newtype.macros.{newsubtype, newtype}
 import xyz.stratalab.models.utility.{Lengths, Sized}
-
-import scala.language.implicitConversions
 
 package object models {
 
@@ -20,13 +17,13 @@ package object models {
   type Slot = Long
   type Epoch = Long
 
-  @newsubtype case class NetworkPrefix(value: Byte)
+  case class NetworkPrefix(value: Byte)
 
   type TxRoot = Sized.Strict[Bytes, Lengths.`32`.type]
   type BloomFilter = Sized.Strict[Bytes, Lengths.`256`.type]
-  @newtype case class Rho(sizedBytes: Sized.Strict[Bytes, Lengths.`64`.type])
-  @newtype case class RhoTestHash(sizedBytes: Sized.Strict[Bytes, Lengths.`64`.type])
-  @newtype case class RhoNonceHash(sizedBytes: Sized.Strict[Bytes, Lengths.`64`.type])
+  case class Rho(sizedBytes: Sized.Strict[Bytes, Lengths.`64`.type])
+  case class RhoTestHash(sizedBytes: Sized.Strict[Bytes, Lengths.`64`.type])
+  case class RhoNonceHash(sizedBytes: Sized.Strict[Bytes, Lengths.`64`.type])
   type Digest32 = Sized.Strict[Bytes, Lengths.`32`.type]
 
   type ProposalId = Int

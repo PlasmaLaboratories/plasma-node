@@ -11,7 +11,6 @@ import com.google.protobuf.ByteString
 import fs2.Chunk
 import fs2.io.file.{Files, Path}
 import quivr.models.{Int128, Ratio}
-import simulacrum.typeclass
 import xyz.stratalab.models.utility._
 
 import scala.concurrent.duration._
@@ -205,7 +204,10 @@ package object cli {
     }
 }
 
-@typeclass
 trait UserInputParser[T] {
   def parse(input: String): Either[String, T]
+}
+
+object UserInputParser {
+  def apply[A](implicit instance: UserInputParser[A]): UserInputParser[A] = instance
 }

@@ -2,9 +2,8 @@ package xyz.stratalab.genus.orientDb.instances
 
 import co.topl.consensus.models._
 import com.google.protobuf.ByteString
-import xyz.stratalab.codecs.bytes.tetra.TetraScodecCodecs._
+import xyz.stratalab.codecs.bytes.tetra.TetraScodecCodecs
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.codecs.bytes.typeclasses.ImmutableCodec
 import xyz.stratalab.genus.orientDb.schema.OIndexable.Instances
 import xyz.stratalab.genus.orientDb.schema.OTyped.Instances._
 import xyz.stratalab.genus.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
@@ -38,7 +37,7 @@ object SchemaBlockHeader {
   }
 
   def size(blockHeader: BlockHeader): Long =
-    ImmutableCodec.fromScodecCodec[BlockHeader].immutableBytes(blockHeader).size
+    TetraScodecCodecs.consensusBlockHeaderCodec.encode(blockHeader).map(_.size).getOrElse(0)
 
   def make(): VertexSchema[BlockHeader] = VertexSchema.create(
     SchemaName,
