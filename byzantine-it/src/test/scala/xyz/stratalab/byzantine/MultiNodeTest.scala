@@ -204,7 +204,12 @@ class MultiNodeTest extends IntegrationSuite {
       spendableOutput = inputTransaction.outputs(inputIndex)
       unprovenPredicateAttestation = Attestation.Predicate(PrivateTestnet.HeightLockOneLock.getPredicate, Nil)
       unprovenInput = SpentTransactionOutput(
-        TransactionOutputAddress(0, 0, inputIndex, inputTransaction.id),
+        TransactionOutputAddress(
+          NetworkConstants.PRIVATE_NETWORK_ID,
+          NetworkConstants.MAIN_LEDGER_ID,
+          inputIndex,
+          inputTransaction.id
+        ),
         Attestation.defaultInstance.withPredicate(unprovenPredicateAttestation),
         spendableOutput.value
       )

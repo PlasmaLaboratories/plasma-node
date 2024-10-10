@@ -112,14 +112,14 @@ class NodeAppTest extends CatsEffectSuite {
           .parMapN(_.race(_).map(_.merge).flatMap(_.embedNever))
           .flatMap(nodeCompletion =>
             nodeCompletion.toResource.race(for {
-              rpcClientA      <- NodeGrpc.Client.make[F]("127.0.0.2", 9151, tls = false)
-              rpcClientB      <- NodeGrpc.Client.make[F]("localhost", 9153, tls = false)
+              rpcClientA <- NodeGrpc.Client.make[F]("127.0.0.2", 9151, tls = false)
+              rpcClientB <- NodeGrpc.Client.make[F]("localhost", 9153, tls = false)
               rpcClients = List(rpcClientA, rpcClientB)
               implicit0(logger: Logger[F]) <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
-              indexerChannelA                <- xyz.stratalab.grpc.makeChannel[F]("localhost", 9151, tls = false)
-              indexerTxServiceA              <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
-              indexerBlockServiceA           <- BlockServiceFs2Grpc.stubResource[F](indexerChannelA)
+              indexerChannelA              <- xyz.stratalab.grpc.makeChannel[F]("localhost", 9151, tls = false)
+              indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
+              indexerBlockServiceA         <- BlockServiceFs2Grpc.stubResource[F](indexerChannelA)
               _                            <- awaitIndexerReady(indexerBlockServiceA).timeout(45.seconds).toResource
               wallet                       <- makeWallet(indexerTxServiceA)
               _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource

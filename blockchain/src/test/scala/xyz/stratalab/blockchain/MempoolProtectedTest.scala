@@ -169,7 +169,14 @@ class MempoolProtectedTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
         .returns(
           Validated
             .invalidNec[TransactionSemanticError, IoTransaction](
-              TransactionSemanticErrors.UnspendableBox(TransactionOutputAddress(0, 0, 0, addedTx.id))
+              TransactionSemanticErrors.UnspendableBox(
+                TransactionOutputAddress(
+                  NetworkConstants.PRIVATE_NETWORK_ID,
+                  NetworkConstants.MAIN_LEDGER_ID,
+                  0,
+                  addedTx.id
+                )
+              )
             )
             .pure[F]
         )
@@ -244,7 +251,14 @@ class MempoolProtectedTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
         .returns(
           Validated
             .invalidNec[TransactionSemanticError, IoTransaction](
-              TransactionSemanticErrors.UnspendableBox(TransactionOutputAddress(0, 0, 0, addedTx.id))
+              TransactionSemanticErrors.UnspendableBox(
+                TransactionOutputAddress(
+                  NetworkConstants.PRIVATE_NETWORK_ID,
+                  NetworkConstants.MAIN_LEDGER_ID,
+                  0,
+                  addedTx.id
+                )
+              )
             )
             .pure[F]
         )
@@ -267,7 +281,14 @@ class MempoolProtectedTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
         .returns(
           Validated
             .invalidNec[TransactionSemanticError, IoTransaction](
-              TransactionSemanticErrors.UnspendableBox(TransactionOutputAddress(0, 0, 0, addedTx.id))
+              TransactionSemanticErrors.UnspendableBox(
+                TransactionOutputAddress(
+                  NetworkConstants.PRIVATE_NETWORK_ID,
+                  NetworkConstants.MAIN_LEDGER_ID,
+                  0,
+                  addedTx.id
+                )
+              )
             )
             .pure[F]
         )

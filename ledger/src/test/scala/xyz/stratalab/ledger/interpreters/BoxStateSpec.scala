@@ -28,7 +28,11 @@ class BoxStateSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
         blockId2: BlockId
       ) =>
         val transaction1 = IoTransaction.defaultInstance.withOutputs(List(output))
-        val outputBoxId = transaction1.id.outputAddress(0, 0, transaction1.outputs.length - 1)
+        val outputBoxId = transaction1.id.outputAddress(
+          NetworkConstants.PRIVATE_NETWORK_ID,
+          NetworkConstants.MAIN_LEDGER_ID,
+          transaction1.outputs.length - 1
+        )
 
         val transaction2 = IoTransaction.defaultInstance.withInputs(List(input.copy(address = outputBoxId)))
 

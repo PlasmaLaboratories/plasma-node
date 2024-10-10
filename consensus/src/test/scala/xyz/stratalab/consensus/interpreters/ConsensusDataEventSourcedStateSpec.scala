@@ -78,7 +78,8 @@ class ConsensusDataEventSourcedStateSpec extends CatsEffectSuite with ScalaCheck
           .withInputs(
             List(
               SpentTransactionOutput(
-                bigBangBlockTransaction.id.outputAddress(0, 0, 0),
+                bigBangBlockTransaction.id
+                  .outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 0),
                 Attestation().withPredicate(Attestation.Predicate.defaultInstance),
                 bigBangBlockTransaction.outputs(0).value
               )
@@ -94,7 +95,7 @@ class ConsensusDataEventSourcedStateSpec extends CatsEffectSuite with ScalaCheck
           .withInputs(
             List(
               SpentTransactionOutput(
-                transaction2.id.outputAddress(0, 0, 0),
+                transaction2.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 0),
                 Attestation().withPredicate(Attestation.Predicate.defaultInstance),
                 transaction2.outputs(0).value
               )
@@ -128,17 +129,17 @@ class ConsensusDataEventSourcedStateSpec extends CatsEffectSuite with ScalaCheck
           .withInputs(
             List(
               SpentTransactionOutput(
-                transaction2.id.outputAddress(0, 0, 1),
+                transaction2.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 1),
                 Attestation().withPredicate(Attestation.Predicate.defaultInstance),
                 transaction2.outputs(1).value
               ),
               SpentTransactionOutput(
-                transaction3.id.outputAddress(0, 0, 1),
+                transaction3.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 1),
                 Attestation().withPredicate(Attestation.Predicate.defaultInstance),
                 transaction3.outputs(1).value
               ),
               SpentTransactionOutput(
-                transaction3.id.outputAddress(0, 0, 0),
+                transaction3.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 0),
                 Attestation().withPredicate(Attestation.Predicate.defaultInstance),
                 transaction3.outputs(0).value
               )

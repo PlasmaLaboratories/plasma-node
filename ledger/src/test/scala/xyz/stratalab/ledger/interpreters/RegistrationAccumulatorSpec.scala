@@ -51,7 +51,7 @@ class RegistrationAccumulatorSpec extends CatsEffectSuite with ScalaCheckEffectS
         .withInputs(
           List(
             SpentTransactionOutput(
-              tx1.id.outputAddress(0, 0, 0),
+              tx1.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 0),
               Attestation().withPredicate(Attestation.Predicate.defaultInstance),
               tx1.outputs(0).value
             )
@@ -68,7 +68,7 @@ class RegistrationAccumulatorSpec extends CatsEffectSuite with ScalaCheckEffectS
         .withInputs(
           List(
             SpentTransactionOutput(
-              tx2.id.outputAddress(0, 0, 0),
+              tx2.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 0),
               Attestation().withPredicate(Attestation.Predicate.defaultInstance),
               tx2.outputs(0).value
             )

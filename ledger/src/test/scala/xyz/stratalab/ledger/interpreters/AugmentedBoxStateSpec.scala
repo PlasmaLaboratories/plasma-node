@@ -30,8 +30,16 @@ class AugmentedBoxStateSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
         blockId1:         BlockId
       ) =>
         val transaction1 = txBase1.addOutputs(txOutput10, txOutput11)
-        val outputBoxId10 = transaction1.id.outputAddress(0, 0, transaction1.outputs.length - 2)
-        val outputBoxId11 = transaction1.id.outputAddress(0, 0, transaction1.outputs.length - 1)
+        val outputBoxId10 = transaction1.id.outputAddress(
+          NetworkConstants.PRIVATE_NETWORK_ID,
+          NetworkConstants.MAIN_LEDGER_ID,
+          transaction1.outputs.length - 2
+        )
+        val outputBoxId11 = transaction1.id.outputAddress(
+          NetworkConstants.PRIVATE_NETWORK_ID,
+          NetworkConstants.MAIN_LEDGER_ID,
+          transaction1.outputs.length - 1
+        )
         val transaction2 = transaction2Base.addInputs(input.copy(address = outputBoxId11))
 
         for {

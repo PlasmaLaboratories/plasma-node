@@ -97,7 +97,12 @@ class SchemaSeriesPolicyTest
       dbTx          <- oThread.delay(odbFactory.getTx).toResource
       transactionId <- BramblGenerator.arbitraryTransactionId.arbitrary.first.pure[F].toResource
 
-      registrationUtxo = TransactionOutputAddress(0, 0, 0, transactionId)
+      registrationUtxo = TransactionOutputAddress(
+        NetworkConstants.PRIVATE_NETWORK_ID,
+        NetworkConstants.MAIN_LEDGER_ID,
+        0,
+        transactionId
+      )
       seriesPolicy = SeriesPolicy(label = "Crypto Frogs series", tokenSupply = None, registrationUtxo)
 
       vertex_test_1 <- oThread

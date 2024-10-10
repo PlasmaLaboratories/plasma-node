@@ -25,7 +25,9 @@ class TransactionSemanticValidationSpec extends CatsEffectSuite with ScalaCheckE
         withMock {
           val transactionB = _transactionB.clearInputs
             .addInputs(
-              input.copy(address = transactionA.id.outputAddress(0, 0, 0))
+              input.copy(address =
+                transactionA.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 0)
+              )
             )
             .update(_.datum.event.schedule.min.set(0))
             .update(_.datum.event.schedule.max.set(4))
@@ -49,7 +51,10 @@ class TransactionSemanticValidationSpec extends CatsEffectSuite with ScalaCheckE
       (blockId: BlockId, transactionA: IoTransaction, _transactionB: IoTransaction, input: SpentTransactionOutput) =>
         withMock {
           val transactionB = _transactionB.clearInputs.addInputs(
-            input.copy(transactionA.id.outputAddress(0, 0, Short.MaxValue))
+            input.copy(
+              transactionA.id
+                .outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, Short.MaxValue)
+            )
           )
           for {
             fetchTransaction <- mockFunction[TransactionId, F[IoTransaction]].pure[F]
@@ -98,7 +103,10 @@ class TransactionSemanticValidationSpec extends CatsEffectSuite with ScalaCheckE
             _.inputs.set(
               List(
                 input.update(
-                  _.address.set(transactionA.id.outputAddress(0, 0, 0))
+                  _.address.set(
+                    transactionA.id
+                      .outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 0)
+                  )
                 )
               )
             )
@@ -145,7 +153,8 @@ class TransactionSemanticValidationSpec extends CatsEffectSuite with ScalaCheckE
             List(
               input.copy(
                 value = Value.defaultInstance,
-                address = transactionA.id.outputAddress(0, 0, 0)
+                address =
+                  transactionA.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 0)
               )
             )
           )
@@ -197,7 +206,8 @@ class TransactionSemanticValidationSpec extends CatsEffectSuite with ScalaCheckE
             List(
               input.copy(
                 value = Value.defaultInstance,
-                address = transactionA.id.outputAddress(0, 0, 0)
+                address =
+                  transactionA.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 0)
               )
             )
           )
@@ -207,7 +217,10 @@ class TransactionSemanticValidationSpec extends CatsEffectSuite with ScalaCheckE
             _ = fetchTransaction.expects(transactionA.id).once().returning(transactionA.pure[F])
             _ = (boxState
               .boxExistsAt(_: BlockId)(_: TransactionOutputAddress))
-              .expects(blockId, transactionA.id.outputAddress(0, 0, 0))
+              .expects(
+                blockId,
+                transactionA.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 0)
+              )
               .once()
               .returning(false.pure[F])
             underTest = TransactionSemanticValidation.make[F](fetchTransaction, boxState)
