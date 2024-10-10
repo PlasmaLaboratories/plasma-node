@@ -10,6 +10,7 @@ import xyz.stratalab.consensus.models.BlockId
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
 import xyz.stratalab.node.models.BlockBody
+import xyz.stratalab.sdk.constants.NetworkConstants
 import xyz.stratalab.sdk.generators.ModelGenerators._
 import xyz.stratalab.sdk.models._
 import xyz.stratalab.sdk.models.transaction._

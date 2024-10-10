@@ -9,6 +9,7 @@ import xyz.stratalab.indexer.orientDb.OrientThread
 import xyz.stratalab.indexer.orientDb.instances.SchemaGroupPolicy.Field
 import xyz.stratalab.indexer.orientDb.instances.VertexSchemaInstances.instances.groupPolicySchema
 import xyz.stratalab.models.ModelGenerators.GenHelper
+import xyz.stratalab.sdk.constants.NetworkConstants
 import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGenerator}
 import xyz.stratalab.sdk.models.Event.{GroupPolicy, SeriesPolicy}
 import xyz.stratalab.sdk.models.TransactionOutputAddress

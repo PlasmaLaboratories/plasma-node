@@ -32,6 +32,7 @@ import xyz.stratalab.typeclasses.implicits._
 import java.security.SecureRandom
 import java.time.Instant
 import scala.concurrent.duration._
+import xyz.stratalab.sdk.constants.NetworkConstants
 
 class MultiNodeTest extends IntegrationSuite {
   import MultiNodeTest._

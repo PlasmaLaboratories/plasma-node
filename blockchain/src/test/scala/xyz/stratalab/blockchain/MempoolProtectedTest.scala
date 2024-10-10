@@ -18,6 +18,7 @@ import xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryBlockI
 import xyz.stratalab.models.generators.consensus._
 import xyz.stratalab.networking.fsnetwork.TestHelper.arbitraryIoTransaction
 import xyz.stratalab.quivr.runtime.DynamicContext
+import xyz.stratalab.sdk.constants.NetworkConstants
 import xyz.stratalab.sdk.models.transaction.IoTransaction
 import xyz.stratalab.sdk.models.{Datum, TransactionId, TransactionOutputAddress}
 import xyz.stratalab.sdk.syntax._

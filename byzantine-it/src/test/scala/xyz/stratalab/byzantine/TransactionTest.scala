@@ -19,6 +19,7 @@ import fs2.Stream
 import munit.{FailSuiteException, Location}
 import org.typelevel.log4cats.Logger
 import scala.concurrent.duration.{Duration, DurationInt}
+import xyz.stratalab.sdk.constants.NetworkConstants
 
 class TransactionTest extends IntegrationSuite {
 
