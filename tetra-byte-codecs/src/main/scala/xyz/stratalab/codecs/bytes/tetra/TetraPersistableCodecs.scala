@@ -3,7 +3,7 @@ package xyz.stratalab.codecs.bytes.tetra
 import cats.data.NonEmptySet
 import cats.implicits._
 import co.topl.consensus.models.BlockId
-import co.topl.crypto.models.SecretKeyKesProduct
+import xyz.stratalab.crypto.models.SecretKeyKesProduct
 import com.google.protobuf.ByteString
 import scalapb.{GeneratedMessage, GeneratedMessageCompanion}
 import scodec.Codec

@@ -3,7 +3,6 @@ package xyz.stratalab.config
 import co.topl.brambl.models.LockAddress
 import co.topl.consensus.models.{BlockId, StakingAddress}
 import co.topl.proto.node.NodeConfig
-import monocle.macros.Lenses
 import xyz.stratalab.models.Slot
 import xyz.stratalab.models.utility.Ratio
 import xyz.stratalab.numerics.implicits._
@@ -11,7 +10,6 @@ import xyz.stratalab.numerics.implicits._
 import scala.concurrent.duration._
 
 // $COVERAGE-OFF$
-@Lenses
 case class ApplicationConfig(
   bifrost: ApplicationConfig.Bifrost,
   genus:   ApplicationConfig.Genus,
@@ -20,7 +18,6 @@ case class ApplicationConfig(
 
 object ApplicationConfig {
 
-  @Lenses
   case class Bifrost(
     data:                Bifrost.Data,
     staking:             Bifrost.Staking,
@@ -37,13 +34,10 @@ object ApplicationConfig {
 
   object Bifrost {
 
-    @Lenses
     case class Data(directory: String, databaseType: String)
 
-    @Lenses
     case class Staking(directory: String, rewardAddress: LockAddress, stakingAddress: Option[StakingAddress])
 
-    @Lenses
     case class P2P(
       bindHost:          String,
       bindPort:          Int,
@@ -104,10 +98,8 @@ object ApplicationConfig {
 
     case class KnownPeer(host: String, port: Int)
 
-    @Lenses
     case class RPC(bindHost: String, bindPort: Int, networkControl: Boolean = false)
 
-    @Lenses
     case class Mempool(defaultExpirationSlots: Long, protection: MempoolProtection = MempoolProtection())
 
     case class MempoolProtection(
@@ -144,7 +136,6 @@ object ApplicationConfig {
 
     object BigBangs {
 
-      @Lenses
       case class Private(
         timestamp:        Long = System.currentTimeMillis() + 5_000L,
         stakerCount:      Int,
@@ -153,14 +144,12 @@ object ApplicationConfig {
         regtestEnabled:   Boolean = false
       ) extends BigBang
 
-      @Lenses
       case class Public(
         genesisId:  BlockId,
         sourcePath: String
       ) extends BigBang
     }
 
-    @Lenses
     case class Protocol(
       minAppVersion:              String,
       fEffective:                 Ratio,
@@ -207,7 +196,6 @@ object ApplicationConfig {
         } yield ()
     }
 
-    @Lenses
     case class Cache(
       parentChildTree:         Cache.CacheConfig,
       slotData:                Cache.CacheConfig,
@@ -235,27 +223,21 @@ object ApplicationConfig {
     )
 
     object Cache {
-
-      @Lenses
       case class CacheConfig(maximumEntries: Long, ttl: Option[FiniteDuration])
     }
 
-    @Lenses
     case class Ntp(server: String, refreshInterval: FiniteDuration, timeout: FiniteDuration)
 
-    @Lenses
     case class VersionInfo(enable: Boolean, uri: String, period: FiniteDuration)
 
   }
 
-  @Lenses
   case class Genus(
     enable:            Boolean,
     orientDbDirectory: String,
     orientDbPassword:  String
   )
 
-  @Lenses
   case class Kamon(enable: Boolean)
 }
 // $COVERAGE-ON$

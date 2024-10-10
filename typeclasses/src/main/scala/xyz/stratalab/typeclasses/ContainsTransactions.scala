@@ -6,10 +6,10 @@ import cats.implicits._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.brambl.syntax._
-import co.topl.crypto.accumulators.LeafData
-import co.topl.crypto.accumulators.merkle.MerkleTree
-import co.topl.crypto.hash.digest.{Digest, Digest32, InvalidDigestFailure}
-import co.topl.crypto.hash.{Blake2b, Blake2bHash}
+import xyz.stratalab.crypto.accumulators.LeafData
+import xyz.stratalab.crypto.accumulators.merkle.MerkleTree
+import xyz.stratalab.crypto.hash.digest.{Digest, Digest32, InvalidDigestFailure}
+import xyz.stratalab.crypto.hash.{Blake2b, Blake2bHash}
 import co.topl.node.models.FullBlockBody
 import com.google.protobuf.ByteString
 import simulacrum.{op, typeclass}

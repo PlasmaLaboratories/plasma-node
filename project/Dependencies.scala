@@ -4,7 +4,6 @@ object Dependencies {
 
   val circeVersion = "0.14.7"
   val kamonVersion = "2.7.2"
-  val simulacrumVersion = "1.0.1"
   val catsCoreVersion = "2.10.0"
   val catsEffectVersion = "3.5.4"
   val fs2Version = "3.10.2"
@@ -13,7 +12,7 @@ object Dependencies {
   val ioGrpcVersion = "1.64.0"
   val http4sVersion = "0.23.26"
   val protobufSpecsVersion = "2.0.0-beta3+3-bd44cc82-SNAPSHOT"
-  val bramblScVersion = "2.0.0-beta3+3-de74a6dd-SNAPSHOT"
+  val strataScVersion = "0.0.0-247-469e78be-20241008-2121"
 
   val catsSlf4j =
     "org.typelevel" %% "log4cats-slf4j" % "2.7.0"
@@ -76,10 +75,13 @@ object Dependencies {
   )
 
   val scodec = Seq(
-    "org.scodec" %% "scodec-core" % "1.11.10",
-    "org.scodec" %% "scodec-bits" % "1.1.38",
+    "org.scodec" %% "scodec-core" % "2.3.2",
+    "org.scodec" %% "scodec-bits" % "1.2.1",
     "org.scodec" %% "scodec-cats" % "1.2.0"
   )
+
+  val scodec213ExlusionRule = ExclusionRule("org.scodec", "scodec-bits_2.13")
+  val geny213ExlusionRule = ExclusionRule("com.lihaoyi", "geny_2.13")
 
   val mainargs = Seq(
     "com.lihaoyi" %% "mainargs" % "0.6.3"
@@ -88,14 +90,14 @@ object Dependencies {
   val fastparse = "com.lihaoyi" %% "fastparse" % "3.1.0"
 
   val monocle: Seq[ModuleID] = Seq(
-    "com.github.julien-truffaut" %% "monocle-core"  % "3.0.0-M6",
-    "com.github.julien-truffaut" %% "monocle-macro" % "3.0.0-M6"
+    "dev.optics" %% "monocle-core"  % "3.3.0",
+    "dev.optics" %% "monocle-macro" % "3.3.0"
   )
 
   val fs2Core = "co.fs2"                   %% "fs2-core"             % fs2Version
   val fs2IO = "co.fs2"                     %% "fs2-io"               % fs2Version
   val fs2ReactiveStreams = "co.fs2"        %% "fs2-reactive-streams" % fs2Version
-  val pureConfig = "com.github.pureconfig" %% "pureconfig"           % "0.17.6"
+  val pureConfig = "com.github.pureconfig" %% "pureconfig-core"      % "0.17.7"
   val circeYaml = "io.circe"               %% "circe-yaml"           % "1.15.0"
   val kubernetes = "io.kubernetes"          % "client-java"          % "20.0.1"
 
@@ -108,9 +110,9 @@ object Dependencies {
     "org.http4s" %% "http4s-ember-server" % http4sVersion
   )
 
-  val bramblScCrypto = "co.topl" %% "crypto"     % bramblScVersion
-  val bramblScSdk = "co.topl"    %% "brambl-sdk" % bramblScVersion
-  val quivr4s = "co.topl"        %% "quivr4s"    % bramblScVersion
+  val strataScCrypto = "xyz.stratalab" %% "crypto"     % strataScVersion
+  val strataScSdk = "xyz.stratalab"    %% "strata-sdk" % strataScVersion
+  val strataQuivr4s = "xyz.stratalab"  %% "quivr4s"    % strataScVersion
 
   val protobufSpecs: Seq[ModuleID] = Seq(
     "co.topl" %% "protobuf-fs2" % protobufSpecsVersion
@@ -187,7 +189,7 @@ object Dependencies {
     externalCrypto ++
     cats ++
     mUnitTest ++
-    Seq(bramblScCrypto, bramblScCrypto.classifier("tests") % Test) ++
+    Seq(strataScCrypto, strataScCrypto.classifier("tests") % Test) ++
     circe.map(_ % Test)
 
   lazy val eventTree: Seq[ModuleID] =
@@ -198,8 +200,8 @@ object Dependencies {
 
   lazy val models: Seq[ModuleID] =
     cats ++ scodec ++ protobufSpecs ++
-    Seq(bramblScSdk, bramblScSdk.classifier("tests") % Test) ++
-    Seq(quivr4s, quivr4s.classifier("tests") % Test)
+    Seq(strataScSdk, strataScSdk.classifier("tests") % Test) ++
+    Seq(strataQuivr4s, strataQuivr4s.classifier("tests") % Test)
 
   lazy val consensus: Seq[ModuleID] =
     Dependencies.mUnitTest ++ externalCrypto ++ catsEffect ++ logging ++ scalacache
@@ -215,7 +217,7 @@ object Dependencies {
 
   lazy val ledger: Seq[ModuleID] =
     Dependencies.mUnitTest ++ Dependencies.catsEffect ++ Dependencies.protobufSpecs ++ scalacache ++
-    Seq(Dependencies.bramblScSdk, Dependencies.bramblScSdk.classifier("tests") % Test)
+    Seq(Dependencies.strataScSdk, Dependencies.strataScSdk.classifier("tests") % Test)
 
   lazy val blockchain: Seq[ModuleID] =
     Dependencies.mUnitTest ++ Dependencies.catsEffect ++ logging ++ Seq(fs2Core)

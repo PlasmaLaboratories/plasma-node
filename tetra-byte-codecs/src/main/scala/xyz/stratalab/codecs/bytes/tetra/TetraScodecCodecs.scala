@@ -1,11 +1,11 @@
 package xyz.stratalab.codecs.bytes.tetra
 
 import co.topl.consensus.models._
-import co.topl.crypto.{models => nodeCryptoModels}
+import xyz.stratalab.crypto.{models => nodeCryptoModels}
 import co.topl.node.models.KnownHost
 import scodec.Codec
 import scodec.codecs._
-import shapeless.{::, HList, HNil}
+//import shapeless.{::, HList, HNil}
 import xyz.stratalab.codecs.bytes.scodecs._
 import xyz.stratalab.codecs.bytes.scodecs.valuetypes.byteStringCodec
 import xyz.stratalab.models._
@@ -26,10 +26,10 @@ trait TetraScodecCodecs {
 
   implicit val ratioCodec: Codec[Ratio] =
     (bigIntCodec :: bigIntCodec)
-      .xmapc { case numerator :: denominator :: HNil =>
+      .xmapc { (numerator, denominator) =>
         Ratio(numerator, denominator)
       } { ratio =>
-        HList(
+        (
           ratio.numerator,
           ratio.denominator
         )

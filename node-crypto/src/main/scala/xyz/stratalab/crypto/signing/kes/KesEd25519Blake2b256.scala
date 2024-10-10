@@ -1,9 +1,9 @@
-package co.topl.crypto.signing.kes
+package xyz.stratalab.crypto.signing.kes
 
-import co.topl.crypto.hash.digest.Digest32
-import co.topl.crypto.hash.{Blake2b, Blake2bHash, Hash, digest}
-import co.topl.crypto.models.KesBinaryTree
-import co.topl.crypto.signing.eddsa.Ed25519
+import xyz.stratalab.crypto.hash.digest.Digest32
+import xyz.stratalab.crypto.hash.{Blake2b, Blake2bHash, Hash, digest}
+import xyz.stratalab.crypto.models.KesBinaryTree
+import xyz.stratalab.crypto.signing.eddsa.Ed25519
 
 import KesBinaryTree._
 

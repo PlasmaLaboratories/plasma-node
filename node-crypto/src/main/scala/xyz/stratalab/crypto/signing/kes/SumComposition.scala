@@ -1,6 +1,6 @@
-package co.topl.crypto.signing.kes
+package xyz.stratalab.crypto.signing.kes
 
-import co.topl.crypto.models.KesBinaryTree
+import xyz.stratalab.crypto.models.KesBinaryTree
 
 import java.security.SecureRandom
 import scala.annotation.tailrec
@@ -79,7 +79,8 @@ class SumComposition extends KesEd25519Blake2b256 {
     // generate the binary tree with the pseudorandom number generator
     def seedTree(seed: Array[Byte], height: Int): KesBinaryTree =
       if (height == 0) {
-        SigningLeaf.tupled(sGenKeypair(seed))
+        val tupled = sGenKeypair(seed)
+        SigningLeaf(tupled._1, tupled._2)
       } else {
         val r = prng(seed)
         val left = seedTree(r._1, height - 1)
@@ -159,8 +160,9 @@ class SumComposition extends KesEd25519Blake2b256 {
     if (step >= halfTotalSteps) {
       input match {
         case MerkleNode(seed, witL, witR, oldLeaf: SigningLeaf, Empty()) =>
+          val tupled = sGenKeypair(seed)
           val newNode =
-            MerkleNode(Array.fill(seed.length)(0: Byte), witL, witR, Empty(), SigningLeaf.tupled(sGenKeypair(seed)))
+            MerkleNode(Array.fill(seed.length)(0: Byte), witL, witR, Empty(), SigningLeaf(tupled._1, tupled._2))
           eraseOldNode(oldLeaf)
           random.nextBytes(seed)
           newNode
