@@ -4,7 +4,6 @@ import cats.implicits._
 import com.google.protobuf.ByteString
 import scodec.bits.BitVector
 import scodec.{Attempt, Codec}
-import simulacrum.typeclass
 
 import scala.language.implicitConversions
 
@@ -19,7 +18,7 @@ import scala.language.implicitConversions
  *
  * @tparam T the type this type-class is implemented for
  */
-@typeclass trait Transmittable[T] {
+trait Transmittable[T] {
 
   /**
    * Encodes a value into its transmittable bytes representation to be sent to another blockchain node.
@@ -41,6 +40,21 @@ import scala.language.implicitConversions
 }
 
 object Transmittable {
+
+  def apply[A](implicit instance: Transmittable[A]): Transmittable[A] = instance
+
+  trait Ops[A] {
+    def typeClassInstance: Transmittable[A]
+    def self: A
+  }
+
+  trait ToTransmittableOps {
+
+    implicit def toTransmittableOps[A](target: A)(implicit tc: Transmittable[A]): Ops[A] = new Ops[A] {
+      val self: A = target
+      val typeClassInstance: Transmittable[A] = tc
+    }
+  }
 
   /**
    * Generates an instance of the `Transmittable` typeclass from an instance of the Scodec `Codec` typeclass.

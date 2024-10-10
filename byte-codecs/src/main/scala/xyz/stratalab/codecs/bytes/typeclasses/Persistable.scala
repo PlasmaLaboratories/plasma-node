@@ -4,7 +4,6 @@ import cats.implicits._
 import com.google.protobuf.ByteString
 import scodec.bits.BitVector
 import scodec.{Attempt, Codec}
-import simulacrum.typeclass
 
 import scala.language.implicitConversions
 
@@ -16,7 +15,7 @@ import scala.language.implicitConversions
  *
  * @tparam T the value that this typeclass is defined for
  */
-@typeclass trait Persistable[T] {
+trait Persistable[T] {
 
   /**
    * Gets the byte representation of the value that should be persisted to a data store.
@@ -35,6 +34,22 @@ import scala.language.implicitConversions
 }
 
 object Persistable {
+
+  def apply[A](implicit instance: Persistable[A]): Persistable[A] = instance
+
+  trait Ops[A] {
+    def typeClassInstance: Persistable[A]
+    def self: A
+    def persistedBytes: ByteString = typeClassInstance.persistedBytes(self)
+  }
+
+  trait ToPersistableOps {
+
+    implicit def toPersistableOps[A](target: A)(implicit tc: Persistable[A]): Ops[A] = new Ops[A] {
+      val self: A = target
+      val typeClassInstance: Persistable[A] = tc
+    }
+  }
 
   /**
    * Generates an instance of the `Persistable` typeclass from an instance of the Scodec `Codec` typeclass.
