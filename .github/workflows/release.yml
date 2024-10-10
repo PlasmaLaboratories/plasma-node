@@ -34,7 +34,7 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
         with:
-          name: Bifrost Node Jar (11)
+          name: Strata Node Jar (11)
 
       - name: Find JAR
         run: echo "JAR_LOCATION=$(find . -maxdepth 1 -name "*.jar")" >> $GITHUB_ENV
