@@ -4,7 +4,6 @@ import cats.Foldable
 import cats.data.ValidatedNec
 import cats.implicits._
 import com.google.protobuf.ByteString
-import simulacrum.{op, typeclass}
 import xyz.stratalab.crypto.accumulators.LeafData
 import xyz.stratalab.crypto.accumulators.merkle.MerkleTree
 import xyz.stratalab.crypto.hash.digest.{Digest, Digest32, InvalidDigestFailure}
