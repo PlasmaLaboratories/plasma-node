@@ -46,7 +46,14 @@ object AugmentedBoxState {
       val transactionId = transaction.id
       val transactionNewBoxIds =
         transaction.outputs
-          .mapWithIndex((_, idx) => transactionId.outputAddress(0, 0, idx))
+          .mapWithIndex((_, idx) =>
+            transactionId
+              .outputAddress(
+                transaction.inputs.map(_.address.network).head,
+                transaction.inputs.map(_.address.ledger).head,
+                idx
+              )
+          )
           .toSet
       StateAugmentation(
         spentBoxIds ++ transactionSpentBoxIds,
