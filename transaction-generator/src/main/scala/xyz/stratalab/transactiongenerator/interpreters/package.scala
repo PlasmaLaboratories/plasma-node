@@ -55,7 +55,13 @@ package object interpreters {
           .get(output.address)
           .map(lock =>
             (
-              transactionId.outputAddress(0, 0, index),
+              // transactionId.outputAddress(0, 0, index),
+              transactionId
+                .outputAddress(
+                  wallet.spendableBoxes.map(_._1.network).headOption.getOrElse(NetworkConstants.PRIVATE_NETWORK_ID),
+                  wallet.spendableBoxes.map(_._1.ledger).headOption.getOrElse(NetworkConstants.MAIN_LEDGER_ID),
+                  index
+                ),
               Box(lock, output.value)
             )
           )
