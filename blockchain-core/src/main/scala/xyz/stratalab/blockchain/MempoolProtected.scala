@@ -174,7 +174,7 @@ object MempoolProtected {
         for {
           _ <- EitherT.liftF(
             Stats[F].recordGauge(
-              "node_mempool_mean_fee_per_kb",
+              "strata_node_mempool_mean_fee_per_kb",
               "Average fee per kb in Topls.",
               Map(),
               meanFeePerKByte.toLong
@@ -182,7 +182,7 @@ object MempoolProtected {
           )
           _ <- EitherT.liftF(
             Stats[F].recordGauge(
-              "node_mempool_free_size",
+              "strata_node_mempool_free_size",
               "Current free size of the mempool.",
               Map(),
               freeMempoolSize.toLong
@@ -190,7 +190,7 @@ object MempoolProtected {
           )
           _ <- EitherT.liftF(
             Stats[F].recordGauge(
-              "node_mempool_free_size_percent",
+              "strata_node_mempool_free_size_percent",
               "Current free size ratio of the mempool.",
               Map(),
               freeMempoolSizePercent.toLong
@@ -198,7 +198,7 @@ object MempoolProtected {
           )
           _ <- EitherT.liftF(
             Stats[F].recordGauge(
-              "node_mempool_minimum_fee_per_kilobyte",
+              "strata_node_mempool_minimum_fee_per_kilobyte",
               "Minimum fee per kb.",
               Map(),
               minimumFeePerKByte.toLong

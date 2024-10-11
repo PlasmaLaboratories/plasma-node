@@ -463,7 +463,7 @@ object PeersManager {
   ): F[(State[F], Response[F])] =
     Async[F].defer(
       Stats[F].recordGauge(
-        "node_header_download_time",
+        "strata_node_header_download_time",
         "Header download time from other peer in millisecconds",
         Map("from_host" -> show"${hostId.id}"),
         delay
@@ -481,7 +481,7 @@ object PeersManager {
     val maxDelay = (tsDelays :+ delay).max
     Async[F].defer(
       Stats[F].recordGauge(
-        "node_block_download_time",
+        "strata_node_block_download_time",
         "Block download time from other peer in millisecconds",
         Map("from_host" -> show"${hostId.id}"),
         delay
@@ -649,7 +649,7 @@ object PeersManager {
     printQueueSizeInfo(thisActor, state) >>
     Async[F].defer(
       Stats[F].recordGauge(
-        "node_hot_peers_count",
+        "strata_node_hot_peers_count",
         "Number of peers in hot state for given node.",
         hotPeerAttributes,
         hotPeers.size
@@ -657,7 +657,7 @@ object PeersManager {
     ) >>
     Async[F].defer(
       Stats[F].recordGauge(
-        "node_warm_peers_count",
+        "strata_node_warm_peers_count",
         "Number of peers in warm state for given node.",
         Map("host_id" -> (show"${state.thisHostId}")),
         warmPeers.size
@@ -665,7 +665,7 @@ object PeersManager {
     ) >>
     Async[F].defer(
       Stats[F].recordGauge(
-        "node_cold_peers_count",
+        "strata_node_cold_peers_count",
         "Number of peers in cold state for given node.",
         Map("host_id" -> (show"${state.thisHostId}")),
         coldPeers.size
@@ -673,7 +673,7 @@ object PeersManager {
     ) >>
     Async[F].defer(
       Stats[F].incrementCounter(
-        "node_peer_id",
+        "strata_node_peer_id",
         "Counter with the sole purpose of adding the host attribute to track the peer id.",
         Map("host_id" -> (show"${state.thisHostId}"))
       )

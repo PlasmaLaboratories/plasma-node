@@ -78,7 +78,7 @@ object Staking {
                 show" stakingAddress=$a"
               _ <- OptionT.liftF(
                 Stats[F].recordGauge(
-                  "node_staking_is_eligible",
+                  "strata_node_staking_is_eligible",
                   "Boolean indicating if the staker is eligible in the current operational period.",
                   Map(),
                   if (isLeader) 1L else 0L
@@ -86,7 +86,7 @@ object Staking {
               )
               _ <- OptionT.liftF(
                 Stats[F].recordGauge(
-                  "node_staking_relative_stake",
+                  "strata_node_staking_relative_stake",
                   "Percentage of stake owned by the operator at the given slot.",
                   Map(),
                   (relativeStake.numerator / relativeStake.denominator).toLong

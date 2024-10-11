@@ -164,7 +164,7 @@ object BlockProducer {
               .delay(BlockBody(block.fullBody.transactions.map(_.id), block.fullBody.rewardTransaction.map(_.id)))
               .flatMap(body => Logger[F].info(show"Minted header=${block.header} body=$body")) >>
             Stats[F].recordHistogram(
-              "node_blocks_minted",
+              "strata_node_blocks_minted",
               "Blocks minted",
               Map(),
               block.header.height

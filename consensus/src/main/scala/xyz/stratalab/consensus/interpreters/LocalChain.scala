@@ -55,13 +55,13 @@ object LocalChain {
             onAdopted(slotData.slotId.blockId) >>
             headRef.set(slotData) >>
             Stats[F].recordGauge(
-              "node_block_adoptions_height",
+              "strata_node_block_adoptions_height",
               "Block adoptions",
               Map(),
               slotData.height
             ) >>
             Stats[F].recordGauge(
-              "node_block_adoptions_slot",
+              "strata_node_block_adoptions_slot",
               "Block adoptions",
               Map(),
               slotData.slotId.slot
