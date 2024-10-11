@@ -52,7 +52,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val dockerSettings = Seq(
-  dockerBaseImage := "eclipse-temurin:11-jre",
+  dockerBaseImage := "eclipse-temurin:21-jre",
   dockerUpdateLatest := sys.env.get("DOCKER_PUBLISH_LATEST_TAG").fold(false)(_.toBoolean),
   dockerLabels ++= Map(
     "strata-node.version" -> version.value
@@ -109,6 +109,11 @@ lazy val networkDelayerDockerSettings =
 lazy val testnetSimulationOrchestratorDockerSettings =
   dockerSettings ++ Seq(
     Docker / packageName := "testnet-simulation-orchestrator"
+  )
+
+lazy val transactionGeneratorDockerSettings =
+  dockerSettings ++ Seq(
+    Docker / packageName := "transaction-generator"
   )
 
 def assemblySettings(main: String) = Seq(
@@ -544,9 +549,16 @@ lazy val transactionGenerator = project
     commonSettings,
     coverageEnabled := false,
     crossScalaVersions := Seq(scala213),
+    assemblySettings("xyz.stratalab.transactiongenerator.app.TransactionGeneratorApp"),
+    assemblyJarName := s"transaction-generator-${version.value}.jar",
+    transactionGeneratorDockerSettings,
+    crossScalaVersions := Seq(scala213),
+    Compile / mainClass := Some("xyz.stratalab.transactiongenerator.app.TransactionGeneratorApp"),
+    publish / skip := true,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "xyz.stratalab.buildinfo.transactiongenerator"
   )
+  .enablePlugins(BuildInfoPlugin, JavaAppPackaging, DockerPlugin)
   .settings(libraryDependencies ++= Dependencies.transactionGenerator)
   .settings(scalamacrosParadiseSettings)
   .dependsOn(
