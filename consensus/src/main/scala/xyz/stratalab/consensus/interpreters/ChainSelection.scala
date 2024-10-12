@@ -5,7 +5,7 @@ import cats.data._
 import cats.effect._
 import cats.implicits._
 import co.topl.consensus.models.{BlockId, SlotData}
-import co.topl.crypto.hash.Blake2b512
+import xyz.stratalab.crypto.hash.Blake2b512
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.Stats
@@ -105,13 +105,13 @@ object ChainSelection {
           ) >> Stats[F].recordHistogram(
             "bifrost_chain_selection_longest_tinex",
             "Histogram to track standard chain selection and the tines as attributes.",
-            Map("tine_y_length" -> ySegment.tineLength),
-            xSegment.tineLength
+            Map("tine_y_length" -> longToJson(ySegment.tineLength)),
+            longToJson(xSegment.tineLength)
           ) >> Stats[F].recordHistogram(
             "bifrost_chain_selection_longest_tiney",
             "Histogram to track standard chain selection and the tines as attributes.",
-            Map("tine_x_length" -> xSegment.tineLength),
-            ySegment.tineLength
+            Map("tine_x_length" -> longToJson(xSegment.tineLength)),
+            longToJson(ySegment.tineLength)
           )
         case DensityChainTraversal(xSegment, ySegment, _, _) =>
           Logger[F].info(
@@ -121,7 +121,7 @@ object ChainSelection {
           ) >> Stats[F].incrementCounter(
             "bifrost_chain_selection_density",
             "Counter to track density chain selection events and the tines as attributes.",
-            Map("tine_x_length" -> xSegment.tineLength, "tine_y_length" -> ySegment.tineLength)
+            Map("tine_x_length" -> longToJson(xSegment.tineLength), "tine_y_length" -> longToJson(ySegment.tineLength))
           )
         case _ =>
           Applicative[F].unit

@@ -3,7 +3,7 @@ package xyz.stratalab.testnetsimulationorchestrator.interpreters
 import cats.effect._
 import cats.implicits._
 import co.topl.brambl.models.box.Value
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import com.google.cloud.storage._
 import com.google.protobuf.ByteString
 import fs2._

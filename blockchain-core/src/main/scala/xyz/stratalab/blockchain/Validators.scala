@@ -3,10 +3,10 @@ package xyz.stratalab.blockchain
 import cats.effect.implicits._
 import cats.effect.{Async, Resource}
 import cats.implicits._
-import co.topl.brambl.validation.algebras.{TransactionAuthorizationVerifier, TransactionSyntaxVerifier}
-import co.topl.brambl.validation.{TransactionAuthorizationInterpreter, TransactionSyntaxInterpreter}
+import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionSyntaxVerifier}
+import xyz.stratalab.sdk.validation.{TransactionAuthorizationInterpreter, TransactionSyntaxInterpreter}
 import co.topl.consensus.models.BlockId
-import co.topl.quivr.api.Verifier.instances.verifierInstance
+import xyz.stratalab.quivr.api.Verifier.instances.verifierInstance
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.algebras.{ClockAlgebra, Stats}
 import xyz.stratalab.consensus.algebras._

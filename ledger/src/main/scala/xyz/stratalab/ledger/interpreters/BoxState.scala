@@ -6,7 +6,7 @@ import cats.implicits._
 import cats.{Applicative, MonadThrow}
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.brambl.models.{TransactionId, TransactionOutputAddress}
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.BlockId
 import co.topl.node.models.BlockBody
 import xyz.stratalab.algebras.Store

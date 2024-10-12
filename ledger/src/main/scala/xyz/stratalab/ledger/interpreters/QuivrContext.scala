@@ -2,11 +2,11 @@ package xyz.stratalab.ledger.interpreters
 
 import cats.effect.Sync
 import cats.implicits._
-import co.topl.brambl.Context
+import xyz.stratalab.sdk.Context
 import co.topl.brambl.models._
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.consensus.models.BlockHeader
-import co.topl.quivr.runtime.DynamicContext
+import xyz.stratalab.quivr.runtime.DynamicContext
 import xyz.stratalab.models.Slot
 
 object QuivrContext {

@@ -22,7 +22,7 @@ object Replicator {
 
   def stream[F[_]: Async: Stats](genus: Genus[F, fs2.Stream[F, *]]): fs2.Stream[F, Unit] =
     for {
-      implicit0(logger: Logger[F]) <- fs2.Stream.eval(Slf4jLogger.fromName("Genus.Replicator"))
+      given Logger[F] <- fs2.Stream.eval(Slf4jLogger.fromName("Genus.Replicator"))
       _                            <- fs2.Stream.eval(genus.nodeRpcClient.waitForRpcStartUp)
       nodeLatestHeight <- fs2.Stream.eval(
         OptionT(genus.nodeBlockFetcher.fetchHeight()).getOrRaise(new IllegalStateException("Unknown node height"))
@@ -60,8 +60,8 @@ object Replicator {
                   Stats[F].recordGauge(
                     "bifrost_genus_replications",
                     "Genus replications",
-                    Map("block_id" -> blockData.header.id.show),
-                    blockData.header.height
+                    Map("block_id" -> stringToJson(blockData.header.id.show)),
+                    longToJson(blockData.header.height)
                   )
                 )
               )

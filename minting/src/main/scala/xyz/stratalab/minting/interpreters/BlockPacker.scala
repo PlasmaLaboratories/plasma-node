@@ -6,8 +6,8 @@ import cats.effect.implicits._
 import cats.implicits._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
-import co.topl.brambl.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
 import co.topl.consensus.models.BlockId
 import co.topl.node.models.FullBlockBody
 import fs2._

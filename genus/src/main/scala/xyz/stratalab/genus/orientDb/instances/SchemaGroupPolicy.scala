@@ -2,7 +2,7 @@ package xyz.stratalab.genus.orientDb.instances
 
 import co.topl.brambl.models.Event.GroupPolicy
 import co.topl.brambl.models.{SeriesId, TransactionOutputAddress}
-import co.topl.brambl.syntax.groupPolicyAsGroupPolicySyntaxOps
+import xyz.stratalab.sdk.syntax.groupPolicyAsGroupPolicySyntaxOps
 import com.google.protobuf.ByteString
 import xyz.stratalab.genus.orientDb.schema.OTyped.Instances._
 import xyz.stratalab.genus.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}

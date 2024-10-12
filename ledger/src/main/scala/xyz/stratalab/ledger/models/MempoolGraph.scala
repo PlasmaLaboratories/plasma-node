@@ -4,8 +4,8 @@ import cats.data.NonEmptySet
 import cats.implicits._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
-import co.topl.brambl.validation.algebras.TransactionCostCalculator
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
 import xyz.stratalab.ledger.algebras.TransactionRewardCalculatorAlgebra
 
 /**

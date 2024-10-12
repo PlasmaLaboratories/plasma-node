@@ -7,7 +7,7 @@ import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.box.Value.UpdateProposal
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.consensus.models.{BlockHeader, BlockId}
-import co.topl.crypto.hash.Blake2b256
+import xyz.stratalab.crypto.hash.Blake2b256
 import co.topl.node.models._
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.algebras.ClockAlgebra.implicits._

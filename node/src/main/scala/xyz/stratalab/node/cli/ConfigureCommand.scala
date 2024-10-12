@@ -247,10 +247,10 @@ private[cli] case class ConfigureCommandInput(
             "staking" -> Json
               .obj(
                 "directory"      -> stakingDir.asJson,
-                "reward-address" -> stakingRewardAddress.map(co.topl.brambl.codecs.AddressCodecs.encodeAddress).asJson,
+                "reward-address" -> stakingRewardAddress.map(xyz.stratalab.sdk.codecs.AddressCodecs.encodeAddress).asJson,
                 "staking-address" -> stakingAddress
                   .map(_.value.toByteArray)
-                  .map(co.topl.brambl.utils.Encoding.encodeToBase58)
+                  .map(xyz.stratalab.sdk.utils.Encoding.encodeToBase58)
                   .asJson
               )
               .dropNullValues,

@@ -9,7 +9,7 @@ import co.topl.brambl.models.LockAddress
 import co.topl.brambl.models.box.Value
 import co.topl.brambl.models.box.Value.UpdateProposal
 import co.topl.brambl.models.transaction.UnspentTransactionOutput
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.BlockId
 import co.topl.node.models.{BlockBody, FullBlock}
 import com.google.protobuf.ByteString
@@ -38,7 +38,7 @@ object InitNetworkHelpers {
           StageResultT.liftF(PrivateTestnet.HeightLockOneSpendingAddress.some.pure[F])
         case lockAddressStr =>
           EitherT
-            .fromEither[StageResultT[F, *]](co.topl.brambl.codecs.AddressCodecs.decodeAddress(lockAddressStr))
+            .fromEither[StageResultT[F, *]](xyz.stratalab.sdk.codecs.AddressCodecs.decodeAddress(lockAddressStr))
             .leftSemiflatTap(error => writeMessage(s"Invalid Lock Address. reason=$error input=$lockAddressStr"))
             .toOption
             .value

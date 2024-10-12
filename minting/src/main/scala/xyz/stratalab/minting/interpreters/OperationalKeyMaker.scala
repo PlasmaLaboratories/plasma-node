@@ -6,9 +6,9 @@ import cats.effect.implicits._
 import cats.effect.{Async, Deferred, MonadCancelThrow, Ref, Resource, Sync}
 import cats.implicits._
 import co.topl.consensus.models._
-import co.topl.crypto.generation.mnemonic.Entropy
-import co.topl.crypto.models.SecretKeyKesProduct
-import co.topl.crypto.signing._
+import xyz.stratalab.crypto.generation.mnemonic.Entropy
+import xyz.stratalab.crypto.models.SecretKeyKesProduct
+import xyz.stratalab.crypto.signing._
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
 import org.typelevel.log4cats.Logger
@@ -56,7 +56,7 @@ object OperationalKeyMaker {
         )
         .toResource
       stateRef                     <- Ref.of(none[(Long, Map[Long, Deferred[F, Option[OperationalKeyOut]]])]).toResource
-      implicit0(logger: Logger[F]) <- Slf4jLogger.fromName("OperationalKeyMaker").toResource
+      given Logger[F] <- Slf4jLogger.fromName("OperationalKeyMaker").toResource
       impl = new Impl[F](
         activationOperationalPeriod,
         address,

@@ -1,6 +1,6 @@
 package xyz.stratalab.genus.orientDb.instances
 
-import co.topl.brambl.codecs.AddressCodecs
+import xyz.stratalab.sdk.codecs.AddressCodecs
 import co.topl.brambl.models.{LockAddress, LockId}
 import xyz.stratalab.genus.orientDb.schema.OTyped.Instances._
 import xyz.stratalab.genus.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}

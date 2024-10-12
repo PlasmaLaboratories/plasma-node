@@ -5,8 +5,8 @@ import cats.effect._
 import cats.implicits._
 import co.topl.brambl.models.LockAddress
 import co.topl.consensus.models._
-import co.topl.crypto.hash.Blake2b256
-import co.topl.crypto.signing.Ed25519
+import xyz.stratalab.crypto.hash.Blake2b256
+import xyz.stratalab.crypto.signing.Ed25519
 import com.google.protobuf.ByteString
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
@@ -81,7 +81,7 @@ object Staking {
                   "bifrost_staking_is_eligible",
                   "Boolean indicating if the staker is eligible in the current operational period.",
                   Map(),
-                  if (isLeader) 1L else 0L
+                  longToJson(if (isLeader) 1L else 0L)
                 )
               )
               _ <- OptionT.liftF(
@@ -89,7 +89,7 @@ object Staking {
                   "bifrost_staking_relative_stake",
                   "Percentage of stake owned by the operator at the given slot.",
                   Map(),
-                  (relativeStake.numerator / relativeStake.denominator).toLong
+                  longToJson((relativeStake.numerator / relativeStake.denominator).toLong)
                 )
               )
               _ <- OptionT.liftF(if (isLeader) Logger[F].info(logMessage) else Logger[F].debug(logMessage))

@@ -6,7 +6,7 @@ import cats.implicits._
 import co.topl.brambl.models._
 import co.topl.brambl.models.box._
 import co.topl.brambl.models.transaction._
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.{BlockId, ProtocolVersion, SlotData, SlotId, StakingAddress}
 import co.topl.node.models.{BlockBody, FullBlock, FullBlockBody}
 import com.google.protobuf.ByteString
@@ -167,7 +167,7 @@ object BlockProducer {
               "bifrost_blocks_minted",
               "Blocks minted",
               Map(),
-              block.header.height
+              longToJson(block.header.height)
             )
           )
           // Despite being eligible, there may not be a corresponding linear KES key if the node restarted in the middle

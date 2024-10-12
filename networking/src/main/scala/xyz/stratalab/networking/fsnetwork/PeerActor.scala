@@ -6,9 +6,9 @@ import cats.effect.{Async, Concurrent, Resource}
 import cats.implicits._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.validation.algebras.TransactionSyntaxVerifier
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import co.topl.crypto.signing.Ed25519VRF
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import co.topl.node.models.{BlockBody, CurrentKnownHostsReq, PingMessage}
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.actor.{Actor, Fsm}

@@ -6,7 +6,7 @@ import cats.implicits._
 import cats.{Foldable, Order, Parallel}
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.brambl.models.{TransactionId, TransactionOutputAddress}
-import co.topl.brambl.validation.algebras.TransactionSyntaxVerifier
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import co.topl.node.models.BlockBody
 import com.google.protobuf.ByteString
 import xyz.stratalab.algebras.Stats
@@ -118,7 +118,7 @@ object BodySyntaxValidation {
                       "bifrost_max_reward_lvl",
                       "Maximum reward in lvls.",
                       Map(),
-                      maximumReward.lvl.toLong
+                      longToJson(maximumReward.lvl.toLong)
                     )
                   )
                   _ <- EitherT.liftF(
@@ -126,7 +126,7 @@ object BodySyntaxValidation {
                       "bifrost_max_reward_topl",
                       "Maximum reward in topls.",
                       Map(),
-                      maximumReward.topl.toLong
+                      longToJson(maximumReward.topl.toLong)
                     )
                   )
                   claimedLvls = TransactionRewardCalculator.sumLvls(rewardTransaction.outputs)(_.value)
@@ -136,7 +136,7 @@ object BodySyntaxValidation {
                       "bifrost_claimed_lvls",
                       "Lvls claimed via transaction rewards.",
                       Map(),
-                      claimedLvls.toLong
+                      longToJson(claimedLvls.toLong)
                     )
                   )
                   claimedTopls = TransactionRewardCalculator.sumTopls(rewardTransaction.outputs)(_.value)
@@ -146,7 +146,7 @@ object BodySyntaxValidation {
                       "bifrost_claimed_topls",
                       "Topls claimed via transaction rewards.",
                       Map(),
-                      claimedTopls.toLong
+                      longToJson(claimedTopls.toLong)
                     )
                   )
                   claimedAssets = TransactionRewardCalculator.sumAssets(rewardTransaction.outputs)(_.value)
@@ -155,7 +155,7 @@ object BodySyntaxValidation {
                       "bifrost_claimed_assets",
                       "Assets claimed via transaction rewards.",
                       Map(),
-                      claimedAssets.size.toLong
+                      longToJson(claimedAssets.size.toLong)
                     )
                   )
                   _ <- claimedAssets.toList.traverse { case (id, quantity) =>

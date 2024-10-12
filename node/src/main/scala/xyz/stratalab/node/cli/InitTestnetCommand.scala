@@ -6,7 +6,7 @@ import cats.implicits._
 import co.topl.brambl.models.box.Value
 import co.topl.brambl.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
 import co.topl.brambl.models.{Datum, Event}
-import co.topl.crypto.hash.Blake2b256
+import xyz.stratalab.crypto.hash.Blake2b256
 import co.topl.node.models.FullBlock
 import fs2.io.file.{Files, Path}
 import quivr.models.{Int128, SmallData}

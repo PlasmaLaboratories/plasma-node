@@ -17,11 +17,11 @@ object NodeRpcOps extends NodeRpcOps
 
 trait NodeRpcOps {
 
-  implicit def clientAsNodeRpcApi[F[_]](client: NodeRpc[F, Stream[F, *]]): NodeRpcApi[F] = new NodeRpcApi(client)
+  implicit def clientAsNodeRpcApi[F[_]](client: NodeRpc[F, Stream[F, _]]): NodeRpcApi[F] = new NodeRpcApi(client)
 
 }
 
-class NodeRpcApi[F[_]](val client: NodeRpc[F, Stream[F, *]]) extends AnyVal {
+class NodeRpcApi[F[_]](val client: NodeRpc[F, Stream[F, _]]) extends AnyVal {
 
   def adoptedHeaders: Stream[F, BlockHeader] =
     Stream

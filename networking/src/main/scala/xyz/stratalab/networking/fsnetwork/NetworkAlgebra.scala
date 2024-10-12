@@ -4,9 +4,9 @@ import cats.Parallel
 import cats.effect.{Async, Resource}
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.validation.algebras.TransactionSyntaxVerifier
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import co.topl.crypto.signing.Ed25519VRF
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import co.topl.node.models.BlockBody
 import com.github.benmanes.caffeine.cache.Caffeine
 import org.typelevel.log4cats.Logger

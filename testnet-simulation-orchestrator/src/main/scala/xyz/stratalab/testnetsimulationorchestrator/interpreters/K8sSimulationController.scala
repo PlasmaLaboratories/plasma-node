@@ -19,7 +19,7 @@ object K8sSimulationController {
     for {
       config <- Resource.eval(Sync[F].delay(Config.fromCluster()))
       api = new CoreV1Api(config)
-      implicit0(logger: Logger[F]) <- Resource.eval(Slf4jLogger.fromName("Bifrost.K8sSimulationController"))
+      given Logger[F] <- Resource.eval(Slf4jLogger.fromName("Bifrost.K8sSimulationController"))
     } yield new SimulationController[F] {
 
       def terminate: F[Unit] = withCallback[V1Status](api.deleteNamespace(namespace).executeAsync).void

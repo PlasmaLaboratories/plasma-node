@@ -2,7 +2,7 @@ package xyz.stratalab.genus.orientDb.instances
 
 import co.topl.brambl.models.transaction.UnspentTransactionOutput
 import co.topl.brambl.models.{TransactionInputAddress, TransactionOutputAddress}
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import co.topl.genus.services.{Txo, TxoState}
 import com.orientechnologies.orient.core.metadata.schema.OType
 import com.tinkerpop.blueprints.Vertex

@@ -24,7 +24,7 @@ object BlockHeaderToBodyValidation {
     val bodyMerkleTxRoot = block.body.merkleTreeRootHash
     val headerMerkleTxRoot = block.header.txRoot
 
-    if (bodyMerkleTxRoot === Sized.strictUnsafe(headerMerkleTxRoot)) {
+    if (bodyMerkleTxRoot === Sized.strictUnsafe[com.google.protobuf.ByteString, Lengths.`32`.type](headerMerkleTxRoot)) {
       Right(block)
     } else {
       Left(IncorrectTxRoot(Sized.strictUnsafe(headerMerkleTxRoot), bodyMerkleTxRoot))

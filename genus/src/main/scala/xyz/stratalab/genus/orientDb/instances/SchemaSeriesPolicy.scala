@@ -3,7 +3,7 @@ package xyz.stratalab.genus.orientDb.instances
 import co.topl.brambl.models.Event.SeriesPolicy
 import co.topl.brambl.models.TransactionOutputAddress
 import co.topl.brambl.models.box.{FungibilityType, QuantityDescriptorType}
-import co.topl.brambl.syntax.seriesPolicyAsSeriesPolicySyntaxOps
+import xyz.stratalab.sdk.syntax.seriesPolicyAsSeriesPolicySyntaxOps
 import com.google.protobuf.struct.Struct
 import xyz.stratalab.genus.orientDb.schema.OTyped.Instances._
 import xyz.stratalab.genus.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}

@@ -5,8 +5,8 @@ import cats.effect.Resource
 import cats.effect.kernel.Async
 import cats.implicits._
 import co.topl.consensus.models.{BlockHeader, BlockId, SlotData, SlotId}
-import co.topl.crypto.hash.Blake2b256
-import co.topl.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
+import xyz.stratalab.crypto.hash.Blake2b256
+import xyz.stratalab.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString

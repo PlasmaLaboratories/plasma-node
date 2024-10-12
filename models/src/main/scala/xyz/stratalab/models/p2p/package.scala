@@ -12,7 +12,7 @@ package object p2p {
   object RemoteAddress {
     implicit val showRemoteAddress: Show[RemoteAddress] = a => s"${a.host}:${a.port}"
   }
-  case class HostId(id: Bytes) extends AnyVal
+  case class HostId(id: Bytes)
 
   type HostReputationValue =
     Double // will be more complex, to get high reputation host shall fulfill different criteria

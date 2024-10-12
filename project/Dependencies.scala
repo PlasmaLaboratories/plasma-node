@@ -98,6 +98,7 @@ object Dependencies {
   val fs2IO = "co.fs2"                     %% "fs2-io"               % fs2Version
   val fs2ReactiveStreams = "co.fs2"        %% "fs2-reactive-streams" % fs2Version
   val pureConfig = "com.github.pureconfig" %% "pureconfig-core"      % "0.17.7"
+  val pureConfigGeneric = "com.github.pureconfig" %% "pureconfig-generic-scala3" % "0.17.7"
   val circeYaml = "io.circe"               %% "circe-yaml"           % "1.15.0"
   val kubernetes = "io.kubernetes"          % "client-java"          % "20.0.1"
 
@@ -154,7 +155,8 @@ object Dependencies {
       catsSlf4j,
       fs2Core,
       fs2IO,
-      pureConfig
+      pureConfig,
+      pureConfigGeneric
     )
 
   val testnetSimulationOrchestator: Seq[ModuleID] =
@@ -163,6 +165,7 @@ object Dependencies {
       fs2Core,
       fs2IO,
       pureConfig,
+      pureConfigGeneric,
       kubernetes,
       "com.google.cloud" % "google-cloud-storage" % "2.36.1"
     )
@@ -181,6 +184,7 @@ object Dependencies {
     http4s ++ Seq(
       catsSlf4j,
       pureConfig,
+      pureConfigGeneric,
       circeYaml
     )
 

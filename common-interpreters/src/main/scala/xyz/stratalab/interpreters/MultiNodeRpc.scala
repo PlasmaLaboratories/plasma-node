@@ -23,15 +23,15 @@ object MultiNodeRpc {
    * @tparam G a collection type
    * @return a ToplRpc interpreter
    */
-  def make[F[_]: Async, G[_]: Foldable](delegates: G[NodeRpc[F, Stream[F, *]]]): F[NodeRpc[F, Stream[F, *]]] =
+  def make[F[_]: Async, G[_]: Foldable](delegates: G[NodeRpc[F, Stream[F, _]]]): F[NodeRpc[F, Stream[F, _]]] =
     for {
-      implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F]
-    } yield new NodeRpc[F, Stream[F, *]] {
+      given Random[F] <- SecureRandom.javaSecuritySecureRandom[F]
+    } yield new NodeRpc[F, Stream[F, _]] {
 
       private val delegatesArray =
         delegates.toIterable.toArray
 
-      private def randomDelegate: F[NodeRpc[F, Stream[F, *]]] =
+      private def randomDelegate: F[NodeRpc[F, Stream[F, _]]] =
         Random[F]
           .nextIntBounded(delegatesArray.length)
           .map(delegatesArray(_))

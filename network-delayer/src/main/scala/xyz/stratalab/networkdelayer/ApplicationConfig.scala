@@ -3,13 +3,14 @@ package xyz.stratalab.networkdelayer
 import cats.Show
 import com.typesafe.config.Config
 import pureconfig.ConfigSource
-import pureconfig.generic.auto._
+import pureconfig._
+import pureconfig.generic.derivation.default._
 
 import scala.concurrent.duration.FiniteDuration
 
 case class ApplicationConfig(
   routes: List[ApplicationConfig.Route]
-)
+) derives ConfigReader
 
 object ApplicationConfig {
 
@@ -19,10 +20,10 @@ object ApplicationConfig {
     destinationHost: String,
     destinationPort: Int,
     throttle:        Option[Route.Throttle]
-  )
+  ) derives ConfigReader
 
   object Route {
-    case class Throttle(latency: FiniteDuration, downloadBytesPerSecond: Long, uploadBytesPerSecond: Long)
+    case class Throttle(latency: FiniteDuration, downloadBytesPerSecond: Long, uploadBytesPerSecond: Long) derives ConfigReader
   }
 
   def unsafe(config: Config): ApplicationConfig =

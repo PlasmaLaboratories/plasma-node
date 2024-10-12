@@ -5,7 +5,7 @@ import cats.effect._
 import cats.implicits._
 import co.topl.brambl.models.TransactionOutputAddress
 import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import co.topl.genus.services.{BlockData, Txo, TxoState}
 import co.topl.node.models.BlockBody
 import com.orientechnologies.orient.core.sql.OCommandSQL

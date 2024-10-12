@@ -8,7 +8,7 @@ import cats.{Monad, MonadThrow}
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import co.topl.crypto.signing.Ed25519VRF
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import co.topl.node.models.{KnownHost, _}
 import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
@@ -59,7 +59,7 @@ object ActorPeerHandlerBridgeAlgebra {
   // scalastyle:on parameter.number
 
   private def makeAlgebra[F[_]: Async: Logger](peersManager: PeersManagerActor[F]): BlockchainPeerHandlerAlgebra[F] = {
-    underlyingClient: BlockchainPeerClient[F] =>
+    (underlyingClient: BlockchainPeerClient[F]) =>
       for {
         // A callback/Deferred that is signaled by the "closeConnection()" call
         closeDeferred <- Deferred[F, Unit].toResource

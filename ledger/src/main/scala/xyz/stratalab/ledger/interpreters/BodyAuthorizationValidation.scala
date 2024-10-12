@@ -5,9 +5,9 @@ import cats.effect.Sync
 import cats.implicits._
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.brambl.models.{Datum, TransactionId}
-import co.topl.brambl.validation.algebras.TransactionAuthorizationVerifier
+import xyz.stratalab.sdk.validation.algebras.TransactionAuthorizationVerifier
 import co.topl.node.models.BlockBody
-import co.topl.quivr.runtime.DynamicContext
+import xyz.stratalab.quivr.runtime.DynamicContext
 import xyz.stratalab.ledger.algebras._
 import xyz.stratalab.ledger.models._
 

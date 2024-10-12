@@ -6,8 +6,8 @@ import cats.effect.implicits._
 import cats.implicits._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax.ioTransactionAsTransactionSyntaxOps
-import co.topl.brambl.validation.algebras.TransactionCostCalculator
+import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
+import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
 import co.topl.consensus.models.BlockId
 import co.topl.node.models.BlockBody
 import fs2.concurrent.Topic

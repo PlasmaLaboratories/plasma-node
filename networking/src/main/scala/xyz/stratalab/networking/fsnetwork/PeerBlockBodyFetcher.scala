@@ -6,7 +6,7 @@ import cats.effect.{Async, Resource}
 import cats.implicits._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.validation.algebras.TransactionSyntaxVerifier
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import co.topl.consensus.models.{BlockHeader, BlockId}
 import co.topl.node.models.{Block, BlockBody}
 import fs2.Stream

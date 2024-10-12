@@ -5,10 +5,10 @@ import cats.effect.kernel.Sync
 import cats.effect.{Async, Resource}
 import cats.implicits._
 import cats.{Applicative, MonadThrow}
-import co.topl.brambl.common.ContainsImmutable
+import xyz.stratalab.sdk.common.ContainsImmutable
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.{BlockHeader, BlockId}
 import co.topl.node.models.BlockBody
 import co.topl.proto.node.EpochData
@@ -178,17 +178,17 @@ object EpochDataEventSourcedState {
         _ <- Stats[F].recordGauge(
           "bifrost_epoch_timestamp",
           "Timestamp of the epoch.",
-          Map("epoch" -> epoch.toString),
-          newEpochData.startTimestamp
+          Map("epoch" -> stringToJson(epoch.toString)),
+          longToJson(newEpochData.startTimestamp)
         )
-        _ <- Stats[F].recordGauge("bifrost_epoch", "Current value of the Epoch.", Map(), newEpochData.epoch)
-        _ <- Stats[F].recordGauge("bifrost_epoch_eon", "Current value of the Eon.", Map(), newEpochData.eon)
-        _ <- Stats[F].recordGauge("bifrost_epoch_era", "Current value of the Era.", Map(), newEpochData.era)
+        _ <- Stats[F].recordGauge("bifrost_epoch", "Current value of the Epoch.", Map(), longToJson(newEpochData.epoch))
+        _ <- Stats[F].recordGauge("bifrost_epoch_eon", "Current value of the Eon.", Map(), longToJson(newEpochData.eon))
+        _ <- Stats[F].recordGauge("bifrost_epoch_era", "Current value of the Era.", Map(), longToJson(newEpochData.era))
         _ <- Stats[F].recordGauge(
           "bifrost_epoch_transaction_count",
           "Current value of the Era.",
-          Map("epoch" -> epoch.toString),
-          newEpochData.transactionCount
+          Map("epoch" -> stringToJson(epoch.toString)),
+          longToJson(newEpochData.transactionCount)
         )
       } yield state
 

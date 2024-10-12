@@ -153,7 +153,8 @@ lazy val commonScalacOptions = Seq(
   "-unchecked",
   "-Ywarn-unused:_",
   "-Yrangepos",
-  "-Ywarn-macros:after"
+  "-Ywarn-macros:after",
+  "-Ykind-projector:underscores"
 )
 
 javaOptions ++= Seq(
@@ -259,7 +260,7 @@ lazy val config = project
     name := "config",
     commonSettings,
     crossScalaVersions := Seq(scala3),
-    libraryDependencies ++= Dependencies.monocle,
+    libraryDependencies ++= Dependencies.monocle :+ Dependencies.pureConfig,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
   .dependsOn(models, numerics)

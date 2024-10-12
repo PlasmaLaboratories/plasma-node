@@ -6,8 +6,8 @@ import cats.effect._
 import cats.effect.std.{Random, SecureRandom}
 import cats.implicits._
 import co.topl.brambl.models.TransactionId
-import co.topl.brambl.syntax._
-import co.topl.brambl.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
 import co.topl.consensus.models.{BlockHeader, BlockId}
 import co.topl.genus.services.TransactionServiceFs2Grpc
 import com.typesafe.config.Config
@@ -228,7 +228,7 @@ object Orchestrator
     for {
       // Assemble a base wallet of available UTxOs
       _                            <- Logger[F].info(show"Initializing wallet")
-      implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F]
+      given Random[F] <- SecureRandom.javaSecuritySecureRandom[F]
       // Combine the Node RPCs into one interface
       client <- MultiNodeRpc.make[F, List](nodes.values.toList)
       _      <- Logger[F].info(show"Initialized wallet with spendableBoxCount=${wallet.spendableBoxes.size}")

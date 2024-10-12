@@ -6,7 +6,7 @@ import cats.effect.kernel.{Async, Fiber}
 import cats.effect.{Resource, Spawn}
 import cats.implicits._
 import co.topl.consensus.models.{BlockId, SlotData}
-import co.topl.crypto.signing.Ed25519VRF
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import co.topl.node.models.BlockBody
 import fs2.Stream
 import org.typelevel.log4cats.Logger

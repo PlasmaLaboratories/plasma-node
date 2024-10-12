@@ -1,7 +1,7 @@
 package xyz.stratalab.consensus.models
 
 import co.topl.consensus.models.{EligibilityCertificate, OperationalCertificate, StakingAddress}
-import co.topl.crypto.models.SignatureKesProduct
+import xyz.stratalab.crypto.models.SignatureKesProduct
 import xyz.stratalab.{models => legacyModels}
 
 import legacyModels.Bytes

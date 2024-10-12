@@ -3,11 +3,11 @@ package xyz.stratalab.node.cli
 import cats.effect.Async
 import cats.effect.std.Console
 import cats.implicits._
-import co.topl.brambl.constants.NetworkConstants
+import xyz.stratalab.sdk.constants.NetworkConstants
 import co.topl.brambl.models.box.Value
 import co.topl.brambl.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
 import co.topl.brambl.models.{Datum, Event, LockAddress, LockId}
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import co.topl.node.models.FullBlock
 import com.google.protobuf.ByteString
 import fs2.io.file.{Files, Path}

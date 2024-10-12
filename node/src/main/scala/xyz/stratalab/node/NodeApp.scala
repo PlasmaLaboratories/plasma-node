@@ -5,10 +5,10 @@ import cats.effect.implicits._
 import cats.effect.std.{Random, SecureRandom}
 import cats.effect.{Async, IO, Resource, Sync}
 import cats.implicits._
-import co.topl.brambl.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
+import xyz.stratalab.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
 import co.topl.consensus.models.BlockId
-import co.topl.crypto.hash.Blake2b512
-import co.topl.crypto.signing.Ed25519
+import xyz.stratalab.crypto.hash.Blake2b512
+import xyz.stratalab.crypto.signing.Ed25519
 import com.google.protobuf.ByteString
 import com.typesafe.config.Config
 import fs2.io.file.Path
@@ -80,14 +80,14 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
   // scalastyle:off method.length
   private def applicationResource: Resource[F, Unit] =
     for {
-      implicit0(syncF: Async[F])   <- Resource.pure(implicitly[Async[F]])
-      implicit0(logger: Logger[F]) <- Resource.pure(Slf4jLogger.getLoggerFromName[F]("Bifrost.Node"))
+      given Async[F]   <- Resource.pure(implicitly[Async[F]])
+      given Logger[F] <- Resource.pure(Slf4jLogger.getLoggerFromName[F]("Bifrost.Node"))
 
       _ <- Sync[F].delay(LoggingUtils.initialize(args)).toResource
       _ <- Logger[F].info(show"Launching node with args=$args").toResource
       _ <- Logger[F].info(show"Node configuration=$appConfig").toResource
 
-      implicit0(metrics: Stats[F]) <- KamonStatsRef.make[F]
+      given Stats[F] <- KamonStatsRef.make[F]
 
       cryptoResources            <- CryptoResources.make[F].toResource
       (bigBangBlock, dataStores) <- DataStoresInit.initializeData(appConfig)
@@ -99,12 +99,12 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         .value
         .toResource
 
-      implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F].toResource
+      given Random[F] <- SecureRandom.javaSecuritySecureRandom[F].toResource
 
       proposalConfig <- ProposalConfig().pure[F].toResource
       p2pSK <- OptionT(metadata.readP2PSK)
         .getOrElseF(
-          random
+          Random[F]
             .nextBytes(32)
             .flatMap(seed =>
               cryptoResources.ed25519

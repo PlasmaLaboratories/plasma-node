@@ -3,12 +3,13 @@ package xyz.stratalab.genus.orientDb.schema
 import com.orientechnologies.orient.core.db.record.OIdentifiable
 import com.orientechnologies.orient.core.metadata.schema.OType
 
-@simulacrum.typeclass
 trait OTyped[T] {
   def oType: OType
 }
 
 object OTyped {
+
+  def apply[A](implicit instance: OTyped[A]): OTyped[A] = instance
 
   def create[T](tType: OType): OTyped[T] =
     new OTyped[T] {

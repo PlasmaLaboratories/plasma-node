@@ -5,7 +5,7 @@ import cats.effect._
 import cats.implicits._
 import cats.{MonadThrow, Parallel}
 import co.topl.consensus.models.{BlockId, SlotData, SlotId}
-import co.topl.crypto.hash.{Blake2b256, Blake2b512}
+import xyz.stratalab.crypto.hash.{Blake2b256, Blake2b512}
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.google.protobuf.ByteString
 import org.typelevel.log4cats.Logger
@@ -38,7 +38,7 @@ object EtaCalculation {
     blake2b512Resource: Resource[F, Blake2b512]
   ): F[EtaCalculationAlgebra[F]] =
     for {
-      implicit0(cache: CaffeineCache[F, Bytes, Eta]) <- Sync[F].delay(
+      given CaffeineCache[F, Bytes, Eta] <- Sync[F].delay(
         CaffeineCache(caffeineCacheBuilder.build[Bytes, Entry[Eta]]())
       )
       slotsPerEpoch <- clock.slotsPerEpoch

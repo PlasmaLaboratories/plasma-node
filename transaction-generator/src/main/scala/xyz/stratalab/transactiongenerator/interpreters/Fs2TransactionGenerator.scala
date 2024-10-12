@@ -5,14 +5,14 @@ import cats.effect._
 import cats.effect.std.Random
 import cats.implicits._
 import cats.{Applicative, Monad}
-import co.topl.brambl.common.ContainsSignable._
-import co.topl.brambl.common.ContainsSignable.instances._
+import xyz.stratalab.sdk.common.ContainsSignable._
+import xyz.stratalab.sdk.common.ContainsSignable.instances._
 import co.topl.brambl.models.box._
 import co.topl.brambl.models.transaction._
 import co.topl.brambl.models.{Datum, Event, TransactionOutputAddress}
-import co.topl.brambl.syntax._
-import co.topl.brambl.validation.algebras.TransactionCostCalculator
-import co.topl.quivr.api.Prover
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
+import xyz.stratalab.quivr.api.Prover
 import com.google.protobuf.ByteString
 import fs2._
 import org.typelevel.log4cats.Logger
@@ -103,7 +103,9 @@ object Fs2TransactionGenerator {
               HeightLockOneSpendingAddress,
               Value.defaultInstance.withLvl(
                 Value.LVL(
-                  inputs.foldMap(_.value.getLvl.quantity: BigInt)
+                  // No given instance of type cats.kernel.Monoid[quivr.models.Int128] was found for parameter B of method foldMap in trait Ops
+                  // inputs.foldMap(_.value.getLvl.quantity: BigInt) TODO
+                  inputs.map(_.value.getLvl.quantity: BigInt).sum
                 )
               )
             )

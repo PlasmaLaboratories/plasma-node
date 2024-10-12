@@ -6,8 +6,8 @@ import cats.implicits._
 import cats.{Monad, Show}
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
-import co.topl.brambl.validation.TransactionSyntaxError
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.TransactionSyntaxError
 import co.topl.consensus.models.{BlockHeader, BlockId}
 import co.topl.node.models.BlockBody
 import co.topl.proto.node.{EpochData, NodeConfig}

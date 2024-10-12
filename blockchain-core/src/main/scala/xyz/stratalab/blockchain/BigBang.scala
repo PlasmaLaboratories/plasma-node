@@ -7,9 +7,9 @@ import cats.implicits._
 import co.topl.brambl.models._
 import co.topl.brambl.models.box.Value
 import co.topl.brambl.models.transaction._
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models._
-import co.topl.crypto.hash.Blake2b256
+import xyz.stratalab.crypto.hash.Blake2b256
 import co.topl.node.models._
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString

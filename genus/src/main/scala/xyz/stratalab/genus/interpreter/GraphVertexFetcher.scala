@@ -3,7 +3,7 @@ package xyz.stratalab.genus.interpreter
 import cats.effect.Resource
 import cats.implicits._
 import co.topl.brambl.models._
-import co.topl.brambl.syntax.transactionIdAsIdSyntaxOps
+import xyz.stratalab.sdk.syntax.transactionIdAsIdSyntaxOps
 import co.topl.consensus.models.BlockId
 import co.topl.genus.services._
 import com.orientechnologies.orient.core.sql.OCommandSQL

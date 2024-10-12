@@ -29,7 +29,7 @@ object KamonStatsRef {
 
   def make[F[_]: Sync]: Resource[F, Stats[F]] =
     for {
-      metrics <- Ref.of[F, Map[String, Metric[_, _]]](Map.empty).toResource
+      metrics <- Ref.of[F, Map[String, Metric[?, ?]]](Map.empty).toResource
     } yield (new Stats[F] {
 
       def incrementCounter(statName: String, description: String, attributes: Map[String, Json]): F[Unit] =

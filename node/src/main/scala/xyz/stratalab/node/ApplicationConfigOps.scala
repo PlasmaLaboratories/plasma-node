@@ -1,26 +1,28 @@
 package xyz.stratalab.node
 
 import cats.Show
-import cats.implicits._
-import co.topl.brambl.codecs.AddressCodecs.decodeAddress
+import cats.implicits.*
+import xyz.stratalab.sdk.codecs.AddressCodecs.decodeAddress
 import co.topl.brambl.models.LockAddress
-import co.topl.brambl.utils.Encoding
+import xyz.stratalab.sdk.utils.Encoding
 import co.topl.consensus.models.{BlockId, StakingAddress}
 import com.google.protobuf.ByteString
 import com.typesafe.config.Config
-import monocle._
-import monocle.macros._
-import pureconfig._
-import pureconfig.configurable._
+import monocle.*
+import monocle.macros.*
+import pureconfig.*
+import pureconfig.configurable.*
+import pureconfig.error.{CannotConvert, KeyNotFound}
 import pureconfig.generic.ProductHint
-import pureconfig.generic.auto._
+import pureconfig.generic.semiauto.*
+import scala.concurrent.duration.FiniteDuration
+import xyz.stratalab.config.ApplicationConfig.Bifrost.BigBangs
 import scodec.bits.ByteVector
 import xyz.stratalab.config.ApplicationConfig
 import xyz.stratalab.config.ApplicationConfig.Bifrost
 import xyz.stratalab.config.ApplicationConfig.Bifrost.KnownPeer
-import xyz.stratalab.models._
-import xyz.stratalab.models.utility._
-
+import xyz.stratalab.models.*
+import xyz.stratalab.models.utility.*
 import scala.util.Try
 
 // $COVERAGE-OFF$
@@ -150,6 +152,120 @@ object ApplicationConfigOps {
       case "p2p" => "p2p"
       case v     => defaultConfigFieldMapping(v)
     })
+
+  implicit val applicationConfigReader: ConfigReader[ApplicationConfig] = deriveReader[ApplicationConfig]
+
+  implicit val bifrostConfigReader: ConfigReader[ApplicationConfig.Bifrost] = deriveReader[ApplicationConfig.Bifrost]
+
+  implicit val bifrostDataConfigReader: ConfigReader[ApplicationConfig.Bifrost.Data] = deriveReader[ApplicationConfig.Bifrost.Data]
+
+  implicit val bifrostStakingConfigReader: ConfigReader[ApplicationConfig.Bifrost.Staking] = deriveReader[ApplicationConfig.Bifrost.Staking]
+
+  implicit val bifrostP2PConfigReader: ConfigReader[ApplicationConfig.Bifrost.P2P] = deriveReader[ApplicationConfig.Bifrost.P2P]
+
+//  implicit val bifrostNetworkPropertiesConfigReader: ConfigReader[ApplicationConfig.Bifrost.NetworkProperties] = deriveReader[ApplicationConfig.Bifrost.NetworkProperties]
+
+  // forProductN max items 22, current is 28, this implementation just choose 2 from application conf and use default values
+  implicit val bifrostNetworkPropertiesConfigReader: ConfigReader[ApplicationConfig.Bifrost.NetworkProperties] =
+    ConfigReader.forProduct2[ApplicationConfig.Bifrost.NetworkProperties, FiniteDuration, List[String]](
+      "ping-pong-interval",
+      "do-not-expose-ips",
+    )((pingPongInterval, doNotExposeIps) => ApplicationConfig.Bifrost.NetworkProperties(pingPongInterval = pingPongInterval, doNotExposeIds = doNotExposeIps))
+
+  implicit val bifrostRPCConfigReader: ConfigReader[ApplicationConfig.Bifrost.RPC] = deriveReader[ApplicationConfig.Bifrost.RPC]
+
+  implicit val bifrostMempoolConfigReader: ConfigReader[ApplicationConfig.Bifrost.Mempool] = deriveReader[ApplicationConfig.Bifrost.Mempool]
+
+  implicit val bifrostMempoolProtectionConfigReader: ConfigReader[ApplicationConfig.Bifrost.MempoolProtection] = deriveReader[ApplicationConfig.Bifrost.MempoolProtection]
+
+  private val bigBangPrivateReader = deriveReader[ApplicationConfig.Bifrost.BigBangs.Private]
+  private val bigBangPublicReader = deriveReader[ApplicationConfig.Bifrost.BigBangs.Public]
+
+  def extractBigBangByType(typ: String, objCur: ConfigObjectCursor): ConfigReader.Result[ApplicationConfig.Bifrost.BigBang] = typ match {
+    case "private" => bigBangPrivateReader.from(objCur)
+    case "public" => bigBangPublicReader.from(objCur)
+    case t =>
+      objCur.failed(CannotConvert(objCur.objValue.toString, "BigBangs", s"type has value $t instead of private or public"))
+  }
+
+  implicit val bifrostBigBangConfigReader: ConfigReader[ApplicationConfig.Bifrost.BigBang] =
+    ConfigReader.fromCursor{ cur =>
+      for {
+        objCur <- cur.asObjectCursor
+        typeCur <- objCur.atKey("type")
+        typeStr <- typeCur.asString
+        ident <- extractBigBangByType(typeStr, objCur)
+      } yield ident
+    }
+
+  implicit val bifrostProtocolConfigReader: ConfigReader[ApplicationConfig.Bifrost.Protocol] = deriveReader[ApplicationConfig.Bifrost.Protocol]
+
+
+  implicit val bifrostCacheCacheConfigConfigReader: ConfigReader[ApplicationConfig.Bifrost.Cache.CacheConfig] = deriveReader[ApplicationConfig.Bifrost.Cache.CacheConfig]
+
+  // forProductN max items 22, current is 23,
+  implicit val bifrostCacheConfigReader: ConfigReader[ApplicationConfig.Bifrost.Cache] =
+    ConfigReader.fromCursor{ cur =>
+      for {
+        objCur <- cur.asObjectCursor
+        parentChildTree <- objCur.atKey("parent-child-tree").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        slotData <- objCur.atKey("slot-data").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        headers <- objCur.atKey("headers").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        bodies <- objCur.atKey("bodies").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        transactions <- objCur.atKey("transactions").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        spendableBoxIds <- objCur.atKey("spendable-box-ids").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        epochBoundaries <- objCur.atKey("epoch-boundaries").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        operatorStakes <- objCur.atKey("operator-stakes").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        registrations <- objCur.atKey("registrations").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        blockHeightTree <- objCur.atKey("block-height-tree").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        eligibilities <- objCur.atKey("eligibilities").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        epochData <- objCur.atKey("epoch-data").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        registrationAccumulator <- objCur.atKey("registration-accumulator").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        txIdToBlockId <- objCur.atKey("tx-id-to-block-id").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        idToProposal <- objCur.atKey("id-to-proposal").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        epochToCreatedVersion <- objCur.atKey("epoch-to-created-version").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        versionVoting <- objCur.atKey("version-voting").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        epochToProposalIds <- objCur.atKey("epoch-to-proposal-ids").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        proposalVoting <- objCur.atKey("proposal-voting").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        epochToVersionIds <- objCur.atKey("epoch-to-version-ids").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        versionIdToProposal <- objCur.atKey("version-id-to-proposal").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        versionCounter <- objCur.atKey("version-counter").flatMap(bifrostCacheCacheConfigConfigReader.from)
+        containsCacheSize <- objCur.atKey("contains-cache-size").flatMap(BasicReaders.longConfigReader.from).orElse(Right(16384L))
+      } yield
+        ApplicationConfig.Bifrost.Cache(
+          parentChildTree,
+          slotData,
+          headers,
+          bodies,
+          transactions,
+          spendableBoxIds,
+          epochBoundaries,
+          operatorStakes,
+          registrations,
+          blockHeightTree,
+          eligibilities,
+          epochData,
+          registrationAccumulator,
+          txIdToBlockId,
+          idToProposal,
+          epochToCreatedVersion,
+          versionVoting,
+          epochToProposalIds,
+          proposalVoting,
+          epochToVersionIds,
+          versionIdToProposal,
+          versionCounter,
+          containsCacheSize
+      )
+    }
+
+  implicit val bifrostNtpConfigReader: ConfigReader[ApplicationConfig.Bifrost.Ntp] = deriveReader[ApplicationConfig.Bifrost.Ntp]
+
+  implicit val bifrostVersionInfoConfigReader: ConfigReader[ApplicationConfig.Bifrost.VersionInfo] = deriveReader[ApplicationConfig.Bifrost.VersionInfo]
+
+  implicit val genusConfigReader: ConfigReader[ApplicationConfig.Genus] = deriveReader[ApplicationConfig.Genus]
+
+  implicit val kamonConfigReader: ConfigReader[ApplicationConfig.Kamon] = deriveReader[ApplicationConfig.Kamon]
 
   implicit val showApplicationConfig: Show[ApplicationConfig] = {
     val base = Show.fromToString[ApplicationConfig]

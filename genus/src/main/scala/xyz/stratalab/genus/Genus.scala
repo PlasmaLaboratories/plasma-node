@@ -34,17 +34,17 @@ object Genus {
     fetchConcurrency: Int = 64
   ): Resource[F, Genus[F, fs2.Stream[F, *]]] =
     for {
-      implicit0(logger: Logger[F]) <- Resource.pure(Slf4jLogger.getLoggerFromName[F]("Genus"))
+      given Logger[F] <- Resource.pure(Slf4jLogger.getLoggerFromName[F]("Genus"))
       // A dedicated single thread executor in which all OrientDB calls are expected to run
-      implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-      orientdb                                 <- OrientDBFactory.make[F](dataDir, dbPassword)
+      given OrientThread[F] <- OrientThread.create[F]
+      orientdb <- OrientDBFactory.make[F](dataDir, dbPassword)
 
       dbTx <- Resource
         .eval(Async[F].delay(orientdb.getTx))
-        .evalTap(db => orientThread.delay(db.makeActive()))
+        .evalTap(db => OrientThread[F].delay(db.makeActive()))
       dbNoTx <- Resource
         .eval(Async[F].delay(orientdb.getNoTx))
-        .evalTap(db => orientThread.delay(db.makeActive()))
+        .evalTap(db => OrientThread[F].delay(db.makeActive()))
 
       rpcInterpreter   <- NodeGrpc.Client.make[F](nodeRpcHost, nodeRpcPort, tls = nodeRpcTls)
       nodeBlockFetcher <- NodeBlockFetcher.make(rpcInterpreter, fetchConcurrency)

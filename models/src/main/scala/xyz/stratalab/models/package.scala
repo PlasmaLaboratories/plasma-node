@@ -3,8 +3,6 @@ package xyz.stratalab
 import com.google.protobuf.ByteString
 import xyz.stratalab.models.utility.{Lengths, Sized}
 
-import scala.language.implicitConversions
-
 package object models {
 
   type Bytes = ByteString

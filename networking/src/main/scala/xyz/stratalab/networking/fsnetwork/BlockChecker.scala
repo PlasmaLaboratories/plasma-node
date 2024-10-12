@@ -4,7 +4,7 @@ import cats.data._
 import cats.effect.{Async, Resource}
 import cats.implicits._
 import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import co.topl.crypto.signing.Ed25519VRF
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import co.topl.node.models._
 import fs2.Stream
 import org.apache.commons.lang3.exception.ExceptionUtils
@@ -325,7 +325,7 @@ object BlockChecker {
       _ <-
         if (appliedHeaders.nonEmpty) {
           requestNextHeaders(newState) >>
-          requestMissedBodies(newState, hostId, unknownBodies)
+          requestMissedBodies(newState, hostId, unknownBodies).void
         } else { ().pure[F] }
 
     } yield (newState, newState)

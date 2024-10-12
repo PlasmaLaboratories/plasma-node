@@ -9,12 +9,13 @@ import co.topl.node.models.BlockBody
 import com.orientechnologies.orient.core.metadata.schema.OClass
 import com.orientechnologies.orient.core.metadata.schema.OClass.INDEX_TYPE
 
-@simulacrum.typeclass
 trait OIndexable[T] {
   def indexType: OClass.INDEX_TYPE
 }
 
 object OIndexable {
+
+  def apply[A](implicit instance: OIndexable[A]): OIndexable[A] = instance
 
   trait Instances {
 

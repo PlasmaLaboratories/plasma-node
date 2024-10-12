@@ -6,7 +6,7 @@ import cats.effect.{Async, Ref, Resource, Spawn}
 import cats.implicits._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.validation.algebras.TransactionSyntaxVerifier
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import fs2.Stream
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.actor.{Actor, Fsm}

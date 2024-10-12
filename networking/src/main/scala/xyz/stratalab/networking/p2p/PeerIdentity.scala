@@ -4,7 +4,7 @@ import cats.data.{EitherT, OptionT}
 import cats.effect.std.Random
 import cats.effect.{Async, Resource}
 import cats.implicits._
-import co.topl.crypto.signing.Ed25519
+import xyz.stratalab.crypto.signing.Ed25519
 import com.google.protobuf.ByteString
 import fs2.Chunk
 import fs2.io.net.Socket

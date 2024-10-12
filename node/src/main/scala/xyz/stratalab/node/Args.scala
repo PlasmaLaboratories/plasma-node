@@ -5,19 +5,19 @@ import cats.implicits._
 import co.topl.brambl.models.LockAddress
 import co.topl.consensus.models.StakingAddress
 import com.google.protobuf.ByteString
-import mainargs._
-import monocle.macros.{GenLens, Lenses}
 import monocle.syntax.all._
+import monocle.macros.GenLens
+import mainargs._
 import xyz.stratalab.common.application.{ContainsDebugFlag, ContainsUserConfigs}
 
 // $COVERAGE-OFF$
 
-@main @Lenses
+@main
 case class Args(startup: Args.Startup, runtime: Args.Runtime)
 
 object Args {
 
-  @main @Lenses
+  @main
   case class Startup(
     @arg(
       doc = "Zero or more config files (.conf, .json, .yaml) to apply to the node." +
@@ -49,7 +49,7 @@ object Args {
     idle: Boolean = false
   )
 
-  @main @Lenses
+  @main
   case class Runtime(
     @arg(
       doc = "The directory to use when saving/reading blockchain data"
@@ -92,7 +92,7 @@ object Args {
     genusArgs:   GenusArgs
   )
 
-  @main @Lenses
+  @main
   case class PrivateTestnetArgs(
     @arg(
       doc = "A UTC Unix epoch timestamp (ms) to use when seeding a private testnet."
@@ -112,7 +112,7 @@ object Args {
     regtest: Flag
   )
 
-  @main @Lenses
+  @main
   case class GenusArgs(
     @arg(
       doc = "Disables the Genus server and Genus gRPC services"
@@ -128,7 +128,7 @@ object Args {
     orientDbPassword: Option[String]
   )
 
-  @main @Lenses
+  @main
   case class StakingArgs(
     @arg(
       doc = "The directory of the block producer's staking keys"
@@ -162,7 +162,7 @@ object Args {
     override def read(strs: Seq[String]): Either[String, LockAddress] =
       strs.headOption
         .toRight("No value")
-        .flatMap(co.topl.brambl.codecs.AddressCodecs.decodeAddress(_).leftMap(_.toString))
+        .flatMap(xyz.stratalab.sdk.codecs.AddressCodecs.decodeAddress(_).leftMap(_.toString))
   }
 
   implicit object ParserStakingAddress extends TokensReader.Simple[StakingAddress] {
@@ -171,7 +171,7 @@ object Args {
     override def read(strs: Seq[String]): Either[String, StakingAddress] =
       strs.headOption
         .toRight("No value")
-        .flatMap(co.topl.brambl.utils.Encoding.decodeFromBase58(_).leftMap(_.toString))
+        .flatMap(xyz.stratalab.sdk.utils.Encoding.decodeFromBase58(_).leftMap(_.toString))
         .map(array => StakingAddress(ByteString.copyFrom(array)))
   }
 

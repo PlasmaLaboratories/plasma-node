@@ -6,7 +6,7 @@ import cats.effect.Async
 import cats.effect.implicits.genSpawnOps
 import cats.effect.kernel.{Outcome, Resource}
 import cats.implicits._
-import co.topl.crypto.signing.Ed25519VRF
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import com.google.protobuf.ByteString
 import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
@@ -147,7 +147,7 @@ object NetworkManager {
 
   private def buildSaveRemotePeersFunction[F[_]: Async: Logger](
     remotePeersStore: Store[F, Unit, Seq[KnownRemotePeer]]
-  ): Set[KnownRemotePeer] => F[Unit] = { peers: Set[KnownRemotePeer] =>
+  ): Set[KnownRemotePeer] => F[Unit] = { (peers: Set[KnownRemotePeer]) =>
     Logger[F].info(show"Going to save known hosts $peers to local data storage") >>
     remotePeersStore.put((), peers.toList)
   }

@@ -8,8 +8,8 @@ import cats.effect.std.Semaphore
 import cats.implicits._
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.brambl.models.{TransactionId, TransactionOutputAddress}
-import co.topl.brambl.syntax.ioTransactionAsTransactionSyntaxOps
-import co.topl.brambl.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
+import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
+import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
 import co.topl.consensus.models.{BlockHeader, BlockId}
 import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
@@ -177,7 +177,7 @@ object MempoolProtected {
               "bifrost_mempool_mean_fee_per_kb",
               "Average fee per kb in Topls.",
               Map(),
-              meanFeePerKByte.toLong
+              longToJson(meanFeePerKByte.toLong)
             )
           )
           _ <- EitherT.liftF(
@@ -185,7 +185,7 @@ object MempoolProtected {
               "bifrost_mempool_free_size",
               "Current free size of the mempool.",
               Map(),
-              freeMempoolSize.toLong
+              longToJson(freeMempoolSize.toLong)
             )
           )
           _ <- EitherT.liftF(
@@ -193,7 +193,7 @@ object MempoolProtected {
               "bifrost_mempool_free_size_percent",
               "Current free size ratio of the mempool.",
               Map(),
-              freeMempoolSizePercent.toLong
+              longToJson(freeMempoolSizePercent.toLong)
             )
           )
           _ <- EitherT.liftF(
@@ -201,7 +201,7 @@ object MempoolProtected {
               "bifrost_mempool_minimum_fee_per_kilobyte",
               "Minimum fee per kb.",
               Map(),
-              minimumFeePerKByte.toLong
+              longToJson(minimumFeePerKByte.toLong)
             )
           )
 

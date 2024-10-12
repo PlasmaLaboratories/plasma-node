@@ -2,7 +2,7 @@ package xyz.stratalab.consensus.interpreters
 
 import cats.effect._
 import cats.implicits._
-import co.topl.crypto.hash.Blake2b512
+import xyz.stratalab.crypto.hash.Blake2b512
 import scalacache.caffeine.CaffeineCache
 import xyz.stratalab.consensus.algebras.LeaderElectionValidationAlgebra
 import xyz.stratalab.consensus.models.VrfConfig

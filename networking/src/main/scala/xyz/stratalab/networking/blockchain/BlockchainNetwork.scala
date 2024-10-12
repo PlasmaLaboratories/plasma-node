@@ -1,16 +1,14 @@
 package xyz.stratalab.networking.blockchain
 
-import cats.Applicative
 import cats.effect._
 import cats.effect.implicits._
 import cats.effect.std.{Mutex, Random}
 import cats.implicits._
-import co.topl.crypto.signing.Ed25519
+import xyz.stratalab.crypto.signing.Ed25519
 import fs2._
 import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.networking.legacy.{ConnectionLeader, LegacyBlockchainSocketHandler}
 import xyz.stratalab.networking.multiplexer.MultiplexedReaderWriter
 import xyz.stratalab.networking.p2p._
 import xyz.stratalab.typeclasses.implicits._
@@ -43,55 +41,40 @@ object BlockchainNetwork {
     networkTimeout:          FiniteDuration
   ): Resource[F, P2PServer[F]] =
     for {
-      implicit0(logger: Logger[F]) <- Slf4jLogger.fromName("Bifrost.P2P.Blockchain").toResource
+      given Logger[F] <- Slf4jLogger.fromName("Bifrost.P2P.Blockchain").toResource
       p2pServer <- FS2P2PServer.make[F](
         host,
         bindPort,
         localPeer,
         remotePeers,
         (peer, socket) =>
-          if (peer.networkVersion == NetworkProtocolVersions.V0) {
-            // Run the legacy P2P implementation
-            (
-              Logger[F].info(show"Using legacy network protocol for peer=${peer.p2pVK}").toResource >>
-              ConnectionLeader
-                .fromSocket(socket.readN, socket.write)
-                .timeout(networkTimeout * 3)
-                .toResource
-                .flatMap(connectionLeader =>
-                  LegacyBlockchainSocketHandler
-                    .make[F](serverF, clientHandler.usePeer)(
-                      peer,
-                      connectionLeader,
-                      socket.reads,
-                      socket.writes,
-                      socket.isOpen.ifM(socket.endOfOutput >> socket.endOfInput, Applicative[F].unit)
-                    )
+          peer.networkVersion match {
+            case NetworkProtocolVersions.V0 =>
+              Logger[F].error(show"Using legacy network protocol for peer=${peer.p2pVK}").toResource
+            case NetworkProtocolVersions.V1 =>
+              for {
+                portQueues   <- BlockchainMultiplexedBuffers.make[F]
+                readerWriter <- MultiplexedReaderWriter.make(socket, networkTimeout)
+                peerCache    <- PeerStreamBuffer.make[F]
+                server       <- serverF(peer)
+                requestMutex <- Mutex[F].toResource
+                socketHandler = new BlockchainSocketHandler[F](
+                  server,
+                  portQueues,
+                  readerWriter,
+                  peerCache,
+                  requestMutex,
+                  peer,
+                  networkTimeout
                 )
-            )
-          } else {
-            // Run the "newer" P2P implementation
-            for {
-              portQueues   <- BlockchainMultiplexedBuffers.make[F]
-              readerWriter <- MultiplexedReaderWriter.make(socket, networkTimeout)
-              peerCache    <- PeerStreamBuffer.make[F]
-              server       <- serverF(peer)
-              requestMutex <- Mutex[F].toResource
-              socketHandler = new BlockchainSocketHandler[F](
-                server,
-                portQueues,
-                readerWriter,
-                peerCache,
-                requestMutex,
-                peer,
-                networkTimeout
-              )
-              _ <- socketHandler.client
-                .evalMap(clientHandler.usePeer(_).use_)
-                .compile
-                .drain
-                .toResource
-            } yield ()
+                _ <- socketHandler.client
+                  .evalMap(clientHandler.usePeer(_).use_)
+                  .compile
+                  .drain
+                  .toResource
+              } yield ()
+            case _ =>
+              Logger[F].error(show"Using unknow network protocol for peer=${peer.p2pVK}").toResource
           },
         peersStatusChangesTopic,
         ed25519Resource

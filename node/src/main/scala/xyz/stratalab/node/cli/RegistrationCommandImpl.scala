@@ -8,9 +8,9 @@ import cats.implicits._
 import co.topl.brambl.models.transaction.Schedule
 import co.topl.brambl.models.{Datum, Event}
 import co.topl.consensus.models.StakingAddress
-import co.topl.crypto.generation.EntropyToSeed
-import co.topl.crypto.generation.mnemonic.Entropy
-import co.topl.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
+import xyz.stratalab.crypto.generation.EntropyToSeed
+import xyz.stratalab.crypto.generation.mnemonic.Entropy
+import xyz.stratalab.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
 import com.google.protobuf.ByteString
 import fs2.io.file.Path
 import quivr.models.Int128
@@ -73,7 +73,7 @@ class RegistrationCommandImpl[F[_]: Async](appConfig: ApplicationConfig)(implici
     (writeMessage[F]("Please enter your LockAddress.") >>
     readInput[F].semiflatMap(lockAddressStr =>
       EitherT
-        .fromEither[F](co.topl.brambl.codecs.AddressCodecs.decodeAddress(lockAddressStr))
+        .fromEither[F](xyz.stratalab.sdk.codecs.AddressCodecs.decodeAddress(lockAddressStr))
         .leftSemiflatTap(error => c.println(s"Invalid Lock Address. reason=$error input=$lockAddressStr"))
         .toOption
         .value

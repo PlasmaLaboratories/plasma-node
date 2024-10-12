@@ -4,9 +4,9 @@ import cats.Monad
 import cats.data.{EitherT, NonEmptyChain, Validated, ValidatedNec}
 import cats.effect._
 import cats.implicits._
-import co.topl.brambl.common.ContainsEvidence
-import co.topl.brambl.common.ContainsEvidence.blake2bEvidenceFromImmutable
-import co.topl.brambl.common.ContainsImmutable.instances._
+import xyz.stratalab.sdk.common.ContainsEvidence
+import xyz.stratalab.sdk.common.ContainsEvidence.blake2bEvidenceFromImmutable
+import xyz.stratalab.sdk.common.ContainsImmutable.instances._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.box.Lock
 import co.topl.brambl.models.transaction.{IoTransaction, Schedule, SpentTransactionOutput}

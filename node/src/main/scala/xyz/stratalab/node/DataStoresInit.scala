@@ -8,9 +8,9 @@ import cats.implicits._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.box.Value.UpdateProposal
 import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models._
-import co.topl.crypto.signing.Ed25519VRF
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import co.topl.node.models._
 import co.topl.proto.node.EpochData
 import com.google.protobuf.ByteString

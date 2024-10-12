@@ -3,7 +3,7 @@ package xyz.stratalab.consensus.algebras
 import cats.Monad
 import cats.data.OptionT
 import cats.implicits._
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.{ActiveStaker, BlockId, StakingAddress}
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility.Ratio
