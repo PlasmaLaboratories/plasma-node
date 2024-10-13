@@ -3,7 +3,6 @@ import sbt.Keys.{organization, test}
 import sbtassembly.MergeStrategy
 import NativePackagerHelper.*
 
-//val scala213 = "2.13.13"
 val scala3 = "3.4.1"
 
 inThisBuild(
@@ -46,8 +45,6 @@ lazy val commonSettings = Seq(
     "Bintray" at "https://jcenter.bintray.com/",
     "jitpack" at "https://jitpack.io"
   ),
-//  addCompilerPlugin("org.typelevel" % "kind-projector"     % "0.13.3" cross CrossVersion.full), // TODO remove
-//  addCompilerPlugin("com.olegpy"   %% "better-monadic-for" % "0.3.1"), // TODO remove https://github.com/oleg-py/better-monadic-for -source:future compiler flag
   testFrameworks += TestFrameworks.MUnit,
   dependencyOverrides ++= Dependencies.protobufSpecs ++ Seq(Dependencies.strataQuivr4s),
 )
@@ -138,22 +135,12 @@ def assemblySettings(main: String) = Seq(
   }
 )
 
-lazy val scalamacrosParadiseSettings =
-  Seq(
-    scalacOptions ++= Seq(
-      "-Ymacro-annotations"
-    )
-  )
-
 lazy val commonScalacOptions = Seq(
   "-deprecation",
   "-feature",
   "-language:higherKinds",
   "-language:postfixOps",
   "-unchecked",
-  "-Ywarn-unused:_",
-  "-Yrangepos",
-  "-Ywarn-macros:after",
   "-Ykind-projector:underscores"
 )
 
@@ -252,7 +239,6 @@ lazy val node = project
     genus
   )
   .enablePlugins(BuildInfoPlugin, JavaAppPackaging, DockerPlugin)
-  .settings(scalamacrosParadiseSettings)
 
 lazy val config = project
   .in(file("config"))
@@ -264,7 +250,6 @@ lazy val config = project
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
   .dependsOn(models, numerics)
-  .settings(scalamacrosParadiseSettings)
 
 lazy val networkDelayer = project
   .in(file("network-delayer"))
@@ -284,7 +269,6 @@ lazy val networkDelayer = project
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
   .enablePlugins(BuildInfoPlugin, JavaAppPackaging, DockerPlugin)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(catsUtils, commonApplication)
 
 lazy val testnetSimulationOrchestrator = project
@@ -305,7 +289,6 @@ lazy val testnetSimulationOrchestrator = project
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
   .enablePlugins(BuildInfoPlugin, JavaAppPackaging, DockerPlugin)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(commonApplication, transactionGenerator)
 
 lazy val commonApplication = project
@@ -318,7 +301,6 @@ lazy val commonApplication = project
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
   .dependsOn(catsUtils)
-  .settings(scalamacrosParadiseSettings)
 
 lazy val models = project
   .in(file("models"))
@@ -327,10 +309,7 @@ lazy val models = project
     name := "models",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.models"
-  )
-  .settings(scalamacrosParadiseSettings)
-  .settings(
+    buildInfoPackage := "xyz.stratalab.buildinfo.models",
     libraryDependencies ++= Dependencies.models ++ Dependencies.mUnitTest,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -343,10 +322,7 @@ lazy val numerics = project
     name := "numerics",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.numerics"
-  )
-  .settings(scalamacrosParadiseSettings)
-  .settings(
+    buildInfoPackage := "xyz.stratalab.buildinfo.numerics",
     libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.scalacache,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -360,13 +336,10 @@ lazy val eventTree = project
     commonSettings,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.eventtree"
-  )
-  .settings(
+    buildInfoPackage := "xyz.stratalab.buildinfo.eventtree",
     libraryDependencies ++= Dependencies.eventTree,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(algebras % "compile->test")
 
 lazy val byteCodecs = project
@@ -376,13 +349,10 @@ lazy val byteCodecs = project
     name := "byte-codecs",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.codecs.bytes"
-  )
-  .settings(
+    buildInfoPackage := "xyz.stratalab.buildinfo.codecs.bytes",
     libraryDependencies ++= Dependencies.byteCodecs ++ Dependencies.protobufSpecs,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(munitScalamock % "test->test")
 
 lazy val tetraByteCodecs = project
@@ -392,11 +362,10 @@ lazy val tetraByteCodecs = project
     name := "tetra-byte-codecs",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.codecs.bytes.tetra"
+    buildInfoPackage := "xyz.stratalab.buildinfo.codecs.bytes.tetra" ,
+    libraryDependencies ++= Dependencies.munitScalamock ++ Dependencies.protobufSpecs,
+    excludeDependencies += Dependencies.scodec213ExlusionRule
   )
-  .settings(libraryDependencies ++= Dependencies.munitScalamock ++ Dependencies.protobufSpecs,
-    excludeDependencies += Dependencies.scodec213ExlusionRule)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(
     models     % "compile->compile;test->test",
     byteCodecs % "compile->compile;test->test",
@@ -410,13 +379,10 @@ lazy val typeclasses: Project = project
     name := "typeclasses",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.typeclasses"
-  )
-  .settings(
+    buildInfoPackage := "xyz.stratalab.buildinfo.typeclasses",
     libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.logging,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(models % "compile->compile;test->test", nodeCrypto, tetraByteCodecs)
 
 lazy val algebras = project
@@ -426,11 +392,10 @@ lazy val algebras = project
     name := "algebras",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.algebras"
+    buildInfoPackage := "xyz.stratalab.buildinfo.algebras" ,
+    libraryDependencies ++= Dependencies.algebras,
+    excludeDependencies += Dependencies.scodec213ExlusionRule
   )
-  .settings(libraryDependencies ++= Dependencies.algebras,
-    excludeDependencies += Dependencies.scodec213ExlusionRule)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(models, nodeCrypto, tetraByteCodecs, munitScalamock % "test->test")
 
 lazy val actor = project
@@ -440,10 +405,10 @@ lazy val actor = project
     name := "actor",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.actor"
+    buildInfoPackage := "xyz.stratalab.buildinfo.actor",
+    libraryDependencies ++= Dependencies.actor,
+    excludeDependencies += Dependencies.scodec213ExlusionRule
   )
-  .settings(libraryDependencies ++= Dependencies.actor,
-    excludeDependencies += Dependencies.scodec213ExlusionRule)
   .dependsOn(
     munitScalamock % "test->test"
   )
@@ -456,11 +421,10 @@ lazy val commonInterpreters = project
     commonSettings,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.commoninterpreters"
+    buildInfoPackage := "xyz.stratalab.buildinfo.commoninterpreters",
+    libraryDependencies ++= Dependencies.commonInterpreters,
+    excludeDependencies += Dependencies.scodec213ExlusionRule
   )
-  .settings(libraryDependencies ++= Dependencies.commonInterpreters,
-    excludeDependencies += Dependencies.scodec213ExlusionRule)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(
     models,
     algebras,
@@ -481,14 +445,10 @@ lazy val consensus = project
     commonSettings,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.consensus"
-  )
-  .settings(libraryDependencies ++= Dependencies.mUnitTest)
-  .settings(
-    libraryDependencies ++= Dependencies.consensus,
+    buildInfoPackage := "xyz.stratalab.buildinfo.consensus",
+    libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.consensus,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(
     ledger,
     models % "compile->compile;test->test",
@@ -510,11 +470,10 @@ lazy val minting = project
     commonSettings,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.minting"
+    buildInfoPackage := "xyz.stratalab.buildinfo.minting",
+    libraryDependencies ++= Dependencies.minting,
+    excludeDependencies += Dependencies.scodec213ExlusionRule
   )
-  .settings(libraryDependencies ++= Dependencies.minting,
-    excludeDependencies += Dependencies.scodec213ExlusionRule)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(
     models % "compile->compile;test->test",
     typeclasses,
@@ -536,11 +495,10 @@ lazy val networking = project
     commonSettings,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.networking"
-  )
-  .settings(libraryDependencies ++= Dependencies.networking,
-    excludeDependencies += Dependencies.scodec213ExlusionRule)
-  .settings(scalamacrosParadiseSettings)
+    buildInfoPackage := "xyz.stratalab.buildinfo.networking",
+    libraryDependencies ++= Dependencies.networking,
+    excludeDependencies += Dependencies.scodec213ExlusionRule
+)
   .dependsOn(
     models % "compile->compile;test->test",
     config,
@@ -568,11 +526,10 @@ lazy val transactionGenerator = project
     coverageEnabled := false,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.transactiongenerator"
+    buildInfoPackage := "xyz.stratalab.buildinfo.transactiongenerator",
+    libraryDependencies ++= Dependencies.transactionGenerator,
+    excludeDependencies += Dependencies.scodec213ExlusionRule
   )
-  .settings(libraryDependencies ++= Dependencies.transactionGenerator,
-    excludeDependencies += Dependencies.scodec213ExlusionRule)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(
     models % "compile->compile;test->test",
     typeclasses,
@@ -595,11 +552,10 @@ lazy val ledger = project
     commonSettings,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.ledger"
+    buildInfoPackage := "xyz.stratalab.buildinfo.ledger",
+    libraryDependencies ++= Dependencies.ledger,
+    excludeDependencies += Dependencies.scodec213ExlusionRule
   )
-  .settings(libraryDependencies ++= Dependencies.ledger,
-    excludeDependencies += Dependencies.scodec213ExlusionRule)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(
     models   % "compile->compile;test->test",
     algebras % "compile->compile;test->test",
@@ -618,11 +574,10 @@ lazy val blockchainCore = project
     commonSettings,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.blockchaincore"
+    buildInfoPackage := "xyz.stratalab.buildinfo.blockchaincore" ,
+    libraryDependencies ++= Dependencies.blockchain,
+    excludeDependencies += Dependencies.scodec213ExlusionRule
   )
-  .settings(libraryDependencies ++= Dependencies.blockchain,
-    excludeDependencies += Dependencies.scodec213ExlusionRule)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(
     models   % "compile->compile;test->test",
     algebras % "compile->compile;test->test",
@@ -645,11 +600,10 @@ lazy val blockchain = project
     commonSettings,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.blockchain"
+    buildInfoPackage := "xyz.stratalab.buildinfo.blockchain" ,
+    libraryDependencies ++= Dependencies.blockchain,
+    excludeDependencies += Dependencies.scodec213ExlusionRule
   )
-  .settings(libraryDependencies ++= Dependencies.blockchain,
-    excludeDependencies += Dependencies.scodec213ExlusionRule)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(
     models   % "compile->compile;test->test",
     algebras % "compile->compile;test->test",
@@ -723,14 +677,12 @@ lazy val catsUtils = project
     libraryDependencies ++= Dependencies.catsUtils,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
-  .settings(scalamacrosParadiseSettings)
 
 lazy val genus = project
   .in(file("genus"))
   .settings(
     name := "genus",
     commonSettings,
-    scalamacrosParadiseSettings,
     publish / skip := true,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),

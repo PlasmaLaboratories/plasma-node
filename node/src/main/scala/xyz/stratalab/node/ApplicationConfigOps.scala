@@ -24,6 +24,9 @@ import xyz.stratalab.config.ApplicationConfig.Bifrost.KnownPeer
 import xyz.stratalab.models.*
 import xyz.stratalab.models.utility.*
 import scala.util.Try
+import scala.concurrent.duration._
+import scala.jdk.CollectionConverters._
+
 
 // $COVERAGE-OFF$
 
@@ -157,53 +160,112 @@ object ApplicationConfigOps {
 
   implicit val bifrostConfigReader: ConfigReader[ApplicationConfig.Bifrost] = deriveReader[ApplicationConfig.Bifrost]
 
-  implicit val bifrostDataConfigReader: ConfigReader[ApplicationConfig.Bifrost.Data] = deriveReader[ApplicationConfig.Bifrost.Data]
+  implicit val bifrostDataConfigReader: ConfigReader[ApplicationConfig.Bifrost.Data] =
+    deriveReader[ApplicationConfig.Bifrost.Data]
 
-  implicit val bifrostStakingConfigReader: ConfigReader[ApplicationConfig.Bifrost.Staking] = deriveReader[ApplicationConfig.Bifrost.Staking]
+  implicit val bifrostStakingConfigReader: ConfigReader[ApplicationConfig.Bifrost.Staking] =
+    deriveReader[ApplicationConfig.Bifrost.Staking]
 
-  implicit val bifrostP2PConfigReader: ConfigReader[ApplicationConfig.Bifrost.P2P] = deriveReader[ApplicationConfig.Bifrost.P2P]
+  implicit val bifrostP2PConfigReader: ConfigReader[ApplicationConfig.Bifrost.P2P] =
+    deriveReader[ApplicationConfig.Bifrost.P2P]
 
-//  implicit val bifrostNetworkPropertiesConfigReader: ConfigReader[ApplicationConfig.Bifrost.NetworkProperties] = deriveReader[ApplicationConfig.Bifrost.NetworkProperties]
-
-  // forProductN max items 22, current is 28, this implementation just choose 2 from application conf and use default values
-  implicit val bifrostNetworkPropertiesConfigReader: ConfigReader[ApplicationConfig.Bifrost.NetworkProperties] =
-    ConfigReader.forProduct2[ApplicationConfig.Bifrost.NetworkProperties, FiniteDuration, List[String]](
-      "ping-pong-interval",
-      "do-not-expose-ips",
-    )((pingPongInterval, doNotExposeIps) => ApplicationConfig.Bifrost.NetworkProperties(pingPongInterval = pingPongInterval, doNotExposeIds = doNotExposeIps))
-
-  implicit val bifrostRPCConfigReader: ConfigReader[ApplicationConfig.Bifrost.RPC] = deriveReader[ApplicationConfig.Bifrost.RPC]
-
-  implicit val bifrostMempoolConfigReader: ConfigReader[ApplicationConfig.Bifrost.Mempool] = deriveReader[ApplicationConfig.Bifrost.Mempool]
-
-  implicit val bifrostMempoolProtectionConfigReader: ConfigReader[ApplicationConfig.Bifrost.MempoolProtection] = deriveReader[ApplicationConfig.Bifrost.MempoolProtection]
-
-  private val bigBangPrivateReader = deriveReader[ApplicationConfig.Bifrost.BigBangs.Private]
-  private val bigBangPublicReader = deriveReader[ApplicationConfig.Bifrost.BigBangs.Public]
-
-  def extractBigBangByType(typ: String, objCur: ConfigObjectCursor): ConfigReader.Result[ApplicationConfig.Bifrost.BigBang] = typ match {
-    case "private" => bigBangPrivateReader.from(objCur)
-    case "public" => bigBangPublicReader.from(objCur)
-    case t =>
-      objCur.failed(CannotConvert(objCur.objValue.toString, "BigBangs", s"type has value $t instead of private or public"))
-  }
-
-  implicit val bifrostBigBangConfigReader: ConfigReader[ApplicationConfig.Bifrost.BigBang] =
+  //  max items 22 allowed, current is 28
+  // Note, be careful with kebac case notations, where p2p is involved, example. aggressive-p2-p
+  // format: off
+  implicit val bifrostNetworkPropertiesConfigReader: ConfigReader[ApplicationConfig.Bifrost.NetworkProperties] = {
+    val defaultNetworkProperties = ApplicationConfig.Bifrost.NetworkProperties()
     ConfigReader.fromCursor{ cur =>
       for {
         objCur <- cur.asObjectCursor
-        typeCur <- objCur.atKey("type")
-        typeStr <- typeCur.asString
-        ident <- extractBigBangByType(typeStr, objCur)
-      } yield ident
+        useHostNames <- objCur.atKey("use-host-names").flatMap(BasicReaders.booleanConfigReader.from).orElse(Right(defaultNetworkProperties.useHostNames))
+        pingPongInterval <- objCur.atKey("ping-pong-interval").flatMap(BasicReaders.finiteDurationConfigReader.from).orElse(Right(defaultNetworkProperties.pingPongInterval))
+        expectedSlotsPerBlock <- objCur.atKey("expected-slots-per-block").flatMap(BasicReaders.doubleConfigReader.from).orElse(Right(defaultNetworkProperties.expectedSlotsPerBlock))
+        maxPerformanceDelayInSlots <- objCur.atKey("max-performance-delay-in-slots").flatMap(BasicReaders.doubleConfigReader.from).orElse(Right(defaultNetworkProperties.maxPerformanceDelayInSlots))
+        remotePeerNoveltyInExpectedBlocks <- objCur.atKey("remote-peer-novelty-in-expected-blocks").flatMap(BasicReaders.doubleConfigReader.from).orElse(Right(defaultNetworkProperties.remotePeerNoveltyInExpectedBlocks))
+        minimumBlockProvidingReputationPeers <- objCur.atKey("minimum-block-providing-reputation-peers").flatMap(BasicReaders.intConfigReader.from).orElse(Right(defaultNetworkProperties.minimumBlockProvidingReputationPeers))
+        minimumPerformanceReputationPeers <- objCur.atKey("minimum-performance-reputation-peers").flatMap(BasicReaders.intConfigReader.from).orElse(Right(defaultNetworkProperties.minimumPerformanceReputationPeers))
+        txImpactRatio <- objCur.atKey("tx-impact-ratio").flatMap(BasicReaders.intConfigReader.from).orElse(Right(defaultNetworkProperties.txImpactRatio))
+        minimumTxMempoolReputationPeers <- objCur.atKey("minimum-tx-mempool-reputation-peers").flatMap(BasicReaders.intConfigReader.from).orElse(Right(defaultNetworkProperties.minimumTxMempoolReputationPeers))
+        minimumRequiredReputation <- objCur.atKey("minimum-required-reputation").flatMap(BasicReaders.doubleConfigReader.from).orElse(Right(defaultNetworkProperties.minimumRequiredReputation))
+        minimumBlockProvidingReputation <- objCur.atKey("minimum-block-providing-reputation").flatMap(BasicReaders.intConfigReader.from).orElse(Right(defaultNetworkProperties.minimumBlockProvidingReputation))
+        minimumEligibleColdConnections <- objCur.atKey("minimum-eligible-cold-connections").flatMap(BasicReaders.intConfigReader.from).orElse(Right(defaultNetworkProperties.minimumEligibleColdConnections ))
+        maximumEligibleColdConnections <- objCur.atKey("maximum-eligible-cold-connections").flatMap(BasicReaders.intConfigReader.from).orElse(Right(defaultNetworkProperties.maximumEligibleColdConnections ))
+        clearColdIfNotActiveForInMs <- objCur.atKey("clear-cold-if-not-active-for-in-ms").flatMap(BasicReaders.longConfigReader.from).orElse(Right(defaultNetworkProperties.clearColdIfNotActiveForInMs))
+        minimumHotConnections  <- objCur.atKey("minimum-hot-connections").flatMap(BasicReaders.intConfigReader.from).orElse(Right(defaultNetworkProperties.minimumHotConnections))
+        maximumWarmConnections  <- objCur.atKey("maximum-warm-connections").flatMap(BasicReaders.intConfigReader.from).orElse(Right(defaultNetworkProperties.maximumWarmConnections))
+        warmHostsUpdateEveryNBlock <- objCur.atKey("warm-hosts-update-every-n-block").flatMap(BasicReaders.doubleConfigReader.from).orElse(Right(defaultNetworkProperties.warmHostsUpdateEveryNBlock))
+        p2pTrackInterval <- objCur.atKey("p2p-track-interval").flatMap(BasicReaders.finiteDurationConfigReader.from).orElse(Right(defaultNetworkProperties.p2pTrackInterval))
+        closeTimeoutFirstDelayInMs <- objCur.atKey("close-timeout-first-delay-in-ms").flatMap(BasicReaders.longConfigReader.from).orElse(Right(defaultNetworkProperties.closeTimeoutFirstDelayInMs))
+        closeTimeoutWindowInMs <- objCur.atKey("close-timeout-window-in-ms").flatMap(BasicReaders.longConfigReader.from).orElse(Right(defaultNetworkProperties.closeTimeoutWindowInMs))
+        aggressiveP2P <- objCur.atKey("aggressive-p2-p").flatMap(BasicReaders.booleanConfigReader.from).orElse(Right(defaultNetworkProperties.aggressiveP2P))
+        aggressiveP2PCount <- objCur.atKey("aggressive-p2-p-count").flatMap(BasicReaders.intConfigReader.from).orElse(Right(defaultNetworkProperties.aggressiveP2PCount))
+        aggressiveP2PMaxCloseEvent <- objCur.atKey("aggressive-p2-p-max-close-event").flatMap(BasicReaders.intConfigReader.from).orElse(Right(defaultNetworkProperties.aggressiveP2PMaxCloseEvent))
+        defaultTimeout <- objCur.atKey("default-timeout").flatMap(BasicReaders.finiteDurationConfigReader.from).orElse(Right(defaultNetworkProperties.defaultTimeout))
+        chunkSize<- objCur.atKey("chunk-size").flatMap(BasicReaders.intConfigReader.from).orElse(Right(defaultNetworkProperties.chunkSize))
+        doNotExposeIps <- objCur.atKey("do-not-expose-ips").flatMap(BasicReaders.configListConfigReader.from).map(_.unwrapped.asInstanceOf[java.util.List[String]]).map(_.asScala.toList).orElse(Right(defaultNetworkProperties.doNotExposeIps))
+        doNotExposeIds <- objCur.atKey("do-not-expose-ids").flatMap(BasicReaders.configListConfigReader.from).map(_.unwrapped.asInstanceOf[java.util.List[String]]).map(_.asScala.toList).orElse(Right(defaultNetworkProperties.doNotExposeIds))
+        slotDataParentDepth <- objCur.atKey("slot-data-parent-depth").flatMap(BasicReaders.intConfigReader.from).orElse(Right(defaultNetworkProperties.slotDataParentDepth))
+
+      } yield
+        ApplicationConfig.Bifrost.NetworkProperties(
+          useHostNames = useHostNames,
+          pingPongInterval = pingPongInterval,
+          expectedSlotsPerBlock = expectedSlotsPerBlock,
+          maxPerformanceDelayInSlots = maxPerformanceDelayInSlots,
+          remotePeerNoveltyInExpectedBlocks = remotePeerNoveltyInExpectedBlocks,
+          minimumBlockProvidingReputationPeers = minimumBlockProvidingReputationPeers,
+          minimumPerformanceReputationPeers = minimumPerformanceReputationPeers,
+          txImpactRatio= txImpactRatio,
+          minimumTxMempoolReputationPeers= minimumTxMempoolReputationPeers,
+          minimumRequiredReputation= minimumRequiredReputation,
+          minimumEligibleColdConnections= minimumEligibleColdConnections,
+          maximumEligibleColdConnections= maximumEligibleColdConnections,
+          clearColdIfNotActiveForInMs=clearColdIfNotActiveForInMs ,
+          minimumHotConnections=minimumHotConnections ,
+          maximumWarmConnections= maximumWarmConnections,
+          warmHostsUpdateEveryNBlock=warmHostsUpdateEveryNBlock ,
+          p2pTrackInterval= p2pTrackInterval,
+          closeTimeoutFirstDelayInMs=closeTimeoutFirstDelayInMs ,
+          closeTimeoutWindowInMs= closeTimeoutWindowInMs,
+          aggressiveP2P= aggressiveP2P,
+          aggressiveP2PCount= aggressiveP2PCount,
+          aggressiveP2PMaxCloseEvent= aggressiveP2PMaxCloseEvent,
+          defaultTimeout= defaultTimeout,
+          chunkSize= chunkSize,
+          doNotExposeIps= doNotExposeIps,
+          doNotExposeIds= doNotExposeIds,
+          slotDataParentDepth= slotDataParentDepth
+        )
     }
+  }
+  // format: on
 
-  implicit val bifrostProtocolConfigReader: ConfigReader[ApplicationConfig.Bifrost.Protocol] = deriveReader[ApplicationConfig.Bifrost.Protocol]
+  implicit val bifrostRPCConfigReader: ConfigReader[ApplicationConfig.Bifrost.RPC] =
+    deriveReader[ApplicationConfig.Bifrost.RPC]
 
+  implicit val bifrostMempoolConfigReader: ConfigReader[ApplicationConfig.Bifrost.Mempool] =
+    deriveReader[ApplicationConfig.Bifrost.Mempool]
 
-  implicit val bifrostCacheCacheConfigConfigReader: ConfigReader[ApplicationConfig.Bifrost.Cache.CacheConfig] = deriveReader[ApplicationConfig.Bifrost.Cache.CacheConfig]
+  implicit val bifrostMempoolProtectionConfigReader: ConfigReader[ApplicationConfig.Bifrost.MempoolProtection] =
+    deriveReader[ApplicationConfig.Bifrost.MempoolProtection]
 
-  // forProductN max items 22, current is 23,
+  implicit val bigBangPrivateReader: ConfigReader[ApplicationConfig.Bifrost.BigBangs.Private] =
+    deriveReader[ApplicationConfig.Bifrost.BigBangs.Private]
+
+  implicit val bigBangPublicReader: ConfigReader[ApplicationConfig.Bifrost.BigBangs.Public] =
+    deriveReader[ApplicationConfig.Bifrost.BigBangs.Public]
+
+  implicit val bifrostBigBangConfigReader: ConfigReader[ApplicationConfig.Bifrost.BigBang] =
+    deriveReader[ApplicationConfig.Bifrost.BigBang]
+
+  implicit val bifrostProtocolConfigReader: ConfigReader[ApplicationConfig.Bifrost.Protocol] =
+    deriveReader[ApplicationConfig.Bifrost.Protocol]
+
+  implicit val bifrostCacheCacheConfigConfigReader: ConfigReader[ApplicationConfig.Bifrost.Cache.CacheConfig] =
+    deriveReader[ApplicationConfig.Bifrost.Cache.CacheConfig]
+
+  // max items 22, current is 23, a potential issue could be that containsCacheSize undefined here, could assign a default that defined on case class
+  // format: off
   implicit val bifrostCacheConfigReader: ConfigReader[ApplicationConfig.Bifrost.Cache] =
     ConfigReader.fromCursor{ cur =>
       for {
@@ -230,7 +292,7 @@ object ApplicationConfigOps {
         epochToVersionIds <- objCur.atKey("epoch-to-version-ids").flatMap(bifrostCacheCacheConfigConfigReader.from)
         versionIdToProposal <- objCur.atKey("version-id-to-proposal").flatMap(bifrostCacheCacheConfigConfigReader.from)
         versionCounter <- objCur.atKey("version-counter").flatMap(bifrostCacheCacheConfigConfigReader.from)
-        containsCacheSize <- objCur.atKey("contains-cache-size").flatMap(BasicReaders.longConfigReader.from).orElse(Right(16384L))
+        containsCacheSize <- objCur.atKey("contains-cache-size").flatMap(BasicReaders.longConfigReader.from).orElse(Right(16384L)) // this value should be the same than defined on case class
       } yield
         ApplicationConfig.Bifrost.Cache(
           parentChildTree,
@@ -258,10 +320,13 @@ object ApplicationConfigOps {
           containsCacheSize
       )
     }
+  // format: on
 
-  implicit val bifrostNtpConfigReader: ConfigReader[ApplicationConfig.Bifrost.Ntp] = deriveReader[ApplicationConfig.Bifrost.Ntp]
+  implicit val bifrostNtpConfigReader: ConfigReader[ApplicationConfig.Bifrost.Ntp] =
+    deriveReader[ApplicationConfig.Bifrost.Ntp]
 
-  implicit val bifrostVersionInfoConfigReader: ConfigReader[ApplicationConfig.Bifrost.VersionInfo] = deriveReader[ApplicationConfig.Bifrost.VersionInfo]
+  implicit val bifrostVersionInfoConfigReader: ConfigReader[ApplicationConfig.Bifrost.VersionInfo] =
+    deriveReader[ApplicationConfig.Bifrost.VersionInfo]
 
   implicit val genusConfigReader: ConfigReader[ApplicationConfig.Genus] = deriveReader[ApplicationConfig.Genus]
 
