@@ -1,6 +1,6 @@
-package co.topl.crypto.utils
+package xyz.stratalab.crypto.utils
 
-import co.topl.crypto.models._
+import xyz.stratalab.crypto.models._
 import org.scalacheck.{Arbitrary, Gen}
 
 object NodeCryptoGenerators {

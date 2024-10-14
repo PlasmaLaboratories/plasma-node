@@ -15,7 +15,7 @@ class FOpsSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
   test("Should emit log messages if an operation is slow") {
     for {
       messages <- Queue.unbounded[F, String]
-      implicit0(logger: Logger[F]) = new LoggerEnqueueWarnMessages(messages)
+      given Logger[F] = new LoggerEnqueueWarnMessages(messages)
       _ <- Async[F].delayBy(().pure[F], 1.seconds).warnIfSlow("FOpsSpec", 100.milli, 100.milli)
       // Give an acceptable range since the clock/delay granularity may not be exact
       _ <- messages.size.map(size => size > 7 && size < 11).assert
@@ -25,7 +25,7 @@ class FOpsSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
   test("Should not emit log messages if an operation is fast enough") {
     for {
       messages <- Queue.unbounded[F, String]
-      implicit0(logger: Logger[F]) = new LoggerEnqueueWarnMessages(messages)
+      given Logger[F] = new LoggerEnqueueWarnMessages(messages)
       _ <- ().pure[F].warnIfSlow("FOpsSpec", 200.milli, 200.milli)
       _ <- messages.size.assertEquals(0)
     } yield ()

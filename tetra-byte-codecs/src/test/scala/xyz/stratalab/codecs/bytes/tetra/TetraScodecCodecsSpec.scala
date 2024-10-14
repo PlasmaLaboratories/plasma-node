@@ -2,7 +2,7 @@ package xyz.stratalab.codecs.bytes.tetra
 
 import cats.{Eq, Show}
 import co.topl.consensus.models.{BlockId, EligibilityCertificate}
-import co.topl.crypto.models.KesBinaryTree
+import xyz.stratalab.crypto.models.KesBinaryTree
 import org.scalacheck.Gen
 import xyz.stratalab.codecs.bytes.CodecSpec
 import xyz.stratalab.models._
@@ -30,25 +30,25 @@ class TetraScodecCodecsSpec extends CodecSpec {
   codecBehavior[KesBinaryTree](
     "KesBinaryTree",
     TetraScodecCodecs.nodeCryptoKesBinaryTreeCodec,
-    co.topl.crypto.utils.NodeCryptoGenerators.kesBinaryTreeGen
+    xyz.stratalab.crypto.utils.NodeCryptoGenerators.kesBinaryTreeGen
   )
 
-  codecBehavior[co.topl.crypto.models.SignatureKesSum](
-    "co.topl.crypto.models.SignatureKesSum",
+  codecBehavior[xyz.stratalab.crypto.models.SignatureKesSum](
+    "xyz.stratalab.crypto.models.SignatureKesSum",
     nodeCryptoSignatureKesSumCodec,
-    co.topl.crypto.utils.NodeCryptoGenerators.signatureKesSumArbitrary.arbitrary
+    xyz.stratalab.crypto.utils.NodeCryptoGenerators.signatureKesSumArbitrary.arbitrary
   )
 
-  codecBehavior[co.topl.crypto.models.SecretKeyKesSum](
-    "co.topl.crypto.models.SecretKeyKesSum",
+  codecBehavior[xyz.stratalab.crypto.models.SecretKeyKesSum](
+    "xyz.stratalab.crypto.models.SecretKeyKesSum",
     nodeCryptoSecretKeyKesSumCodec,
-    co.topl.crypto.utils.NodeCryptoGenerators.kesSumSKGen
+    xyz.stratalab.crypto.utils.NodeCryptoGenerators.kesSumSKGen
   )
 
-  codecBehavior[co.topl.crypto.models.SecretKeyKesProduct](
-    "co.topl.crypto.models.SecretKeyKesProduct",
+  codecBehavior[xyz.stratalab.crypto.models.SecretKeyKesProduct](
+    "xyz.stratalab.crypto.models.SecretKeyKesProduct",
     nodeCryptoSecretKeyKesProductCodec,
-    co.topl.crypto.utils.NodeCryptoGenerators.kesProductSKGen
+    xyz.stratalab.crypto.utils.NodeCryptoGenerators.kesProductSKGen
   )
 
   codecBehavior[BlockId](

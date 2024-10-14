@@ -53,7 +53,7 @@ object SchemaLockAddress {
           readOnly = true,
           notNull = true
         )
-        .withIndex[LockAddress](Field.AddressIndex, Field.AddressId)(OIndexable.Instances.address),
+        .withIndex[LockAddress](Field.AddressIndex, Field.AddressId)(using OIndexable.Instances.address),
       v =>
         LockAddress(
           network = v(Field.Network),

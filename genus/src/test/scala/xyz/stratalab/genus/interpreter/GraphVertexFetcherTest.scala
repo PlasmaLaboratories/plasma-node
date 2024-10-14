@@ -2,9 +2,9 @@ package xyz.stratalab.genus.interpreter
 
 import cats.data.EitherT
 import cats.implicits._
-import co.topl.brambl.generators.{ModelGenerators => BramblGenerator}
+import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGenerator}
 import co.topl.brambl.models.Event.{GroupPolicy, SeriesPolicy}
-import co.topl.brambl.syntax.{
+import xyz.stratalab.sdk.syntax.{
   groupPolicyAsGroupPolicySyntaxOps,
   ioTransactionAsTransactionSyntaxOps,
   seriesPolicyAsSeriesPolicySyntaxOps
@@ -33,10 +33,10 @@ class GraphVertexFetcherTest
     with DbFixtureUtil {
 
   orientDbFixture.test("On fetchBlockHeader, None should be returned") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, given OrientThread[F]) =>
       val res = for {
         blockHeader        <- ModelGenerators.arbitraryHeader.arbitrary.first.pure[F].toResource
-        notx               <- oThread.delay(odbFactory.getNoTx).toResource
+        notx               <- OrientThread[F].delay(odbFactory.getNoTx).toResource
         graphVertexFetcher <- GraphVertexFetcher.make[F](notx)
         _ <- assertIO(
           graphVertexFetcher.fetchHeader(blockHeader.id),
@@ -48,14 +48,14 @@ class GraphVertexFetcherTest
   }
 
   orientDbFixture.test("On fetchBlockHeader, a blockHeader should be returned") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, given OrientThread[F]) =>
       val res = for {
         blockHeader        <- ModelGenerators.arbitraryHeader.arbitrary.first.pure[F].toResource
-        tx                 <- oThread.delay(odbFactory.getTx).toResource
-        notx               <- oThread.delay(odbFactory.getNoTx).toResource
+        tx                 <- OrientThread[F].delay(odbFactory.getTx).toResource
+        notx               <- OrientThread[F].delay(odbFactory.getNoTx).toResource
         graphVertexFetcher <- GraphVertexFetcher.make[F](notx)
 
-        _ <- oThread.delay {
+        _ <- OrientThread[F].delay {
           tx.addBlockHeader(blockHeader)
           tx.commit()
           tx.shutdown()
@@ -69,14 +69,14 @@ class GraphVertexFetcherTest
   }
 
   orientDbFixture.test("On fetchHeaderByHeight, a blockHeader should be returned") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, given OrientThread[F]) =>
       val res = for {
         blockHeader        <- ModelGenerators.arbitraryHeader.arbitrary.first.copy(height = 1).pure[F].toResource
-        tx                 <- oThread.delay(odbFactory.getTx).toResource
-        notx               <- oThread.delay(odbFactory.getNoTx).toResource
+        tx                 <- OrientThread[F].delay(odbFactory.getTx).toResource
+        notx               <- OrientThread[F].delay(odbFactory.getNoTx).toResource
         graphVertexFetcher <- GraphVertexFetcher.make[F](notx)
 
-        _ <- oThread.delay {
+        _ <- OrientThread[F].delay {
           tx.addBlockHeader(blockHeader)
           tx.commit()
           tx.shutdown()
@@ -90,14 +90,14 @@ class GraphVertexFetcherTest
   }
 
   orientDbFixture.test("On fetchHeaderByDepth, a blockHeader should be returned") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, given OrientThread[F]) =>
       val res = for {
         blockHeader        <- ModelGenerators.arbitraryHeader.arbitrary.first.copy(height = 1).pure[F].toResource
-        tx                 <- oThread.delay(odbFactory.getTx).toResource
-        notx               <- oThread.delay(odbFactory.getNoTx).toResource
+        tx                 <- OrientThread[F].delay(odbFactory.getTx).toResource
+        notx               <- OrientThread[F].delay(odbFactory.getNoTx).toResource
         graphVertexFetcher <- GraphVertexFetcher.make[F](notx)
 
-        _ <- oThread.delay {
+        _ <- OrientThread[F].delay {
           tx.addBlockHeader(blockHeader)
           tx.commit()
           tx.shutdown()
@@ -112,9 +112,9 @@ class GraphVertexFetcherTest
   }
 
   orientDbFixture.test("On fetchBody, None should be returned") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, given OrientThread[F]) =>
       val res = for {
-        notx <- oThread.delay(odbFactory.getNoTx).toResource
+        notx <- OrientThread[F].delay(odbFactory.getNoTx).toResource
 
         blockHeaderVertex = new OrientVertex(notx, new ORecordId(1, 1))
 
@@ -127,14 +127,14 @@ class GraphVertexFetcherTest
   }
 
   orientDbFixture.test("On fetchBody, Body should be returned") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, given  OrientThread[F]) =>
       val res = for {
-        tx   <- oThread.delay(odbFactory.getTx).toResource
-        notx <- oThread.delay(odbFactory.getNoTx).toResource
+        tx   <- OrientThread[F].delay(odbFactory.getTx).toResource
+        notx <- OrientThread[F].delay(odbFactory.getNoTx).toResource
 
         blockHeader <- ModelGenerators.arbitraryHeader.arbitrary.first.pure[F].toResource
 
-        blockHeaderVertex <- oThread.delay {
+        blockHeaderVertex <- OrientThread[F].delay {
           val blockHeaderVertex = tx.addBlockHeader(blockHeader)
           // TODO add body Vertex should set the property inside the ops method
           val bodyVertex = tx.addBody(BlockBody(Seq.empty))
@@ -155,9 +155,9 @@ class GraphVertexFetcherTest
   }
 
   orientDbFixture.test("On fetchTransactions, None should be returned") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, given OrientThread[F]) =>
       val res = for {
-        notx <- oThread.delay(odbFactory.getNoTx).toResource
+        notx <- OrientThread[F].delay(odbFactory.getNoTx).toResource
 
         blockHeaderVertex = new OrientVertex(notx, new ORecordId(1, 1))
 
@@ -173,10 +173,10 @@ class GraphVertexFetcherTest
   }
 
   orientDbFixture.test("On fetchLockAddress, None should be returned") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, given OrientThread[F]) =>
       val res = for {
         lockAddress        <- BramblGenerator.arbitraryLockAddress.arbitrary.first.pure[F].toResource
-        notx               <- oThread.delay(odbFactory.getNoTx).toResource
+        notx               <- OrientThread[F].delay(odbFactory.getNoTx).toResource
         graphVertexFetcher <- GraphVertexFetcher.make[F](notx)
 
         _ <- assertIO(
@@ -189,14 +189,14 @@ class GraphVertexFetcherTest
   }
 
   orientDbFixture.test("On fetchLockAddress, a LockAddress should be returned") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, given OrientThread[F]) =>
       val res = for {
         lockAddress        <- BramblGenerator.arbitraryLockAddress.arbitrary.first.pure[F].toResource
-        tx                 <- oThread.delay(odbFactory.getTx).toResource
-        notx               <- oThread.delay(odbFactory.getNoTx).toResource
+        tx                 <- OrientThread[F].delay(odbFactory.getTx).toResource
+        notx               <- OrientThread[F].delay(odbFactory.getNoTx).toResource
         graphVertexFetcher <- GraphVertexFetcher.make[F](notx)
 
-        _ <- oThread.delay {
+        _ <- OrientThread[F].delay {
           tx.addLockAddress(lockAddress)
           tx.commit()
           tx.shutdown()
@@ -211,10 +211,10 @@ class GraphVertexFetcherTest
   }
 
   orientDbFixture.test("On fetchTxo, None should be returned") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, given OrientThread[F]) =>
       val res = for {
         transactionOutputAddress <- BramblGenerator.arbitraryTransactionOutputAddress.arbitrary.first.pure[F].toResource
-        notx                     <- oThread.delay(odbFactory.getNoTx).toResource
+        notx                     <- OrientThread[F].delay(odbFactory.getNoTx).toResource
         graphVertexFetcher       <- GraphVertexFetcher.make[F](notx)
 
         _ <- assertIO(
@@ -228,16 +228,16 @@ class GraphVertexFetcherTest
   }
 
   orientDbFixture.test("On fetchTxo, Txo should be returned") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, given  OrientThread[F]) =>
       val res = for {
         transactionOutputAddress <- BramblGenerator.arbitraryTransactionOutputAddress.arbitrary.first.pure[F].toResource
         unspentTransactionOutput <- BramblGenerator.arbitraryUnspentTransactionOutput.arbitrary.first.pure[F].toResource
 
-        tx                 <- oThread.delay(odbFactory.getTx).toResource
-        notx               <- oThread.delay(odbFactory.getNoTx).toResource
+        tx                 <- OrientThread[F].delay(odbFactory.getTx).toResource
+        notx               <- OrientThread[F].delay(odbFactory.getNoTx).toResource
         graphVertexFetcher <- GraphVertexFetcher.make[F](notx)
 
-        _ <- oThread.delay {
+        _ <- OrientThread[F].delay {
           tx.addTxo(Txo(unspentTransactionOutput, TxoState.SPENT, transactionOutputAddress))
           tx.commit()
           tx.shutdown()
@@ -253,7 +253,7 @@ class GraphVertexFetcherTest
 
   orientDbFixture.test(
     "On fetchTxoStats, a default instance of TxoStats should be returned"
-  ) { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  ) { case (odbFactory, given OrientThread[F]) =>
     val res = for {
       graphVertexFetcher <- GraphVertexFetcher.make[F](odbFactory.getNoTx)
       _ <- assertIO(graphVertexFetcher.fetchTxoStats(), TxoStats.defaultInstance.asRight[GE]).toResource
@@ -264,15 +264,15 @@ class GraphVertexFetcherTest
 
   orientDbFixture.test(
     "On fetchTxoStats, TxoStats SPENT should be returned"
-  ) { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  ) { case (odbFactory, given OrientThread[F]) =>
     val res = for {
 
       transactionOutputAddress <- BramblGenerator.arbitraryTransactionOutputAddress.arbitrary.first.pure[F].toResource
       unspentTransactionOutput <- BramblGenerator.arbitraryUnspentTransactionOutput.arbitrary.first.pure[F].toResource
 
-      tx <- oThread.delay(odbFactory.getTx).toResource
+      tx <- OrientThread[F].delay(odbFactory.getTx).toResource
 
-      _ <- oThread.delay {
+      _ <- OrientThread[F].delay {
         tx.addTxo(Txo(unspentTransactionOutput, TxoState.SPENT, transactionOutputAddress))
         tx.commit()
         tx.shutdown()
@@ -292,15 +292,15 @@ class GraphVertexFetcherTest
 
   orientDbFixture.test(
     "On fetchTxoStats, TxoStats UNSPENT should be returned"
-  ) { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  ) { case (odbFactory, given OrientThread[F]) =>
     val res = for {
 
       transactionOutputAddress <- BramblGenerator.arbitraryTransactionOutputAddress.arbitrary.first.pure[F].toResource
       unspentTransactionOutput <- BramblGenerator.arbitraryUnspentTransactionOutput.arbitrary.first.pure[F].toResource
 
-      tx <- oThread.delay(odbFactory.getTx).toResource
+      tx <- OrientThread[F].delay(odbFactory.getTx).toResource
 
-      _ <- oThread.delay {
+      _ <- OrientThread[F].delay {
         tx.addTxo(Txo(unspentTransactionOutput, TxoState.UNSPENT, transactionOutputAddress))
         tx.commit()
         tx.shutdown()
@@ -320,10 +320,10 @@ class GraphVertexFetcherTest
 
   orientDbFixture.test(
     "On fetchBlockchainSizeStats, a default instance of BlockchainSizeStats should be returned"
-  ) { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  ) { case (odbFactory, given OrientThread[F]) =>
     val res = for {
 
-      dbNoTx <- oThread.delay(odbFactory.getNoTx).toResource
+      dbNoTx <- OrientThread[F].delay(odbFactory.getNoTx).toResource
 
       graphVertexFetcher <- GraphVertexFetcher.make[F](dbNoTx)
       _ <- assertIO(
@@ -337,13 +337,13 @@ class GraphVertexFetcherTest
 
   orientDbFixture.test(
     "On fetchBlockchainSizeStats, after saving a blockheader and an IoTransaction, BlockchainSizeStats should be returned with sizes"
-  ) { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  ) { case (odbFactory, given  OrientThread[F]) =>
     val res = for {
 
       blockHeader   <- ModelGenerators.arbitraryHeader.arbitrary.first.pure[F].toResource
       ioTransaction <- BramblGenerator.arbitraryIoTransaction.arbitrary.first.pure[F].toResource
 
-      _ <- oThread
+      _ <- OrientThread[F]
         .delay(odbFactory.getTx)
         .map { tx =>
           tx.addBlockHeader(blockHeader)
@@ -351,7 +351,7 @@ class GraphVertexFetcherTest
         }
         .toResource
 
-      _ <- oThread
+      _ <- OrientThread[F]
         .delay(odbFactory.getTx)
         .map { tx =>
           tx.addIoTx(ioTransaction)
@@ -373,14 +373,14 @@ class GraphVertexFetcherTest
   }
 
   orientDbFixture.test("On fetchBlockStats, BodyStats with 1 empty result should be returned") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, given OrientThread[F]) =>
       val res = for {
-        tx   <- oThread.delay(odbFactory.getTx).toResource
-        notx <- oThread.delay(odbFactory.getNoTx).toResource
+        tx   <- OrientThread[F].delay(odbFactory.getTx).toResource
+        notx <- OrientThread[F].delay(odbFactory.getNoTx).toResource
 
         blockHeader <- ModelGenerators.arbitraryHeader.arbitrary.first.pure[F].toResource
 
-        _ <- oThread.delay {
+        _ <- OrientThread[F].delay {
           val blockHeaderVertex = tx.addBlockHeader(blockHeader)
           val bodyVertex = tx.addBody(BlockBody(Seq.empty))
           bodyVertex.setProperty(blockBodySchema.links.head.propertyName, blockHeaderVertex.getId)
@@ -398,15 +398,15 @@ class GraphVertexFetcherTest
   }
 
   orientDbFixture.test("On fetchBlockStats, BodyStats with 1 non empty result should be returned") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, given  OrientThread[F]) =>
       val res = for {
-        tx   <- oThread.delay(odbFactory.getTx).toResource
-        notx <- oThread.delay(odbFactory.getNoTx).toResource
+        tx   <- OrientThread[F].delay(odbFactory.getTx).toResource
+        notx <- OrientThread[F].delay(odbFactory.getNoTx).toResource
 
         blockHeader   <- ModelGenerators.arbitraryHeader.arbitrary.first.pure[F].toResource
         ioTransaction <- BramblGenerator.arbitraryIoTransaction.arbitrary.first.pure[F].toResource
 
-        _ <- oThread.delay {
+        _ <- OrientThread[F].delay {
           val blockHeaderVertex = tx.addBlockHeader(blockHeader)
           val bodyVertex = tx.addBody(BlockBody(Seq(ioTransaction.id)))
           bodyVertex.setProperty(blockBodySchema.links.head.propertyName, blockHeaderVertex.getId)
@@ -424,11 +424,11 @@ class GraphVertexFetcherTest
   }
 
   orientDbFixture.test("On fetchGroupPolicy, None should be returned") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, given  OrientThread[F]) =>
       val res = for {
         registrationUtxo <- BramblGenerator.arbitraryTransactionOutputAddress.arbitrary.first.pure[F].toResource
         groupPolicy = GroupPolicy(label = "Crypto Frogs with None fixed series", registrationUtxo, None)
-        notx               <- oThread.delay(odbFactory.getNoTx).toResource
+        notx               <- OrientThread[F].delay(odbFactory.getNoTx).toResource
         graphVertexFetcher <- GraphVertexFetcher.make[F](notx)
 
         _ <- assertIO(
@@ -441,16 +441,16 @@ class GraphVertexFetcherTest
   }
 
   orientDbFixture.test("On fetchGroupPolicy, a policy should be returned") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, given  OrientThread[F]) =>
       val res = for {
         registrationUtxo <- BramblGenerator.arbitraryTransactionOutputAddress.arbitrary.first.pure[F].toResource
         groupPolicy = GroupPolicy(label = "Crypto Frogs with None fixed series", registrationUtxo, None)
 
-        tx                 <- oThread.delay(odbFactory.getTx).toResource
-        notx               <- oThread.delay(odbFactory.getNoTx).toResource
+        tx                 <- OrientThread[F].delay(odbFactory.getTx).toResource
+        notx               <- OrientThread[F].delay(odbFactory.getNoTx).toResource
         graphVertexFetcher <- GraphVertexFetcher.make[F](notx)
 
-        _ <- oThread.delay {
+        _ <- OrientThread[F].delay {
           tx.addGroupPolicy(groupPolicy)
           tx.commit()
           tx.shutdown()
@@ -464,7 +464,7 @@ class GraphVertexFetcherTest
   }
 
   orientDbFixture.test("On fetchSeriesPolicy, None should be returned") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, given OrientThread[F]) =>
       val res = for {
         registrationUtxo <- BramblGenerator.arbitraryTransactionOutputAddress.arbitrary.first.pure[F].toResource
         seriesPolicy = SeriesPolicy(
@@ -472,7 +472,7 @@ class GraphVertexFetcherTest
           tokenSupply = Some(1),
           registrationUtxo = registrationUtxo
         )
-        notx               <- oThread.delay(odbFactory.getNoTx).toResource
+        notx               <- OrientThread[F].delay(odbFactory.getNoTx).toResource
         graphVertexFetcher <- GraphVertexFetcher.make[F](notx)
 
         _ <- assertIO(
@@ -485,7 +485,7 @@ class GraphVertexFetcherTest
   }
 
   orientDbFixture.test("On fetchSeriesPolicy, a policy should be returned") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, given  OrientThread[F]) =>
       val res = for {
         registrationUtxo <- BramblGenerator.arbitraryTransactionOutputAddress.arbitrary.first.pure[F].toResource
         seriesPolicy = SeriesPolicy(
@@ -494,11 +494,11 @@ class GraphVertexFetcherTest
           registrationUtxo = registrationUtxo
         )
 
-        tx                 <- oThread.delay(odbFactory.getTx).toResource
-        notx               <- oThread.delay(odbFactory.getNoTx).toResource
+        tx                 <- OrientThread[F].delay(odbFactory.getTx).toResource
+        notx               <- OrientThread[F].delay(odbFactory.getNoTx).toResource
         graphVertexFetcher <- GraphVertexFetcher.make[F](notx)
 
-        _ <- oThread.delay {
+        _ <- OrientThread[F].delay {
           tx.addSeriesPolicy(seriesPolicy)
           tx.commit()
           tx.shutdown()

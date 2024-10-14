@@ -173,7 +173,7 @@ package object fsnetwork {
   private val remoteAddressCodec: Codec[RemoteAddress] = (cstring :: int32).as[RemoteAddress]
 
   implicit val peerToAddCodec: Codec[KnownRemotePeer] =
-    (hostIdCodec :: remoteAddressCodec :: double :: double :: optionCodec[Long](vlong)).as[KnownRemotePeer]
+    (hostIdCodec :: remoteAddressCodec :: double :: double :: optionCodec[Long](using vlong)).as[KnownRemotePeer]
 
   implicit class LoggerOps[F[_]: Applicative](logger: Logger[F]) {
 

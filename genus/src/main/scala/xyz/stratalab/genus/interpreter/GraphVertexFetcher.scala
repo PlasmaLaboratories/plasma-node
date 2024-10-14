@@ -300,7 +300,7 @@ object GraphVertexFetcher {
         private def sqlIterator(query: String)(args: Seq[Object]): Iterator[Object] =
           orientGraph
             .command(new OCommandSQL(query))
-            .execute[OrientDynaElementIterable](args: _*)
+            .execute[OrientDynaElementIterable](args*)
             .iterator()
             .asScala
 

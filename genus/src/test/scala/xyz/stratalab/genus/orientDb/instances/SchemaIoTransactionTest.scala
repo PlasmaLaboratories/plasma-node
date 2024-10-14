@@ -1,8 +1,8 @@
 package xyz.stratalab.genus.orientDb.instances
 
 import cats.implicits._
-import co.topl.brambl.generators.{ModelGenerators => BramblGenerator}
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGenerator}
+import xyz.stratalab.sdk.syntax._
 import com.orientechnologies.orient.core.metadata.schema.OType
 import com.tinkerpop.blueprints.impls.orient.OrientVertex
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -23,7 +23,7 @@ class SchemaIoTransactionTest
     with AsyncMockFactory
     with DbFixtureUtil {
 
-  orientDbFixture.test("IoTransaction Schema Metadata") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixture.test("IoTransaction Schema Metadata") { case (odbFactory, oThread: OrientThread[F]) =>
     val res = for {
       dbNoTx             <- oThread.delay(odbFactory.getNoTx).toResource
       databaseDocumentTx <- oThread.delay(dbNoTx.getRawGraph).toResource
@@ -72,7 +72,7 @@ class SchemaIoTransactionTest
   }
 
   orientDbFixture.test("Transaction and Block Header Schema Add vertex") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, oThread: OrientThread[F]) =>
       val res = for {
 
         dbTx        <- oThread.delay(odbFactory.getTx).toResource

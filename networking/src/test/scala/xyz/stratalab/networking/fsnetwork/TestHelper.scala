@@ -2,9 +2,9 @@ package xyz.stratalab.networking.fsnetwork
 
 import cats.data.NonEmptyChain
 import cats.implicits._
-import co.topl.brambl.generators.TransactionGenerator
+import xyz.stratalab.sdk.generators.TransactionGenerator
 import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
 import co.topl.node.models.{BlockBody, KnownHost}
 import com.google.protobuf.ByteString

@@ -99,7 +99,7 @@ object OrientDBMetadataFactory {
         val currentIndices = oClass.getIndexes.asScala.map(_.getName)
         vs.indices
           .filterNot(i => currentIndices.contains(i.name))
-          .foreach(i => oClass.createIndex(i.name, i.indexType, i.propertyNames: _*))
+          .foreach(i => oClass.createIndex(i.name, i.indexType, i.propertyNames*))
       }
       .onError { case e => Logger[F].error(e)(s"Failed to create indices on ${vs.name}") }
       .void

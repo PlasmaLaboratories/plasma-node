@@ -4,13 +4,13 @@ import cats.data.EitherT
 import cats.effect._
 import cats.implicits._
 import cats.{Monad, MonadThrow, Show}
-import co.topl.brambl.syntax._
-import co.topl.brambl.utils.CatsUnsafeResource
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.utils.CatsUnsafeResource
 import co.topl.consensus.models._
-import co.topl.crypto.generation.mnemonic.Entropy
-import co.topl.crypto.hash.{Blake2b256, Blake2b512}
-import co.topl.crypto.models.SecretKeyKesProduct
-import co.topl.crypto.signing._
+import xyz.stratalab.crypto.generation.mnemonic.Entropy
+import xyz.stratalab.crypto.hash.{Blake2b256, Blake2b512}
+import xyz.stratalab.crypto.models.SecretKeyKesProduct
+import xyz.stratalab.crypto.signing._
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -119,7 +119,7 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
 
   def defaultBlockHeaderVersionValidation: BlockHeaderVersionValidationAlgebra[F] = {
     val validator = mock[BlockHeaderVersionValidationAlgebra[F]]
-    (validator.validate _).expects(*).anyNumberOfTimes().onCall { header: BlockHeader =>
+    (validator.validate).expects(*).anyNumberOfTimes().onCall { (header: BlockHeader) =>
       Either.right[BlockHeaderValidationFailure, BlockHeader](header).pure[F]
     }
     validator
@@ -502,14 +502,14 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
 
           val blockHeaderVersionValidation: BlockHeaderVersionValidationAlgebra[F] =
             mock[BlockHeaderVersionValidationAlgebra[F]]
-          (blockHeaderVersionValidation.validate _).expects(*).once().onCall { _: BlockHeader =>
+          (blockHeaderVersionValidation.validate).expects(*).once().onCall { (_: BlockHeader) =>
             Either
               .left[BlockHeaderValidationFailure, BlockHeader](BlockHeaderValidationFailures.IncorrectVersionId(0, 10))
               .pure[F]
           }
           val blockHeaderVotingValidation: BlockHeaderVotingValidationAlgebra[F] =
             mock[BlockHeaderVotingValidationAlgebra[F]]
-          (blockHeaderVotingValidation.validate _).expects(*).never().onCall { header: BlockHeader =>
+          (blockHeaderVotingValidation.validate).expects(*).never().onCall { (header: BlockHeader) =>
             Either.right[BlockHeaderValidationFailure, BlockHeader](header).pure[F]
           }
 
@@ -575,12 +575,12 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
 
           val blockHeaderVersionValidation: BlockHeaderVersionValidationAlgebra[F] =
             mock[BlockHeaderVersionValidationAlgebra[F]]
-          (blockHeaderVersionValidation.validate _).expects(*).once().onCall { header: BlockHeader =>
+          (blockHeaderVersionValidation.validate).expects(*).once().onCall { (header: BlockHeader) =>
             Either.right[BlockHeaderValidationFailure, BlockHeader](header).pure[F]
           }
           val blockHeaderVotingValidation: BlockHeaderVotingValidationAlgebra[F] =
             mock[BlockHeaderVotingValidationAlgebra[F]]
-          (blockHeaderVotingValidation.validate _).expects(*).once().onCall { _: BlockHeader =>
+          (blockHeaderVotingValidation.validate).expects(*).once().onCall { (_: BlockHeader) =>
             Either
               .left[BlockHeaderValidationFailure, BlockHeader](
                 BlockHeaderValidationFailures.IncorrectVotedVersionId(10)
@@ -653,12 +653,12 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
 
           val blockHeaderVersionValidation: BlockHeaderVersionValidationAlgebra[F] =
             mock[BlockHeaderVersionValidationAlgebra[F]]
-          (blockHeaderVersionValidation.validate _).expects(*).once().onCall { header: BlockHeader =>
+          (blockHeaderVersionValidation.validate).expects(*).once().onCall { (header: BlockHeader) =>
             Either.right[BlockHeaderValidationFailure, BlockHeader](header).pure[F]
           }
           val blockHeaderVotingValidation: BlockHeaderVotingValidationAlgebra[F] =
             mock[BlockHeaderVotingValidationAlgebra[F]]
-          (blockHeaderVotingValidation.validate _).expects(*).once().onCall { header: BlockHeader =>
+          (blockHeaderVotingValidation.validate).expects(*).once().onCall { (header: BlockHeader) =>
             Either.right[BlockHeaderValidationFailure, BlockHeader](header).pure[F]
           }
 

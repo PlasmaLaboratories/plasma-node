@@ -63,7 +63,7 @@ trait TetraScodecCodecs {
   }
 
   implicit val nodeCryptoSignatureKesSumCodec: Codec[nodeCryptoModels.SignatureKesSum] =
-    (byteArrayCodecSized(32) :: byteArrayCodecSized(64) :: seqCodec(byteArrayCodecSized(32)))
+    (byteArrayCodecSized(32) :: byteArrayCodecSized(64) :: seqCodec(using byteArrayCodecSized(32)))
       .as[nodeCryptoModels.SignatureKesSum]
 
   implicit val nodeCryptoSecretKeyKesSumCodec: Codec[nodeCryptoModels.SecretKeyKesSum] =
@@ -96,7 +96,7 @@ trait TetraScodecCodecs {
       .as[VerificationKeyKesProduct]
 
   implicit val signatureKesSumCodec: Codec[SignatureKesSum] =
-    (byteStringCodecSized(32) :: byteStringCodecSized(64) :: seqCodec(byteStringCodecSized(32)) :: unknownFieldSetCodec)
+    (byteStringCodecSized(32) :: byteStringCodecSized(64) :: seqCodec(using byteStringCodecSized(32)) :: unknownFieldSetCodec)
       .as[SignatureKesSum]
 
   implicit val signatureKesProductCodec: Codec[SignatureKesProduct] =

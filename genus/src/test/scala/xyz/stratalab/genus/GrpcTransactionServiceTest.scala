@@ -2,7 +2,7 @@ package xyz.stratalab.genus
 
 import cats.effect.IO
 import cats.implicits._
-import co.topl.brambl.generators.ModelGenerators._
+import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.brambl.models.transaction.UnspentTransactionOutput
 import co.topl.brambl.models.{LockAddress, TransactionId, TransactionOutputAddress}
 import co.topl.genus.services._
@@ -25,7 +25,7 @@ class GrpcTransactionServiceTest extends CatsEffectSuite with ScalaCheckEffectSu
         val transactionFetcher = mock[TransactionFetcherAlgebra[F]]
         val underTest = new GrpcTransactionService[F](transactionFetcher)
 
-        (transactionFetcher.fetchTransactionReceipt _)
+        (transactionFetcher.fetchTransactionReceipt)
           .expects(transactionId)
           .once()
           .returning((GEs.Internal(new IllegalStateException("Boom!")): GE).asLeft[Option[TransactionReceipt]].pure[F])
@@ -46,7 +46,7 @@ class GrpcTransactionServiceTest extends CatsEffectSuite with ScalaCheckEffectSu
         val transactionFetcher = mock[TransactionFetcherAlgebra[F]]
         val underTest = new GrpcTransactionService[F](transactionFetcher)
 
-        (transactionFetcher.fetchTransactionReceipt _)
+        (transactionFetcher.fetchTransactionReceipt)
           .expects(transactionId)
           .once()
           .returning(Option.empty[TransactionReceipt].asRight[GE].pure[F])
@@ -76,7 +76,7 @@ class GrpcTransactionServiceTest extends CatsEffectSuite with ScalaCheckEffectSu
           ChainDistance.defaultInstance
         )
 
-        (transactionFetcher.fetchTransactionReceipt _)
+        (transactionFetcher.fetchTransactionReceipt)
           .expects(transactionId)
           .once()
           .returning(transactionReceipt.some.asRight[GE].pure[F])
@@ -96,7 +96,7 @@ class GrpcTransactionServiceTest extends CatsEffectSuite with ScalaCheckEffectSu
         val transactionFetcher = mock[TransactionFetcherAlgebra[F]]
         val underTest = new GrpcTransactionService[F](transactionFetcher)
 
-        (transactionFetcher.fetchTransactionByLockAddress _)
+        (transactionFetcher.fetchTransactionByLockAddress)
           .expects(lockAddress, TxoState.SPENT)
           .once()
           .returning((GEs.Internal(new IllegalStateException("Boom!")): GE).asLeft[List[Txo]].pure[F])
@@ -116,7 +116,7 @@ class GrpcTransactionServiceTest extends CatsEffectSuite with ScalaCheckEffectSu
         val transactionFetcher = mock[TransactionFetcherAlgebra[F]]
         val underTest = new GrpcTransactionService[F](transactionFetcher)
 
-        (transactionFetcher.fetchTransactionByLockAddress _)
+        (transactionFetcher.fetchTransactionByLockAddress)
           .expects(lockAddress, TxoState.SPENT)
           .once()
           .returning(List.empty[Txo].asRight[GE].pure[F])
@@ -146,7 +146,7 @@ class GrpcTransactionServiceTest extends CatsEffectSuite with ScalaCheckEffectSu
             outputAddress
           )
 
-          (transactionFetcher.fetchTransactionByLockAddress _)
+          (transactionFetcher.fetchTransactionByLockAddress)
             .expects(lockAddress, TxoState.SPENT)
             .once()
             .returning(List(txo).asRight[GE].pure[F])

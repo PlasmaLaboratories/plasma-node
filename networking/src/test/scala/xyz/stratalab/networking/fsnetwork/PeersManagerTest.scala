@@ -5,13 +5,13 @@ import cats.effect.kernel.Sync
 import cats.effect.{Async, IO, Resource}
 import cats.implicits._
 import cats.{Applicative, Parallel}
-import co.topl.brambl.generators.TransactionGenerator
+import xyz.stratalab.sdk.generators.TransactionGenerator
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.utils.Encoding
-import co.topl.brambl.validation.algebras.TransactionSyntaxVerifier
+import xyz.stratalab.sdk.utils.Encoding
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import co.topl.consensus.models.{BlockId, SlotData}
-import co.topl.crypto.signing.Ed25519VRF
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import co.topl.node.models.{BlockBody, KnownHost}
 import com.github.benmanes.caffeine.cache.{Cache, Caffeine}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -92,7 +92,7 @@ class PeersManagerTest
   def mockPeerActor[F[_]: Applicative](): PeerActor[F] = {
     val mocked = mock[PeerActor[F]]
     (() => mocked.id).stubs().returns(mocked.hashCode())
-    (mocked.mailboxSize _).stubs().returns(0.pure[F])
+    ((() => mocked.mailboxSize())).stubs().returns(0.pure[F])
 
     mocked
   }
@@ -255,7 +255,7 @@ class PeersManagerTest
         mockData.ed25519VRF,
         mockData.initialPeers,
         mockData.blockSource
-      )(implicitly[Async[IO]], implicitly[Parallel[IO]], logger, dnsResolver, reverseDnsResolver, stats)
+      )(using implicitly[Async[IO]], implicitly[Parallel[IO]], logger, dnsResolver, reverseDnsResolver, stats)
 
   test("Get current tips request shall be forwarded if application level is enabled") {
     withMock {
@@ -264,7 +264,7 @@ class PeersManagerTest
       val warmPeer = mockPeerActor[F]()
 
       val hotPeer = mockPeerActor[F]()
-      (hotPeer.sendNoWait _)
+      (hotPeer.sendNoWait)
         .expects(PeerActor.Message.GetCurrentTip)
         .returns(().pure[F])
 
@@ -295,7 +295,7 @@ class PeersManagerTest
 
       arbitraryHost.arbitrary.first
       val warmPeer = mockPeerActor[F]()
-      (warmPeer.sendNoWait _)
+      (warmPeer.sendNoWait)
         .expects(PeerActor.Message.GetNetworkQuality)
         .returns(().pure[F])
 
@@ -327,13 +327,13 @@ class PeersManagerTest
     withMock {
       arbitraryHost.arbitrary.first
       val coldPeer = mockPeerActor[F]()
-      (coldPeer.sendNoWait _)
+      (coldPeer.sendNoWait)
         .expects(PeerActor.Message.PrintCommonAncestor)
         .returns(().pure[F])
 
       arbitraryHost.arbitrary.first
       val warmPeer = mockPeerActor[F]()
-      (warmPeer.sendNoWait _)
+      (warmPeer.sendNoWait)
         .expects(PeerActor.Message.PrintCommonAncestor)
         .returns(().pure[F])
 
@@ -372,7 +372,7 @@ class PeersManagerTest
     withMock {
       val host1 = arbitraryHost.arbitrary.first
       val peerActor1 = mockPeerActor[F]()
-      (peerActor1.sendNoWait _)
+      (peerActor1.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = false, applicationLevel = false))
         .returns(().pure[F])
 
@@ -407,7 +407,7 @@ class PeersManagerTest
   test("Peer moved to closed state shall be stopped and appropriate state shall be set") {
     withMock {
       val peerActor = mockPeerActor[F]()
-      (peerActor.sendNoWait _)
+      (peerActor.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = false, applicationLevel = false))
         .returns(().pure[F])
 
@@ -440,13 +440,13 @@ class PeersManagerTest
     withMock {
       val host1 = arbitraryHost.arbitrary.first
       val peerActor1 = mockPeerActor[F]()
-      (peerActor1.sendNoWait _)
+      (peerActor1.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = false, applicationLevel = false))
         .returns(().pure[F])
 
       val host2 = arbitraryHost.arbitrary.first
       val peerActor2 = mockPeerActor[F]()
-      (peerActor2.sendNoWait _)
+      (peerActor2.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = false, applicationLevel = false))
         .returns(().pure[F])
 
@@ -495,7 +495,7 @@ class PeersManagerTest
   test("Peer moved to cold state shall be stopped closed timestamp shall be updated correctly") {
     withMock {
       val peerActor = mockPeerActor[F]()
-      (peerActor.sendNoWait _)
+      (peerActor.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = false, applicationLevel = false))
         .returns(().pure[F])
 
@@ -544,8 +544,8 @@ class PeersManagerTest
       DisconnectedPeer(host3Ra, host3Id.id.some)
 
       val mockData = buildDefaultMockData(p2pConfig = p2pConfig)
-      (mockData.newPeerCreationAlgebra.requestNewPeerCreation _).expects(host1).returns(().pure[F])
-      (mockData.newPeerCreationAlgebra.requestNewPeerCreation _).expects(host2).returns(().pure[F])
+      (mockData.newPeerCreationAlgebra.requestNewPeerCreation).expects(host1).returns(().pure[F])
+      (mockData.newPeerCreationAlgebra.requestNewPeerCreation).expects(host2).returns(().pure[F])
       buildActorFromMockData(mockData)
         .use { actor =>
           val peers =
@@ -593,14 +593,14 @@ class PeersManagerTest
       val host7Id = arbitraryHost.arbitrary.first
       val host7Ra = RemoteAddress("7", 6)
       val host7Actor = mock[PeerActor[F]]
-      (host7Actor.sendNoWait _)
+      (host7Actor.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = true, applicationLevel = false))
         .returning(Applicative[F].unit)
 
-      (newPeerCreationAlgebra.requestNewPeerCreation _)
+      (newPeerCreationAlgebra.requestNewPeerCreation)
         .expects(DisconnectedPeer(host1Ra, host1Id.id.some))
         .returns(().pure[F])
-      (newPeerCreationAlgebra.requestNewPeerCreation _)
+      (newPeerCreationAlgebra.requestNewPeerCreation)
         .expects(DisconnectedPeer(host2Ra, host2Id.id.some))
         .returns(().pure[F])
 
@@ -660,10 +660,10 @@ class PeersManagerTest
           buildSimplePeerEntry(PeerState.Cold, None, host3Id, host3Ra, blockRep = 0.0, perfRep = 0.0, newRep = 0)
         )
 
-      (newPeerCreationAlgebra.requestNewPeerCreation _)
+      (newPeerCreationAlgebra.requestNewPeerCreation)
         .expects(DisconnectedPeer(host1Ra, host1Id.id.some))
         .returns(().pure[F])
-      (newPeerCreationAlgebra.requestNewPeerCreation _)
+      (newPeerCreationAlgebra.requestNewPeerCreation)
         .expects(DisconnectedPeer(host2Ra, host2Id.id.some))
         .returns(().pure[F])
 
@@ -697,7 +697,7 @@ class PeersManagerTest
       val host3Ra = RemoteAddress("3", 3)
 
       val peer1 = mockPeerActor[F]()
-      (peer1.sendNoWait _)
+      (peer1.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = true, applicationLevel = true))
         .returns(().pure[F])
 
@@ -739,7 +739,7 @@ class PeersManagerTest
       val host3Ra = RemoteAddress("3", 3)
 
       val peer1 = mockPeerActor[F]()
-      (peer1.sendNoWait _)
+      (peer1.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = true, applicationLevel = true))
         .returns(().pure[F])
 
@@ -867,13 +867,13 @@ class PeersManagerTest
       val host7Id = arbitraryHost.arbitrary.first
       val host7Ra = RemoteAddress("7", 7)
 
-      (newPeerCreationAlgebra.requestNewPeerCreation _)
+      (newPeerCreationAlgebra.requestNewPeerCreation)
         .expects(DisconnectedPeer(host1Ra, host1Id.id.some))
         .returns(().pure[F])
-      (newPeerCreationAlgebra.requestNewPeerCreation _)
+      (newPeerCreationAlgebra.requestNewPeerCreation)
         .expects(DisconnectedPeer(host2Ra, host2Id.id.some))
         .returns(().pure[F])
-      (newPeerCreationAlgebra.requestNewPeerCreation _)
+      (newPeerCreationAlgebra.requestNewPeerCreation)
         .expects(DisconnectedPeer(host3Ra, host3Id.id.some))
         .returns(().pure[F])
 
@@ -953,10 +953,10 @@ class PeersManagerTest
       val host4Id = arbitraryHost.arbitrary.first
       val host4Ra = RemoteAddress("4", 4)
       val host4Actor = mock[PeerActor[F]]
-      (host4Actor.sendNoWait _)
+      (host4Actor.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = true, applicationLevel = true))
         .returning(Applicative[F].unit)
-      (host4Actor.sendNoWait _)
+      (host4Actor.sendNoWait)
         .expects(PeerActor.Message.ReputationUpdateTick)
         .returning(Applicative[F].unit)
 
@@ -1005,14 +1005,14 @@ class PeersManagerTest
       val host1Id = arbitraryHost.arbitrary.first
       val host1Ra = RemoteAddress("1", 1)
       val peerActor1 = mockPeerActor[F]()
-      (peerActor1.sendNoWait _)
+      (peerActor1.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = false, applicationLevel = false))
         .returning(Applicative[F].unit)
 
       val host2Id = arbitraryHost.arbitrary.first
       val host2Ra = RemoteAddress("2", 2)
       val peerActor2 = mockPeerActor[F]()
-      (peerActor2.sendNoWait _)
+      (peerActor2.sendNoWait)
         .expects(PeerActor.Message.ReputationUpdateTick)
         .returning(Applicative[F].unit)
 
@@ -1148,7 +1148,7 @@ class PeersManagerTest
       val host1Id = arbitraryHost.arbitrary.first
       val host1Ra = RemoteAddress("first", 1)
       val peer1 = mockPeerActor[F]()
-      (peer1.sendNoWait _)
+      (peer1.sendNoWait)
         .expects(PeerActor.Message.ReputationUpdateTick)
         .anyNumberOfTimes()
         .returns(().pure[F])
@@ -1156,7 +1156,7 @@ class PeersManagerTest
       val host2Id = arbitraryHost.arbitrary.first
       val host2Ra = RemoteAddress("second", 2)
       val peer2 = mockPeerActor[F]()
-      (peer2.sendNoWait _)
+      (peer2.sendNoWait)
         .expects(PeerActor.Message.ReputationUpdateTick)
         .anyNumberOfTimes()
         .returns(().pure[F])
@@ -1164,7 +1164,7 @@ class PeersManagerTest
       val host3Id = arbitraryHost.arbitrary.first
       val host3Ra = RemoteAddress("10.0.0.3", 3)
       val peer3 = mockPeerActor[F]()
-      (peer3.sendNoWait _)
+      (peer3.sendNoWait)
         .expects(PeerActor.Message.ReputationUpdateTick)
         .anyNumberOfTimes()
         .returns(().pure[F])
@@ -1172,7 +1172,7 @@ class PeersManagerTest
       val host4Id = arbitraryHost.arbitrary.first
       val host4Ra = RemoteAddress("fourth", 4)
       val peer4 = mockPeerActor[F]()
-      (peer4.sendNoWait _)
+      (peer4.sendNoWait)
         .expects(PeerActor.Message.ReputationUpdateTick)
         .anyNumberOfTimes()
         .returns(().pure[F])
@@ -1180,10 +1180,10 @@ class PeersManagerTest
       val host5Id = arbitraryHost.arbitrary.first
       val host5Ra = RemoteAddress("five", 5)
       val peer5 = mockPeerActor[F]()
-      (peer5.sendNoWait _)
+      (peer5.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = false, applicationLevel = false))
         .returns(().pure[F])
-      (peer5.sendNoWait _)
+      (peer5.sendNoWait)
         .expects(PeerActor.Message.ReputationUpdateTick)
         .anyNumberOfTimes()
         .returns(().pure[F])
@@ -1191,10 +1191,10 @@ class PeersManagerTest
       val host6Id = arbitraryHost.arbitrary.first
       val host6Ra = RemoteAddress("six", 6)
       val peer6 = mockPeerActor[F]()
-      (peer6.sendNoWait _)
+      (peer6.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = false, applicationLevel = false))
         .returns(().pure[F])
-      (peer6.sendNoWait _)
+      (peer6.sendNoWait)
         .expects(PeerActor.Message.ReputationUpdateTick)
         .anyNumberOfTimes()
         .returns(().pure[F])
@@ -1270,7 +1270,7 @@ class PeersManagerTest
         )
 
       val hotUpdater = mock[Set[RemotePeer] => F[Unit]]
-      (hotUpdater.apply _)
+      (hotUpdater.apply)
         .expects(Set.empty[RemotePeer])
         .once()
         .returns(().pure[F])
@@ -1322,7 +1322,7 @@ class PeersManagerTest
       val peer1 = mockPeerActor[F]()
       val peer2 = mockPeerActor[F]()
 
-      (networkAlgebra.makePeer _)
+      (networkAlgebra.makePeer)
         .expects(host1Id, *, *, *, *, *, *, *, *, *, *, *, *, *, *, *)
         .once()
         .returns(
@@ -1330,22 +1330,22 @@ class PeersManagerTest
             .pure(peer1)
             .onFinalize(Sync[F].delay(peer1.sendNoWait(PeerActor.Message.CloseConnectionForActor)))
         ) // simulate real actor finalizer
-      (peer1.sendNoWait _)
+      (peer1.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = false, applicationLevel = false))
         .returns(Applicative[F].unit)
-      (peer1.sendNoWait _)
+      (peer1.sendNoWait)
         .expects(PeerActor.Message.GetNetworkQuality)
         .returns(Applicative[F].unit)
-      (peer1.sendNoWait _).expects(PeerActor.Message.CloseConnectionForActor).returns(Applicative[F].unit)
+      (peer1.sendNoWait).expects(PeerActor.Message.CloseConnectionForActor).returns(Applicative[F].unit)
 
-      (networkAlgebra.makePeer _)
+      (networkAlgebra.makePeer)
         .expects(host1Id, *, *, *, *, *, *, *, *, *, *, *, *, *, *, *)
         .once()
         .returns(Resource.pure(peer2))
-      (peer2.sendNoWait _)
+      (peer2.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = false, applicationLevel = false))
         .returns(Applicative[F].unit)
-      (peer2.sendNoWait _)
+      (peer2.sendNoWait)
         .expects(PeerActor.Message.GetNetworkQuality)
         .returns(Applicative[F].unit)
 
@@ -1390,7 +1390,7 @@ class PeersManagerTest
       val host1Ra = RemoteAddress("first", 1)
       val peer1 = mockPeerActor[F]()
 
-      (networkAlgebra.makePeer _)
+      (networkAlgebra.makePeer)
         .expects(host1Id, *, *, *, *, *, *, *, *, *, *, *, *, *, *, *)
         .once()
         .returns(
@@ -1398,13 +1398,13 @@ class PeersManagerTest
             .pure(peer1)
             .onFinalize(Sync[F].delay(peer1.sendNoWait(PeerActor.Message.CloseConnectionForActor)))
         ) // simulate real actor finalizer
-      (peer1.sendNoWait _)
+      (peer1.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = false, applicationLevel = false))
         .returns(Applicative[F].unit)
-      (peer1.sendNoWait _)
+      (peer1.sendNoWait)
         .expects(PeerActor.Message.GetNetworkQuality)
         .returns(Applicative[F].unit)
-      (peer1.sendNoWait _).expects(PeerActor.Message.CloseConnectionForActor).returns(Applicative[F].unit)
+      (peer1.sendNoWait).expects(PeerActor.Message.CloseConnectionForActor).returns(Applicative[F].unit)
 
       val initialPeersMap: Map[HostId, Peer[F]] =
         Map(buildSimplePeerEntry(PeerState.Cold, None, host1Id, host1Ra, remoteNetworkLevel = false))
@@ -1437,7 +1437,7 @@ class PeersManagerTest
       val host1Ra = RemoteAddress("first", 1)
       val peer1 = mockPeerActor[F]()
 
-      (networkAlgebra.makePeer _)
+      (networkAlgebra.makePeer)
         .expects(host1Id, *, *, *, *, *, *, *, *, *, *, *, *, *, *, *)
         .once()
         .returns(
@@ -1448,13 +1448,13 @@ class PeersManagerTest
       val connectedPeer = ConnectedPeer(host1Ra, host1Id.id, NetworkProtocolVersions.V1)
       (() => client1.remotePeer).expects().anyNumberOfTimes().returns(connectedPeer)
 
-      (peer1.sendNoWait _)
+      (peer1.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = false, applicationLevel = false))
         .returns(Applicative[F].unit)
-      (peer1.sendNoWait _)
+      (peer1.sendNoWait)
         .expects(PeerActor.Message.GetNetworkQuality)
         .returns(Applicative[F].unit)
-      (peer1.sendNoWait _).expects(PeerActor.Message.CloseConnectionForActor).returns(Applicative[F].unit)
+      (peer1.sendNoWait).expects(PeerActor.Message.CloseConnectionForActor).returns(Applicative[F].unit)
 
       val initialPeersMap: Map[HostId, Peer[F]] =
         Map(buildSimplePeerEntry(PeerState.Cold, None, host1Id, host1Ra, remoteNetworkLevel = false))
@@ -1512,20 +1512,20 @@ class PeersManagerTest
       val host1Id = arbitraryHost.arbitrary.first
       val host1Ra = RemoteAddress("first", 1)
       val peer1 = mockPeerActor[F]()
-      (peer1.sendNoWait _)
+      (peer1.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = true, applicationLevel = true))
         .returns(().pure[F])
-      (peer1.sendNoWait _)
+      (peer1.sendNoWait)
         .expects(PeerActor.Message.ReputationUpdateTick)
         .returns(().pure[F])
 
       val host2Id = arbitraryHost.arbitrary.first
       val host2Ra = RemoteAddress("second", 2)
       val peer2 = mockPeerActor[F]()
-      (peer2.sendNoWait _)
+      (peer2.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = true, applicationLevel = true))
         .returns(().pure[F])
-      (peer2.sendNoWait _)
+      (peer2.sendNoWait)
         .expects(PeerActor.Message.ReputationUpdateTick)
         .returns(().pure[F])
 
@@ -1577,7 +1577,7 @@ class PeersManagerTest
         )
 
       val hotUpdater = mock[Set[RemotePeer] => F[Unit]]
-      (hotUpdater.apply _)
+      (hotUpdater.apply)
         .expects(Set(RemotePeer(host2Id, host2Ra)))
         .once()
         .returns(().pure[F]) // skip host1, because it have no server port
@@ -1613,67 +1613,67 @@ class PeersManagerTest
       val host1Id = arbitraryHost.arbitrary.first
       val host1Ra = RemoteAddress("1", 1)
       val peer1 = mockPeerActor[F]()
-      (networkAlgebra.makePeer _)
+      (networkAlgebra.makePeer)
         .expects(host1Id, *, *, *, *, *, *, *, *, *, *, *, *, *, *, *)
         .once()
         .returns(Resource.pure(peer1))
-      (peer1.sendNoWait _)
+      (peer1.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = false, applicationLevel = false))
         .returns(Applicative[F].unit)
       val client1 = mock[BlockchainPeerClient[F]]
 
-      (peer1.sendNoWait _)
+      (peer1.sendNoWait)
         .expects(PeerActor.Message.GetNetworkQuality)
         .returns(Applicative[F].unit)
 
       val host2Id = arbitraryHost.arbitrary.first
       val host2Ra = RemoteAddress("2", 2)
       val peer2 = mockPeerActor[F]()
-      (networkAlgebra.makePeer _)
+      (networkAlgebra.makePeer)
         .expects(host2Id, *, *, *, *, *, *, *, *, *, *, *, *, *, *, *)
         .once()
         .returns(Resource.pure(peer2))
-      (peer2.sendNoWait _)
+      (peer2.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = false, applicationLevel = false))
         .returns(Applicative[F].unit)
       val client2 = mock[BlockchainPeerClient[F]]
-      (peer2.sendNoWait _)
+      (peer2.sendNoWait)
         .expects(PeerActor.Message.GetNetworkQuality)
         .returns(Applicative[F].unit)
 
       val host3Id = arbitraryHost.arbitrary.first
       val host3Ra = RemoteAddress("3", 3)
       val peer3 = mockPeerActor[F]()
-      (networkAlgebra.makePeer _)
+      (networkAlgebra.makePeer)
         .expects(host3Id, *, *, *, *, *, *, *, *, *, *, *, *, *, *, *)
         .once()
         .returns(Resource.pure(peer3))
-      (peer3.sendNoWait _)
+      (peer3.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = true, applicationLevel = false))
         .returns(Applicative[F].unit)
       val client3 = mock[BlockchainPeerClient[F]]
-      (peer3.sendNoWait _)
+      (peer3.sendNoWait)
         .expects(PeerActor.Message.GetNetworkQuality)
         .returns(Applicative[F].unit)
 
       val host4Id = arbitraryHost.arbitrary.first
       val host4Ra = RemoteAddress("4", 4)
       val client4 = mock[BlockchainPeerClient[F]]
-      (client4.closeConnection _).expects().once().returns(().pure[F])
+      ((() => client4.closeConnection())).expects().once().returns(().pure[F])
 
       val host5Id = arbitraryHost.arbitrary.first
       val host5Ra = RemoteAddress("5", 5)
       val peer5 = mockPeerActor[F]()
-      (networkAlgebra.makePeer _)
+      (networkAlgebra.makePeer)
         .expects(host5Id, *, *, *, *, *, *, *, *, *, *, *, *, *, *, *)
         .once()
         .returns(Resource.pure(peer5))
-      (peer5.sendNoWait _)
+      (peer5.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = true, applicationLevel = true))
         .returns(Applicative[F].unit)
       val client5 = mock[BlockchainPeerClient[F]]
       val client5RemotePort = None
-      (peer5.sendNoWait _)
+      (peer5.sendNoWait)
         .expects(PeerActor.Message.GetNetworkQuality)
         .returns(Applicative[F].unit)
 
@@ -1914,7 +1914,7 @@ class PeersManagerTest
         KnownRemotePeer(host4Id, RemoteAddress(host4.reverse, hostServer4Port), 0, 0, None),
         KnownRemotePeer(host5Id, RemoteAddress(host5.reverse, hostServer5Port), 0, 0, None)
       )
-      (writingHosts.apply _).expects(expectedHosts).once().returns(().pure[F])
+      (writingHosts.apply).expects(expectedHosts).once().returns(().pure[F])
 
       implicit val dummyReverseReverseDns: ReverseDnsResolver[F] = (h: String) => h.reverse.pure[F]
       val mockData = buildDefaultMockData(initialPeers = initialPeersMap, savePeersFunction = writingHosts)
@@ -2052,7 +2052,7 @@ class PeersManagerTest
       )
 
       val expectedMessage = PeerActor.Message.DownloadBlockHeaders(NonEmptyChain(blockHeader1.id, blockHeader2.id))
-      (peer.sendNoWait _).expects(expectedMessage).once().returns(Applicative[F].unit)
+      (peer.sendNoWait).expects(expectedMessage).once().returns(Applicative[F].unit)
 
       val messageToSend =
         PeersManager.Message.BlockHeadersRequest(None, NonEmptyChain(blockHeader1.id, blockHeader2.id))
@@ -2091,7 +2091,7 @@ class PeersManagerTest
         Map(buildSimplePeerEntry(PeerState.Hot, Option(peer), blockSource, newRep = Long.MaxValue - 1))
 
       val expectedMessage = PeerActor.Message.DownloadBlockHeaders(NonEmptyChain(blockHeader1.id, blockHeader2.id))
-      (peer.sendNoWait _).expects(expectedMessage).once().returns(Applicative[F].unit)
+      (peer.sendNoWait).expects(expectedMessage).once().returns(Applicative[F].unit)
 
       val messageToSend =
         PeersManager.Message.BlockHeadersRequest(Option(blockSource), NonEmptyChain(blockHeader1.id, blockHeader2.id))
@@ -2140,7 +2140,7 @@ class PeersManagerTest
       )
 
       val expectedMessage = BlockChecker.Message.InvalidateBlockIds(NonEmptyChain(blockHeader2.id))
-      (blockChecker.sendNoWait _).expects(expectedMessage).once().returns(Applicative[F].unit)
+      (blockChecker.sendNoWait).expects(expectedMessage).once().returns(Applicative[F].unit)
 
       val messageToSend =
         PeersManager.Message.BlockHeadersRequest(
@@ -2194,7 +2194,7 @@ class PeersManagerTest
       )
 
       val expectedMessage = PeerActor.Message.DownloadBlockBodies(NonEmptyChain(blockHeader1, blockHeader2))
-      (peer.sendNoWait _).expects(expectedMessage).once().returns(Applicative[F].unit)
+      (peer.sendNoWait).expects(expectedMessage).once().returns(Applicative[F].unit)
 
       val messageToSend =
         PeersManager.Message.BlockBodyRequest(None, NonEmptyChain(blockHeader1, blockHeader2))
@@ -2231,7 +2231,7 @@ class PeersManagerTest
       val initialPeersMap: Map[HostId, Peer[F]] = Map(buildSimplePeerEntry(PeerState.Hot, Option(peer), blockSource))
 
       val expectedMessage = PeerActor.Message.DownloadBlockBodies(NonEmptyChain(blockHeader1, blockHeader2))
-      (peer.sendNoWait _).expects(expectedMessage).once().returns(Applicative[F].unit)
+      (peer.sendNoWait).expects(expectedMessage).once().returns(Applicative[F].unit)
 
       val messageToSend =
         PeersManager.Message.BlockBodyRequest(Option(blockSource), NonEmptyChain(blockHeader1, blockHeader2))
@@ -2279,7 +2279,7 @@ class PeersManagerTest
       )
 
       val expectedMessage = BlockChecker.Message.InvalidateBlockIds(NonEmptyChain(blockHeader2.id))
-      (blockChecker.sendNoWait _).expects(expectedMessage).once().returns(Applicative[F].unit)
+      (blockChecker.sendNoWait).expects(expectedMessage).once().returns(Applicative[F].unit)
 
       val messageToSend =
         PeersManager.Message.BlockBodyRequest(
@@ -2437,7 +2437,7 @@ class PeersManagerTest
       val requestProxy = mock[RequestsProxyActor[F]]
 
       val peerActor = mockPeerActor[F]()
-      (peerActor.sendNoWait _)
+      (peerActor.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = false, applicationLevel = false))
         .returning(Applicative[F].unit)
 
@@ -2615,7 +2615,7 @@ class PeersManagerTest
       val peerActor = mockPeerActor[F]()
       val initialPeersMap: Map[HostId, Peer[F]] = Map(buildSimplePeerEntry(PeerState.Hot, Option(peerActor), hostId))
 
-      (peerActor.sendNoWait _)
+      (peerActor.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = false, applicationLevel = false))
         .returns(Applicative[F].unit)
 
@@ -3280,7 +3280,7 @@ class PeersManagerTest
       val hostServer1Port = 2
       val host1Ra = RemoteAddress(host1, hostServer1Port)
       val actor1 = mock[PeerActor[F]]
-      (actor1.sendNoWait _)
+      (actor1.sendNoWait)
         .expects(PeerActor.Message.GetHotPeersFromPeer(maximumWarmConnections))
         .returning(Applicative[F].unit)
 
@@ -3310,7 +3310,7 @@ class PeersManagerTest
       val hostServer1Port = 2
       val host1Ra = RemoteAddress(host1, hostServer1Port)
       val actor1 = mock[PeerActor[F]]
-      (actor1.sendNoWait _)
+      (actor1.sendNoWait)
         .expects(PeerActor.Message.GetHotPeersFromPeer(maximumWarmConnections))
         .never()
         .returning(Applicative[F].unit)
@@ -3455,7 +3455,7 @@ class PeersManagerTest
       val host2PeerActor = mockPeerActor[F]()
       val peer1 = mockPeerActor[F]()
 
-      (networkAlgebra.makePeer _)
+      (networkAlgebra.makePeer)
         .expects(host1Id, *, client1, *, *, *, *, *, *, *, *, *, *, *, *, *)
         .once()
         .returns(
@@ -3464,11 +3464,11 @@ class PeersManagerTest
             .onFinalize(Sync[F].delay(peer1.sendNoWait(PeerActor.Message.CloseConnectionForActor)))
         ) // simulate real actor finalizer
 
-      (peer1.sendNoWait _)
+      (peer1.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = false, applicationLevel = false))
         .returning(Applicative[F].unit)
-      (peer1.sendNoWait _).expects(PeerActor.Message.GetNetworkQuality).returning(Applicative[F].unit)
-      (peer1.sendNoWait _).expects(PeerActor.Message.CloseConnectionForActor).returning(Applicative[F].unit)
+      (peer1.sendNoWait).expects(PeerActor.Message.GetNetworkQuality).returning(Applicative[F].unit)
+      (peer1.sendNoWait).expects(PeerActor.Message.CloseConnectionForActor).returning(Applicative[F].unit)
 
       val initialPeersMap: Map[HostId, Peer[F]] = Map(
         buildSimplePeerEntry(PeerState.Hot, host2PeerActor.some, host2Id)
@@ -3509,7 +3509,7 @@ class PeersManagerTest
 
       val host2Id = arbitraryHost.arbitrary.first
 
-      (networkAlgebra.makePeer _)
+      (networkAlgebra.makePeer)
         .expects(host1Id, *, client1, *, *, *, *, *, *, *, *, *, *, *, *, *)
         .once()
         .returns(
@@ -3518,11 +3518,11 @@ class PeersManagerTest
             .onFinalize(Sync[F].delay(peer1.sendNoWait(PeerActor.Message.CloseConnectionForActor)))
         ) // simulate real actor finalizer
 
-      (peer1.sendNoWait _)
+      (peer1.sendNoWait)
         .expects(PeerActor.Message.UpdateState(networkLevel = false, applicationLevel = false))
         .returning(Applicative[F].unit)
-      (peer1.sendNoWait _).expects(PeerActor.Message.GetNetworkQuality).returning(Applicative[F].unit)
-      (peer1.sendNoWait _).expects(PeerActor.Message.CloseConnectionForActor).returning(Applicative[F].unit)
+      (peer1.sendNoWait).expects(PeerActor.Message.GetNetworkQuality).returning(Applicative[F].unit)
+      (peer1.sendNoWait).expects(PeerActor.Message.CloseConnectionForActor).returning(Applicative[F].unit)
 
       val initialPeersMap: Map[HostId, Peer[F]] = Map(buildSimplePeerEntry(PeerState.Banned, None, host2Id))
 

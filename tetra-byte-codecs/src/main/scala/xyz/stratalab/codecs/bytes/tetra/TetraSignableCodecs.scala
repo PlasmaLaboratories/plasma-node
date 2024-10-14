@@ -6,7 +6,7 @@ import xyz.stratalab.models.UnsignedBlockHeader
 trait TetraSignableCodecs {
 
   implicit val signableUnsignedConsensusBlockHeader: Signable[UnsignedBlockHeader] =
-    Signable.fromScodecEncoder(TetraScodecCodecs.unsignedBlockHeaderCodec)
+    Signable.fromScodecEncoder(using TetraScodecCodecs.unsignedBlockHeaderCodec)
 
 }
 

@@ -1,10 +1,10 @@
 package xyz.stratalab.genus.orientDb.instances
 
 import cats.implicits._
-import co.topl.brambl.generators.{ModelGenerators => BramblGenerator}
+import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGenerator}
 import co.topl.brambl.models.Event.{GroupPolicy, SeriesPolicy}
 import co.topl.brambl.models.TransactionOutputAddress
-import co.topl.brambl.syntax.{groupPolicyAsGroupPolicySyntaxOps, seriesPolicyAsSeriesPolicySyntaxOps}
+import xyz.stratalab.sdk.syntax.{groupPolicyAsGroupPolicySyntaxOps, seriesPolicyAsSeriesPolicySyntaxOps}
 import com.orientechnologies.orient.core.metadata.schema.OType
 import munit.{CatsEffectFunFixtures, CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
@@ -23,7 +23,7 @@ class SchemaGroupPolicyTest
     with CatsEffectFunFixtures
     with DbFixtureUtil {
 
-  orientDbFixture.test("GroupPolicy Schema Metadata") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixture.test("GroupPolicy Schema Metadata") { case (odbFactory, oThread: OrientThread[F]) =>
     val res = for {
       dbNoTx             <- oThread.delay(odbFactory.getNoTx).toResource
       databaseDocumentTx <- oThread.delay(dbNoTx.getRawGraph).toResource
@@ -64,7 +64,7 @@ class SchemaGroupPolicyTest
 
   }
 
-  orientDbFixture.test("GroupPolicy Schema Add vertex") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixture.test("GroupPolicy Schema Add vertex") { case (odbFactory, oThread: OrientThread[F]) =>
     val res = for {
 
       dbTx          <- oThread.delay(odbFactory.getTx).toResource

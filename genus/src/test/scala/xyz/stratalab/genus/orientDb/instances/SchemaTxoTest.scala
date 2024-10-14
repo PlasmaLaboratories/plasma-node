@@ -1,7 +1,7 @@
 package xyz.stratalab.genus.orientDb.instances
 
 import cats.implicits._
-import co.topl.brambl.generators.{ModelGenerators => BramblGens}
+import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGens}
 import co.topl.genus.services.{Txo, TxoState}
 import com.orientechnologies.orient.core.metadata.schema.OType
 import munit.{CatsEffectFunFixtures, CatsEffectSuite, ScalaCheckEffectSuite}
@@ -22,7 +22,7 @@ class SchemaTxoTest
     with CatsEffectFunFixtures
     with DbFixtureUtil {
 
-  orientDbFixture.test("Txo Schema Metadata") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixture.test("Txo Schema Metadata") { case (odbFactory, oThread: OrientThread[F]) =>
     val res = for {
       databaseDocumentTx <- oThread.delay(odbFactory.getNoTx.getRawGraph).toResource
       schema = SchemaTxo.make()
@@ -65,7 +65,7 @@ class SchemaTxoTest
 
   }
 
-  orientDbFixture.test("Txo Schema Add vertex") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixture.test("Txo Schema Add vertex") { case (odbFactory, oThread: OrientThread[F]) =>
     val res = for {
       dbTx <- oThread.delay(odbFactory.getTx).toResource
 

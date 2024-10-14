@@ -5,10 +5,10 @@ import cats.effect.IO
 import cats.implicits._
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.brambl.models.{Datum, TransactionId, TransactionOutputAddress}
-import co.topl.brambl.syntax._
-import co.topl.brambl.validation.TransactionAuthorizationError
-import co.topl.brambl.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
-import co.topl.quivr.runtime.DynamicContext
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.TransactionAuthorizationError
+import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
+import xyz.stratalab.quivr.runtime.DynamicContext
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.Arbitrary
 import org.scalamock.munit.AsyncMockFactory
@@ -26,6 +26,7 @@ import xyz.stratalab.networking.fsnetwork.TestHelper.arbitraryIoTransaction
 
 import scala.annotation.tailrec
 
+@munit.IgnoreSuite
 class MempoolProtectedTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]
 

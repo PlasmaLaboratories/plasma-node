@@ -2,8 +2,8 @@ package xyz.stratalab.minting.interpreters
 
 import cats.effect.IO
 import cats.effect.IO.asyncForIO
-import co.topl.brambl.utils.CatsUnsafeResource
-import co.topl.crypto.signing.Ed25519VRF
+import xyz.stratalab.sdk.utils.CatsUnsafeResource
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory

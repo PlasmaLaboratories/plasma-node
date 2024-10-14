@@ -9,7 +9,7 @@ import co.topl.brambl.builders.locks.PropositionTemplate
 import co.topl.brambl.models._
 import co.topl.brambl.models.box._
 import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.byzantine.transactions.{Locks, TransactionFactory, Wallet}
 import xyz.stratalab.byzantine.util._
 import xyz.stratalab.interpreters.NodeRpcOps._

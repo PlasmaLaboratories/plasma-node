@@ -12,14 +12,14 @@ import co.topl.brambl.common.ContainsSignable.instances._
 import co.topl.brambl.models.box.{Attestation, Value}
 import co.topl.brambl.models._
 import co.topl.brambl.models.transaction._
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.byzantine.util._
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.codecs.bytes.typeclasses.Persistable
 import co.topl.consensus.models.{BlockId, StakingAddress}
 import co.topl.crypto.generation.mnemonic.Entropy
 import co.topl.crypto.models.SecretKeyKesProduct
-import co.topl.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
+import xyz.stratalab.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
 import com.spotify.docker.client.DockerClient
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.interpreters.NodeRpcOps._

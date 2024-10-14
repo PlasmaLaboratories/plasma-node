@@ -47,7 +47,7 @@ case class GraphDataEncoder[T] private (
    */
 
   def withIndex[V <: AnyRef: OIndexable](name: String, propertyNames: String*): GraphDataEncoder[T] =
-    copy(indices = indices + Index(name, OIndexable[V].indexType, propertyNames: _*))
+    copy(indices = indices + Index(name, OIndexable[V].indexType, propertyNames*))
 
   /**
    * Describe an Link on the vertex

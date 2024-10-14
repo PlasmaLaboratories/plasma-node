@@ -1,8 +1,8 @@
 package xyz.stratalab.genus.orientDb.instances
 
 import cats.implicits._
-import co.topl.brambl.codecs.AddressCodecs
-import co.topl.brambl.generators.{ModelGenerators => BramblGens}
+import xyz.stratalab.sdk.codecs.AddressCodecs
+import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGens}
 import co.topl.brambl.models.LockAddress
 import com.orientechnologies.orient.core.metadata.schema.OType
 import munit.{CatsEffectFunFixtures, CatsEffectSuite, ScalaCheckEffectSuite}
@@ -23,7 +23,7 @@ class SchemaLockAddressTest
     with CatsEffectFunFixtures
     with DbFixtureUtil {
 
-  orientDbFixture.test("Address Schema Metadata") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixture.test("Address Schema Metadata") { case (odbFactory, oThread: OrientThread[F]) =>
     val res = for {
       databaseDocumentTx <- oThread.delay(odbFactory.getNoTx.getRawGraph).toResource
 
@@ -74,7 +74,7 @@ class SchemaLockAddressTest
   }
 
   orientDbFixture.test("Address Schema Add vertex Lock Address") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, oThread: OrientThread[F]) =>
       val res = for {
         dbTx <- oThread.delay(odbFactory.getTx).toResource
 

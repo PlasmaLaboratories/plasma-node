@@ -5,10 +5,10 @@ import cats.effect.IO.asyncForIO
 import cats.effect.{IO, Resource}
 import cats.implicits._
 import cats.{Applicative, Monad}
-import co.topl.brambl.utils.CatsUnsafeResource
+import xyz.stratalab.sdk.utils.CatsUnsafeResource
 import co.topl.consensus.models._
-import co.topl.crypto.models.SecretKeyKesProduct
-import co.topl.crypto.signing._
+import xyz.stratalab.crypto.models.SecretKeyKesProduct
+import xyz.stratalab.crypto.signing._
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -75,13 +75,13 @@ class OperationalKeyMakerSpec extends CatsEffectSuite with ScalaCheckEffectSuite
         .returning(Chain("a").pure[F])
 
       (secureStore
-        .consume[SecretKeyKesProduct](_: String)(_: Persistable[SecretKeyKesProduct]))
+        .consume[SecretKeyKesProduct](_: String)(using _: Persistable[SecretKeyKesProduct]))
         .expects("a", *)
         .once()
         .returning(sk.some.pure[F])
 
       (secureStore
-        .write[SecretKeyKesProduct](_: String, _: SecretKeyKesProduct)(_: Persistable[SecretKeyKesProduct]))
+        .write[SecretKeyKesProduct](_: String, _: SecretKeyKesProduct)(using _: Persistable[SecretKeyKesProduct]))
         .expects(*, *, *)
         .once()
         .returning(Applicative[F].unit)
@@ -186,13 +186,13 @@ class OperationalKeyMakerSpec extends CatsEffectSuite with ScalaCheckEffectSuite
         .returning(Chain("a").pure[F])
 
       (secureStore
-        .consume[SecretKeyKesProduct](_: String)(_: Persistable[SecretKeyKesProduct]))
+        .consume[SecretKeyKesProduct](_: String)(using _: Persistable[SecretKeyKesProduct]))
         .expects("a", *)
         .once()
         .returning(sk.some.pure[F])
 
       (secureStore
-        .write[SecretKeyKesProduct](_: String, _: SecretKeyKesProduct)(_: Persistable[SecretKeyKesProduct]))
+        .write[SecretKeyKesProduct](_: String, _: SecretKeyKesProduct)(using _: Persistable[SecretKeyKesProduct]))
         .expects(*, *, *)
         .once()
         .returning(Applicative[F].unit)

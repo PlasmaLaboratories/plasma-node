@@ -5,7 +5,7 @@ import cats.effect._
 import cats.effect.implicits._
 import cats.effect.std.{Random, SecureRandom}
 import cats.implicits._
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import co.topl.consensus.models.BlockId
 import co.topl.genus.services._

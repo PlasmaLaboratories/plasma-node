@@ -10,7 +10,7 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.genus.orientDb.instances.VertexSchemaInstances.instances._
 import xyz.stratalab.genus.orientDb.{OrientDBMetadataFactory, OrientThread}
 
-trait DbFixtureUtil { self: FunSuite with CatsEffectSuite =>
+trait DbFixtureUtil { self: FunSuite & CatsEffectSuite =>
 
   type F[A] = IO[A]
   implicit val logger: Logger[F] = Slf4jLogger.getLoggerFromClass[F](this.getClass)
@@ -59,7 +59,7 @@ trait DbFixtureUtil { self: FunSuite with CatsEffectSuite =>
         .delay(odb._1.drop())
         .flatTap(_ => logger.info("Teardown, db dropped"))
 
-    ResourceFixture(factoryR, setup _, teardown _)
+    ResourceFixture(factoryR, setup, teardown)
   }
 
 }

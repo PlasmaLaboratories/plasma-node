@@ -160,7 +160,7 @@ object EtaCalculation {
     ): F[Eta] =
       Sync[F]
         .delay(EtaCalculationArgs(previousEta, epoch, rhoNonceHashValues.toIterable).digestMessages)
-        .flatMap(bytes => blake2b256Resource.use(b2b => Sync[F].delay(b2b.hash(bytes.map(v => v: Array[Byte]): _*))))
+        .flatMap(bytes => blake2b256Resource.use(b2b => Sync[F].delay(b2b.hash(bytes.map(v => v: Array[Byte])*))))
         .map(v => v: ByteString)
         .map(Sized.strictUnsafe(_): Eta)
 

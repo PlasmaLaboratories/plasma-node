@@ -6,8 +6,8 @@ import co.topl.brambl.models.box.{Challenge, Lock}
 import co.topl.brambl.syntax.lockAsLockSyntaxOps
 import co.topl.brambl.syntax.{cryptoToPbKeyPair, pbKeyPairToCryptoKeyPair}
 import co.topl.crypto.generation.Bip32Indexes
-import co.topl.crypto.hash.Blake2b256
-import co.topl.crypto.signing.ExtendedEd25519
+import xyz.stratalab.crypto.hash.Blake2b256
+import xyz.stratalab.crypto.signing.ExtendedEd25519
 import com.google.protobuf.ByteString
 import quivr.models.{Digest, KeyPair, Preimage, Proposition}
 import quivr.models.Proposition.{DigitalSignature, TickRange}

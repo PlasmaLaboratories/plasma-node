@@ -1,10 +1,10 @@
-package co.topl.crypto.signing
+package xyz.stratalab.crypto.signing
 
 import cats.effect.IO
 import cats.implicits._
-import co.topl.crypto.models._
-import co.topl.crypto.utils.Hex.implicits._
-import co.topl.crypto.utils.NodeCryptoGenerators._
+import xyz.stratalab.crypto.models._
+import xyz.stratalab.crypto.utils.Hex.implicits._
+import xyz.stratalab.crypto.utils.NodeCryptoGenerators._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.Gen
 import org.scalacheck.effect.PropF

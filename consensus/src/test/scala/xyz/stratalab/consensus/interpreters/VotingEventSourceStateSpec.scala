@@ -2,13 +2,13 @@ package xyz.stratalab.consensus.interpreters
 
 import cats.effect.{Async, IO}
 import cats.implicits._
-import co.topl.brambl.generators.TransactionGenerator
+import xyz.stratalab.sdk.generators.TransactionGenerator
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.box.Value
 import co.topl.brambl.models.box.Value.UpdateProposal
 import co.topl.brambl.models.transaction._
 import co.topl.consensus.models.{BlockHeader, BlockId, _}
-import co.topl.crypto.signing.Ed25519VRF
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import co.topl.node.models.BlockBody
 import co.topl.proto.node.EpochData
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}

@@ -2,7 +2,7 @@ package xyz.stratalab.genus
 
 import cats.effect.IO
 import cats.implicits._
-import co.topl.brambl.generators.ModelGenerators._
+import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.brambl.models.Event.{GroupPolicy, SeriesPolicy}
 import co.topl.brambl.models.{GroupId, SeriesId, TransactionOutputAddress}
 import co.topl.genus.services._
@@ -22,7 +22,7 @@ class GrpcTokenServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
         val fetcher = mock[TokenFetcherAlgebra[F]]
         val underTest = new GrpcTokenService[F](fetcher)
 
-        (fetcher.fetchGroupPolicy _)
+        (fetcher.fetchGroupPolicy)
           .expects(id)
           .once()
           .returning((GEs.Internal(new IllegalStateException("Boom!")): GE).asLeft[Option[GroupPolicy]].pure[F])
@@ -43,7 +43,7 @@ class GrpcTokenServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
         val fetcher = mock[TokenFetcherAlgebra[F]]
         val underTest = new GrpcTokenService[F](fetcher)
 
-        (fetcher.fetchGroupPolicy _)
+        (fetcher.fetchGroupPolicy)
           .expects(id)
           .once()
           .returning(Option.empty[GroupPolicy].asRight[GE].pure[F])
@@ -65,7 +65,7 @@ class GrpcTokenServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
 
         val groupPolicy = GroupPolicy("fooboo", address, Some(seriesId))
 
-        (fetcher.fetchGroupPolicy _)
+        (fetcher.fetchGroupPolicy)
           .expects(id)
           .once()
           .returning(groupPolicy.some.asRight[GE].pure[F])
@@ -85,7 +85,7 @@ class GrpcTokenServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
         val fetcher = mock[TokenFetcherAlgebra[F]]
         val underTest = new GrpcTokenService[F](fetcher)
 
-        (fetcher.fetchSeriesPolicy _)
+        (fetcher.fetchSeriesPolicy)
           .expects(id)
           .once()
           .returning((GEs.Internal(new IllegalStateException("Boom!")): GE).asLeft[Option[SeriesPolicy]].pure[F])
@@ -106,7 +106,7 @@ class GrpcTokenServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
         val fetcher = mock[TokenFetcherAlgebra[F]]
         val underTest = new GrpcTokenService[F](fetcher)
 
-        (fetcher.fetchSeriesPolicy _)
+        (fetcher.fetchSeriesPolicy)
           .expects(id)
           .once()
           .returning(Option.empty[SeriesPolicy].asRight[GE].pure[F])
@@ -132,7 +132,7 @@ class GrpcTokenServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
           registrationUtxo = address
         )
 
-        (fetcher.fetchSeriesPolicy _)
+        (fetcher.fetchSeriesPolicy)
           .expects(id)
           .once()
           .returning(seriesPolicy.some.asRight[GE].pure[F])

@@ -26,6 +26,7 @@ object Dependencies {
   )
 
   val scalamockBase = "org.scalamock" %% "scalamock" % "6.0.0"
+//  val scalamockBase = "eu.monniot" %% "scala3mock" % "0.6.5"
   val scalamock = scalamockBase        % Test
 
   private val mUnitTestBase: Seq[ModuleID] = Seq(

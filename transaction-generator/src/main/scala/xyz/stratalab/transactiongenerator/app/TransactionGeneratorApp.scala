@@ -115,7 +115,7 @@ object TransactionGeneratorApp
       .drain
 
   implicit private val showMempool: Show[Set[TransactionId]] =
-    catsStdShowForSet(showIoTransactionId)
+    catsStdShowForSet(using showIoTransactionId)
 
   /**
    * Periodically poll and log the state of the mempool.

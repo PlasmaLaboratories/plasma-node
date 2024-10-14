@@ -6,7 +6,7 @@ import cats.implicits._
 import cats.{MonadThrow, Show}
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.validation.algebras.TransactionCostCalculator
+import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
 import co.topl.consensus.models._
 import co.topl.node.models.{BlockBody, CurrentKnownHostsReq, CurrentKnownHostsRes, KnownHost}
 import fs2._
@@ -43,7 +43,7 @@ class BlockchainPeerServerSpec extends CatsEffectSuite with ScalaCheckEffectSuit
   override val munitIOTimeout: FiniteDuration = 5.seconds
 
   test("serve slot data") {
-    PropF.forAllF { slotData: SlotData =>
+    PropF.forAllF { (slotData: SlotData )=>
       withMock {
         val slotDataStore = mock[Store[F, BlockId, SlotData]]
         (slotDataStore.get(_: BlockId)).expects(slotData.slotId.blockId).once().returning(slotData.some.pure[F])
@@ -56,7 +56,7 @@ class BlockchainPeerServerSpec extends CatsEffectSuite with ScalaCheckEffectSuit
   val chainLen = 100L
 
   test("serve slot data chain") {
-    PropF.forAllF(Gen.choose(1L, chainLen), Gen.choose(1L, chainLen), Gen.choose(1, chainLen + 1)) {
+    PropF.forAllF(Gen.choose(1L, chainLen), Gen.choose(1L, chainLen), Gen.choose(1L, chainLen + 1)) {
       (firstVal: Long, secondVal: Long, chunkSize: Long) =>
         withMock {
           val from = Math.min(firstVal, secondVal)
@@ -68,7 +68,7 @@ class BlockchainPeerServerSpec extends CatsEffectSuite with ScalaCheckEffectSuit
           val slotDataMap = slotDataChain.map(sd => (sd.slotId.blockId, sd)).toList.toMap
           val heightToId = slotDataChain.map(sd => (sd.height, sd.slotId.blockId)).toList.toMap
           val slotDataStore = mock[Store[F, BlockId, SlotData]]
-          (slotDataStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (slotDataStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             slotDataMap.contains(id).pure[F]
           }
           (slotDataStore
@@ -135,7 +135,7 @@ class BlockchainPeerServerSpec extends CatsEffectSuite with ScalaCheckEffectSuit
   }
 
   test("serve this peer address") {
-    PropF.forAllF { asServer: KnownHost =>
+    PropF.forAllF { (asServer: KnownHost) =>
       withMock {
         val f = mockFunction[Option[KnownHost]]
         f.expects().once().returning(Option(asServer))
@@ -146,7 +146,7 @@ class BlockchainPeerServerSpec extends CatsEffectSuite with ScalaCheckEffectSuit
   }
 
   test("serve hot peers") {
-    PropF.forAllF { hotPeers: Set[RemotePeer] =>
+    PropF.forAllF {( hotPeers: Set[RemotePeer]) =>
       withMock {
         val f = mockFunction[F[Set[RemotePeer]]]
         f.expects().once().returning(hotPeers.pure[F])
@@ -259,7 +259,7 @@ class BlockchainPeerServerSpec extends CatsEffectSuite with ScalaCheckEffectSuit
             dummyCostCalc
           )
           val mempool = mock[MempoolAlgebra[F]]
-          (mempool.read _).expects(head.slotId.blockId).once().returning(currentMempool.pure[F])
+          (mempool.read).expects(head.slotId.blockId).once().returning(currentMempool.pure[F])
           val localChain = mock[LocalChainAlgebra[F]]
           (() => localChain.head).expects().once().returning(head.pure[F])
           (() => localChain.adoptions)

@@ -4,11 +4,11 @@ import cats.Applicative
 import cats.data.NonEmptyChain
 import cats.effect._
 import cats.implicits._
-import co.topl.brambl.generators.ModelGenerators._
+import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction._
-import co.topl.brambl.syntax._
-import co.topl.brambl.validation.algebras.TransactionCostCalculator
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
 import co.topl.consensus.models.BlockId
 import co.topl.node.models.BlockBody
 import fs2.Stream

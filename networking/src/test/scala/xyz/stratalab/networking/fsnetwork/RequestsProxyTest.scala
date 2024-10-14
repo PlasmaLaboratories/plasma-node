@@ -89,9 +89,9 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
 
       val header = arbitraryHeader.arbitrary.first
 
-      (peersManager.sendNoWait _).expects(*).anyNumberOfTimes().returns(Applicative[F].unit)
-      (headerStore.contains _).expects(*).anyNumberOfTimes().returns(true.pure[F])
-      (blockChecker.sendNoWait _).expects(*).anyNumberOfTimes().returns(Applicative[F].unit)
+      (peersManager.sendNoWait).expects(*).anyNumberOfTimes().returns(Applicative[F].unit)
+      (headerStore.contains).expects(*).anyNumberOfTimes().returns(true.pure[F])
+      (blockChecker.sendNoWait).expects(*).anyNumberOfTimes().returns(Applicative[F].unit)
 
       RequestsProxy
         .makeActor(peersManager, headerStore, bodyStore)
@@ -131,7 +131,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
       val slotData =
         arbitraryLinkedSlotDataChainFor(Gen.choose(3L, 5L)).arbitrary.first
 
-      (blockChecker.sendNoWait _)
+      (blockChecker.sendNoWait)
         .expects(BlockChecker.Message.RemoteSlotData(hostId, slotData))
         .once()
         .returns(Applicative[F].unit)
@@ -151,7 +151,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
 
   test("Block header download request: downloaded prefix sent back, request for new block header shall be sent") {
     PropF.forAllF(nonEmptyChainArbOf(arbitraryHeader).arbitrary.retryUntil(_.size < maxChainSize)) {
-      headers: NonEmptyChain[BlockHeader] =>
+      (headers: NonEmptyChain[BlockHeader]) =>
         withMock {
 
           val peersManager = mock[PeersManagerActor[F]]
@@ -170,7 +170,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
             .map { case (id, headerOpt) => headerRequestsCache.put(id, headerOpt) }
 
           NonEmptyChain.fromChain(headerWithStatus.collect { case (h, NewRequest) => h.id }).map { req =>
-            (peersManager.sendNoWait _)
+            (peersManager.sendNoWait)
               .expects(PeersManager.Message.BlockHeadersRequest(hostId.some, req))
               .returns(().pure[F])
           }
@@ -180,7 +180,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
           val headerStorageData =
             headerWithStatus.collect { case (h, ReceivedOk) => h.id }.filter(inHeaderStorage).toList.toSet
 
-          (headerStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (headerStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             headerStorageData.contains(id).pure[F]
           }
 
@@ -196,7 +196,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
 
           blockCheckerMessageOpt.map { m =>
             val unverifiedHeaders = m.map(UnverifiedBlockHeader(hostId, _, 0))
-            (blockChecker.sendNoWait _)
+            (blockChecker.sendNoWait)
               .expects(BlockChecker.Message.RemoteBlockHeaders(unverifiedHeaders))
               .returns(().pure[F])
           }
@@ -222,7 +222,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
       val requestTimeout = 200.milliseconds
 
       val peersManager = mock[PeersManagerActor[F]]
-      (peersManager.sendNoWait _)
+      (peersManager.sendNoWait)
         .expects(PeersManager.Message.BlockHeadersRequest(hostId.some, requestNeC))
         .twice()
         .returns(Applicative[F].unit)
@@ -254,7 +254,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
 
   test("Block header download response: downloaded prefix sent back, cache is updated, critical error") {
     PropF.forAllF(nonEmptyChainArbOf(arbitraryHeader).arbitrary.retryUntil(_.size < maxChainSize)) {
-      headers: NonEmptyChain[BlockHeader] =>
+      (headers: NonEmptyChain[BlockHeader]) =>
         withMock {
 
           val peersManager = mock[PeersManagerActor[F]]
@@ -271,11 +271,11 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
           }
 
           def inHeaderStorage(id: BlockId): Boolean = id.hashCode() % 2 == 0
-          (headerStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (headerStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             if (inHeaderStorage(id)) Option(arbitraryHeader.arbitrary.first).pure[F]
             else Option.empty[BlockHeader].pure[F]
           }
-          (headerStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (headerStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             inHeaderStorage(id).pure[F]
           }
 
@@ -285,7 +285,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
             .headOption
             .map {
               case (_, header) if inHeaderStorage(header.blockHeader.parentHeaderId) =>
-                (blockChecker.sendNoWait _)
+                (blockChecker.sendNoWait)
                   .expects(
                     BlockChecker.Message.RemoteBlockHeaders(NonEmptyChain.one(header))
                   )
@@ -294,17 +294,17 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
             }
 
           response.collect { case (_, Right(_)) =>
-            (peersManager.sendNoWait _)
+            (peersManager.sendNoWait)
               .expects(PeersManager.Message.DownloadTimeHeader(hostId, 0))
               .returns(().pure[F])
           }
 
           val errorIds = response.collect { case (id, Left(_)) => id }
           NonEmptyChain.fromChain(errorIds).map { errors =>
-            (peersManager.sendNoWait _)
+            (peersManager.sendNoWait)
               .expects(PeersManager.Message.CriticalErrorForHost(hostId))
               .returns(().pure[F])
-            (peersManager.sendNoWait _)
+            (peersManager.sendNoWait)
               .expects(PeersManager.Message.BlockHeadersRequest(None, errors))
               .returns(().pure[F])
           }
@@ -328,7 +328,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
 
   test("Block header download response: downloaded prefix sent back, cache is updated, non-critical error") {
     PropF.forAllF(nonEmptyChainArbOf(arbitraryHeader).arbitrary.retryUntil(_.size < maxChainSize)) {
-      headers: NonEmptyChain[BlockHeader] =>
+      (headers: NonEmptyChain[BlockHeader]) =>
         withMock {
 
           val peersManager = mock[PeersManagerActor[F]]
@@ -351,11 +351,11 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
 
           def inHeaderStorage(id: BlockId): Boolean = id.hashCode() % 2 == 0
 
-          (headerStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (headerStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             if (inHeaderStorage(id)) Option(arbitraryHeader.arbitrary.first).pure[F]
             else Option.empty[BlockHeader].pure[F]
           }
-          (headerStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (headerStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             inHeaderStorage(id).pure[F]
           }
 
@@ -365,7 +365,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
             .headOption
             .map {
               case (_, header) if inHeaderStorage(header.blockHeader.parentHeaderId) =>
-                (blockChecker.sendNoWait _)
+                (blockChecker.sendNoWait)
                   .expects(
                     BlockChecker.Message.RemoteBlockHeaders(NonEmptyChain.one(header))
                   )
@@ -374,17 +374,17 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
             }
 
           response.collect { case (_, Right(_)) =>
-            (peersManager.sendNoWait _)
+            (peersManager.sendNoWait)
               .expects(PeersManager.Message.DownloadTimeHeader(hostId, 0))
               .returns(().pure[F])
           }
 
           val errorIds = response.collect { case (id, Left(_)) => id }
           NonEmptyChain.fromChain(errorIds).map { errors =>
-            (peersManager.sendNoWait _)
+            (peersManager.sendNoWait)
               .expects(PeersManager.Message.NonCriticalErrorForHost(hostId))
               .returns(().pure[F])
-            (peersManager.sendNoWait _)
+            (peersManager.sendNoWait)
               .expects(PeersManager.Message.BlockHeadersRequest(None, errors))
               .returns(().pure[F])
           }
@@ -408,7 +408,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
 
   test("Block body download request: downloaded prefix sent back, request for new block body shall be sent") {
     PropF.forAllF(TestHelper.arbitraryLinkedSlotDataHeaderBlockNoTx(Gen.choose(1, maxChainSize)).arbitrary) {
-      data: NonEmptyChain[(BlockId, SlotData, BlockHeader, BlockBody)] =>
+      (data: NonEmptyChain[(BlockId, SlotData, BlockHeader, BlockBody)]) =>
         withMock {
           val dataMap: ListMap[BlockId, (BlockHeader, BlockBody)] =
             ListMap.from(data.toList.map(d => (d._1, (d._3, d._4))))
@@ -431,7 +431,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
             .foreach { case (id, blockBodyOpt) => bodyRequestsCache.put(id, blockBodyOpt) }
 
           NonEmptyChain.fromSeq(idsWithStatus.collect { case (id, NewRequest) => id }).map { blockIds =>
-            (peersManager.sendNoWait _)
+            (peersManager.sendNoWait)
               .expects(PeersManager.Message.BlockBodyRequest(hostId.some, blockIds.map(id => dataMap(id)._1)))
               .returns(().pure[F])
           }
@@ -439,12 +439,12 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
           def inBodyStorage(id: BlockId): Boolean = id.hashCode() % 2 == 0
           val bodyStorageData =
             idsWithStatus.collect { case (id, ReceivedOk) => id }.filter(inBodyStorage).toList.toSet
-          (bodyStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             bodyStorageData.contains(id).pure[F]
           }
 
           val headerStorageData = dataMap.view.mapValues { case (header, _) => header }.toMap
-          (headerStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId => headerStorageData.get(id).pure[F] }
+          (headerStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => headerStorageData.get(id).pure[F] }
 
           val blockCheckerMessageOpt =
             for {
@@ -459,7 +459,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
 
           blockCheckerMessageOpt.map { m =>
             val data = m.map(d => (d.header, UnverifiedBlockBody(hostId, d.body, 0)))
-            (blockChecker.sendNoWait _).expects(BlockChecker.Message.RemoteBlockBodies(data)).returns(().pure[F])
+            (blockChecker.sendNoWait).expects(BlockChecker.Message.RemoteBlockBodies(data)).returns(().pure[F])
           }
 
           val message = RequestsProxy.Message.DownloadBodiesRequest(
@@ -482,7 +482,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
 
   test("Block body download response: downloaded prefix sent back, cache is updated, critical error") {
     PropF.forAllF(TestHelper.arbitraryLinkedSlotDataHeaderBlockNoTx(Gen.choose(1, maxChainSize)).arbitrary) {
-      data: NonEmptyChain[(BlockId, SlotData, BlockHeader, BlockBody)] =>
+      (data: NonEmptyChain[(BlockId, SlotData, BlockHeader, BlockBody)]) =>
         withMock {
           val dataMap: ListMap[BlockId, (BlockHeader, BlockBody)] =
             ListMap.from(data.toList.map(d => (d._1, (d._3, d._4))))
@@ -504,24 +504,24 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
           def inBodyStorage(id: BlockId): Boolean = id.hashCode() % 2 == 0
 
           // body of parent block for given request
-          (bodyStore.get _)
+          (bodyStore.get)
             .expects(parentOfFirstBlock)
             .anyNumberOfTimes()
             .returns(
               if (inBodyStorage(parentOfFirstBlock)) Option(arbitraryNodeBody.arbitrary.first).pure[F] else None.pure[F]
             )
 
-          (bodyStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (bodyStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             if (inBodyStorage(id)) dataMap.get(id).map(_._2).pure[F]
             else Option.empty[BlockBody].pure[F]
           }
-          (bodyStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             inBodyStorage(id).pure[F]
           }
-          (bodyStore.contains _).expects(parentOfFirstBlock).anyNumberOfTimes().onCall { id: BlockId =>
+          (bodyStore.contains).expects(parentOfFirstBlock).anyNumberOfTimes().onCall { (id: BlockId) =>
             inBodyStorage(id).pure[F]
           }
-          (headerStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (headerStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             dataMap.get(id).map(_._1).pure[F]
           }
 
@@ -531,7 +531,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
             .headOption
             .map {
               case (header, body) if inBodyStorage(header.parentHeaderId) =>
-                (blockChecker.sendNoWait _)
+                (blockChecker.sendNoWait)
                   .expects(
                     BlockChecker.Message
                       .RemoteBlockBodies(NonEmptyChain.one((header, UnverifiedBlockBody(hostId, body, 0))))
@@ -542,17 +542,17 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
 
           response
             .collect { case (_, Right(_)) =>
-              (peersManager.sendNoWait _)
+              (peersManager.sendNoWait)
                 .expects(PeersManager.Message.DownloadTimeBody(hostId, 0, Seq.empty))
                 .returns(().pure[F])
             }
 
           val errorHeaders = response.collect { case (header, Left(_)) => header }
           NonEmptyChain.fromSeq(errorHeaders).map { headers =>
-            (peersManager.sendNoWait _)
+            (peersManager.sendNoWait)
               .expects(PeersManager.Message.CriticalErrorForHost(hostId))
               .returns(().pure[F])
-            (peersManager.sendNoWait _)
+            (peersManager.sendNoWait)
               .expects(PeersManager.Message.BlockBodyRequest(None, headers))
               .returns(().pure[F])
           }
@@ -581,7 +581,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
 
   test("Block body download response: downloaded prefix sent back, cache is updated, non-critical error") {
     PropF.forAllF(TestHelper.arbitraryLinkedSlotDataHeaderBlockNoTx(Gen.choose(1, maxChainSize)).arbitrary) {
-      data: NonEmptyChain[(BlockId, SlotData, BlockHeader, BlockBody)] =>
+      (data: NonEmptyChain[(BlockId, SlotData, BlockHeader, BlockBody)]) =>
         withMock {
           val dataMap: ListMap[BlockId, (BlockHeader, BlockBody)] =
             ListMap.from(data.toList.map(d => (d._1, (d._3, d._4))))
@@ -609,24 +609,24 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
           def inBodyStorage(id: BlockId): Boolean = id.hashCode() % 2 == 0
 
           // body of parent block for given request
-          (bodyStore.get _)
+          (bodyStore.get)
             .expects(parentOfFirstBlock)
             .anyNumberOfTimes()
             .returns(
               if (inBodyStorage(parentOfFirstBlock)) Option(arbitraryNodeBody.arbitrary.first).pure[F] else None.pure[F]
             )
 
-          (bodyStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (bodyStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId )=>
             if (inBodyStorage(id)) dataMap.get(id).map(_._2).pure[F]
             else Option.empty[BlockBody].pure[F]
           }
-          (bodyStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             inBodyStorage(id).pure[F]
           }
-          (bodyStore.contains _).expects(parentOfFirstBlock).anyNumberOfTimes().onCall { id: BlockId =>
+          (bodyStore.contains).expects(parentOfFirstBlock).anyNumberOfTimes().onCall { (id: BlockId) =>
             inBodyStorage(id).pure[F]
           }
-          (headerStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (headerStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             dataMap.get(id).map(_._1).pure[F]
           }
 
@@ -636,7 +636,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
             .headOption
             .map {
               case (header, body) if inBodyStorage(header.parentHeaderId) =>
-                (blockChecker.sendNoWait _)
+                (blockChecker.sendNoWait)
                   .expects(
                     BlockChecker.Message
                       .RemoteBlockBodies(NonEmptyChain.one((header, UnverifiedBlockBody(hostId, body, 0))))
@@ -647,17 +647,17 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
 
           response
             .collect { case (_, Right(_)) =>
-              (peersManager.sendNoWait _)
+              (peersManager.sendNoWait)
                 .expects(PeersManager.Message.DownloadTimeBody(hostId, 0, Seq.empty))
                 .returns(().pure[F])
             }
 
           val errorHeaders = response.collect { case (header, Left(_)) => header }
           NonEmptyChain.fromSeq(errorHeaders).map { headers =>
-            (peersManager.sendNoWait _)
+            (peersManager.sendNoWait)
               .expects(PeersManager.Message.NonCriticalErrorForHost(hostId))
               .returns(().pure[F])
-            (peersManager.sendNoWait _)
+            (peersManager.sendNoWait)
               .expects(PeersManager.Message.BlockBodyRequest(None, headers))
               .returns(().pure[F])
           }
@@ -690,7 +690,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
       val headerStore = mock[Store[F, BlockId, BlockHeader]]
       val bodyStore = mock[Store[F, BlockId, BlockBody]]
 
-      (peersManager.sendNoWait _)
+      (peersManager.sendNoWait)
         .expects(PeersManager.Message.GetCurrentTips)
         .returns(().pure[F])
 
@@ -726,7 +726,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
       val headerStore = mock[Store[F, BlockId, BlockHeader]]
       val bodyStore = mock[Store[F, BlockId, BlockBody]]
 
-      (peersManager.sendNoWait _)
+      (peersManager.sendNoWait)
         .expects(PeersManager.Message.CriticalErrorForHost(hostId))
         .returns(().pure[F])
 
@@ -747,7 +747,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
       val headerStore = mock[Store[F, BlockId, BlockHeader]]
       val bodyStore = mock[Store[F, BlockId, BlockBody]]
 
-      (peersManager.sendNoWait _)
+      (peersManager.sendNoWait)
         .expects(PeersManager.Message.BadKLookbackSlotData(hostId))
         .returns(().pure[F])
 

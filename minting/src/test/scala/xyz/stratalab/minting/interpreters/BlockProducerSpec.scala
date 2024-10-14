@@ -3,10 +3,10 @@ package xyz.stratalab.minting.interpreters
 import cats.effect.std.Queue
 import cats.effect.{Async, IO}
 import cats.implicits._
-import co.topl.brambl.generators.ModelGenerators._
+import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.brambl.models.box.{FungibilityType, QuantityDescriptorType}
 import co.topl.brambl.models.{GroupId, LockAddress, SeriesId}
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.{BlockHeader, BlockId, ProtocolVersion, SlotData, StakingAddress}
 import co.topl.node.models.{FullBlock, FullBlockBody}
 import com.google.protobuf.ByteString
@@ -58,7 +58,7 @@ class BlockProducerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with 
           val version = 1
           val protocolVersion = ProtocolVersion(version, 0, 0)
           (() => staker.address).expects().once().returning(stakingAddress.pure[F])
-          (staker.elect _)
+          (staker.elect)
             .expects(parentSlotData.slotId, parentSlotData.slotId.slot + 1)
             .once()
             .returning(vrfHit.some.pure[F])

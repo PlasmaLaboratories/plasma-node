@@ -6,11 +6,11 @@ import cats.implicits._
 import cats.{MonadThrow, Show}
 import co.topl.brambl.models.Datum
 import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.validation.algebras.{TransactionAuthorizationVerifier, TransactionSyntaxVerifier}
+import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionSyntaxVerifier}
 import co.topl.consensus.models.{BlockHeader, BlockId, _}
-import co.topl.crypto.signing.Ed25519VRF
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import co.topl.node.models.{Block, BlockBody}
-import co.topl.quivr.runtime.DynamicContext
+import xyz.stratalab.quivr.runtime.DynamicContext
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.Gen
 import org.scalacheck.effect.PropF
@@ -85,7 +85,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
   test("RemoteSlotData: Request no headers if new slot data is worse") {
     PropF.forAllF(arbitraryLinkedSlotDataChainFor(Gen.choose(1, maxChainSize)).arbitrary) {
-      slotData: NonEmptyChain[SlotData] =>
+      (slotData: NonEmptyChain[SlotData]) =>
         withMock {
 
           val requestsProxy = mock[RequestsProxyActor[F]]
@@ -95,13 +95,13 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           (() => localChain.head).expects().once().onCall(() => currentSlotDataHead.pure[F])
 
           val slotDataStore = mock[Store[F, BlockId, SlotData]]
-          (slotDataStore.contains _).expects(slotData.head.parentSlotId.blockId).returns(true.pure[F])
+          (slotDataStore.contains).expects(slotData.head.parentSlotId.blockId).returns(true.pure[F])
           val headerStore = mock[Store[F, BlockId, BlockHeader]]
           val bodyStore = mock[Store[F, BlockId, BlockBody]]
           val validators = getValidators()
           val chainSelectionAlgebra = mock[ChainSelectionAlgebra[F, BlockId, SlotData]]
 
-          (chainSelectionAlgebra.compare _).expects(currentSlotDataHead, slotData.last, *, *).returning(1.pure[F])
+          (chainSelectionAlgebra.compare).expects(currentSlotDataHead, slotData.last, *, *).returning(1.pure[F])
 
           BlockChecker
             .makeActor(
@@ -126,7 +126,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
   test("RemoteSlotData: Request headers if new slot data is better and is extension of current chain") {
     PropF.forAllF(arbitraryLinkedSlotDataChainFor(Gen.choose(3, maxChainSize)).arbitrary) {
-      slotData: NonEmptyChain[SlotData] =>
+      (slotData: NonEmptyChain[SlotData]) =>
         withMock {
           val requestsProxy = mock[RequestsProxyActor[F]]
           val localChain = mock[LocalChainAlgebra[F]]
@@ -144,9 +144,9 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
           // local is known data which are stored in stores
           val (localId, localSlotData) = idAndSlotData.head
-          (slotDataStore.contains _).expects(remoteSlotData.head.parentSlotId.blockId).returns(true.pure[F])
-          (headerStore.contains _).expects(localId).once().returning(true.pure[F])
-          (bodyStore.contains _).expects(localId).once().returning(true.pure[F])
+          (slotDataStore.contains).expects(remoteSlotData.head.parentSlotId.blockId).returns(true.pure[F])
+          (headerStore.contains).expects(localId).once().returning(true.pure[F])
+          (bodyStore.contains).expects(localId).once().returning(true.pure[F])
 
           val localSlotDataStore = idAndSlotData.toList.toMap
           (slotDataStore
@@ -157,14 +157,14 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
               localSlotDataStore(id).pure[F]
             }
 
-          (headerStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId => (id == localId).pure[F] }
+          (headerStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => (id == localId).pure[F] }
 
           val expectedRequest =
             RequestsProxy.Message.DownloadHeadersRequest(
               hostId,
               NonEmptyChain.fromSeq(remoteSlotDataAndId.toChain.toList.take(chunkSize).map(_._1)).get
             ): RequestsProxy.Message
-          (requestsProxy.sendNoWait _).expects(expectedRequest).once().returning(().pure[F])
+          (requestsProxy.sendNoWait).expects(expectedRequest).once().returning(().pure[F])
 
           BlockChecker
             .makeActor(
@@ -191,7 +191,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
   test("RemoteSlotData: Request headers if new slot data is better and is overlapped of current chain") {
     PropF.forAllF(arbitraryLinkedSlotDataChainFor(Gen.choose(3, maxChainSize)).arbitrary) {
-      slotData: NonEmptyChain[SlotData] =>
+      (slotData: NonEmptyChain[SlotData]) =>
         withMock {
           val requestsProxy = mock[RequestsProxyActor[F]]
           val localChain = mock[LocalChainAlgebra[F]]
@@ -209,14 +209,14 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
           // local is known data which are stored in stores
           val (localId, localSlotData) = idAndSlotData.head
-          (slotDataStore.contains _).expects(remoteSlotData.head.parentSlotId.blockId).returns(true.pure[F])
+          (slotDataStore.contains).expects(remoteSlotData.head.parentSlotId.blockId).returns(true.pure[F])
           (slotDataStore
             .getOrRaise(_: BlockId)(_: MonadThrow[F], _: Show[BlockId]))
             .expects(localId, *, *)
             .once()
             .returning(localSlotData.pure[F])
-          (headerStore.contains _).expects(localId).once().returning(true.pure[F])
-          (bodyStore.contains _).expects(localId).once().returning(true.pure[F])
+          (headerStore.contains).expects(localId).once().returning(true.pure[F])
+          (bodyStore.contains).expects(localId).once().returning(true.pure[F])
 
           // known but not accepted yet data
           NonEmptyChain.fromSeq(slotData.toChain.toList.take(2)).get
@@ -230,14 +230,14 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
               localSlotDataStore(id).pure[F]
             }
 
-          (headerStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId => (id == localId).pure[F] }
+          (headerStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => (id == localId).pure[F] }
 
           val expectedRequest =
             RequestsProxy.Message.DownloadHeadersRequest(
               hostId,
               NonEmptyChain.fromSeq(remoteSlotDataAndId.toChain.toList.take(chunkSize).map(_._1)).get
             ): RequestsProxy.Message
-          (requestsProxy.sendNoWait _).expects(expectedRequest).once().returning(().pure[F])
+          (requestsProxy.sendNoWait).expects(expectedRequest).once().returning(().pure[F])
 
           BlockChecker
             .makeActor(
@@ -264,7 +264,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
   test("RemoteSlotData: Request headers if new slot data is better and best chain is none") {
     PropF.forAllF(arbitraryLinkedSlotDataChainFor(Gen.choose(3, maxChainSize)).arbitrary) {
-      slotData: NonEmptyChain[SlotData] =>
+      (slotData: NonEmptyChain[SlotData]) =>
         withMock {
           val requestsProxy = mock[RequestsProxyActor[F]]
           val localChain = mock[LocalChainAlgebra[F]]
@@ -282,7 +282,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
           // local is known data which are stored in stores
           val (localId, localSlotData) = idAndSlotData.head
-          (slotDataStore.contains _).expects(remoteSlotData.head.parentSlotId.blockId).returns(true.pure[F])
+          (slotDataStore.contains).expects(remoteSlotData.head.parentSlotId.blockId).returns(true.pure[F])
           (slotDataStore
             .getOrRaise(_: BlockId)(_: MonadThrow[F], _: Show[BlockId]))
             .expects(localId, *, *)
@@ -300,15 +300,15 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
               localSlotDataStore(id).pure[F]
             }
 
-          (headerStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId => (id == localId).pure[F] }
-          (bodyStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId => (id == localId).pure[F] }
+          (headerStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => (id == localId).pure[F] }
+          (bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => (id == localId).pure[F] }
 
           val expectedRequest =
             RequestsProxy.Message.DownloadHeadersRequest(
               hostId,
               NonEmptyChain.fromSeq(remoteSlotDataAndId.toChain.toList.take(chunkSize).map(_._1)).get
             ): RequestsProxy.Message
-          (requestsProxy.sendNoWait _).expects(expectedRequest).once().returning(().pure[F])
+          (requestsProxy.sendNoWait).expects(expectedRequest).once().returning(().pure[F])
 
           val expectedBestChain = Option(BestChain(NonEmptyChain.fromChain(slotData.tail).get))
 
@@ -336,7 +336,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
   test("RemoteSlotData: Request headers if new slot data is better and current best chain in fork") {
     PropF.forAllF(arbitraryLinkedSlotDataChainFor(Gen.choose(3, maxChainSize)).arbitrary) {
-      slotData: NonEmptyChain[SlotData] =>
+      (slotData: NonEmptyChain[SlotData]) =>
         withMock {
           val requestsProxy = mock[RequestsProxyActor[F]]
           val localChain = mock[LocalChainAlgebra[F]]
@@ -354,7 +354,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
           // local is known data which are stored in stores
           val (localId, localSlotData) = idAndSlotData.head
-          (slotDataStore.contains _).expects(remoteSlotData.head.parentSlotId.blockId).returns(true.pure[F])
+          (slotDataStore.contains).expects(remoteSlotData.head.parentSlotId.blockId).returns(true.pure[F])
 
           val currentFork =
             arbitraryLinkedSlotDataChainFor(Gen.choose(1L, 1L), localSlotData.some).arbitrary.first
@@ -362,7 +362,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
           // (() => localChain.head).expects().once().returning(localSlotData.pure[F])
 
-          (chainSelectionAlgebra.compare _).expects(currentFork.last, slotData.last, *, *).returning((-1).pure[F])
+          (chainSelectionAlgebra.compare).expects(currentFork.last, slotData.last, *, *).returning((-1).pure[F])
 
           val localSlotDataStore = idAndSlotData.toList.toMap
           (slotDataStore
@@ -373,15 +373,15 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
               localSlotDataStore(id).pure[F]
             }
 
-          (headerStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId => (id == localId).pure[F] }
-          (bodyStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId => (id == localId).pure[F] }
+          (headerStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => (id == localId).pure[F] }
+          (bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => (id == localId).pure[F] }
 
           val expectedRequest =
             RequestsProxy.Message.DownloadHeadersRequest(
               hostId,
               NonEmptyChain.fromSeq(remoteSlotDataAndId.toChain.toList.take(chunkSize).map(_._1)).get
             ): RequestsProxy.Message
-          (requestsProxy.sendNoWait _).expects(expectedRequest).once().returning(().pure[F])
+          (requestsProxy.sendNoWait).expects(expectedRequest).once().returning(().pure[F])
 
           val bestChain = Option(BestChain(currentFork))
           val expectedBestChain = Option(BestChain(NonEmptyChain.fromChain(slotData.tail).get))
@@ -411,7 +411,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
   test("RemoteSlotData: Request headers if new slot data is better, building full chain") {
     PropF.forAllF(arbitraryLinkedSlotDataChainFor(Gen.choose(3, maxChainSize)).arbitrary) {
-      slotData: NonEmptyChain[SlotData] =>
+      (slotData: NonEmptyChain[SlotData]) =>
         withMock {
           mock[PeersManagerActor[F]]
           val requestsProxy = mock[RequestsProxyActor[F]]
@@ -426,7 +426,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
           // local is known data which are stored in stores
           val (localId, _) = idAndSlotData.head
-          (headerStore.contains _).expects(localId).once().returning(true.pure[F])
+          (headerStore.contains).expects(localId).once().returning(true.pure[F])
 
           // slot data from peer
           val remoteSize = Gen.choose[Int](2, idAndSlotData.tail.size.toInt - 1).first
@@ -434,7 +434,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           val (_, peerSlotData) = remoteIdAndSlotData.unzip
 
           val localSlotDataStore = idAndSlotData.toList.toMap
-          (slotDataStore.contains _).expects(peerSlotData.head.parentSlotId.blockId).returns(true.pure[F])
+          (slotDataStore.contains).expects(peerSlotData.head.parentSlotId.blockId).returns(true.pure[F])
           (slotDataStore
             .getOrRaise(_: BlockId)(_: MonadThrow[F], _: Show[BlockId]))
             .expects(*, *, *)
@@ -443,18 +443,18 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
               localSlotDataStore(id).pure[F]
             }
 
-          (headerStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId => (id == localId).pure[F] }
-          (bodyStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId => (id == localId).pure[F] }
+          (headerStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => (id == localId).pure[F] }
+          (bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => (id == localId).pure[F] }
 
           val currentBestChain = NonEmptyChain.fromSeq(slotData.toList.take(2)).get
-          (chainSelectionAlgebra.compare _).expects(currentBestChain.last, slotData.last, *, *).returning((-1).pure[F])
+          (chainSelectionAlgebra.compare).expects(currentBestChain.last, slotData.last, *, *).returning((-1).pure[F])
 
           val expectedRequest =
             RequestsProxy.Message.DownloadHeadersRequest(
               hostId,
               NonEmptyChain.fromSeq(missedInChainData.take(chunkSize).map(_._1)).get
             ): RequestsProxy.Message
-          (requestsProxy.sendNoWait _).expects(expectedRequest).once().returning(().pure[F])
+          (requestsProxy.sendNoWait).expects(expectedRequest).once().returning(().pure[F])
 
           val expectedBestChain = Option(BestChain(NonEmptyChain.fromChain(slotData.tail).get))
 
@@ -485,7 +485,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
   test("RemoteBlockHeader: Do not verify already known headers, do not search unknown body") {
     PropF.forAllF(arbitraryLinkedBlockHeaderChain(Gen.choose(maxChainSize, maxChainSize)).arbitrary) {
-      headers: NonEmptyChain[BlockHeader] =>
+      (headers: NonEmptyChain[BlockHeader]) =>
         withMock {
           val requestsProxy = mock[RequestsProxyActor[F]]
           val localChain = mock[LocalChainAlgebra[F]]
@@ -495,7 +495,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           val validators = getValidators()
           val chainSelectionAlgebra = mock[ChainSelectionAlgebra[F, BlockId, SlotData]]
 
-          (headerStore.contains _).expects(*).rep(headers.size.toInt).returning(true.pure[F])
+          (headerStore.contains).expects(*).rep(headers.size.toInt).returning(true.pure[F])
           (validators.header.validate _).expects(*).never()
           val slotData = headers.map(h => h.id -> h.slotData).toList.toMap
           (slotDataStore
@@ -506,7 +506,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
               slotData(id).pure[F]
             }
 
-          (bodyStore.contains _).expects(*).never().onCall { id: BlockId =>
+          (bodyStore.contains).expects(*).never().onCall { (id: BlockId) =>
             if (id == slotData.head._2.parentSlotId.blockId) true.pure[F] else false.pure[F]
           }
 
@@ -534,7 +534,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
   test("RemoteBlockHeader: Do not verify already known headers, stop processing if all headers are known") {
     PropF.forAllF(arbitraryLinkedBlockHeaderChain(Gen.choose(2, maxChainSize)).arbitrary) {
-      headers: NonEmptyChain[BlockHeader] =>
+      (headers: NonEmptyChain[BlockHeader]) =>
         withMock {
           val requestsProxy = mock[RequestsProxyActor[F]]
           val localChain = mock[LocalChainAlgebra[F]]
@@ -544,8 +544,8 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           val validators = getValidators()
           val chainSelectionAlgebra = mock[ChainSelectionAlgebra[F, BlockId, SlotData]]
 
-          (headerStore.contains _).expects(*).rep(headers.size.toInt).returning(true.pure[F])
-          (validators.header.validate _).expects(*).never()
+          (headerStore.contains).expects(*).rep(headers.size.toInt).returning(true.pure[F])
+//          ((() => validators.header.validate)).expects(*).never()
 
           val message = headers.map(UnverifiedBlockHeader(hostId, _, 0))
 
@@ -572,7 +572,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
   test("RemoteBlockHeader: Do not verify already known headers, request bodies, request next headers") {
     PropF.forAllF(arbitraryLinkedBlockHeaderChain(Gen.choose(2, maxChainSize)).arbitrary) {
-      headers: NonEmptyChain[BlockHeader] =>
+      (headers: NonEmptyChain[BlockHeader]) =>
         withMock {
           val requestsProxy = mock[RequestsProxyActor[F]]
           val localChain = mock[LocalChainAlgebra[F]]
@@ -589,10 +589,10 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           val knownSlotData = knownIdAndHeaders.head._2.slotData
 
           val headerStoreData = mutable.Map.empty[BlockId, BlockHeader] ++ knownIdAndHeaders.toMap
-          (headerStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (headerStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             headerStoreData.contains(id).pure[F]
           }
-          (headerStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (headerStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             headerStoreData.get(id).pure[F]
           }
           (headerStore
@@ -603,7 +603,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
               headerStoreData(id).pure[F]
             }
           val addedHeader = mutable.Map.empty[BlockId, BlockHeader]
-          (headerStore.put _).expects(*, *).rep(newIdAndHeaders.size).onCall {
+          (headerStore.put).expects(*, *).rep(newIdAndHeaders.size).onCall {
             case (id: BlockId, header: BlockHeader) =>
               addedHeader.put(id, header)
               headerStoreData.put(id, header)
@@ -611,8 +611,8 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           }
 
           (() => localChain.head).stubs().returning(knownSlotData.pure[F])
-          (validators.header.couldBeValidated _).stubs(*, *).returning(true.pure[F])
-          (validators.header.validate _)
+          ((validators.header.couldBeValidated _ )).stubs(*, *).returning(true.pure[F])
+          ((validators.header.validate _))
             .expects(*)
             .rep(newIdAndHeaders.size)
             .onCall((header: BlockHeader) => Either.right[BlockHeaderValidationFailure, BlockHeader](header).pure[F])
@@ -626,14 +626,14 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
               slotData(id).pure[F]
             }
           val bodyStoreData = idAndHeaders.toList.toMap
-          (bodyStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             (!bodyStoreData.contains(id)).pure[F]
           }
 
           val expectedHeaders = NonEmptyChain.fromSeq(idAndHeaders.toList.take(chunkSize).map(_._2)).get
           val expectedMessage: RequestsProxy.Message =
             RequestsProxy.Message.DownloadBodiesRequest(hostId, expectedHeaders)
-          (requestsProxy.sendNoWait _).expects(expectedMessage).returning(().pure[F])
+          (requestsProxy.sendNoWait).expects(expectedMessage).returning(().pure[F])
 
           val message = headers.map(UnverifiedBlockHeader(hostId, _, 0))
 
@@ -661,7 +661,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
   test("RemoteBlockHeader: Do not verify non-verifiable headers, do not request next bodies") {
     PropF.forAllF(arbitraryLinkedBlockHeaderChain(Gen.choose(2, maxChainSize)).arbitrary) {
-      headers: NonEmptyChain[BlockHeader] =>
+      (headers: NonEmptyChain[BlockHeader]) =>
         withMock {
           val requestsProxy = mock[RequestsProxyActor[F]]
           val localChain = mock[LocalChainAlgebra[F]]
@@ -677,10 +677,10 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           val (knownIdAndHeaders, _) = idAndHeaders.toList.splitAt(knownHeadersSize)
           val knownSlotData = knownIdAndHeaders.head._2.slotData(Ed25519VRF.precomputed())
 
-          (headerStore.contains _).expects(*).anyNumberOfTimes().returning(false.pure[F])
+          (headerStore.contains).expects(*).anyNumberOfTimes().returning(false.pure[F])
 
           (() => localChain.head).stubs().returning(knownSlotData.pure[F])
-          (validators.header.couldBeValidated _).stubs(*, *).returning(false.pure[F])
+          ((validators.header.couldBeValidated _)).stubs(*, *).returning(false.pure[F])
           val bestChainForKnownAndNewIds: NonEmptyChain[SlotData] =
             idAndHeaders.map { case (id, header) =>
               val parentId = header.parentHeaderId
@@ -701,7 +701,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
               slotData(id).pure[F]
             }
           val bodyStoreData = idAndHeaders.toList.toMap
-          (bodyStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             (!bodyStoreData.contains(id)).pure[F]
           }
 
@@ -735,7 +735,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
   test("RemoteBlockHeader: Do not verify already known headers, apply only first header, second is not correct") {
     PropF.forAllF(arbitraryLinkedBlockHeaderChain(Gen.choose(3, maxChainSize)).arbitrary) {
-      headers: NonEmptyChain[BlockHeader] =>
+      (headers: NonEmptyChain[BlockHeader]) =>
         withMock {
           val requestsProxy = mock[RequestsProxyActor[F]]
           val localChain = mock[LocalChainAlgebra[F]]
@@ -752,10 +752,10 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           val knownSlotData = knownIdAndHeaders.head._2.slotData(Ed25519VRF.precomputed())
 
           val headerStoreData = mutable.Map.empty[BlockId, BlockHeader] ++ knownIdAndHeaders.toMap
-          (headerStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (headerStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             headerStoreData.contains(id).pure[F]
           }
-          (headerStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (headerStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             headerStoreData.get(id).pure[F]
           }
           (headerStore
@@ -766,19 +766,19 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
               headerStoreData(id).pure[F]
             }
           val addedHeader = mutable.Map.empty[BlockId, BlockHeader]
-          (headerStore.put _).expects(*, *).rep(1).onCall { case (id: BlockId, header: BlockHeader) =>
+          (headerStore.put).expects(*, *).rep(1).onCall { case (id: BlockId, header: BlockHeader) =>
             addedHeader.put(id, header)
             headerStoreData.put(id, header)
             ().pure[F]
           }
 
           (() => localChain.head).stubs().returning(knownSlotData.pure[F])
-          (validators.header.couldBeValidated _).stubs(*, *).returning(true.pure[F])
-          (validators.header.validate _)
+          ((validators.header.couldBeValidated _)).stubs(*, *).returning(true.pure[F])
+          ((validators.header.validate _))
             .expects(*)
             .once()
             .onCall((header: BlockHeader) => Either.right[BlockHeaderValidationFailure, BlockHeader](header).pure[F])
-          (validators.header.validate _)
+          ((validators.header.validate _))
             .expects(*)
             .once()
             .onCall((_: BlockHeader) =>
@@ -794,7 +794,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
               slotData(id).pure[F]
             }
           val bodyStoreData = idAndHeaders.toList.toMap
-          (bodyStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             (!bodyStoreData.contains(id)).pure[F]
           }
 
@@ -816,13 +816,13 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           val expectedHeaders = NonEmptyChain.fromSeq(idAndHeaders.toList.take(chunkSize).map(_._2)).get
           val expectedMessage: RequestsProxy.Message =
             RequestsProxy.Message.DownloadBodiesRequest(hostId, expectedHeaders)
-          (requestsProxy.sendNoWait _)
+          (requestsProxy.sendNoWait)
             .expects(expectedMessage)
             .returning(().pure[F])
-          (requestsProxy.sendNoWait _)
+          (requestsProxy.sendNoWait)
             .expects(RequestsProxy.Message.InvalidateBlockId(hostId, newIdAndHeaders(1)._1))
             .returning(().pure[F])
-          (requestsProxy.sendNoWait _)
+          (requestsProxy.sendNoWait)
             .expects(RequestsProxy.Message.ResetRequestsProxy)
             .returns(().pure[F])
 
@@ -857,7 +857,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
     "RemoteBlockHeader: Do not verify already known headers, apply only first header, exception during processing second"
   ) {
     PropF.forAllF(arbitraryLinkedBlockHeaderChain(Gen.choose(3, maxChainSize)).arbitrary) {
-      headers: NonEmptyChain[BlockHeader] =>
+      (headers: NonEmptyChain[BlockHeader]) =>
         withMock {
           val requestsProxy = mock[RequestsProxyActor[F]]
           val localChain = mock[LocalChainAlgebra[F]]
@@ -874,10 +874,10 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           val knownSlotData = knownIdAndHeaders.head._2.slotData(Ed25519VRF.precomputed())
 
           val headerStoreData = mutable.Map.empty[BlockId, BlockHeader] ++ knownIdAndHeaders.toMap
-          (headerStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (headerStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             headerStoreData.contains(id).pure[F]
           }
-          (headerStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (headerStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             headerStoreData.get(id).pure[F]
           }
           (headerStore
@@ -888,7 +888,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
               headerStoreData(id).pure[F]
             }
           val addedHeader = mutable.Map.empty[BlockId, BlockHeader]
-          (headerStore.put _).expects(*, *).rep(1).onCall { case (id: BlockId, header: BlockHeader) =>
+          (headerStore.put).expects(*, *).rep(1).onCall { case (id: BlockId, header: BlockHeader) =>
             addedHeader.put(id, header)
             headerStoreData.put(id, header)
             ().pure[F]
@@ -900,7 +900,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
             .expects(*)
             .once()
             .onCall((header: BlockHeader) => Either.right[BlockHeaderValidationFailure, BlockHeader](header).pure[F])
-          (validators.header.validate _)
+          ((validators.header.validate _))
             .expects(*)
             .once()
             .onCall((id: BlockHeader) => throw new IllegalStateException(show"Error for id $id"))
@@ -914,7 +914,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
               slotData(id).pure[F]
             }
           val bodyStoreData = idAndHeaders.toList.toMap
-          (bodyStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+          (bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             (!bodyStoreData.contains(id)).pure[F]
           }
 
@@ -936,7 +936,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           val expectedHeaders = NonEmptyChain.fromSeq(idAndHeaders.toList.take(chunkSize).map(_._2)).get
           val expectedMessage: RequestsProxy.Message =
             RequestsProxy.Message.DownloadBodiesRequest(hostId, expectedHeaders)
-          (requestsProxy.sendNoWait _)
+          (requestsProxy.sendNoWait)
             .expects(expectedMessage)
             .returning(().pure[F])
 
@@ -968,7 +968,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
   test("RemoteBlockBodies: Skip verification already known bodies") {
     PropF.forAllF(
       nonEmptyChainArbOfLen(ModelGenerators.arbitraryNodeBody, Gen.choose(2, maxChainSize).first).arbitrary
-    ) { bodies: NonEmptyChain[BlockBody] =>
+    ) { (bodies: NonEmptyChain[BlockBody]) =>
       withMock {
         val requestsProxy = mock[RequestsProxyActor[F]]
         val localChain = mock[LocalChainAlgebra[F]]
@@ -986,7 +986,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
         val message =
           BlockChecker.Message.RemoteBlockBodies(blocks.map(d => (d.header, UnverifiedBlockBody(hostId, d.body, 0))))
 
-        (bodyStore.contains _).expects(*).rep(bodies.size.toInt).returning(true.pure[F])
+        (bodyStore.contains).expects(*).rep(bodies.size.toInt).returning(true.pure[F])
 
         BlockChecker
           .makeActor(
@@ -1012,7 +1012,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
   test("RemoteBlockBodies: Verify and save new blocks, but not apply to local chain because it worse") {
     PropF.forAllF(
       nonEmptyChainArbOfLen(ModelGenerators.arbitraryNodeBody, Gen.choose(2, maxChainSize).first).arbitrary
-    ) { bodies: NonEmptyChain[BlockBody] =>
+    ) { (bodies: NonEmptyChain[BlockBody]) =>
       withMock {
         val requestsProxy = mock[RequestsProxyActor[F]]
         val localChain = mock[LocalChainAlgebra[F]]
@@ -1038,7 +1038,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
         val newBodiesSize = newIdAndHeaders.size
 
         val knownBodyStorageData = knownIdAndHeaders.toMap
-        (bodyStore.contains _).expects(*).rep(bodies.size.toInt).onCall { id: BlockId =>
+        (bodyStore.contains).expects(*).rep(bodies.size.toInt).onCall { (id: BlockId) =>
           knownBodyStorageData.contains(id).pure[F]
         }
 
@@ -1051,7 +1051,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
             headerStorageData(id).pure[F]
           }
 
-        (validators.bodySyntax.validate _).expects(*).rep(newBodiesSize).onCall { b: BlockBody =>
+        (validators.bodySyntax.validate _).expects(*).rep(newBodiesSize).onCall {( b: BlockBody) =>
           Validated.validNec[BodySyntaxError, BlockBody](b).pure[F]
         }
 
@@ -1081,12 +1081,12 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           }
 
         val storedBodies = mutable.Map.empty[BlockId, BlockBody]
-        (bodyStore.put _).expects(*, *).rep(newBodiesSize).onCall { case (id: BlockId, block: BlockBody) =>
+        (bodyStore.put).expects(*, *).rep(newBodiesSize).onCall { case (id: BlockId, block: BlockBody) =>
           storedBodies.put(id, block).pure[F].void
         }
 
         val slotsStorageData = idAndHeader.map { case (id, header) => (id, headerToSlotData(header)) }.toList.toMap
-        (slotDataStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId => slotsStorageData.get(id).pure[F] }
+        (slotDataStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => slotsStorageData.get(id).pure[F] }
         (slotDataStore
           .getOrRaise(_: BlockId)(_: MonadThrow[F], _: Show[BlockId]))
           .expects(*, *, *)
@@ -1095,7 +1095,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
             slotsStorageData(id).pure[F]
           }
 
-        (localChain.isWorseThan _).expects(*).anyNumberOfTimes().returning(false.pure[F])
+        (localChain.isWorseThan).expects(*).anyNumberOfTimes().returning(false.pure[F])
 
         BlockChecker
           .makeActor(
@@ -1121,7 +1121,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
   test("RemoteBlockBodies: Verify and save blocks, apply to local chain, send no new request") {
     PropF.forAllF(
       nonEmptyChainArbOfLen(ModelGenerators.arbitraryNodeBody, Gen.choose(2, maxChainSize).first).arbitrary
-    ) { bodies: NonEmptyChain[BlockBody] =>
+    ) { (bodies: NonEmptyChain[BlockBody]) =>
       withMock {
         val requestsProxy = mock[RequestsProxyActor[F]]
         val localChain = mock[LocalChainAlgebra[F]]
@@ -1147,7 +1147,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
         val newBodiesSize = newIdAndHeaders.size
 
         val knownBodyStorageData = knownIdAndHeaders.toMap
-        (bodyStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+        (bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
           knownBodyStorageData.contains(id).pure[F]
         }
 
@@ -1160,7 +1160,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
             headerStorageData(id).pure[F]
           }
 
-        (validators.bodySyntax.validate _).expects(*).rep(newBodiesSize).onCall { b: BlockBody =>
+        (validators.bodySyntax.validate _).expects(*).rep(newBodiesSize).onCall { (b: BlockBody) =>
           Validated.validNec[BodySyntaxError, BlockBody](b).pure[F]
         }
 
@@ -1190,13 +1190,13 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           }
 
         val storedBodies = mutable.Map.empty[BlockId, BlockBody]
-        (bodyStore.put _).expects(*, *).rep(newBodiesSize).onCall { case (id: BlockId, block: BlockBody) =>
+        (bodyStore.put).expects(*, *).rep(newBodiesSize).onCall { case (id: BlockId, block: BlockBody) =>
           storedBodies.put(id, block).pure[F].void
         }
 
         val idAndSlotData = idAndHeader.map { case (id, header) => (id, headerToSlotData(header)) }.toList
         val slotsStorageData = idAndSlotData.toMap
-        (slotDataStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId => slotsStorageData.get(id).pure[F] }
+        (slotDataStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => slotsStorageData.get(id).pure[F] }
         (slotDataStore
           .getOrRaise(_: BlockId)(_: MonadThrow[F], _: Show[BlockId]))
           .expects(*, *, *)
@@ -1207,13 +1207,13 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
         val lastBlockSlotData = idAndSlotData.last._2
 
-        (localChain.isWorseThan _).expects(*).anyNumberOfTimes().onCall { ids: NonEmptyChain[SlotData] =>
+        (localChain.isWorseThan).expects(*).anyNumberOfTimes().onCall { (ids: NonEmptyChain[SlotData]) =>
           (lastBlockSlotData === ids.last).pure[F]
         }
 
-        (localChain.adopt _).expects(Validated.Valid(lastBlockSlotData)).once().returning(().pure[F])
+        (localChain.adopt).expects(Validated.Valid(lastBlockSlotData)).once().returning(().pure[F])
 
-        (requestsProxy.sendNoWait _).expects(*).never()
+        (requestsProxy.sendNoWait).expects(*).never()
 
         BlockChecker
           .makeActor(
@@ -1283,10 +1283,10 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
       val knownBodyStorageData: mutable.Map[BlockId, BlockBody] =
         mutable.Map.empty[BlockId, BlockBody] ++ knownBody.toMap
-      (bodyStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+      (bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
         knownBodyStorageData.contains(id).pure[F]
       }
-      (bodyStore.put _).expects(*, *).rep(requestIdSlotDataHeaderBlockSize).onCall {
+      (bodyStore.put).expects(*, *).rep(requestIdSlotDataHeaderBlockSize).onCall {
         case (id: BlockId, block: BlockBody) =>
           knownBodyStorageData.put(id, block).pure[F].void
       }
@@ -1299,14 +1299,14 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
         .onCall { case (id: BlockId, _: MonadThrow[F] @unchecked, _: Show[BlockId] @unchecked) =>
           headerStorageData(id).pure[F]
         }
-      (headerStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+      (headerStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
         headerStorageData.get(id).pure[F]
       }
-      (headerStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+      (headerStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
         headerStorageData.contains(id).pure[F]
       }
 
-      (validators.bodySyntax.validate _).expects(*).rep(requestIdSlotDataHeaderBlockSize).onCall { b: BlockBody =>
+      (validators.bodySyntax.validate _).expects(*).rep(requestIdSlotDataHeaderBlockSize).onCall { (b: BlockBody) =>
         Validated.validNec[BodySyntaxError, BlockBody](b).pure[F]
       }
 
@@ -1336,7 +1336,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
         }
 
       val slotDataStoreData = knowSlotData.toMap
-      (slotDataStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId => slotDataStoreData.get(id).pure[F] }
+      (slotDataStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => slotDataStoreData.get(id).pure[F] }
       (slotDataStore
         .getOrRaise(_: BlockId)(_: MonadThrow[F], _: Show[BlockId]))
         .expects(*, *, *)
@@ -1345,15 +1345,15 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           slotDataStoreData(id).pure[F]
         }
 
-      (localChain.isWorseThan _).expects(*).rep(requestIdSlotDataHeaderBlockSize).returning(true.pure[F])
-      (localChain.adopt _).expects(*).rep(requestIdSlotDataHeaderBlockSize).returning(().pure[F])
+      (localChain.isWorseThan).expects(*).rep(requestIdSlotDataHeaderBlockSize).returning(true.pure[F])
+      (localChain.adopt).expects(*).rep(requestIdSlotDataHeaderBlockSize).returning(().pure[F])
 
       val expectedNewRequestMessage: RequestsProxy.Message =
         RequestsProxy.Message.DownloadBodiesRequest(
           hostId,
           NonEmptyChain.fromSeq(expectedNewRequest.map(d => d._3.embedId).take(chunkSize)).get
         )
-      (requestsProxy.sendNoWait _).expects(expectedNewRequestMessage).once().returning(().pure[F])
+      (requestsProxy.sendNoWait).expects(expectedNewRequestMessage).once().returning(().pure[F])
 
       BlockChecker
         .makeActor(
@@ -1426,10 +1426,10 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
       val knownBodyStorageData: mutable.Map[BlockId, BlockBody] =
         mutable.Map.empty[BlockId, BlockBody] ++ knownBody.toMap
-      (bodyStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+      (bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
         knownBodyStorageData.contains(id).pure[F]
       }
-      (bodyStore.put _).expects(*, *).rep(requestIdSlotDataHeaderBlockSize).onCall {
+      (bodyStore.put).expects(*, *).rep(requestIdSlotDataHeaderBlockSize).onCall {
         case (id: BlockId, block: BlockBody) =>
           knownBodyStorageData.put(id, block).pure[F].void
       }
@@ -1442,14 +1442,14 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
         .onCall { case (id: BlockId, _: MonadThrow[F] @unchecked, _: Show[BlockId] @unchecked) =>
           headerStorageData(id).pure[F]
         }
-      (headerStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+      (headerStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
         headerStorageData.contains(id).pure[F]
       }
-      (headerStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+      (headerStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
         headerStorageData.get(id).pure[F]
       }
 
-      (validators.bodySyntax.validate _).expects(*).rep(requestIdSlotDataHeaderBlockSize).onCall { b: BlockBody =>
+      (validators.bodySyntax.validate _).expects(*).rep(requestIdSlotDataHeaderBlockSize).onCall { (b: BlockBody) =>
         Validated.validNec[BodySyntaxError, BlockBody](b).pure[F]
       }
 
@@ -1479,7 +1479,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
         }
 
       val slotDataStoreData = knowSlotData.toMap
-      (slotDataStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId => slotDataStoreData.get(id).pure[F] }
+      (slotDataStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => slotDataStoreData.get(id).pure[F] }
       (slotDataStore
         .getOrRaise(_: BlockId)(_: MonadThrow[F], _: Show[BlockId]))
         .expects(*, *, *)
@@ -1488,14 +1488,14 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           slotDataStoreData(id).pure[F]
         }
 
-      (localChain.isWorseThan _).expects(*).rep(requestIdSlotDataHeaderBlockSize).returning(true.pure[F])
-      (localChain.adopt _).expects(*).rep(requestIdSlotDataHeaderBlockSize).returning(().pure[F])
+      (localChain.isWorseThan).expects(*).rep(requestIdSlotDataHeaderBlockSize).returning(true.pure[F])
+      (localChain.adopt).expects(*).rep(requestIdSlotDataHeaderBlockSize).returning(().pure[F])
 
       val headersRequest =
         allIdSlotDataHeaderBlock.slice(knownSlotHeaderUnknownBodyLen, knownSlotHeaderUnknownBodyLen + 1).map(_._1)
       val headerReqMessage =
         RequestsProxy.Message.DownloadHeadersRequest(hostId, NonEmptyChain.fromSeq(headersRequest).get)
-      (requestsProxy.sendNoWait _).expects(headerReqMessage).returning(().pure[F])
+      (requestsProxy.sendNoWait).expects(headerReqMessage).returning(().pure[F])
 
       BlockChecker
         .makeActor(
@@ -1567,7 +1567,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
       val knownBodyStorageData: mutable.Map[BlockId, BlockBody] =
         mutable.Map.empty[BlockId, BlockBody] ++ knownBody.toMap
-      (bodyStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+      (bodyStore.contains).expects(*).anyNumberOfTimes().onCall {( id: BlockId) =>
         knownBodyStorageData.contains(id).pure[F]
       }
       (bodyStore.put(_: BlockId, _: BlockBody)).expects(*, *).anyNumberOfTimes().onCall {
@@ -1583,14 +1583,14 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
         .onCall { case (id: BlockId, _: MonadThrow[F] @unchecked, _: Show[BlockId] @unchecked) =>
           headerStorageData(id).pure[F]
         }
-      (headerStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+      (headerStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
         headerStorageData.contains(id).pure[F]
       }
-      (headerStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+      (headerStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
         headerStorageData.get(id).pure[F]
       }
 
-      (validators.bodySyntax.validate _).expects(*).rep(2).onCall { b: BlockBody =>
+      (validators.bodySyntax.validate _).expects(*).rep(2).onCall { (b: BlockBody) =>
         Validated.validNec[BodySyntaxError, BlockBody](b).pure[F]
       }
 
@@ -1625,7 +1625,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
         }
 
       val slotDataStoreData = knowSlotData.toMap
-      (slotDataStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId => slotDataStoreData.get(id).pure[F] }
+      (slotDataStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => slotDataStoreData.get(id).pure[F] }
       (slotDataStore
         .getOrRaise(_: BlockId)(_: MonadThrow[F], _: Show[BlockId]))
         .expects(*, *, *)
@@ -1635,16 +1635,16 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
         }
 
       val lastAdoptedBlockSlotData = requestIdSlotDataHeaderBlock.head._2
-      (localChain.isWorseThan _).expects(*).anyNumberOfTimes().onCall { ids: NonEmptyChain[SlotData] =>
+      (localChain.isWorseThan).expects(*).anyNumberOfTimes().onCall { (ids: NonEmptyChain[SlotData]) =>
         assert(lastAdoptedBlockSlotData == ids.last)
         (lastAdoptedBlockSlotData == ids.last).pure[F]
       }
-      (localChain.adopt _).expects(Validated.Valid(lastAdoptedBlockSlotData)).once().returning(().pure[F])
+      (localChain.adopt).expects(Validated.Valid(lastAdoptedBlockSlotData)).once().returning(().pure[F])
 
-      (requestsProxy.sendNoWait _)
+      (requestsProxy.sendNoWait)
         .expects(RequestsProxy.Message.InvalidateBlockId(hostId, requestIdSlotDataHeaderBlock(1)._1))
         .returns(().pure[F])
-      (requestsProxy.sendNoWait _)
+      (requestsProxy.sendNoWait)
         .expects(RequestsProxy.Message.ResetRequestsProxy)
         .returns(().pure[F])
 
@@ -1713,7 +1713,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
       val knownBodyStorageData: mutable.Map[BlockId, BlockBody] =
         mutable.Map.empty[BlockId, BlockBody] ++ knownBody.toMap
-      (bodyStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+      (bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
         knownBodyStorageData.contains(id).pure[F]
       }
       (bodyStore.put(_: BlockId, _: BlockBody)).expects(*, *).anyNumberOfTimes().onCall {
@@ -1729,18 +1729,18 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
         .onCall { case (id: BlockId, _: MonadThrow[F] @unchecked, _: Show[BlockId] @unchecked) =>
           headerStorageData(id).pure[F]
         }
-      (headerStore.contains _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+      (headerStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
         headerStorageData.contains(id).pure[F]
       }
-      (headerStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+      (headerStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
         headerStorageData.get(id).pure[F]
       }
 
-      (validators.bodySyntax.validate _).expects(*).once().onCall { b: BlockBody =>
+      (validators.bodySyntax.validate _).expects(*).once().onCall { (b: BlockBody) =>
         Validated.validNec[BodySyntaxError, BlockBody](b).pure[F]
       }
 
-      (validators.bodySyntax.validate _).expects(*).once().onCall { _: BlockBody =>
+      (validators.bodySyntax.validate _).expects(*).once().onCall { (_: BlockBody) =>
         throw new IllegalStateException()
       }
 
@@ -1775,7 +1775,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
         }
 
       val slotDataStoreData = knowSlotData.toMap
-      (slotDataStore.get _).expects(*).anyNumberOfTimes().onCall { id: BlockId => slotDataStoreData.get(id).pure[F] }
+      (slotDataStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => slotDataStoreData.get(id).pure[F] }
       (slotDataStore
         .getOrRaise(_: BlockId)(_: MonadThrow[F], _: Show[BlockId]))
         .expects(*, *, *)
@@ -1785,13 +1785,13 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
         }
 
       val lastAdoptedBlockSlotData = requestIdSlotDataHeaderBlock.head._2
-      (localChain.isWorseThan _).expects(*).anyNumberOfTimes().onCall { ids: NonEmptyChain[SlotData] =>
+      (localChain.isWorseThan).expects(*).anyNumberOfTimes().onCall { (ids: NonEmptyChain[SlotData]) =>
         assert(lastAdoptedBlockSlotData == ids.last)
         (lastAdoptedBlockSlotData == ids.last).pure[F]
       }
-      (localChain.adopt _).expects(Validated.Valid(lastAdoptedBlockSlotData)).once().returning(().pure[F])
+      (localChain.adopt).expects(Validated.Valid(lastAdoptedBlockSlotData)).once().returning(().pure[F])
 
-      (requestsProxy.sendNoWait _)
+      (requestsProxy.sendNoWait)
         .expects(
           RequestsProxy.Message.DownloadBodiesRequest(hostId, NonEmptyChain.one(requestIdSlotDataHeaderBlock(1)._3))
         )
@@ -1829,9 +1829,9 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
       val chainSelectionAlgebra = mock[ChainSelectionAlgebra[F, BlockId, SlotData]]
 
       val currentBestChain = arbitraryLinkedSlotDataChain.arbitrary.first
-      val invalidSlotData = currentBestChain.get(Gen.choose(0, currentBestChain.size - 1).first).get
+      val invalidSlotData = currentBestChain.get(Gen.choose(0L, currentBestChain.size - 1).first).get
 
-      (requestsProxy.sendNoWait _).expects(RequestsProxy.Message.ResetRequestsProxy).returns(().pure[F])
+      (requestsProxy.sendNoWait).expects(RequestsProxy.Message.ResetRequestsProxy).returns(().pure[F])
 
       BlockChecker
         .makeActor(
@@ -1870,9 +1870,9 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
       val chainSelectionAlgebra = mock[ChainSelectionAlgebra[F, BlockId, SlotData]]
 
       val currentBestChain = arbitraryLinkedSlotDataChain.arbitrary.first
-      val invalidSlotData = currentBestChain.get(Gen.choose(0, currentBestChain.size - 1).first).get
+      val invalidSlotData = currentBestChain.get(Gen.choose(0L, currentBestChain.size - 1).first).get
 
-      (requestsProxy.sendNoWait _).expects(RequestsProxy.Message.ResetRequestsProxy).returns(().pure[F])
+      (requestsProxy.sendNoWait).expects(RequestsProxy.Message.ResetRequestsProxy).returns(().pure[F])
 
       val invalidatedBlocks = NonEmptyChain(arbitraryBlockId.arbitrary.first, invalidSlotData.slotId.blockId)
       BlockChecker
@@ -1914,7 +1914,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
       val currentBestChain = arbitraryLinkedSlotDataChain.arbitrary.first
       val invalidBlockId = arbitrarySlotData.arbitrary.first.slotId.blockId
 
-      (requestsProxy.sendNoWait _).expects(RequestsProxy.Message.ResetRequestsProxy).once().returns(().pure[F])
+      (requestsProxy.sendNoWait).expects(RequestsProxy.Message.ResetRequestsProxy).once().returns(().pure[F])
 
       BlockChecker
         .makeActor(

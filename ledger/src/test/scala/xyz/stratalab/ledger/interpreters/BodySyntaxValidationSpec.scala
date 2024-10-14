@@ -2,14 +2,14 @@ package xyz.stratalab.ledger.interpreters
 
 import cats.effect.IO
 import cats.implicits._
-import co.topl.brambl.constants.NetworkConstants
-import co.topl.brambl.generators.ModelGenerators._
+import xyz.stratalab.sdk.constants.NetworkConstants
+import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.brambl.models.box.{FungibilityType, Lock, QuantityDescriptorType, Value}
 import co.topl.brambl.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
 import co.topl.brambl.models.{GroupId, LockAddress, SeriesId, TransactionId}
-import co.topl.brambl.syntax._
-import co.topl.brambl.validation.TransactionSyntaxError
-import co.topl.brambl.validation.algebras.TransactionSyntaxVerifier
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.TransactionSyntaxError
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import co.topl.node.models.BlockBody
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -25,14 +25,14 @@ class BodySyntaxValidationSpec extends CatsEffectSuite with ScalaCheckEffectSuit
   type F[A] = IO[A]
 
   test("validation should fail if any transaction is syntactically invalid") {
-    PropF.forAllF { transaction: IoTransaction =>
+    PropF.forAllF { (transaction: IoTransaction) =>
       withMock {
         val body = BlockBody(List(transaction.id))
         for {
           fetchTransaction <- mockFunction[TransactionId, F[IoTransaction]].pure[F]
           _ = fetchTransaction.expects(transaction.id).once().returning(transaction.pure[F])
           transactionSyntaxValidation = mock[TransactionSyntaxVerifier[F]]
-          _ = (transactionSyntaxValidation.validate _)
+          _ = (transactionSyntaxValidation.validate)
             .expects(transaction)
             .once()
             .returning(
@@ -106,7 +106,7 @@ class BodySyntaxValidationSpec extends CatsEffectSuite with ScalaCheckEffectSuit
           _ = fetchTransaction.expects(transaction.id).once().returning(transaction.pure[F])
           _ = fetchTransaction.expects(rewardTx.id).once().returning(rewardTx.pure[F])
           transactionSyntaxValidation = mock[TransactionSyntaxVerifier[F]]
-          _ = (transactionSyntaxValidation.validate _)
+          _ = (transactionSyntaxValidation.validate)
             .expects(transaction)
             .once()
             .returning(transaction.validNec[TransactionSyntaxError].toEither.pure[F])

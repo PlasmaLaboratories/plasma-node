@@ -91,7 +91,7 @@ class PackageObjectTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
   }
 
   test("dropWhile shall works properly") {
-    PropF.forAllF(ModelGenerators.nonEmptyChainArbOf[Boolean].arbitrary) { chain: NonEmptyChain[Boolean] =>
+    PropF.forAllF(ModelGenerators.nonEmptyChainArbOf[Boolean].arbitrary) { (chain: NonEmptyChain[Boolean]) =>
       for {
         d <- NonEmptyChainFOps[Boolean, F](chain).dropWhileF(_.pure[F])
         _ = assert(!d.headOption.getOrElse(false))

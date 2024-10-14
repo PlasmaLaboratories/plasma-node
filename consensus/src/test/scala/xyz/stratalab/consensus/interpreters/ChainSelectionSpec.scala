@@ -2,9 +2,9 @@ package xyz.stratalab.consensus.interpreters
 
 import cats.effect.IO
 import cats.implicits._
-import co.topl.brambl.utils.CatsUnsafeResource
+import xyz.stratalab.sdk.utils.CatsUnsafeResource
 import co.topl.consensus.models._
-import co.topl.crypto.hash.Blake2b512
+import xyz.stratalab.crypto.hash.Blake2b512
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
@@ -29,7 +29,7 @@ class ChainSelectionSpec extends CatsEffectSuite with ScalaCheckEffectSuite with
   override def munitFixtures = List(blake2b512Resource)
 
   private def makeFetcher(sdMap: Map[BlockId, SlotData]): BlockId => F[SlotData] = {
-    val fetcher = { id: BlockId => sdMap(id).pure[F] }
+    val fetcher = { (id: BlockId) => sdMap(id).pure[F] }
     fetcher
   }
 

@@ -1,10 +1,10 @@
-package co.topl.crypto.signing
+package xyz.stratalab.crypto.signing
 
 import cats.effect.IO
 import cats.implicits._
-import co.topl.crypto.generation.mnemonic.Entropy
-import co.topl.crypto.utils.EntropySupport._
-import co.topl.crypto.utils._
+import xyz.stratalab.crypto.generation.mnemonic.Entropy
+import xyz.stratalab.crypto.utils.EntropySupport._
+import xyz.stratalab.crypto.utils._
 import io.circe.generic.semiauto.deriveDecoder
 import io.circe.{Decoder, HCursor}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -45,7 +45,7 @@ class Ed25519VRFSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
   }
 
   test("with Ed25519VRF, keyPairs generated with the same seed should be the same") {
-    PropF.forAllF { seedByteVector: Entropy =>
+    PropF.forAllF { (seedByteVector: Entropy) =>
       if (seedByteVector.value.length != 0) {
         val ed25519vrf = new Ed25519VRF
         val keyPair1 = ed25519vrf.deriveKeyPairFromEntropy(seedByteVector, None)

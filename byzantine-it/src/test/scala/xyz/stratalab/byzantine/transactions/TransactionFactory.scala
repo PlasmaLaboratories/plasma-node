@@ -10,9 +10,9 @@ import co.topl.brambl.common.ContainsSignable.instances.ioTransactionSignable
 import co.topl.brambl.models.box.{Attestation, Box, Lock, Value}
 import co.topl.brambl.models.transaction.{IoTransaction, Schedule, SpentTransactionOutput, UnspentTransactionOutput}
 import co.topl.brambl.models._
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import co.topl.brambl.syntax.pbKeyPairToCryptoKeyPair
-import co.topl.crypto.signing.ExtendedEd25519
+import xyz.stratalab.crypto.signing.ExtendedEd25519
 import co.topl.quivr.api.Prover
 import com.google.protobuf.ByteString
 import quivr.models._

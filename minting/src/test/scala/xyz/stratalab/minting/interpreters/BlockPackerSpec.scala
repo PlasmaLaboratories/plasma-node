@@ -2,15 +2,15 @@ package xyz.stratalab.minting.interpreters
 
 import cats.effect.{IO, Resource}
 import cats.implicits._
-import co.topl.brambl.generators.ModelGenerators._
+import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.brambl.models._
 import co.topl.brambl.models.box.{Attestation, Value}
 import co.topl.brambl.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
-import co.topl.brambl.syntax._
-import co.topl.brambl.validation.TransactionAuthorizationError
-import co.topl.brambl.validation.algebras._
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.TransactionAuthorizationError
+import xyz.stratalab.sdk.validation.algebras._
 import co.topl.consensus.models.BlockId
-import co.topl.quivr.runtime.DynamicContext
+import xyz.stratalab.quivr.runtime.DynamicContext
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory

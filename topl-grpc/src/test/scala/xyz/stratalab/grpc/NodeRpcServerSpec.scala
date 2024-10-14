@@ -4,7 +4,7 @@ import cats.effect.IO
 import cats.implicits._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.validation.algebras.TransactionSyntaxVerifier
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
 import co.topl.node.models.BlockBody
 import co.topl.proto.node.{EpochData, NodeConfig}
@@ -184,7 +184,7 @@ class NodeRpcServerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with 
         for {
           epochDataAlgebra <- mock[EpochDataAlgebra[F]].pure[F]
           epochData = EpochData.defaultInstance
-          _ = (epochDataAlgebra.dataOf _)
+          _ = (epochDataAlgebra.dataOf)
             .expects(0L)
             .once()
             .returning(epochData.some.pure[F])

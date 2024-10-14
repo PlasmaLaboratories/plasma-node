@@ -32,23 +32,23 @@ trait TetraTransmittableCodecs {
     override def fromTransmittableBytes(bytes: ByteString): Either[String, Unit] = Right(())
   }
 
-  implicit val booleanTransmittable: Transmittable[Boolean] = Transmittable.instanceFromCodec(boolCodec)
+  implicit val booleanTransmittable: Transmittable[Boolean] = Transmittable.instanceFromCodec(using boolCodec)
 
-  implicit val intTransmittable: Transmittable[Int] = Transmittable.instanceFromCodec(intCodec)
+  implicit val intTransmittable: Transmittable[Int] = Transmittable.instanceFromCodec(using intCodec)
 
-  implicit val longTransmittable: Transmittable[Long] = Transmittable.instanceFromCodec(longCodec)
+  implicit val longTransmittable: Transmittable[Long] = Transmittable.instanceFromCodec(using longCodec)
 
   implicit val longBlockIdOptTransmittable: Transmittable[(Long, Option[BlockId])] =
     Transmittable.instanceFromCodec(
-      (longCodec :: optionCodec[BlockId])
+      using (longCodec :: optionCodec[BlockId])
         .as[(Long, Option[BlockId])]
     )
 
   implicit def listTransmittable[A: Codec]: Transmittable[List[A]] =
-    Transmittable.instanceFromCodec(list[A](implicitly[Codec[A]]))
+    Transmittable.instanceFromCodec(using list[A](implicitly[Codec[A]]))
 
   implicit def pairTransmittable[A: Codec, B: Codec]: Transmittable[(A, B)] =
-    Transmittable.instanceFromCodec(pairCodec[A, B])
+    Transmittable.instanceFromCodec(using pairCodec[A, B])
 
   implicit def optionalTransmittable[T: Transmittable]: Transmittable[Option[T]] =
     new Transmittable[Option[T]] {

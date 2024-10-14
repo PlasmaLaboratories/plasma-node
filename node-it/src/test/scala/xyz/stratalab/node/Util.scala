@@ -10,7 +10,7 @@ import xyz.stratalab.blockchain.{BigBang, PrivateTestnet, StakerInitializers, St
 import co.topl.brambl.models._
 import co.topl.brambl.models.box.Value
 import co.topl.brambl.models.transaction.{IoTransaction, UnspentTransactionOutput}
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import xyz.stratalab.config.ApplicationConfig
 import co.topl.consensus.models.{BlockId, ProtocolVersion}

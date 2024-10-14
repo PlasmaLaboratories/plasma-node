@@ -141,7 +141,9 @@ lazy val commonScalacOptions = Seq(
   "-language:higherKinds",
   "-language:postfixOps",
   "-unchecked",
-  "-Ykind-projector:underscores"
+  "-Ykind-projector:underscores",
+//  "-rewrite",
+  "-source:3.4-migration"
 )
 
 javaOptions ++= Seq(

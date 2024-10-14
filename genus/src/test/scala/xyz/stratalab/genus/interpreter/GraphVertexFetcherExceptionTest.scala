@@ -2,7 +2,7 @@ package xyz.stratalab.genus.interpreter
 
 import cats.effect.{IO, Resource, Sync}
 import cats.implicits._
-import co.topl.brambl.generators.ModelGenerators._
+import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.brambl.models.{LockAddress, TransactionOutputAddress}
 import co.topl.consensus.models.BlockHeader
 import com.orientechnologies.orient.core.command.OCommandRequest
@@ -30,7 +30,7 @@ class GraphVertexFetcherExceptionTest extends CatsEffectSuite with ScalaCheckEff
     PropF.forAllF { (header: BlockHeader) =>
       withMock {
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
+          given OrientThread[F] <- OrientThread.create[F]
           orientGraphNoTx                          <- throwableOrientGraphResource(expectedTh)
           graphVertexFetcher                       <- GraphVertexFetcher.make[F](orientGraphNoTx)
           _ <- assertIO(
@@ -52,7 +52,7 @@ class GraphVertexFetcherExceptionTest extends CatsEffectSuite with ScalaCheckEff
         val expectedTh = new IllegalStateException("boom!")
 
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
+          given OrientThread[F] <- OrientThread.create[F]
           orientGraphNoTx                          <- throwableOrientGraphResource(expectedTh)
           graphVertexFetcher                       <- GraphVertexFetcher.make[F](orientGraphNoTx)
           _ <- assertIO(
@@ -73,7 +73,7 @@ class GraphVertexFetcherExceptionTest extends CatsEffectSuite with ScalaCheckEff
 
     withMock {
       val res = for {
-        implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
+        given OrientThread[F] <- OrientThread.create[F]
         orientGraphNoTx                          <- throwableOrientGraphResource(expectedTh)
         vertex                                   <- mock[Vertex].pure[F].toResource
         graphVertexFetcher                       <- GraphVertexFetcher.make[F](orientGraphNoTx)
@@ -95,7 +95,7 @@ class GraphVertexFetcherExceptionTest extends CatsEffectSuite with ScalaCheckEff
 
     withMock {
       val res = for {
-        implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
+        given OrientThread[F] <- OrientThread.create[F]
         orientGraphNoTx                          <- throwableOrientGraphResource(expectedTh)
         vertex                                   <- mock[Vertex].pure[F].toResource
         graphVertexFetcher                       <- GraphVertexFetcher.make[F](orientGraphNoTx)
@@ -118,7 +118,7 @@ class GraphVertexFetcherExceptionTest extends CatsEffectSuite with ScalaCheckEff
     PropF.forAllF { (lockAddress: LockAddress) =>
       withMock {
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
+          given OrientThread[F] <- OrientThread.create[F]
           orientGraphNoTx                          <- throwableOrientGraphResource(expectedTh)
           graphVertexFetcher                       <- GraphVertexFetcher.make[F](orientGraphNoTx)
           _ <- assertIO(
@@ -140,7 +140,7 @@ class GraphVertexFetcherExceptionTest extends CatsEffectSuite with ScalaCheckEff
     PropF.forAllF { (transactionOutputAddress: TransactionOutputAddress) =>
       withMock {
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
+          given OrientThread[F] <- OrientThread.create[F]
           orientGraphNoTx                          <- throwableOrientGraphResource(expectedTh)
           graphVertexFetcher                       <- GraphVertexFetcher.make[F](orientGraphNoTx)
           _ <- assertIO(

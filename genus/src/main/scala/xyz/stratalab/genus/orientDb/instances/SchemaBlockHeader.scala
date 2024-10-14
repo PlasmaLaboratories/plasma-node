@@ -57,8 +57,8 @@ object SchemaBlockHeader {
       .withProperty(Field.Address,_.address.toByteArray,mandatory = true, readOnly = true, notNull = true)
       .withProperty(Field.Size, blockHeader => java.lang.Long.valueOf(size(blockHeader)) ,mandatory = true, readOnly = true, notNull = true)
       .withProperty(Field.Version, blockHeader => blockHeader.version.toByteArray ,mandatory = true, readOnly = true, notNull = true)
-      .withIndex[BlockHeader](Field.BlockHeaderIndex, Field.BlockId)(Instances.blockHeader)
-      .withIndex[BlockHeader](Field.BlockHeaderHeightIndex, Field.Height)(OIndexable.Instances.blockHeightHeader),
+      .withIndex[BlockHeader](Field.BlockHeaderIndex, Field.BlockId)(using Instances.blockHeader)
+      .withIndex[BlockHeader](Field.BlockHeaderHeightIndex, Field.Height)(using OIndexable.Instances.blockHeightHeader),
       // @formatter:on
     v =>
       BlockHeader(
