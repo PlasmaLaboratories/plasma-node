@@ -3,17 +3,17 @@ package xyz.stratalab.byzantine.transactions
 import cats.effect.Async
 import cats.implicits._
 import xyz.stratalab.blockchain.StakerInitializers
-import co.topl.brambl.builders.locks.PropositionTemplate
-import co.topl.brambl.builders.locks.PropositionTemplate.PropositionType
-import co.topl.brambl.common.ContainsSignable.ContainsSignableTOps
-import co.topl.brambl.common.ContainsSignable.instances.ioTransactionSignable
+import xyz.stratalab.sdk.builders.locks.PropositionTemplate
+import xyz.stratalab.sdk.builders.locks.PropositionTemplate.PropositionType
+import xyz.stratalab.sdk.common.ContainsSignable.ContainsSignableTOps
+import xyz.stratalab.sdk.common.ContainsSignable.instances.ioTransactionSignable
 import co.topl.brambl.models.box.{Attestation, Box, Lock, Value}
 import co.topl.brambl.models.transaction.{IoTransaction, Schedule, SpentTransactionOutput, UnspentTransactionOutput}
 import co.topl.brambl.models._
 import xyz.stratalab.sdk.syntax._
-import co.topl.brambl.syntax.pbKeyPairToCryptoKeyPair
+import xyz.stratalab.sdk.syntax.pbKeyPairToCryptoKeyPair
 import xyz.stratalab.crypto.signing.ExtendedEd25519
-import co.topl.quivr.api.Prover
+import xyz.stratalab.quivr.api.Prover
 import com.google.protobuf.ByteString
 import quivr.models._
 

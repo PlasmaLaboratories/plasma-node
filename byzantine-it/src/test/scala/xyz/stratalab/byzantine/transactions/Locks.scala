@@ -1,11 +1,11 @@
 package xyz.stratalab.byzantine.transactions
 
-import co.topl.brambl.constants.NetworkConstants
+import xyz.stratalab.sdk.constants.NetworkConstants
 import co.topl.brambl.models.Indices
 import co.topl.brambl.models.box.{Challenge, Lock}
-import co.topl.brambl.syntax.lockAsLockSyntaxOps
-import co.topl.brambl.syntax.{cryptoToPbKeyPair, pbKeyPairToCryptoKeyPair}
-import co.topl.crypto.generation.Bip32Indexes
+import xyz.stratalab.sdk.syntax.lockAsLockSyntaxOps
+import xyz.stratalab.sdk.syntax.{cryptoToPbKeyPair, pbKeyPairToCryptoKeyPair}
+import xyz.stratalab.crypto.generation.Bip32Indexes
 import xyz.stratalab.crypto.hash.Blake2b256
 import xyz.stratalab.crypto.signing.ExtendedEd25519
 import com.google.protobuf.ByteString

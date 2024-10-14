@@ -44,7 +44,7 @@ object DockerSupport {
     debugLoggingEnabled:    Boolean = loggingEnabledFromEnvironment
   ): Resource[F, (DockerSupport[F], DockerClient)] =
     for {
-      implicit0(dockerClient: DockerClient) <- Resource.make(Sync[F].blocking(DefaultDockerClient.fromEnv().build()))(
+      given DockerClient <- Resource.make(Sync[F].blocking(DefaultDockerClient.fromEnv().build()))(
         c => Sync[F].blocking(c.close())
       )
       nodeCache <- Resource.make[F, Ref[F, Set[BifrostDockerNode]]](Ref.of(Set.empty[BifrostDockerNode]))(
@@ -52,7 +52,7 @@ object DockerSupport {
           _.toList
             .traverse(node =>
               Sync[F]
-                .blocking(dockerClient.removeContainer(node.containerId, DockerClient.RemoveContainerParam.forceKill))
+                .blocking(summon[DockerClient].removeContainer(node.containerId, DockerClient.RemoveContainerParam.forceKill))
                 .voidError
             )
             .void
@@ -61,13 +61,13 @@ object DockerSupport {
       networkCache <- Resource.make[F, Ref[F, Set[NetworkCreation]]](Ref.of(Set.empty[NetworkCreation]))(
         _.get.flatMap(
           _.toList
-            .traverse(network => Sync[F].blocking(dockerClient.removeNetwork(network.id())).voidError)
+            .traverse(network => Sync[F].blocking(summon[DockerClient].removeNetwork(network.id())).voidError)
             .void
         )
       )
       _ <- containerLogsDirectory.fold(Resource.unit[F])(Files.forAsync[F].createDirectories(_).toResource)
       dockerSupport = new Impl[F](containerLogsDirectory, debugLoggingEnabled, nodeCache, networkCache)
-    } yield (dockerSupport, dockerClient)
+    } yield (dockerSupport, summon[DockerClient])
 
   private class Impl[F[_]: Async](
     containerLogsDirectory: Option[Path],

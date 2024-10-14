@@ -7,8 +7,8 @@ import cats.effect.kernel.Sync
 import cats.implicits._
 import xyz.stratalab.algebras.{NodeRpc, SynchronizationTraversalSteps}
 import xyz.stratalab.blockchain._
-import co.topl.brambl.common.ContainsSignable.ContainsSignableTOps
-import co.topl.brambl.common.ContainsSignable.instances._
+import xyz.stratalab.sdk.common.ContainsSignable.ContainsSignableTOps
+import xyz.stratalab.sdk.common.ContainsSignable.instances._
 import co.topl.brambl.models.box.{Attestation, Value}
 import co.topl.brambl.models._
 import co.topl.brambl.models.transaction._
@@ -17,8 +17,8 @@ import xyz.stratalab.byzantine.util._
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.codecs.bytes.typeclasses.Persistable
 import co.topl.consensus.models.{BlockId, StakingAddress}
-import co.topl.crypto.generation.mnemonic.Entropy
-import co.topl.crypto.models.SecretKeyKesProduct
+import xyz.stratalab.crypto.generation.mnemonic.Entropy
+import xyz.stratalab.crypto.models.SecretKeyKesProduct
 import xyz.stratalab.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
 import com.spotify.docker.client.DockerClient
 import org.typelevel.log4cats.Logger
@@ -26,7 +26,7 @@ import xyz.stratalab.interpreters.NodeRpcOps._
 import com.google.protobuf.ByteString
 import fs2.Chunk
 import fs2.io.file.{Files, Path, PosixPermission, PosixPermissions}
-import co.topl.quivr.api.Prover
+import xyz.stratalab.quivr.api.Prover
 import xyz.stratalab.typeclasses.implicits._
 
 import java.security.SecureRandom
@@ -48,7 +48,7 @@ class MultiNodeTest extends IntegrationSuite {
     val resource =
       for {
         (dockerSupport, _dockerClient) <- DockerSupport.make[F]()
-        implicit0(dockerClient: DockerClient) = _dockerClient
+        given DockerClient = _dockerClient
         initialNodes <- List
           .tabulate(totalNodeCount - 1)(index =>
             dockerSupport.createNode(

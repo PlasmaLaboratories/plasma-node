@@ -5,7 +5,7 @@ import cats.effect.Async
 import cats.implicits._
 import xyz.stratalab.algebras.NodeRpc
 import xyz.stratalab.blockchain.PrivateTestnet
-import co.topl.brambl.builders.locks.PropositionTemplate
+import xyz.stratalab.sdk.builders.locks.PropositionTemplate
 import co.topl.brambl.models._
 import co.topl.brambl.models.box._
 import co.topl.brambl.models.transaction.IoTransaction
@@ -60,7 +60,7 @@ class TransactionTest extends IntegrationSuite {
     val resource =
       for {
         (dockerSupport, _dockerClient) <- DockerSupport.make[F]()
-        implicit0(dockerClient: DockerClient) = _dockerClient
+        given DockerClient = _dockerClient
         node1 <- dockerSupport.createNode(
           "TransactionTest-node1",
           "TransactionTest",

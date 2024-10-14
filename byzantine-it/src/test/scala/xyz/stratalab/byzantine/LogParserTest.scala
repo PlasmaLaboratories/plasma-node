@@ -138,7 +138,7 @@ object LogParserTest {
     time ~ "|" ~ level ~ packagePath ~ "-" ~ "Received syntactically invalid transaction" ~ "id=" ~ transactionId.! ~ "reasons="
   )
 
-  private def blockHeader[$: P]: P[Unit] =
+  private def blockHeader[$: P]: P[(String,String)] =
     P("header=BlockHeader(id=") ~ blockIdId ~ "parentId=" ~ blockIdId ~ CharsWhile(_ != ')') ~ ")"
 
   private def minted[$: P]: P[String] = P(
