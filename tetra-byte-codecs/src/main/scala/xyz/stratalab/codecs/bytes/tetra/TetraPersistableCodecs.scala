@@ -3,12 +3,12 @@ package xyz.stratalab.codecs.bytes.tetra
 import cats.data.NonEmptySet
 import cats.implicits._
 import co.topl.consensus.models.BlockId
-import xyz.stratalab.crypto.models.SecretKeyKesProduct
 import com.google.protobuf.ByteString
 import scalapb.{GeneratedMessage, GeneratedMessageCompanion}
 import scodec.Codec
 import xyz.stratalab.codecs.bytes.scodecs._
 import xyz.stratalab.codecs.bytes.typeclasses.Persistable
+import xyz.stratalab.crypto.models.SecretKeyKesProduct
 import xyz.stratalab.models.{Epoch, ProposalId}
 
 import scala.collection.immutable.SortedSet
@@ -37,8 +37,8 @@ trait TetraPersistableCodecs {
   }
 
   implicit val persistableTransactionOutputIndices: Persistable[NonEmptySet[Short]] =
-    Persistable.instanceFromCodec(
-      using seqCodec[Short].xmap(s => NonEmptySet.fromSetUnsafe(SortedSet.from(s)), _.toList)
+    Persistable.instanceFromCodec(using
+      seqCodec[Short].xmap(s => NonEmptySet.fromSetUnsafe(SortedSet.from(s)), _.toList)
     )
 
   implicit val persistableLong: Persistable[Long] =

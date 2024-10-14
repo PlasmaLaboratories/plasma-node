@@ -4,7 +4,6 @@ import cats.effect.IO
 import cats.implicits._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
 import co.topl.node.models.BlockBody
 import co.topl.proto.node.{EpochData, NodeConfig}
@@ -21,6 +20,7 @@ import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.ledger.Ledger
 import xyz.stratalab.ledger.algebras.MempoolAlgebra
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 
 class NodeRpcServerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

@@ -9,7 +9,6 @@ import co.topl.brambl.models.LockAddress
 import co.topl.brambl.models.box.Value
 import co.topl.brambl.models.box.Value.UpdateProposal
 import co.topl.brambl.models.transaction.UnspentTransactionOutput
-import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.BlockId
 import co.topl.node.models.{BlockBody, FullBlock}
 import com.google.protobuf.ByteString
@@ -18,6 +17,7 @@ import fs2.io.file.Path
 import quivr.models.{Int128, Ratio}
 import xyz.stratalab.blockchain._
 import xyz.stratalab.codecs.bytes.tetra.instances._
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 import java.nio.charset.StandardCharsets

@@ -6,12 +6,12 @@ import cats.implicits._
 import cats.{Applicative, MonadThrow}
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.brambl.models.{TransactionId, TransactionOutputAddress}
-import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.BlockId
 import co.topl.node.models.BlockBody
 import xyz.stratalab.algebras.Store
 import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
 import xyz.stratalab.ledger.algebras.BoxStateAlgebra
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 import scala.collection.immutable.SortedSet

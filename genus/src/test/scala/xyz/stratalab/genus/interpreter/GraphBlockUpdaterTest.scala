@@ -13,7 +13,6 @@ import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.genus.algebras.{BlockFetcherAlgebra, NodeBlockFetcherAlgebra}
-import xyz.stratalab.genus.interpreter.GraphBlockUpdater
 import xyz.stratalab.genus.model.{GE, GEs}
 import xyz.stratalab.genus.orientDb.OrientThread
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
@@ -37,8 +36,8 @@ class GraphBlockUpdaterTest extends CatsEffectSuite with ScalaCheckEffectSuite w
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          blockData                                <- Resource.pure(BlockData(blockHeader.copy(height = 1), null, null))
-          graphBlockUpdater <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
+          blockData             <- Resource.pure(BlockData(blockHeader.copy(height = 1), null, null))
+          graphBlockUpdater     <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
           _ <- assertIO(
             graphBlockUpdater.insert(blockData),
             (GEs.InternalMessage("boom!"): GE).asLeft[Unit]
@@ -64,8 +63,8 @@ class GraphBlockUpdaterTest extends CatsEffectSuite with ScalaCheckEffectSuite w
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          blockData                                <- Resource.pure(BlockData(blockHeader.copy(height = 1), null, null))
-          graphBlockUpdater <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
+          blockData             <- Resource.pure(BlockData(blockHeader.copy(height = 1), null, null))
+          graphBlockUpdater     <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
           _ <- assertIO(
             graphBlockUpdater.insert(blockData),
             ().asRight[GE]
@@ -87,8 +86,8 @@ class GraphBlockUpdaterTest extends CatsEffectSuite with ScalaCheckEffectSuite w
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          blockData                                <- Resource.pure(BlockData(blockHeader.copy(height = 2), null, null))
-          graphBlockUpdater <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
+          blockData             <- Resource.pure(BlockData(blockHeader.copy(height = 2), null, null))
+          graphBlockUpdater     <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
           _ <- assertIO(
             graphBlockUpdater.insert(blockData),
             (GEs.InternalMessage("boom!"): GE).asLeft[Unit]
@@ -121,8 +120,8 @@ class GraphBlockUpdaterTest extends CatsEffectSuite with ScalaCheckEffectSuite w
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          blockData                                <- Resource.pure(BlockData(blockHeader.copy(height = 2), null, null))
-          graphBlockUpdater <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
+          blockData             <- Resource.pure(BlockData(blockHeader.copy(height = 2), null, null))
+          graphBlockUpdater     <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
           _ <- assertIO(
             graphBlockUpdater.insert(blockData),
             ().asRight[GE]
@@ -153,8 +152,8 @@ class GraphBlockUpdaterTest extends CatsEffectSuite with ScalaCheckEffectSuite w
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          blockData                                <- Resource.pure(BlockData(blockHeader.copy(height = 2), null, null))
-          graphBlockUpdater <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
+          blockData             <- Resource.pure(BlockData(blockHeader.copy(height = 2), null, null))
+          graphBlockUpdater     <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
           _ <- assertIO(
             graphBlockUpdater.insert(blockData),
             (GEs.InternalMessage("boom!"): GE).asLeft[Unit]

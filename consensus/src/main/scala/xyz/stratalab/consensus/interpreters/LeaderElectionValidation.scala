@@ -2,11 +2,11 @@ package xyz.stratalab.consensus.interpreters
 
 import cats.effect._
 import cats.implicits._
-import xyz.stratalab.crypto.hash.Blake2b512
 import scalacache.caffeine.CaffeineCache
 import xyz.stratalab.consensus.algebras.LeaderElectionValidationAlgebra
 import xyz.stratalab.consensus.models.VrfConfig
 import xyz.stratalab.consensus.rhoToRhoTestHash
+import xyz.stratalab.crypto.hash.Blake2b512
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility.Ratio
 import xyz.stratalab.numerics.algebras.{Exp, Log1p}

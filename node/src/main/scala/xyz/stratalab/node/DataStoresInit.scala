@@ -8,9 +8,7 @@ import cats.implicits._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.box.Value.UpdateProposal
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models._
-import xyz.stratalab.crypto.signing.Ed25519VRF
 import co.topl.node.models._
 import co.topl.proto.node.EpochData
 import com.google.protobuf.ByteString
@@ -25,6 +23,7 @@ import xyz.stratalab.codecs.bytes.typeclasses.Persistable
 import xyz.stratalab.config.ApplicationConfig
 import xyz.stratalab.consensus._
 import xyz.stratalab.consensus.interpreters.BlockHeaderToBodyValidation
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.db.leveldb.LevelDbStore
 import xyz.stratalab.interpreters.CacheStore
 import xyz.stratalab.interpreters.ContainsCacheStore._
@@ -32,6 +31,7 @@ import xyz.stratalab.models.p2p._
 import xyz.stratalab.models.utility._
 import xyz.stratalab.models.{Epoch, ProposalId, VersionId}
 import xyz.stratalab.networking.fsnetwork._
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 import DataStoresInit.DataStoreNames._

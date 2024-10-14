@@ -46,7 +46,7 @@ lazy val commonSettings = Seq(
     "jitpack" at "https://jitpack.io"
   ),
   testFrameworks += TestFrameworks.MUnit,
-  dependencyOverrides ++= Dependencies.protobufSpecs ++ Seq(Dependencies.strataQuivr4s),
+  dependencyOverrides ++= Dependencies.protobufSpecs // ++ Seq(Dependencies.strataQuivr4s),
 )
 
 lazy val dockerSettings = Seq(
@@ -142,8 +142,9 @@ lazy val commonScalacOptions = Seq(
   "-language:postfixOps",
   "-unchecked",
   "-Ykind-projector:underscores",
-//  "-rewrite",
-  "-source:3.4-migration"
+  "-source:3.4-migration",
+  "-Wunused:imports",
+  "-Yunused:all",
 )
 
 javaOptions ++= Seq(
@@ -382,7 +383,7 @@ lazy val typeclasses: Project = project
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "xyz.stratalab.buildinfo.typeclasses",
-    libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.logging,
+    libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.logging ++ Dependencies.circe,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
   .dependsOn(models % "compile->compile;test->test", nodeCrypto, tetraByteCodecs)

@@ -2,7 +2,6 @@ package xyz.stratalab.genus.interpreter
 
 import cats.effect.IO
 import cats.implicits._
-import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.brambl.models.Event.{GroupPolicy, SeriesPolicy}
 import co.topl.brambl.models.{GroupId, SeriesId, TransactionOutputAddress}
 import com.tinkerpop.blueprints.Vertex
@@ -10,9 +9,9 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.genus.algebras.VertexFetcherAlgebra
-import xyz.stratalab.genus.interpreter.GraphTokenFetcher
 import xyz.stratalab.genus.model.{GE, GEs}
 import xyz.stratalab.genus.orientDb.instances.{SchemaGroupPolicy, SchemaSeriesPolicy}
+import xyz.stratalab.sdk.generators.ModelGenerators._
 
 class GraphTokenFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 
@@ -65,17 +64,20 @@ class GraphTokenFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
             .once()
             .returning(Option(vertex).asRight[GE].pure[F])
 
-          _ = (vertex.getProperty[String])
+          _ = (vertex
+            .getProperty[String])
             .expects(SchemaGroupPolicy.Field.Label)
             .once()
             .returning(groupPolicy.label)
 
-          _ = (vertex.getProperty[Array[Byte]])
+          _ = (vertex
+            .getProperty[Array[Byte]])
             .expects(SchemaGroupPolicy.Field.RegistrationUtxo)
             .once()
             .returning(groupPolicy.registrationUtxo.toByteArray)
 
-          _ = (vertex.getProperty[Array[Byte]])
+          _ = (vertex
+            .getProperty[Array[Byte]])
             .expects(SchemaGroupPolicy.Field.FixedSeries)
             .once()
             .returning(groupPolicy.fixedSeries.map(_.value.toByteArray).getOrElse(Array.empty[Byte]))
@@ -141,37 +143,44 @@ class GraphTokenFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
             .once()
             .returning(Option(vertex).asRight[GE].pure[F])
 
-          _ = (vertex.getProperty[String])
+          _ = (vertex
+            .getProperty[String])
             .expects(SchemaSeriesPolicy.Field.Label)
             .once()
             .returning(seriesPolicy.label)
 
-          _ = (vertex.getProperty[Int])
+          _ = (vertex
+            .getProperty[Int])
             .expects(SchemaSeriesPolicy.Field.TokenSupply)
             .once()
             .returning(seriesPolicy.tokenSupply.get)
 
-          _ = (vertex.getProperty[Array[Byte]])
+          _ = (vertex
+            .getProperty[Array[Byte]])
             .expects(SchemaSeriesPolicy.Field.RegistrationUtxo)
             .once()
             .returning(seriesPolicy.registrationUtxo.toByteArray)
 
-          _ = (vertex.getProperty[Int])
+          _ = (vertex
+            .getProperty[Int])
             .expects(SchemaSeriesPolicy.Field.QuantityDescriptor)
             .once()
             .returning(seriesPolicy.quantityDescriptor.value)
 
-          _ = (vertex.getProperty[Int])
+          _ = (vertex
+            .getProperty[Int])
             .expects(SchemaSeriesPolicy.Field.Fungibility)
             .once()
             .returning(seriesPolicy.fungibility.value)
 
-          _ = (vertex.getProperty[Array[Byte]])
+          _ = (vertex
+            .getProperty[Array[Byte]])
             .expects(SchemaSeriesPolicy.Field.EphemeralMetadataScheme)
             .once()
             .returning(seriesPolicy.ephemeralMetadataScheme.map(_.toByteArray).getOrElse(Array.empty[Byte]))
 
-          _ = (vertex.getProperty[Array[Byte]])
+          _ = (vertex
+            .getProperty[Array[Byte]])
             .expects(SchemaSeriesPolicy.Field.PermanentMetadataScheme)
             .once()
             .returning(seriesPolicy.permanentMetadataScheme.map(_.toByteArray).getOrElse(Array.empty[Byte]))

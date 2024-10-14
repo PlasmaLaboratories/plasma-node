@@ -2,10 +2,8 @@ package xyz.stratalab.genus.interpreter
 
 import cats.effect.IO
 import cats.implicits._
-import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.{BlockHeader, BlockId}
 import co.topl.genus.services.BlockData
 import co.topl.node.models.{BlockBody, FullBlockBody}
@@ -16,9 +14,10 @@ import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.NodeRpc
-import xyz.stratalab.genus.interpreter.NodeBlockFetcher
 import xyz.stratalab.genus.model.GEs._
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
+import xyz.stratalab.sdk.generators.ModelGenerators._
+import xyz.stratalab.sdk.syntax._
 
 import scala.collection.immutable.ListSet
 
@@ -31,7 +30,7 @@ class NodeBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
   private val nodeBlockFetcher = NodeBlockFetcher.make[F](toplRpc, 1)
 
   test("On no block at given height, a None should be returned") {
-    PropF.forAllF { (height: Long )=>
+    PropF.forAllF { (height: Long) =>
       withMock {
 
         (toplRpc.blockIdAtHeight)

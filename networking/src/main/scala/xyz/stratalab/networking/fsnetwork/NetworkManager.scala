@@ -6,13 +6,13 @@ import cats.effect.Async
 import cats.effect.implicits.genSpawnOps
 import cats.effect.kernel.{Outcome, Resource}
 import cats.implicits._
-import xyz.stratalab.crypto.signing.Ed25519VRF
 import com.google.protobuf.ByteString
 import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.algebras.Store
 import xyz.stratalab.blockchain.BlockchainCore
 import xyz.stratalab.config.ApplicationConfig.Bifrost.NetworkProperties
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.models.p2p._
 import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
 import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor

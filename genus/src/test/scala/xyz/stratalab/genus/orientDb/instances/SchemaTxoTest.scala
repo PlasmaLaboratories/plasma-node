@@ -1,17 +1,16 @@
 package xyz.stratalab.genus.orientDb.instances
 
 import cats.implicits._
-import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGens}
 import co.topl.genus.services.{Txo, TxoState}
 import com.orientechnologies.orient.core.metadata.schema.OType
 import munit.{CatsEffectFunFixtures, CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.genus.DbFixtureUtil
-import xyz.stratalab.genus.orientDb.instances.SchemaTxo
 import xyz.stratalab.genus.orientDb.instances.SchemaTxo.Field
 import xyz.stratalab.genus.orientDb.instances.VertexSchemaInstances.instances.txoSchema
 import xyz.stratalab.genus.orientDb.{OrientDBMetadataFactory, OrientThread}
 import xyz.stratalab.models.ModelGenerators.GenHelper
+import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGens}
 
 import scala.jdk.CollectionConverters._
 

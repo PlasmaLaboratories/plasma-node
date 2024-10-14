@@ -6,9 +6,6 @@ import cats.effect.std.{Random, SecureRandom}
 import cats.implicits._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
-import xyz.stratalab.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
 import co.topl.genus.services.TransactionServiceFs2Grpc
 import com.typesafe.config.Config
 import fs2._
@@ -17,6 +14,9 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.NodeRpc
 import xyz.stratalab.common.application._
 import xyz.stratalab.grpc.NodeGrpc
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
+import xyz.stratalab.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
 import xyz.stratalab.transactiongenerator.interpreters._
 import xyz.stratalab.typeclasses.implicits._
 
@@ -34,7 +34,7 @@ object TransactionGeneratorApp
 
   override def run(args: Args, config: Config, appConfig: ApplicationConfig): IO[Unit] =
     for {
-      _                            <- Logger[F].info(show"Launching Transaction Generator with appConfig=$appConfig")
+      _               <- Logger[F].info(show"Launching Transaction Generator with appConfig=$appConfig")
       given Random[F] <- SecureRandom.javaSecuritySecureRandom[F]
       // Initialize gRPC Clients
       clientAddress <- parseClientAddress(appConfig)

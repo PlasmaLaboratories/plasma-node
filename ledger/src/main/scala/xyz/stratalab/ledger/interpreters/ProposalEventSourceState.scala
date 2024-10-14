@@ -7,12 +7,12 @@ import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.box.Value.UpdateProposal
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.consensus.models.{BlockHeader, BlockId}
-import xyz.stratalab.crypto.hash.Blake2b256
 import co.topl.node.models._
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.algebras.ClockAlgebra.implicits._
 import xyz.stratalab.algebras.StoreOps._
 import xyz.stratalab.algebras._
+import xyz.stratalab.crypto.hash.Blake2b256
 import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
 import xyz.stratalab.models._
 import xyz.stratalab.typeclasses.implicits._

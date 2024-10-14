@@ -32,7 +32,7 @@ class ActorSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMoc
     PropF.forAllF { (inputs: Seq[Int]) =>
       for {
         actor: Actor[F, Ping, Pong] <- getActor
-        _ <- IO.parTraverseN((inputs.size / 2) + 1)(inputs) {( v: Int )=> actor.sendNoWait(Ping(v)) }
+        _ <- IO.parTraverseN((inputs.size / 2) + 1)(inputs)((v: Int) => actor.sendNoWait(Ping(v)))
         _ <- actor.send(Ping(0)).map { case Pong(sum) => assertEquals(sum, inputs.map(_.toLong).sum) }
       } yield ()
     }

@@ -6,14 +6,14 @@ import cats.effect.Async
 import cats.implicits._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.algebras.Store
 import xyz.stratalab.models.p2p._
 import xyz.stratalab.networking.blockchain.BlockchainPeerClient
 import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError._
 import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
+import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import xyz.stratalab.typeclasses.implicits._
 
 class TransactionFetcher[F[_]: Async: Logger](

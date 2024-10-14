@@ -5,12 +5,12 @@ import co.topl.brambl.models._
 import co.topl.brambl.models.box._
 import co.topl.brambl.models.transaction.{IoTransaction, UnspentTransactionOutput}
 import co.topl.consensus.models._
-import xyz.stratalab.crypto.hash.Blake2b256
-import xyz.stratalab.crypto.models.SecretKeyKesProduct
-import xyz.stratalab.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
 import com.google.protobuf.ByteString
 import quivr.models._
 import xyz.stratalab.consensus.models._
+import xyz.stratalab.crypto.hash.Blake2b256
+import xyz.stratalab.crypto.models.SecretKeyKesProduct
+import xyz.stratalab.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility._
 

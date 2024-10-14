@@ -2,9 +2,9 @@ package xyz.stratalab.codecs.bytes.tetra
 
 import cats.{Eq, Show}
 import co.topl.consensus.models.{BlockId, EligibilityCertificate}
-import xyz.stratalab.crypto.models.KesBinaryTree
 import org.scalacheck.Gen
 import xyz.stratalab.codecs.bytes.CodecSpec
+import xyz.stratalab.crypto.models.KesBinaryTree
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility.Ratio
 

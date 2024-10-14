@@ -1,10 +1,10 @@
 package xyz.stratalab
 
 import co.topl.consensus.models.{BlockHeader, SlotData, SlotId}
-import xyz.stratalab.crypto.hash.{Blake2b256, Blake2b512}
-import xyz.stratalab.crypto.signing.Ed25519VRF
 import com.google.protobuf.ByteString
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import xyz.stratalab.crypto.hash.{Blake2b256, Blake2b512}
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.models.utility._
 import xyz.stratalab.models.{Bytes, UnsignedBlockHeader}
 

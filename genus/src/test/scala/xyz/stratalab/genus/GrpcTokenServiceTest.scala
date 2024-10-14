@@ -2,7 +2,6 @@ package xyz.stratalab.genus
 
 import cats.effect.IO
 import cats.implicits._
-import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.brambl.models.Event.{GroupPolicy, SeriesPolicy}
 import co.topl.brambl.models.{GroupId, SeriesId, TransactionOutputAddress}
 import co.topl.genus.services._
@@ -12,6 +11,7 @@ import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.genus.algebras.TokenFetcherAlgebra
 import xyz.stratalab.genus.model.{GE, GEs}
+import xyz.stratalab.sdk.generators.ModelGenerators._
 
 class GrpcTokenServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]

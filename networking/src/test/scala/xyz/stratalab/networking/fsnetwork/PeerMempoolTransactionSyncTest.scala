@@ -4,13 +4,8 @@ import cats.data.NonEmptyChain
 import cats.effect.{IO, Sync}
 import cats.implicits._
 import cats.{Applicative, MonadThrow}
-import xyz.stratalab.sdk.generators.ModelGenerators.arbitraryIoTransaction
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
-import xyz.stratalab.sdk.validation.TransactionSyntaxError
-import xyz.stratalab.sdk.validation.TransactionSyntaxError.EmptyInputs
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import co.topl.consensus.models.SlotData
 import fs2.Stream
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -28,6 +23,11 @@ import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransact
 import xyz.stratalab.networking.fsnetwork.PeerMempoolTransactionSyncTest.F
 import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
 import xyz.stratalab.networking.fsnetwork.TestHelper.{BlockBodyOrTransactionErrorByName, arbitraryHost}
+import xyz.stratalab.sdk.generators.ModelGenerators.arbitraryIoTransaction
+import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
+import xyz.stratalab.sdk.validation.TransactionSyntaxError
+import xyz.stratalab.sdk.validation.TransactionSyntaxError.EmptyInputs
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 
 import java.util.concurrent.atomic.AtomicBoolean
 import scala.concurrent.duration._

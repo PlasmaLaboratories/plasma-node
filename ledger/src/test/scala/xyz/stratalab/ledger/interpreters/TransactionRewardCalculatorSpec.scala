@@ -2,16 +2,15 @@ package xyz.stratalab.ledger.interpreters
 
 import cats.effect.IO
 import cats.implicits._
-import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.brambl.models.box.{Attestation, FungibilityType, QuantityDescriptorType, Value}
 import co.topl.brambl.models.transaction._
-import xyz.stratalab.sdk.syntax._
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import quivr.models.Int128
 import xyz.stratalab.ledger.models.AssetId
 import xyz.stratalab.models.ModelGenerators.GenHelper
 import xyz.stratalab.numerics.implicits.intAsInt128
+import xyz.stratalab.sdk.generators.ModelGenerators._
 
 class TransactionRewardCalculatorSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
 

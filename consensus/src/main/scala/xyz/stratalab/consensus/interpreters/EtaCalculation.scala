@@ -5,7 +5,6 @@ import cats.effect._
 import cats.implicits._
 import cats.{MonadThrow, Parallel}
 import co.topl.consensus.models.{BlockId, SlotData, SlotId}
-import xyz.stratalab.crypto.hash.{Blake2b256, Blake2b512}
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.google.protobuf.ByteString
 import org.typelevel.log4cats.Logger
@@ -17,6 +16,7 @@ import xyz.stratalab.algebras.{ClockAlgebra, Stats}
 import xyz.stratalab.consensus.algebras.EtaCalculationAlgebra
 import xyz.stratalab.consensus.models.EtaCalculationArgs
 import xyz.stratalab.consensus.rhoToRhoNonceHash
+import xyz.stratalab.crypto.hash.{Blake2b256, Blake2b512}
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility.HasLength.instances._
 import xyz.stratalab.models.utility.{Sized, _}

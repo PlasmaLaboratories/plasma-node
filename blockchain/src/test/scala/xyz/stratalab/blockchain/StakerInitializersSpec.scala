@@ -4,12 +4,12 @@ import cats.effect.IO
 import cats.effect.kernel.Async
 import cats.implicits._
 import co.topl.brambl.models.box.Value
-import xyz.stratalab.sdk.syntax._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.blockchain.PrivateTestnet.DefaultTotalStake
 import xyz.stratalab.models.utility.Ratio
 import xyz.stratalab.numerics.implicits._
+import xyz.stratalab.sdk.syntax._
 
 class StakerInitializersSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

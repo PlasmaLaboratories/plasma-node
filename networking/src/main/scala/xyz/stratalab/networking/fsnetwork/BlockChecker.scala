@@ -4,7 +4,6 @@ import cats.data._
 import cats.effect.{Async, Resource}
 import cats.implicits._
 import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import xyz.stratalab.crypto.signing.Ed25519VRF
 import co.topl.node.models._
 import fs2.Stream
 import org.apache.commons.lang3.exception.ExceptionUtils
@@ -15,6 +14,7 @@ import xyz.stratalab.blockchain.Validators
 import xyz.stratalab.catsutils.faAsFAClockOps
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import xyz.stratalab.consensus.algebras._
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.ledger.implicits._
 import xyz.stratalab.ledger.interpreters.QuivrContext
 import xyz.stratalab.ledger.models.{BodyProposalValidationContext, BodyValidationError, StaticBodyValidationContext}

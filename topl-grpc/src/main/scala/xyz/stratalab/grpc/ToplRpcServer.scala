@@ -6,8 +6,6 @@ import cats.implicits._
 import cats.{Monad, Show}
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.validation.TransactionSyntaxError
 import co.topl.consensus.models.{BlockHeader, BlockId}
 import co.topl.node.models.BlockBody
 import co.topl.proto.node.{EpochData, NodeConfig}
@@ -19,6 +17,8 @@ import xyz.stratalab.blockchain.{BlockchainCore, LocalChainSynchronizationTraver
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.ledger.algebras.MempoolAlgebra
 import xyz.stratalab.models.Epoch
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.TransactionSyntaxError
 import xyz.stratalab.typeclasses.implicits._
 
 object ToplRpcServer {

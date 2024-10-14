@@ -2,9 +2,8 @@ package xyz.stratalab.transactiongenerator.app
 
 import cats.Show
 import com.typesafe.config.Config
-import pureconfig.ConfigSource
-import pureconfig._
 import pureconfig.generic.derivation.default._
+import pureconfig.{ConfigSource, _}
 
 import scala.concurrent.duration.FiniteDuration
 

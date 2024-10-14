@@ -3,7 +3,6 @@ package xyz.stratalab.genus.model
 import co.topl.brambl.models.TransactionId
 import co.topl.consensus.models.BlockId
 import com.google.protobuf.ByteString
-import xyz.stratalab.genus.model.{GE, GEs}
 
 import scala.collection.immutable.ListSet
 

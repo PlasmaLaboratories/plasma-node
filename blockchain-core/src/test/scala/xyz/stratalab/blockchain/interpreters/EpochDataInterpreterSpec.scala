@@ -3,11 +3,9 @@ package xyz.stratalab.blockchain.interpreters
 import cats.data.OptionT
 import cats.effect.{IO, Sync}
 import cats.implicits._
-import xyz.stratalab.sdk.common.ContainsImmutable
 import co.topl.brambl.models.box.{Attestation, Value}
 import co.topl.brambl.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
 import co.topl.brambl.models.{Datum, LockAddress, LockId, TransactionId, TransactionOutputAddress}
-import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models._
 import co.topl.node.models.{BlockBody, FullBlock, FullBlockBody}
 import co.topl.proto.node.EpochData
@@ -27,6 +25,8 @@ import xyz.stratalab.ledger.models.RewardQuantities
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility._
 import xyz.stratalab.numerics.implicits._
+import xyz.stratalab.sdk.common.ContainsImmutable
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 import java.time.Instant

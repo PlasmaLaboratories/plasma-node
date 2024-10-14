@@ -5,12 +5,12 @@ import cats.data._
 import cats.effect._
 import cats.implicits._
 import co.topl.consensus.models.{BlockId, SlotData}
-import xyz.stratalab.crypto.hash.Blake2b512
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.Stats
 import xyz.stratalab.consensus.algebras.ChainSelectionAlgebra
 import xyz.stratalab.consensus.rhoToRhoTestHash
+import xyz.stratalab.crypto.hash.Blake2b512
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility._
 import xyz.stratalab.typeclasses.implicits._

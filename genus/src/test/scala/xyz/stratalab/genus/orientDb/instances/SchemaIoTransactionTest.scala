@@ -1,8 +1,6 @@
 package xyz.stratalab.genus.orientDb.instances
 
 import cats.implicits._
-import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGenerator}
-import xyz.stratalab.sdk.syntax._
 import com.orientechnologies.orient.core.metadata.schema.OType
 import com.tinkerpop.blueprints.impls.orient.OrientVertex
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -11,9 +9,10 @@ import xyz.stratalab.genus.DbFixtureUtil
 import xyz.stratalab.genus.orientDb.OrientThread
 import xyz.stratalab.genus.orientDb.instances.SchemaIoTransaction.Field
 import xyz.stratalab.genus.orientDb.instances.VertexSchemaInstances.instances.{blockHeaderSchema, ioTransactionSchema}
-import xyz.stratalab.genus.orientDb.instances.{SchemaBlockHeader, SchemaIoTransaction}
 import xyz.stratalab.models.ModelGenerators.GenHelper
 import xyz.stratalab.models.generators.consensus.ModelGenerators
+import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGenerator}
+import xyz.stratalab.sdk.syntax._
 
 import scala.jdk.CollectionConverters._
 

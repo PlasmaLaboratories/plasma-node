@@ -5,12 +5,9 @@ import cats.effect.kernel.{Async, Sync}
 import cats.effect.{IO, Resource}
 import cats.implicits._
 import cats.{Applicative, MonadThrow, Show}
-import xyz.stratalab.sdk.generators.TransactionGenerator
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import co.topl.consensus.models.{BlockId, SlotData}
-import xyz.stratalab.crypto.signing.Ed25519VRF
 import co.topl.node.models._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
@@ -19,6 +16,7 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.Store
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import xyz.stratalab.consensus.algebras.{BlockHeaderToBodyValidationAlgebra, ChainSelectionAlgebra, LocalChainAlgebra}
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.ledger.algebras.MempoolAlgebra
 import xyz.stratalab.models.ModelGenerators.GenHelper
@@ -35,6 +33,8 @@ import xyz.stratalab.networking.fsnetwork.PeersManager.Message.PingPongMessagePi
 import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
 import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
 import xyz.stratalab.networking.fsnetwork.TestHelper.{arbitraryHost, arbitraryKnownHost}
+import xyz.stratalab.sdk.generators.TransactionGenerator
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 
 import scala.concurrent.duration.{FiniteDuration, MILLISECONDS}
 
@@ -314,6 +314,7 @@ class PeerActorTest extends CatsEffectSuite with ScalaCheckEffectSuite with Asyn
         message match {
           case PingPongMessagePing(`hostId`, Right(t)) =>
             assert(t >= pingDelay.toMillis)
+            // scala fmt joing these lines
             ().pure[F]
           case _ => throw new IllegalStateException()
         }
@@ -360,6 +361,7 @@ class PeerActorTest extends CatsEffectSuite with ScalaCheckEffectSuite with Asyn
         message match {
           case PingPongMessagePing(`hostId`, Right(t)) =>
             assert(t >= pingDelay.toMillis)
+            // scala fmt
             ().pure[F]
           case _ => throw new IllegalStateException()
         }
@@ -399,7 +401,7 @@ class PeerActorTest extends CatsEffectSuite with ScalaCheckEffectSuite with Asyn
         .expects(1L)
         .once()
         .returning(genesis.slotId.blockId.some.pure[F])
-      (client.getPongMessage).expects(*).twice().onCall { (_: PingMessage) => throw new RuntimeException() }
+      (client.getPongMessage).expects(*).twice().onCall((_: PingMessage) => throw new RuntimeException())
       (client.notifyAboutThisNetworkLevel).expects(false).returns(Applicative[F].unit)
       ((() => client.closeConnection())).expects().returns(Applicative[F].unit)
 
@@ -548,7 +550,7 @@ class PeerActorTest extends CatsEffectSuite with ScalaCheckEffectSuite with Asyn
 
       (mockedData.client.getRemoteKnownHosts)
         .expects(CurrentKnownHostsReq(2))
-        .onCall { (_: CurrentKnownHostsReq) => throw new RuntimeException() }
+        .onCall((_: CurrentKnownHostsReq) => throw new RuntimeException())
 
       (mockedData.peersManager.sendNoWait)
         .expects(PeersManager.Message.NonCriticalErrorForHost(hostId))

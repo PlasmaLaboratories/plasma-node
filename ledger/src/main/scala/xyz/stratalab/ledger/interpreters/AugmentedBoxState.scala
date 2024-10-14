@@ -4,9 +4,9 @@ import cats.effect.Sync
 import cats.implicits._
 import co.topl.brambl.models.TransactionOutputAddress
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.BlockId
 import xyz.stratalab.ledger.algebras.BoxStateAlgebra
+import xyz.stratalab.sdk.syntax._
 
 object AugmentedBoxState {
 

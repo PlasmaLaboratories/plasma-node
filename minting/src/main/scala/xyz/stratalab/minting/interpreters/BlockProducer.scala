@@ -6,7 +6,6 @@ import cats.implicits._
 import co.topl.brambl.models._
 import co.topl.brambl.models.box._
 import co.topl.brambl.models.transaction._
-import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.{BlockId, ProtocolVersion, SlotData, SlotId, StakingAddress}
 import co.topl.node.models.{BlockBody, FullBlock, FullBlockBody}
 import com.google.protobuf.ByteString
@@ -25,6 +24,7 @@ import xyz.stratalab.minting.models.VrfHit
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility.HasLength.instances.byteStringLength
 import xyz.stratalab.models.utility.Sized
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 import scala.concurrent.duration._

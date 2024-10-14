@@ -1,40 +1,41 @@
 package xyz.stratalab.blockchain
 
-import cats.data.*
-import cats.effect.*
-import cats.effect.implicits.*
+import cats.data._
+import cats.effect._
+import cats.effect.implicits._
 import cats.effect.std.{Queue, Random}
-import cats.implicits.*
+import cats.implicits._
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
 import co.topl.node.models.{Block, BlockBody, FullBlock, KnownHost}
 import com.comcast.ip4s.Dns
 import fs2.concurrent.Topic
-import fs2.{io as _, *}
+import fs2.{io => _, _}
 import io.grpc.ServerServiceDefinition
-import org.typelevel.log4cats.*
+import org.typelevel.log4cats._
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.*
+import xyz.stratalab.algebras._
 import xyz.stratalab.blockchain.interpreters.{NetworkControlRpcServer, RegtestRpcServer}
-import xyz.stratalab.catsutils.*
-import xyz.stratalab.codecs.bytes.tetra.instances.*
+import xyz.stratalab.catsutils._
+import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.config.ApplicationConfig.Bifrost.{KnownPeer, NetworkProperties}
-import xyz.stratalab.consensus.*
-import xyz.stratalab.grpc.*
-import xyz.stratalab.ledger.implicits.*
+import xyz.stratalab.consensus._
+import xyz.stratalab.grpc._
+import xyz.stratalab.ledger.implicits._
 import xyz.stratalab.ledger.interpreters.{QuivrContext, TransactionSemanticValidation}
 import xyz.stratalab.ledger.models.StaticBodyValidationContext
 import xyz.stratalab.minting.algebras.StakingAlgebra
-import xyz.stratalab.minting.interpreters.*
-import xyz.stratalab.models.p2p.*
-import xyz.stratalab.networking.blockchain.{BlockchainPeerServerAlgebra, *}
+import xyz.stratalab.minting.interpreters._
+import xyz.stratalab.models.p2p._
+import xyz.stratalab.networking.blockchain._
 import xyz.stratalab.networking.fsnetwork.DnsResolverInstances.DefaultDnsResolver
-import xyz.stratalab.networking.fsnetwork.P2PShowInstances.*
+import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
 import xyz.stratalab.networking.fsnetwork.ReverseDnsResolverInstances.{DefaultReverseDnsResolver, NoOpReverseResolver}
-import xyz.stratalab.networking.fsnetwork.*
-import xyz.stratalab.networking.p2p.*
-import xyz.stratalab.typeclasses.implicits.*
-import scala.jdk.CollectionConverters.*
+import xyz.stratalab.networking.fsnetwork._
+import xyz.stratalab.networking.p2p._
+import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
+import xyz.stratalab.typeclasses.implicits._
+
+import scala.jdk.CollectionConverters._
 
 object Blockchain {
 

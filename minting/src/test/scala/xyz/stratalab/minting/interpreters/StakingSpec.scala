@@ -6,7 +6,6 @@ import cats.effect._
 import cats.implicits._
 import co.topl.brambl.models.{LockAddress, LockId}
 import co.topl.consensus.models._
-import xyz.stratalab.crypto.hash.Blake2b256
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
@@ -15,6 +14,7 @@ import scodec.bits._
 import xyz.stratalab.algebras.Stats.Implicits._
 import xyz.stratalab.consensus.algebras._
 import xyz.stratalab.consensus.thresholdEvidence
+import xyz.stratalab.crypto.hash.Blake2b256
 import xyz.stratalab.minting.algebras.{OperationalKeyMakerAlgebra, VrfCalculatorAlgebra}
 import xyz.stratalab.minting.models.{OperationalKeyOut, VrfHit}
 import xyz.stratalab.models.ModelGenerators.GenHelper

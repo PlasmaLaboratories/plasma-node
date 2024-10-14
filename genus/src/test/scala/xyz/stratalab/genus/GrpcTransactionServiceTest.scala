@@ -2,7 +2,6 @@ package xyz.stratalab.genus
 
 import cats.effect.IO
 import cats.implicits._
-import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.brambl.models.transaction.UnspentTransactionOutput
 import co.topl.brambl.models.{LockAddress, TransactionId, TransactionOutputAddress}
 import co.topl.genus.services._
@@ -14,6 +13,7 @@ import xyz.stratalab.genus.algebras.TransactionFetcherAlgebra
 import xyz.stratalab.genus.model.{GE, GEs}
 import xyz.stratalab.models.ModelGenerators.GenHelper
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
+import xyz.stratalab.sdk.generators.ModelGenerators._
 import xyz.stratalab.typeclasses.implicits._
 
 class GrpcTransactionServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {

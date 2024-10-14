@@ -6,7 +6,6 @@ import cats.effect.{Async, IO, Resource}
 import cats.implicits._
 import cats.{Applicative, MonadThrow, Show}
 import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import xyz.stratalab.crypto.signing.Ed25519VRF
 import co.topl.node.models.BlockBody
 import fs2.Stream
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -17,6 +16,7 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.{ClockAlgebra, Store}
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.consensus.algebras.{ChainSelectionAlgebra, LocalChainAlgebra}
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.models.ModelGenerators.GenHelper
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
@@ -623,7 +623,7 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
 
       (() => mockData.clock.globalSlot).expects().anyNumberOfTimes().returning(2L.pure[F])
 
-      (mockData.bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => (knownId == id).pure[F] }
+      (mockData.bodyStore.contains).expects(*).anyNumberOfTimes().onCall((id: BlockId) => (knownId == id).pure[F])
 
       prepareSlotDataStorage(slotDataStoreMap, mockData)
       clientDownloadRemoteSlotDataChain(
@@ -687,7 +687,7 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
 
       (() => mockData.clock.globalSlot).expects().anyNumberOfTimes().returning(2L.pure[F])
 
-      (mockData.bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => (knownId == id).pure[F] }
+      (mockData.bodyStore.contains).expects(*).anyNumberOfTimes().onCall((id: BlockId) => (knownId == id).pure[F])
 
       prepareSlotDataStorage(slotDataStoreMap, mockData)
       clientDownloadRemoteSlotDataChain(
@@ -763,7 +763,7 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
 
       (() => mockData.clock.globalSlot).expects().anyNumberOfTimes().returning(2L.pure[F])
 
-      (mockData.bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => (localId == id).pure[F] }
+      (mockData.bodyStore.contains).expects(*).anyNumberOfTimes().onCall((id: BlockId) => (localId == id).pure[F])
 
       buildActorFromMockData(mockData)
         .use { actor =>
@@ -907,7 +907,7 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
 
       (mockData.commonAncestorF.apply).expects(*, *).returning(bestSlotId.pure[F])
 
-      (mockData.bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => (knownId == id).pure[F] }
+      (mockData.bodyStore.contains).expects(*).anyNumberOfTimes().onCall((id: BlockId) => (knownId == id).pure[F])
 
       buildActorFromMockData(mockData)
         .use { actor =>
@@ -1047,7 +1047,7 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
       (() => mockData.clock.globalSlot).expects().anyNumberOfTimes().returning(2L.pure[F])
 
       val knownBodies = idAndSlotData.map(_._1).toList.toSet
-      (mockData.bodyStore.contains).expects(*).anyNumberOfTimes().onCall {( id: BlockId) =>
+      (mockData.bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
         knownBodies.contains(id).pure[F]
       }
 
@@ -1094,7 +1094,7 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
 
       (() => mockData.clock.globalSlot).expects().anyNumberOfTimes().returning(2L.pure[F])
 
-      (mockData.bodyStore.contains).expects(*).anyNumberOfTimes().onCall {( id: BlockId) =>
+      (mockData.bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
         (slotData.slotId.blockId == id).pure[F]
       }
 
@@ -1208,7 +1208,7 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
 
       (() => mockData.clock.globalSlot).expects().anyNumberOfTimes().returning(2L.pure[F])
 
-      (mockData.bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => (knownId == id).pure[F] }
+      (mockData.bodyStore.contains).expects(*).anyNumberOfTimes().onCall((id: BlockId) => (knownId == id).pure[F])
 
       prepareSlotDataStorage(slotDataStoreMap, mockData)
       clientDownloadRemoteSlotDataChain(
@@ -1250,7 +1250,7 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
         Stream.fromOption[F](Option.empty[BlockId]).pure[F]
       }
       val remoteHeightToBlockId = remoteIdToSlotData.map { case (id, sd) => sd.height -> id }
-      (mockData.client.getRemoteBlockIdAtHeight).expects(*).onCall {( height: Long) =>
+      (mockData.client.getRemoteBlockIdAtHeight).expects(*).onCall { (height: Long) =>
         remoteHeightToBlockId.get(height).pure[F]
       }
 
@@ -1272,7 +1272,7 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
 
       (() => mockData.clock.globalSlot).expects().anyNumberOfTimes().returning(2L.pure[F])
 
-      (mockData.bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => (knownId == id).pure[F] }
+      (mockData.bodyStore.contains).expects(*).anyNumberOfTimes().onCall((id: BlockId) => (knownId == id).pure[F])
       prepareSlotDataStorage(slotDataStoreMap, mockData)
       clientDownloadRemoteSlotDataChain(
         mockData,
@@ -1335,7 +1335,7 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
 
       (() => mockData.clock.globalSlot).expects().anyNumberOfTimes().returning(2L.pure[F])
 
-      (mockData.bodyStore.contains).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => (knownId == id).pure[F] }
+      (mockData.bodyStore.contains).expects(*).anyNumberOfTimes().onCall((id: BlockId) => (knownId == id).pure[F])
 
       prepareSlotDataStorage(slotDataStoreMap, mockData)
       clientDownloadRemoteSlotDataChain(

@@ -4,9 +4,6 @@ import cats.Monad
 import cats.data.{EitherT, NonEmptyChain, Validated, ValidatedNec}
 import cats.effect._
 import cats.implicits._
-import xyz.stratalab.sdk.common.ContainsEvidence
-import xyz.stratalab.sdk.common.ContainsEvidence.blake2bEvidenceFromImmutable
-import xyz.stratalab.sdk.common.ContainsImmutable.instances._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.box.Lock
 import co.topl.brambl.models.transaction.{IoTransaction, Schedule, SpentTransactionOutput}
@@ -15,6 +12,9 @@ import xyz.stratalab.algebras.ContextlessValidationAlgebra
 import xyz.stratalab.ledger.algebras._
 import xyz.stratalab.ledger.models._
 import xyz.stratalab.models._
+import xyz.stratalab.sdk.common.ContainsEvidence
+import xyz.stratalab.sdk.common.ContainsEvidence.blake2bEvidenceFromImmutable
+import xyz.stratalab.sdk.common.ContainsImmutable.instances._
 
 object TransactionSemanticValidation {
 

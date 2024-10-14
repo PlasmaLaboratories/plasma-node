@@ -39,8 +39,8 @@ trait TetraTransmittableCodecs {
   implicit val longTransmittable: Transmittable[Long] = Transmittable.instanceFromCodec(using longCodec)
 
   implicit val longBlockIdOptTransmittable: Transmittable[(Long, Option[BlockId])] =
-    Transmittable.instanceFromCodec(
-      using (longCodec :: optionCodec[BlockId])
+    Transmittable.instanceFromCodec(using
+      (longCodec :: optionCodec[BlockId])
         .as[(Long, Option[BlockId])]
     )
 

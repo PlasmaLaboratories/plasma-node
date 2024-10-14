@@ -30,9 +30,9 @@ class PrunedDataStoresApp(appConfig: ApplicationConfig, prunedDataStorePath: Str
 
   private def prunedAppResource: Resource[F, Unit] =
     for {
-      given Async[F]   <- Resource.pure(implicitly[Async[F]])
+      given Async[F]  <- Resource.pure(implicitly[Async[F]])
       given Logger[F] <- Resource.pure(Slf4jLogger.getLoggerFromName[F]("Bifrost.Prune"))
-      _                            <- log("Launching in prune data stores operation mode")
+      _               <- log("Launching in prune data stores operation mode")
 
       (bigBangBlock, dataStores) <- DataStoresInit
         .initializeData(appConfig)

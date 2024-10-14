@@ -5,16 +5,10 @@ import cats.effect.kernel.Sync
 import cats.effect.{Async, IO, Ref, Resource}
 import cats.implicits._
 import cats.{Applicative, MonadThrow}
-import xyz.stratalab.sdk.generators.ModelGenerators.arbitraryIoTransaction
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.brambl.models.{Datum, TransactionId}
-import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
-import xyz.stratalab.sdk.validation.TransactionSyntaxError
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import co.topl.consensus.models._
-import xyz.stratalab.crypto.signing.Ed25519VRF
 import co.topl.node.models._
-import xyz.stratalab.quivr.runtime.DynamicContext
 import fs2.Stream
 import fs2.concurrent.Topic
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -28,6 +22,7 @@ import xyz.stratalab.config.ApplicationConfig.Bifrost.NetworkProperties
 import xyz.stratalab.consensus.Consensus
 import xyz.stratalab.consensus.algebras.{ChainSelectionAlgebra, _}
 import xyz.stratalab.consensus.models.{BlockHeaderToBodyValidationFailure, BlockHeaderValidationFailure}
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.interpreters.SchedulerClock
 import xyz.stratalab.ledger.Ledger
@@ -41,6 +36,11 @@ import xyz.stratalab.networking.fsnetwork.ActorPeerHandlerBridgeAlgebraTest._
 import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
 import xyz.stratalab.networking.fsnetwork.TestHelper.{BlockBodyOrTransactionErrorByName, arbitraryHost}
 import xyz.stratalab.networking.p2p.{ConnectedPeer, DisconnectedPeer, PeerConnectionChange}
+import xyz.stratalab.quivr.runtime.DynamicContext
+import xyz.stratalab.sdk.generators.ModelGenerators.arbitraryIoTransaction
+import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
+import xyz.stratalab.sdk.validation.TransactionSyntaxError
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import xyz.stratalab.typeclasses.implicits._
 
 import java.time.Instant
@@ -188,7 +188,7 @@ class ActorPeerHandlerBridgeAlgebraTest extends CatsEffectSuite with ScalaCheckE
       val client =
         mock[BlockchainPeerClient[F]]
       (client.notifyAboutThisNetworkLevel).expects(true).returns(Applicative[F].unit)
-      (client.getPongMessage).expects(*).anyNumberOfTimes().onCall {( req: PingMessage) =>
+      (client.getPongMessage).expects(*).anyNumberOfTimes().onCall { (req: PingMessage) =>
         Sync[F].delay(pingProcessedFlag.set(true)) >>
         Option(PongMessage(req.ping.reverse)).pure[F]
       }

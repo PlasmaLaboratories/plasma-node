@@ -5,7 +5,6 @@ import cats.effect._
 import cats.implicits._
 import co.topl.brambl.models.TransactionOutputAddress
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
 import co.topl.genus.services.{BlockData, Txo, TxoState}
 import co.topl.node.models.BlockBody
 import com.orientechnologies.orient.core.sql.OCommandSQL
@@ -20,6 +19,7 @@ import xyz.stratalab.genus.orientDb.instances.VertexSchemaInstances.implicits._
 import xyz.stratalab.genus.orientDb.instances._
 import xyz.stratalab.genus.orientDb.schema.EdgeSchemaInstances._
 import xyz.stratalab.models.utility._
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 import scala.jdk.CollectionConverters._

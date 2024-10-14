@@ -3,10 +3,8 @@ package xyz.stratalab.ledger.interpreters
 import cats.data.NonEmptySet
 import cats.effect.IO
 import cats.implicits._
-import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.brambl.models._
 import co.topl.brambl.models.transaction._
-import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.BlockId
 import co.topl.node.models.BlockBody
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -14,6 +12,8 @@ import org.scalacheck.effect.PropF
 import xyz.stratalab.algebras.testInterpreters.TestStore
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
+import xyz.stratalab.sdk.generators.ModelGenerators._
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 class BoxStateSpec extends CatsEffectSuite with ScalaCheckEffectSuite {

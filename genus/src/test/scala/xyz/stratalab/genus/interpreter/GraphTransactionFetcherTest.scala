@@ -3,10 +3,8 @@ package xyz.stratalab.genus.interpreter
 import cats.data.EitherT
 import cats.effect.IO
 import cats.implicits._
-import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.brambl.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
 import co.topl.brambl.models.{LockAddress, TransactionId, TransactionInputAddress, TransactionOutputAddress}
-import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
 import co.topl.consensus.models.BlockHeader
 import co.topl.genus.services._
 import com.tinkerpop.blueprints.Vertex
@@ -15,11 +13,12 @@ import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import xyz.stratalab.genus.algebras.VertexFetcherAlgebra
-import xyz.stratalab.genus.interpreter.GraphTransactionFetcher
 import xyz.stratalab.genus.model.{GE, GEs}
 import xyz.stratalab.genus.orientDb.OrientThread
 import xyz.stratalab.genus.orientDb.instances.{SchemaBlockHeader, SchemaIoTransaction, SchemaTxo}
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
+import xyz.stratalab.sdk.generators.ModelGenerators._
+import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
 
 class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 
@@ -32,7 +31,7 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
 
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           expectedTh = new IllegalStateException("boom!")
           _ = (vertexFetcher.fetchTransaction)
             .expects(transactionId)
@@ -64,7 +63,7 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
 
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           _ = (vertexFetcher.fetchTransaction)
             .expects(transactionId)
             .once()
@@ -89,10 +88,11 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
 
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
-          vertex                                   <- mock[Vertex].pure[F].toResource
+          vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          vertex                <- mock[Vertex].pure[F].toResource
 
-          _ = (vertex.getProperty[Array[Byte]])
+          _ = (vertex
+            .getProperty[Array[Byte]])
             .expects(SchemaIoTransaction.Field.Transaction)
             .once()
             .returning(ioTransaction.toByteArray)
@@ -122,7 +122,7 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
 
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           expectedTh = new IllegalStateException("boom!")
           _ = (vertexFetcher.fetchTransaction)
             .expects(transactionId)
@@ -154,7 +154,7 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
 
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           _ = (vertexFetcher.fetchTransaction)
             .expects(transactionId)
             .once()
@@ -182,14 +182,15 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
 
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
 
           _ = (vertexFetcher.fetchTransaction)
             .expects(transactionId)
             .once()
             .returning(Option(iotxVertex).asRight[GE].pure[F])
 
-          _ = (iotxVertex.getProperty[Vertex])
+          _ = (iotxVertex
+            .getProperty[Vertex])
             .expects(SchemaIoTransaction.Field.ParentBlock)
             .once()
             .returning(blockHeaderVertex)
@@ -272,7 +273,8 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
             .once()
             .returning(blockHeader.version.toByteArray)
 
-          _ = (iotxVertex.getProperty[Array[Byte]])
+          _ = (iotxVertex
+            .getProperty[Array[Byte]])
             .expects(SchemaIoTransaction.Field.Transaction)
             .once()
             .returning(ioTransaction.toByteArray)
@@ -306,7 +308,7 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
 
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           expectedTh = new IllegalStateException("boom!")
           _ = (vertexFetcher.fetchLockAddress)
             .expects(lockAddress)
@@ -338,7 +340,7 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
 
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           vertex = mock[Vertex]
 
           _ = (vertexFetcher.fetchLockAddress)
@@ -375,7 +377,7 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
 
           val res = for {
             given OrientThread[F] <- OrientThread.create[F]
-            vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+            vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
             lockAddressVertex = mock[Vertex]
 
             _ = (vertexFetcher.fetchLockAddress)
@@ -415,7 +417,7 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
 
           val res = for {
             given OrientThread[F] <- OrientThread.create[F]
-            vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+            vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
             lockAddressVertex = mock[Vertex]
             spendingTransactionVertex = mock[Vertex]
             txoVertex = mock[Vertex]
@@ -426,32 +428,38 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
               .once()
               .returning(Option(lockAddressVertex).asRight[GE].pure[F])
 
-            _ = (txoVertex.getProperty[Array[Byte]])
+            _ = (txoVertex
+              .getProperty[Array[Byte]])
               .expects(SchemaTxo.Field.TransactionOutput)
               .once()
               .returning(transactionOutput.toByteArray)
 
-            _ = (txoVertex.getProperty[java.lang.Integer])
+            _ = (txoVertex
+              .getProperty[java.lang.Integer])
               .expects(SchemaTxo.Field.State)
               .once()
               .returning(TxoState.SPENT.value)
 
-            _ = (txoVertex.getProperty[java.lang.Integer])
+            _ = (txoVertex
+              .getProperty[java.lang.Integer])
               .expects(SchemaTxo.Field.SpendingInputIndex)
               .once()
               .returning(0)
 
-            _ = (txoVertex.getProperty[Vertex])
+            _ = (txoVertex
+              .getProperty[Vertex])
               .expects(SchemaTxo.Field.SpendingTransaction)
               .once()
               .returning(spendingTransactionVertex)
 
-            _ = (spendingTransactionVertex.getProperty[Array[Byte]])
+            _ = (spendingTransactionVertex
+              .getProperty[Array[Byte]])
               .expects(SchemaIoTransaction.Field.Transaction)
               .once()
               .returning(spendingTransaction.toByteArray)
 
-            _ = (txoVertex.getProperty[Array[Byte]])
+            _ = (txoVertex
+              .getProperty[Array[Byte]])
               .expects(SchemaTxo.Field.OutputAddress)
               .once()
               .returning(transactionOutputAddress.toByteArray)

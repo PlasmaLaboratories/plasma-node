@@ -5,10 +5,7 @@ import cats.effect.implicits._
 import cats.effect.std.{Random, SecureRandom}
 import cats.effect.{Async, IO, Resource, Sync}
 import cats.implicits._
-import xyz.stratalab.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
 import co.topl.consensus.models.BlockId
-import xyz.stratalab.crypto.hash.Blake2b512
-import xyz.stratalab.crypto.signing.Ed25519
 import com.google.protobuf.ByteString
 import com.typesafe.config.Config
 import fs2.io.file.Path
@@ -28,6 +25,8 @@ import xyz.stratalab.consensus._
 import xyz.stratalab.consensus.interpreters.VotingEventSourceState.VotingData
 import xyz.stratalab.consensus.interpreters._
 import xyz.stratalab.consensus.models.VrfConfig
+import xyz.stratalab.crypto.hash.Blake2b512
+import xyz.stratalab.crypto.signing.Ed25519
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.genus._
 import xyz.stratalab.grpc.HealthCheckGrpc
@@ -44,6 +43,7 @@ import xyz.stratalab.networking.p2p.LocalPeer
 import xyz.stratalab.node.ApplicationConfigOps._
 import xyz.stratalab.node.cli.ConfiguredCliApp
 import xyz.stratalab.numerics.interpreters.{ExpInterpreter, Log1pInterpreter}
+import xyz.stratalab.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
 import xyz.stratalab.typeclasses.implicits._
 import xyz.stratalab.version.VersionReplicator
 
@@ -80,7 +80,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
   // scalastyle:off method.length
   private def applicationResource: Resource[F, Unit] =
     for {
-      given Async[F]   <- Resource.pure(implicitly[Async[F]])
+      given Async[F]  <- Resource.pure(implicitly[Async[F]])
       given Logger[F] <- Resource.pure(Slf4jLogger.getLoggerFromName[F]("Bifrost.Node"))
 
       _ <- Sync[F].delay(LoggingUtils.initialize(args)).toResource

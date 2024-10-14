@@ -5,10 +5,7 @@ import cats.effect.IO.asyncForIO
 import cats.effect.{IO, Resource}
 import cats.implicits._
 import cats.{Applicative, Monad}
-import xyz.stratalab.sdk.utils.CatsUnsafeResource
 import co.topl.consensus.models._
-import xyz.stratalab.crypto.models.SecretKeyKesProduct
-import xyz.stratalab.crypto.signing._
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -17,12 +14,15 @@ import xyz.stratalab.algebras._
 import xyz.stratalab.codecs.bytes.typeclasses.Persistable
 import xyz.stratalab.consensus.algebras._
 import xyz.stratalab.consensus.models._
+import xyz.stratalab.crypto.models.SecretKeyKesProduct
+import xyz.stratalab.crypto.signing._
 import xyz.stratalab.minting.algebras.{OperationalKeyMakerAlgebra, VrfCalculatorAlgebra}
 import xyz.stratalab.models.ModelGenerators._
 import xyz.stratalab.models._
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
 import xyz.stratalab.models.utility.HasLength.instances.byteStringLength
 import xyz.stratalab.models.utility._
+import xyz.stratalab.sdk.utils.CatsUnsafeResource
 
 import java.util.concurrent.TimeUnit
 import scala.concurrent.duration._

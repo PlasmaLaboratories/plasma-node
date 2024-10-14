@@ -2,14 +2,10 @@ package xyz.stratalab.blockchain
 
 import cats.effect.Async
 import cats.implicits._
-import xyz.stratalab.sdk.constants.NetworkConstants
 import co.topl.brambl.models.box.{Challenge, Lock, Value}
 import co.topl.brambl.models.transaction.{IoTransaction, UnspentTransactionOutput}
 import co.topl.brambl.models.{Datum, LockAddress}
-import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.ProtocolVersion
-import xyz.stratalab.crypto.hash.Blake2b256
-import xyz.stratalab.crypto.models.SecretKeyKesProduct
 import com.google.protobuf.ByteString
 import fs2.Chunk
 import fs2.io.file.{Files, Path}
@@ -19,9 +15,13 @@ import xyz.stratalab.blockchain.BigBang.Config
 import xyz.stratalab.codecs.bytes.tetra.instances.persistableKesProductSecretKey
 import xyz.stratalab.codecs.bytes.typeclasses.Persistable
 import xyz.stratalab.config.ApplicationConfig
+import xyz.stratalab.crypto.hash.Blake2b256
+import xyz.stratalab.crypto.models.SecretKeyKesProduct
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility._
 import xyz.stratalab.numerics.implicits._
+import xyz.stratalab.sdk.constants.NetworkConstants
+import xyz.stratalab.sdk.syntax._
 
 import scala.concurrent.duration._
 

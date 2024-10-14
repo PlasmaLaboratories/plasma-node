@@ -10,7 +10,6 @@ import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import xyz.stratalab.genus.algebras.VertexFetcherAlgebra
-import xyz.stratalab.genus.interpreter.GraphBlockFetcher
 import xyz.stratalab.genus.model.{GE, GEs}
 import xyz.stratalab.genus.orientDb.OrientThread
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
@@ -25,7 +24,7 @@ class GraphBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
 
       val res = for {
         given OrientThread[F] <- OrientThread.create[F]
-        graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+        graphVertexFetcher    <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
         expectedTh = new IllegalStateException("boom!")
         _ = (() => graphVertexFetcher.fetchCanonicalHead())
           .expects()
@@ -54,7 +53,7 @@ class GraphBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
     withMock {
       val res = for {
         given OrientThread[F] <- OrientThread.create[F]
-        graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+        graphVertexFetcher    <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
         _ = (() => graphVertexFetcher.fetchCanonicalHead())
           .expects()
           .returning(Option.empty[Vertex].asRight[GE].pure[F])
@@ -77,7 +76,7 @@ class GraphBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
 
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          graphVertexFetcher    <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           expectedTh = new IllegalStateException("boom!")
           _ = (graphVertexFetcher.fetchHeader)
             .expects(header.id)
@@ -107,7 +106,7 @@ class GraphBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
       withMock {
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          graphVertexFetcher    <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           _ = (graphVertexFetcher.fetchHeader)
             .expects(header.id)
             .returning(Option.empty[Vertex].asRight[GE].pure[F])
@@ -129,7 +128,7 @@ class GraphBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
       withMock {
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          graphVertexFetcher    <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           expectedTh = new IllegalStateException("boom!")
           _ = (graphVertexFetcher.fetchHeaderByHeight)
             .expects(header.height)
@@ -158,7 +157,7 @@ class GraphBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
       withMock {
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          graphVertexFetcher    <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           _ = (graphVertexFetcher.fetchHeaderByHeight)
             .expects(header.height)
             .once()
@@ -180,7 +179,7 @@ class GraphBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
       withMock {
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          graphVertexFetcher    <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           _ = (graphVertexFetcher.fetchHeader)
             .expects(header.id)
             .once()
@@ -202,8 +201,8 @@ class GraphBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
       withMock {
         val res = for {
           given OrientThread[F] <- OrientThread.create[F]
-          graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
-          headerVertex                             <- mock[Vertex].pure[F].toResource
+          graphVertexFetcher    <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          headerVertex          <- mock[Vertex].pure[F].toResource
 
           _ = (graphVertexFetcher.fetchHeader)
             .expects(header.id)

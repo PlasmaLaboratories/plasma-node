@@ -6,8 +6,6 @@ import cats.effect._
 import cats.effect.std.{Random, SecureRandom}
 import cats.implicits._
 import co.topl.brambl.models.TransactionId
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
 import co.topl.consensus.models.{BlockHeader, BlockId}
 import co.topl.genus.services.TransactionServiceFs2Grpc
 import com.typesafe.config.Config
@@ -20,6 +18,8 @@ import xyz.stratalab.common.application.IOBaseApp
 import xyz.stratalab.grpc.NodeGrpc
 import xyz.stratalab.interpreters.MultiNodeRpc
 import xyz.stratalab.models.utility._
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
 import xyz.stratalab.testnetsimulationorchestrator.algebras.DataPublisher
 import xyz.stratalab.testnetsimulationorchestrator.interpreters.{GcpCsvDataPublisher, K8sSimulationController}
 import xyz.stratalab.testnetsimulationorchestrator.models.{AdoptionDatum, BlockDatum, TransactionDatum}
@@ -227,7 +227,7 @@ object Orchestrator
   )(nodes: NodeRpcs, wallet: Wallet): IO[Fiber[IO, Throwable, Unit]] =
     for {
       // Assemble a base wallet of available UTxOs
-      _                            <- Logger[F].info(show"Initializing wallet")
+      _               <- Logger[F].info(show"Initializing wallet")
       given Random[F] <- SecureRandom.javaSecuritySecureRandom[F]
       // Combine the Node RPCs into one interface
       client <- MultiNodeRpc.make[F, List](nodes.values.toList)

@@ -4,12 +4,11 @@ import cats.Eq
 import cats.implicits._
 import co.topl.brambl.models.TransactionId
 import co.topl.consensus.models._
-import xyz.stratalab.crypto.generation.mnemonic.Entropy
 import com.google.protobuf.ByteString
 import grpc.health.v1.ServingStatus
+import xyz.stratalab.crypto.generation.mnemonic.Entropy
 import xyz.stratalab.models._
-import xyz.stratalab.models.utility._
-import xyz.stratalab.models.utility.Sized
+import xyz.stratalab.models.utility.{Sized, _}
 
 trait EqInstances {
 
@@ -19,7 +18,7 @@ trait EqInstances {
   implicit val bytesStringEq: Eq[ByteString] =
     Eq.fromUniversalEquals
 
-// does not compile for scala 3, TODO  
+// does not compile for scala 3, TODO
 //  implicit def sizedMaxEq[T: Eq, L]: Eq[Sized.Max[T, L]] =
 //    (a, b) => a.data === b.data
 //
@@ -34,7 +33,7 @@ trait EqInstances {
 
   implicit def bloomFilterEq: Eq[BloomFilter] =
     (a, b) => a.data === b.data
-  
+
   implicit val entropyEq: Eq[Entropy] =
     (a, b) => a.value === b.value
 

@@ -8,7 +8,6 @@ import cats.{Monad, MonadThrow}
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import xyz.stratalab.crypto.signing.Ed25519VRF
 import co.topl.node.models.{KnownHost, _}
 import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
@@ -16,6 +15,7 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.Stats
 import xyz.stratalab.blockchain.BlockchainCore
 import xyz.stratalab.config.ApplicationConfig.Bifrost.NetworkProperties
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.models.p2p._
 import xyz.stratalab.networking.blockchain.{BlockchainPeerClient, BlockchainPeerHandlerAlgebra}
 import xyz.stratalab.networking.fsnetwork.P2PShowInstances._

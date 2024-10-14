@@ -7,9 +7,7 @@ import cats.implicits._
 import cats.{Parallel, Show}
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import xyz.stratalab.crypto.signing.Ed25519VRF
 import co.topl.node.models.{BlockBody, KnownHost}
 import com.github.benmanes.caffeine.cache.Cache
 import org.typelevel.log4cats.Logger
@@ -18,6 +16,7 @@ import xyz.stratalab.actor.{Actor, Fsm}
 import xyz.stratalab.algebras.{Stats, Store}
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import xyz.stratalab.consensus.algebras.{BlockHeaderToBodyValidationAlgebra, ChainSelectionAlgebra, LocalChainAlgebra}
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.ledger.algebras.MempoolAlgebra
 import xyz.stratalab.models.p2p._
@@ -32,6 +31,7 @@ import xyz.stratalab.networking.fsnetwork.PeersManager.Message._
 import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
 import xyz.stratalab.networking.fsnetwork.ReverseDnsResolverHTInstances._
 import xyz.stratalab.networking.p2p._
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import xyz.stratalab.typeclasses.implicits._
 
 /**
@@ -668,7 +668,7 @@ object PeersManager {
         "bifrost_cold_peers_count",
         "Number of peers in cold state for given node.",
         Map("host_id" -> stringToJson(show"${state.thisHostId}")),
-       longToJson( coldPeers.size)
+        longToJson(coldPeers.size)
       )
     ) >>
     Async[F].defer(

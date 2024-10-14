@@ -8,8 +8,6 @@ import cats.effect.std.Semaphore
 import cats.implicits._
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.brambl.models.{TransactionId, TransactionOutputAddress}
-import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
-import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
 import co.topl.consensus.models.{BlockHeader, BlockId}
 import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
@@ -20,6 +18,8 @@ import xyz.stratalab.ledger.algebras._
 import xyz.stratalab.ledger.implicits._
 import xyz.stratalab.ledger.interpreters.QuivrContext
 import xyz.stratalab.ledger.models._
+import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
+import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
 import xyz.stratalab.typeclasses.implicits._
 
 object MempoolProtected {

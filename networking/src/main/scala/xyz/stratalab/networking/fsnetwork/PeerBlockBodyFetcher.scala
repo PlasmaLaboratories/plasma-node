@@ -6,7 +6,6 @@ import cats.effect.{Async, Resource}
 import cats.implicits._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import co.topl.consensus.models.{BlockHeader, BlockId}
 import co.topl.node.models.{Block, BlockBody}
 import fs2.Stream
@@ -22,6 +21,7 @@ import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransact
 import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError._
 import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
 import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import xyz.stratalab.typeclasses.implicits._
 
 object PeerBlockBodyFetcher {

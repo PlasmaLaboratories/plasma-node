@@ -1,11 +1,11 @@
 package xyz.stratalab.genus.orientDb.instances
 
-import xyz.stratalab.sdk.common.ContainsImmutable.instances.ioTransactionImmutable
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
 import com.orientechnologies.orient.core.metadata.schema.OType
 import xyz.stratalab.genus.orientDb.schema.OTyped.Instances._
 import xyz.stratalab.genus.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
+import xyz.stratalab.sdk.common.ContainsImmutable.instances.ioTransactionImmutable
+import xyz.stratalab.sdk.syntax._
 
 object SchemaIoTransaction {
 

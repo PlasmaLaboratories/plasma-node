@@ -5,9 +5,9 @@ import cats.implicits._
 import co.topl.brambl.models.LockAddress
 import co.topl.consensus.models.StakingAddress
 import com.google.protobuf.ByteString
-import monocle.syntax.all._
-import monocle.macros.GenLens
 import mainargs._
+import monocle.macros.GenLens
+import monocle.syntax.all._
 import xyz.stratalab.common.application.{ContainsDebugFlag, ContainsUserConfigs}
 
 // $COVERAGE-OFF$

@@ -1,9 +1,9 @@
 package xyz.stratalab.models.generators.node
 
-import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.node.models._
 import org.scalacheck.{Arbitrary, Gen}
 import xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryHeader
+import xyz.stratalab.sdk.generators.ModelGenerators._
 
 trait ModelGenerators {
 

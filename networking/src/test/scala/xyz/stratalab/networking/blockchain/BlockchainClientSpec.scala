@@ -5,7 +5,6 @@ import cats.implicits._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import xyz.stratalab.crypto.hash.Blake2b256
 import co.topl.node.models._
 import com.google.protobuf.ByteString
 import fs2._
@@ -14,6 +13,7 @@ import org.scalacheck.Gen
 import org.scalacheck.effect.PropF
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
+import xyz.stratalab.crypto.hash.Blake2b256
 import xyz.stratalab.networking.p2p.ConnectedPeer
 
 import java.nio.charset.StandardCharsets

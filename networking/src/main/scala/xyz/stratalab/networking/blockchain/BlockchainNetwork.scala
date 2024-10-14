@@ -4,11 +4,11 @@ import cats.effect._
 import cats.effect.implicits._
 import cats.effect.std.{Mutex, Random}
 import cats.implicits._
-import xyz.stratalab.crypto.signing.Ed25519
 import fs2._
 import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
+import xyz.stratalab.crypto.signing.Ed25519
 import xyz.stratalab.networking.multiplexer.MultiplexedReaderWriter
 import xyz.stratalab.networking.p2p._
 import xyz.stratalab.typeclasses.implicits._

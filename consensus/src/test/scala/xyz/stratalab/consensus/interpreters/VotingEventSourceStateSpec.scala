@@ -2,13 +2,11 @@ package xyz.stratalab.consensus.interpreters
 
 import cats.effect.{Async, IO}
 import cats.implicits._
-import xyz.stratalab.sdk.generators.TransactionGenerator
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.box.Value
 import co.topl.brambl.models.box.Value.UpdateProposal
 import co.topl.brambl.models.transaction._
 import co.topl.consensus.models.{BlockHeader, BlockId, _}
-import xyz.stratalab.crypto.signing.Ed25519VRF
 import co.topl.node.models.BlockBody
 import co.topl.proto.node.EpochData
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -22,7 +20,7 @@ import xyz.stratalab.codecs.bytes.tetra.ModelGenerators._
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.consensus._
 import xyz.stratalab.consensus.algebras.VersionInfoAlgebra
-import xyz.stratalab.consensus.interpreters.VotingEventSourceState
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
 import xyz.stratalab.ledger.interpreters.ProposalEventSourceState
 import xyz.stratalab.ledger.interpreters.ProposalEventSourceState._
@@ -30,6 +28,7 @@ import xyz.stratalab.models.ModelGenerators._
 import xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryHeader
 import xyz.stratalab.models.{ProposalId, Slot, Timestamp, VersionId, _}
 import xyz.stratalab.numerics.implicits._
+import xyz.stratalab.sdk.generators.TransactionGenerator
 import xyz.stratalab.typeclasses.implicits._
 
 import scala.collection.immutable.NumericRange

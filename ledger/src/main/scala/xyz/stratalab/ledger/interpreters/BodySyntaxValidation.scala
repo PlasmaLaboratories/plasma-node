@@ -6,12 +6,12 @@ import cats.implicits._
 import cats.{Foldable, Order, Parallel}
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.brambl.models.{TransactionId, TransactionOutputAddress}
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import co.topl.node.models.BlockBody
 import com.google.protobuf.ByteString
 import xyz.stratalab.algebras.Stats
 import xyz.stratalab.ledger.algebras._
 import xyz.stratalab.ledger.models._
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import xyz.stratalab.typeclasses.implicits._
 
 import scala.collection.immutable.SortedSet

@@ -37,7 +37,7 @@ object Genus {
       given Logger[F] <- Resource.pure(Slf4jLogger.getLoggerFromName[F]("Genus"))
       // A dedicated single thread executor in which all OrientDB calls are expected to run
       given OrientThread[F] <- OrientThread.create[F]
-      orientdb <- OrientDBFactory.make[F](dataDir, dbPassword)
+      orientdb              <- OrientDBFactory.make[F](dataDir, dbPassword)
 
       dbTx <- Resource
         .eval(Async[F].delay(orientdb.getTx))

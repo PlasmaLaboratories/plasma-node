@@ -8,15 +8,15 @@ import cats.implicits._
 import co.topl.brambl.models.transaction.Schedule
 import co.topl.brambl.models.{Datum, Event}
 import co.topl.consensus.models.StakingAddress
-import xyz.stratalab.crypto.generation.EntropyToSeed
-import xyz.stratalab.crypto.generation.mnemonic.Entropy
-import xyz.stratalab.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
 import com.google.protobuf.ByteString
 import fs2.io.file.Path
 import quivr.models.Int128
 import xyz.stratalab.blockchain.{StakerInitializers, StakingInit}
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.config.ApplicationConfig
+import xyz.stratalab.crypto.generation.EntropyToSeed
+import xyz.stratalab.crypto.generation.mnemonic.Entropy
+import xyz.stratalab.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
 import xyz.stratalab.typeclasses.implicits._
 
 object RegistrationCommand {

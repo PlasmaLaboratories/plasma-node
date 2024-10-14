@@ -5,17 +5,17 @@ import cats.data.ValidatedNec
 import cats.implicits._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
+import co.topl.node.models.FullBlockBody
+import com.google.protobuf.ByteString
 import xyz.stratalab.crypto.accumulators.LeafData
 import xyz.stratalab.crypto.accumulators.merkle.MerkleTree
 import xyz.stratalab.crypto.hash.digest.{Digest, Digest32, InvalidDigestFailure}
 import xyz.stratalab.crypto.hash.{Blake2b, Blake2bHash}
-import co.topl.node.models.FullBlockBody
-import com.google.protobuf.ByteString
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility.HasLength.instances._
 import xyz.stratalab.models.utility.Lengths._
 import xyz.stratalab.models.utility._
+import xyz.stratalab.sdk.syntax._
 
 import scala.language.implicitConversions
 

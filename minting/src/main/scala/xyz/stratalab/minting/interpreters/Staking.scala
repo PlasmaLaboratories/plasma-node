@@ -5,8 +5,6 @@ import cats.effect._
 import cats.implicits._
 import co.topl.brambl.models.LockAddress
 import co.topl.consensus.models._
-import xyz.stratalab.crypto.hash.Blake2b256
-import xyz.stratalab.crypto.signing.Ed25519
 import com.google.protobuf.ByteString
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
@@ -16,6 +14,8 @@ import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.codecs.bytes.typeclasses.implicits._
 import xyz.stratalab.consensus.algebras._
 import xyz.stratalab.consensus.thresholdEvidence
+import xyz.stratalab.crypto.hash.Blake2b256
+import xyz.stratalab.crypto.signing.Ed25519
 import xyz.stratalab.minting.algebras._
 import xyz.stratalab.minting.models.VrfHit
 import xyz.stratalab.models._

@@ -3,12 +3,12 @@ package xyz.stratalab.testnetsimulationorchestrator.interpreters
 import cats.effect._
 import cats.implicits._
 import co.topl.brambl.models.box.Value
-import xyz.stratalab.sdk.syntax._
 import com.google.cloud.storage._
 import com.google.protobuf.ByteString
 import fs2._
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.models.utility._
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.testnetsimulationorchestrator.algebras.DataPublisher
 import xyz.stratalab.testnetsimulationorchestrator.models.{AdoptionDatum, BlockDatum, TransactionDatum}
 import xyz.stratalab.typeclasses.implicits._

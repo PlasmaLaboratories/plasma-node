@@ -4,12 +4,8 @@ import cats.MonadThrow
 import cats.data.NonEmptyChain
 import cats.effect.{Async, IO}
 import cats.implicits._
-import xyz.stratalab.sdk.generators.TransactionGenerator
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.validation.TransactionSyntaxError.EmptyInputs
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import co.topl.consensus.models.{BlockHeader, BlockId}
 import co.topl.node.models.{Block, BlockBody}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -33,6 +29,10 @@ import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransact
 import xyz.stratalab.networking.fsnetwork.PeerBlockHeaderFetcherTest.F
 import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
 import xyz.stratalab.networking.fsnetwork.TestHelper._
+import xyz.stratalab.sdk.generators.TransactionGenerator
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.TransactionSyntaxError.EmptyInputs
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import xyz.stratalab.typeclasses.implicits._
 
 import scala.collection.mutable
@@ -159,7 +159,7 @@ class PeerBlockBodyFetcherTest
           .unzip
 
       val blockIdsBodiesHeaders =
-        bodies.map {( body: BlockBody) =>
+        bodies.map { (body: BlockBody) =>
           val header =
             ModelGenerators.arbitraryHeader.arbitrary.first.copy(txRoot = body.merkleTreeRootHash.data).embedId
           val id = header.id

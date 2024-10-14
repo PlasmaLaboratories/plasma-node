@@ -5,10 +5,8 @@ import cats.effect.kernel.Sync
 import cats.effect.{Async, Resource}
 import cats.implicits._
 import cats.{Applicative, MonadThrow}
-import xyz.stratalab.sdk.common.ContainsImmutable
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.{BlockHeader, BlockId}
 import co.topl.node.models.BlockBody
 import co.topl.proto.node.EpochData
@@ -23,6 +21,8 @@ import xyz.stratalab.ledger.algebras.TransactionRewardCalculatorAlgebra
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility._
 import xyz.stratalab.numerics.implicits._
+import xyz.stratalab.sdk.common.ContainsImmutable
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 /**

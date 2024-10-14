@@ -2,11 +2,9 @@ package xyz.stratalab.ledger.interpreters
 
 import cats.effect.IO
 import cats.implicits._
-import xyz.stratalab.sdk.constants.NetworkConstants
 import co.topl.brambl.models.box.{Attestation, Lock, Value}
 import co.topl.brambl.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
 import co.topl.brambl.models.{Datum, LockAddress}
-import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.{BlockId, StakingAddress}
 import co.topl.node.models.BlockBody
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -16,6 +14,8 @@ import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.models.ModelGenerators._
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
 import xyz.stratalab.numerics.implicits._
+import xyz.stratalab.sdk.constants.NetworkConstants
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 class RegistrationAccumulatorSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {

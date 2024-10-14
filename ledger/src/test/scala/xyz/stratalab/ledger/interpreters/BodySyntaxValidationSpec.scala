@@ -2,14 +2,9 @@ package xyz.stratalab.ledger.interpreters
 
 import cats.effect.IO
 import cats.implicits._
-import xyz.stratalab.sdk.constants.NetworkConstants
-import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.brambl.models.box.{FungibilityType, Lock, QuantityDescriptorType, Value}
 import co.topl.brambl.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
 import co.topl.brambl.models.{GroupId, LockAddress, SeriesId, TransactionId}
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.validation.TransactionSyntaxError
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import co.topl.node.models.BlockBody
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -19,6 +14,11 @@ import xyz.stratalab.algebras.Stats.Implicits._
 import xyz.stratalab.ledger.algebras.TransactionRewardCalculatorAlgebra
 import xyz.stratalab.ledger.models.{AssetId, BodySyntaxErrors, RewardQuantities}
 import xyz.stratalab.models.ModelGenerators._
+import xyz.stratalab.sdk.constants.NetworkConstants
+import xyz.stratalab.sdk.generators.ModelGenerators._
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.TransactionSyntaxError
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 
 class BodySyntaxValidationSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

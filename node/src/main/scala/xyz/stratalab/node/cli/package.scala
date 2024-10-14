@@ -5,13 +5,13 @@ import cats.effect.std.Console
 import cats.effect.{Async, Sync}
 import cats.implicits._
 import co.topl.brambl.models.LockAddress
-import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.{BlockId, StakingAddress}
 import com.google.protobuf.ByteString
 import fs2.Chunk
 import fs2.io.file.{Files, Path}
 import quivr.models.{Int128, Ratio}
 import xyz.stratalab.models.utility._
+import xyz.stratalab.sdk.syntax._
 
 import scala.concurrent.duration._
 import scala.util.Try

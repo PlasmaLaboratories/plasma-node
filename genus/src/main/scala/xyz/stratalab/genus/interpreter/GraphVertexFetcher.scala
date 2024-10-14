@@ -3,7 +3,6 @@ package xyz.stratalab.genus.interpreter
 import cats.effect.Resource
 import cats.implicits._
 import co.topl.brambl.models._
-import xyz.stratalab.sdk.syntax.transactionIdAsIdSyntaxOps
 import co.topl.consensus.models.BlockId
 import co.topl.genus.services._
 import com.orientechnologies.orient.core.sql.OCommandSQL
@@ -17,6 +16,7 @@ import xyz.stratalab.genus.orientDb.instances.SchemaIoTransaction.Field
 import xyz.stratalab.genus.orientDb.instances.VertexSchemaInstances.instances._
 import xyz.stratalab.genus.orientDb.instances._
 import xyz.stratalab.genus.orientDb.schema.EdgeSchemaInstances
+import xyz.stratalab.sdk.syntax.transactionIdAsIdSyntaxOps
 
 import scala.jdk.CollectionConverters._
 import scala.util.Try

@@ -444,7 +444,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
           }
 
           val headerStorageData = dataMap.view.mapValues { case (header, _) => header }.toMap
-          (headerStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) => headerStorageData.get(id).pure[F] }
+          (headerStore.get).expects(*).anyNumberOfTimes().onCall((id: BlockId) => headerStorageData.get(id).pure[F])
 
           val blockCheckerMessageOpt =
             for {
@@ -616,7 +616,7 @@ class RequestsProxyTest extends CatsEffectSuite with ScalaCheckEffectSuite with 
               if (inBodyStorage(parentOfFirstBlock)) Option(arbitraryNodeBody.arbitrary.first).pure[F] else None.pure[F]
             )
 
-          (bodyStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId )=>
+          (bodyStore.get).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
             if (inBodyStorage(id)) dataMap.get(id).map(_._2).pure[F]
             else Option.empty[BlockBody].pure[F]
           }

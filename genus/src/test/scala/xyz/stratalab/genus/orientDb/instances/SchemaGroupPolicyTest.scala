@@ -1,10 +1,8 @@
 package xyz.stratalab.genus.orientDb.instances
 
 import cats.implicits._
-import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGenerator}
 import co.topl.brambl.models.Event.{GroupPolicy, SeriesPolicy}
 import co.topl.brambl.models.TransactionOutputAddress
-import xyz.stratalab.sdk.syntax.{groupPolicyAsGroupPolicySyntaxOps, seriesPolicyAsSeriesPolicySyntaxOps}
 import com.orientechnologies.orient.core.metadata.schema.OType
 import munit.{CatsEffectFunFixtures, CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
@@ -13,6 +11,8 @@ import xyz.stratalab.genus.orientDb.OrientThread
 import xyz.stratalab.genus.orientDb.instances.SchemaGroupPolicy.Field
 import xyz.stratalab.genus.orientDb.instances.VertexSchemaInstances.instances.groupPolicySchema
 import xyz.stratalab.models.ModelGenerators.GenHelper
+import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGenerator}
+import xyz.stratalab.sdk.syntax.{groupPolicyAsGroupPolicySyntaxOps, seriesPolicyAsSeriesPolicySyntaxOps}
 
 import scala.jdk.CollectionConverters._
 

@@ -7,9 +7,7 @@ import cats.implicits._
 import co.topl.brambl.models._
 import co.topl.brambl.models.box.Value
 import co.topl.brambl.models.transaction._
-import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models._
-import xyz.stratalab.crypto.hash.Blake2b256
 import co.topl.node.models._
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
@@ -17,10 +15,12 @@ import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.codecs.bytes.typeclasses.Transmittable
 import xyz.stratalab.config.ApplicationConfig
 import xyz.stratalab.consensus.algebras.BlockHeaderToBodyValidationAlgebra
+import xyz.stratalab.crypto.hash.Blake2b256
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility.HasLength.instances.byteStringLength
 import xyz.stratalab.models.utility._
 import xyz.stratalab.numerics.implicits._
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 /**

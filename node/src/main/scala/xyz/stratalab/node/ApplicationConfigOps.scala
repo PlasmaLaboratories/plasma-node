@@ -1,32 +1,30 @@
 package xyz.stratalab.node
 
 import cats.Show
-import cats.implicits.*
-import xyz.stratalab.sdk.codecs.AddressCodecs.decodeAddress
+import cats.implicits._
 import co.topl.brambl.models.LockAddress
-import xyz.stratalab.sdk.utils.Encoding
 import co.topl.consensus.models.{BlockId, StakingAddress}
 import com.google.protobuf.ByteString
 import com.typesafe.config.Config
-import monocle.*
-import monocle.macros.*
-import pureconfig.*
-import pureconfig.configurable.*
+import monocle._
+import monocle.macros._
+import pureconfig._
+import pureconfig.configurable._
 import pureconfig.error.{CannotConvert, KeyNotFound}
 import pureconfig.generic.ProductHint
-import pureconfig.generic.semiauto.*
-import scala.concurrent.duration.FiniteDuration
-import xyz.stratalab.config.ApplicationConfig.Bifrost.BigBangs
+import pureconfig.generic.semiauto._
 import scodec.bits.ByteVector
 import xyz.stratalab.config.ApplicationConfig
 import xyz.stratalab.config.ApplicationConfig.Bifrost
-import xyz.stratalab.config.ApplicationConfig.Bifrost.KnownPeer
-import xyz.stratalab.models.*
-import xyz.stratalab.models.utility.*
-import scala.util.Try
-import scala.concurrent.duration._
-import scala.jdk.CollectionConverters._
+import xyz.stratalab.config.ApplicationConfig.Bifrost.{BigBangs, KnownPeer}
+import xyz.stratalab.models._
+import xyz.stratalab.models.utility._
+import xyz.stratalab.sdk.codecs.AddressCodecs.decodeAddress
+import xyz.stratalab.sdk.utils.Encoding
 
+import scala.concurrent.duration.{FiniteDuration, _}
+import scala.jdk.CollectionConverters._
+import scala.util.Try
 
 // $COVERAGE-OFF$
 

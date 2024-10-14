@@ -2,12 +2,9 @@ package xyz.stratalab.ledger.interpreters
 
 import cats.effect.IO
 import cats.implicits._
-import xyz.stratalab.sdk.constants.NetworkConstants
-import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.brambl.models._
 import co.topl.brambl.models.box.Value
 import co.topl.brambl.models.transaction._
-import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.BlockId
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
@@ -15,6 +12,9 @@ import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.ledger.algebras._
 import xyz.stratalab.ledger.models._
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
+import xyz.stratalab.sdk.constants.NetworkConstants
+import xyz.stratalab.sdk.generators.ModelGenerators._
+import xyz.stratalab.sdk.syntax._
 
 class TransactionSemanticValidationSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]

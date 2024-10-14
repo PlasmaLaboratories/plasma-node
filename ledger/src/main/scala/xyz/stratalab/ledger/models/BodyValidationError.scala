@@ -3,8 +3,8 @@ package xyz.stratalab.ledger.models
 import cats.data.{NonEmptyChain, NonEmptySet}
 import co.topl.brambl.models.TransactionOutputAddress
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.validation.{TransactionAuthorizationError, TransactionSyntaxError}
 import xyz.stratalab.models.ProposalId
+import xyz.stratalab.sdk.validation.{TransactionAuthorizationError, TransactionSyntaxError}
 
 sealed abstract class BodyValidationError
 

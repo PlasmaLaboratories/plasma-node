@@ -4,9 +4,9 @@ import cats.data.NonEmptySet
 import cats.implicits._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
+import xyz.stratalab.ledger.algebras.TransactionRewardCalculatorAlgebra
 import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
-import xyz.stratalab.ledger.algebras.TransactionRewardCalculatorAlgebra
 
 /**
  * @param transactions a collection of all transactions in the mempool

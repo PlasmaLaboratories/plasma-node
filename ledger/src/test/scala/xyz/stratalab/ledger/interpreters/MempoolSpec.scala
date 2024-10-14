@@ -4,11 +4,8 @@ import cats.Applicative
 import cats.data.NonEmptyChain
 import cats.effect._
 import cats.implicits._
-import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction._
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
 import co.topl.consensus.models.BlockId
 import co.topl.node.models.BlockBody
 import fs2.Stream
@@ -23,6 +20,9 @@ import xyz.stratalab.ledger.algebras.TransactionRewardCalculatorAlgebra
 import xyz.stratalab.ledger.models.RewardQuantities
 import xyz.stratalab.models.ModelGenerators._
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
+import xyz.stratalab.sdk.generators.ModelGenerators._
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
 import xyz.stratalab.typeclasses.implicits._
 
 import scala.concurrent.duration._

@@ -246,8 +246,10 @@ private[cli] case class ConfigureCommandInput(
               .dropNullValues,
             "staking" -> Json
               .obj(
-                "directory"      -> stakingDir.asJson,
-                "reward-address" -> stakingRewardAddress.map(xyz.stratalab.sdk.codecs.AddressCodecs.encodeAddress).asJson,
+                "directory" -> stakingDir.asJson,
+                "reward-address" -> stakingRewardAddress
+                  .map(xyz.stratalab.sdk.codecs.AddressCodecs.encodeAddress)
+                  .asJson,
                 "staking-address" -> stakingAddress
                   .map(_.value.toByteArray)
                   .map(xyz.stratalab.sdk.utils.Encoding.encodeToBase58)

@@ -9,9 +9,8 @@ import kamon.Kamon
 import mainargs.{Flag, ParserForClass, arg, main}
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import pureconfig.ConfigSource
-import pureconfig._
 import pureconfig.generic.derivation.default._
+import pureconfig.{ConfigSource, _}
 import xyz.stratalab.algebras.Stats
 import xyz.stratalab.common.application.{ContainsDebugFlag, ContainsUserConfigs, IOBaseApp, YamlConfig}
 import xyz.stratalab.grpc.{HealthCheckGrpc, ToplGrpc}
@@ -29,7 +28,7 @@ object GenusApp
 
   override def run(cmdArgs: GenusArgs, config: Config, appConfig: GenusApplicationConfig): IO[Unit] = (
     for {
-      _                            <- Logger[F].info(show"Genus args=$cmdArgs").toResource
+      _              <- Logger[F].info(show"Genus args=$cmdArgs").toResource
       given Stats[F] <- KamonStatsRef.make[F]
       nodeRpcProxy <- NodeRpcProxy
         .make[IO](appConfig.nodeRpcHost, appConfig.nodeRpcPort, appConfig.nodeRpcTls)

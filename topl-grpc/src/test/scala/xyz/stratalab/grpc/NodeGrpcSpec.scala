@@ -3,9 +3,7 @@ package xyz.stratalab.grpc
 import cats.Applicative
 import cats.effect.IO
 import cats.implicits._
-import xyz.stratalab.sdk.generators.ModelGenerators._
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
 import co.topl.consensus.models.{BlockHeader, BlockId}
 import co.topl.node.models.BlockBody
 import co.topl.node.services._
@@ -19,6 +17,8 @@ import xyz.stratalab.algebras.NodeRpc
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
 import xyz.stratalab.models.generators.node.ModelGenerators._
+import xyz.stratalab.sdk.generators.ModelGenerators._
+import xyz.stratalab.sdk.syntax._
 
 class NodeGrpcSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]

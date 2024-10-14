@@ -7,7 +7,6 @@ import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import xyz.stratalab.genus.DbFixtureUtil
 import xyz.stratalab.genus.orientDb.OrientThread
-import xyz.stratalab.genus.orientDb.instances.SchemaBlockHeader
 import xyz.stratalab.genus.orientDb.instances.SchemaBlockHeader.{Field, SchemaName}
 import xyz.stratalab.genus.orientDb.instances.VertexSchemaInstances.instances.blockHeaderSchema
 import xyz.stratalab.models.ModelGenerators.GenHelper

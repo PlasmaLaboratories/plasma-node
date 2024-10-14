@@ -1,11 +1,11 @@
 package xyz.stratalab.transactiongenerator
 
-import xyz.stratalab.sdk.constants.NetworkConstants
 import co.topl.brambl.models._
 import co.topl.brambl.models.box._
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
 import quivr.models._
+import xyz.stratalab.sdk.constants.NetworkConstants
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.transactiongenerator.models.Wallet
 
 package object interpreters {

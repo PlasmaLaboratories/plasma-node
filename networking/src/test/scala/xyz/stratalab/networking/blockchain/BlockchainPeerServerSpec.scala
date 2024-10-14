@@ -6,7 +6,6 @@ import cats.implicits._
 import cats.{MonadThrow, Show}
 import co.topl.brambl.models.TransactionId
 import co.topl.brambl.models.transaction.IoTransaction
-import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
 import co.topl.consensus.models._
 import co.topl.node.models.{BlockBody, CurrentKnownHostsReq, CurrentKnownHostsRes, KnownHost}
 import fs2._
@@ -30,6 +29,7 @@ import xyz.stratalab.networking.fsnetwork.RemotePeer
 import xyz.stratalab.networking.fsnetwork.TestHelper._
 import xyz.stratalab.networking.p2p.PeerConnectionChanges.RemotePeerApplicationLevel
 import xyz.stratalab.networking.p2p.{ConnectedPeer, PeerConnectionChange}
+import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
 
 import scala.concurrent.duration._
 
@@ -43,7 +43,7 @@ class BlockchainPeerServerSpec extends CatsEffectSuite with ScalaCheckEffectSuit
   override val munitIOTimeout: FiniteDuration = 5.seconds
 
   test("serve slot data") {
-    PropF.forAllF { (slotData: SlotData )=>
+    PropF.forAllF { (slotData: SlotData) =>
       withMock {
         val slotDataStore = mock[Store[F, BlockId, SlotData]]
         (slotDataStore.get(_: BlockId)).expects(slotData.slotId.blockId).once().returning(slotData.some.pure[F])
@@ -146,7 +146,7 @@ class BlockchainPeerServerSpec extends CatsEffectSuite with ScalaCheckEffectSuit
   }
 
   test("serve hot peers") {
-    PropF.forAllF {( hotPeers: Set[RemotePeer]) =>
+    PropF.forAllF { (hotPeers: Set[RemotePeer]) =>
       withMock {
         val f = mockFunction[F[Set[RemotePeer]]]
         f.expects().once().returning(hotPeers.pure[F])

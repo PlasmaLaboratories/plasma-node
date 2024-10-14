@@ -5,10 +5,6 @@ import cats.effect.IO
 import cats.implicits._
 import co.topl.brambl.models.transaction.IoTransaction
 import co.topl.brambl.models.{Datum, TransactionId, TransactionOutputAddress}
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.validation.TransactionAuthorizationError
-import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
-import xyz.stratalab.quivr.runtime.DynamicContext
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.Arbitrary
 import org.scalamock.munit.AsyncMockFactory
@@ -23,6 +19,10 @@ import xyz.stratalab.models.ModelGenerators._
 import xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryBlockId
 import xyz.stratalab.models.generators.consensus._
 import xyz.stratalab.networking.fsnetwork.TestHelper.arbitraryIoTransaction
+import xyz.stratalab.quivr.runtime.DynamicContext
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.TransactionAuthorizationError
+import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
 
 import scala.annotation.tailrec
 

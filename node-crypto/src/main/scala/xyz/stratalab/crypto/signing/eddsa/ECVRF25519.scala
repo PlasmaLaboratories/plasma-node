@@ -1,7 +1,5 @@
 package xyz.stratalab.crypto.signing.eddsa
 
-import xyz.stratalab.crypto.signing.eddsa.EC
-
 import java.security.SecureRandom
 
 /**

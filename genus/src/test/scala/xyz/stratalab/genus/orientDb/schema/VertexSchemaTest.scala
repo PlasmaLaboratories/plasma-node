@@ -5,7 +5,6 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.genus.DbFixtureUtil
 import xyz.stratalab.genus.orientDb.schema.OTyped.Instances._
-import xyz.stratalab.genus.orientDb.schema.{GraphDataEncoder, VertexSchema}
 import xyz.stratalab.genus.orientDb.{OrientDBMetadataFactory, OrientThread}
 
 import scala.jdk.CollectionConverters._

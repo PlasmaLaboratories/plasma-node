@@ -6,7 +6,6 @@ import cats.effect.kernel.{Async, Fiber}
 import cats.effect.{Resource, Spawn}
 import cats.implicits._
 import co.topl.consensus.models.{BlockId, SlotData}
-import xyz.stratalab.crypto.signing.Ed25519VRF
 import co.topl.node.models.BlockBody
 import fs2.Stream
 import org.typelevel.log4cats.Logger
@@ -16,6 +15,7 @@ import xyz.stratalab.catsutils.faAsFAClockOps
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.consensus._
 import xyz.stratalab.consensus.algebras.{ChainSelectionAlgebra, LocalChainAlgebra}
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.models.p2p._
 import xyz.stratalab.networking.blockchain.BlockchainPeerClient

@@ -4,13 +4,7 @@ import cats.data.EitherT
 import cats.effect._
 import cats.implicits._
 import cats.{Monad, MonadThrow, Show}
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.utils.CatsUnsafeResource
 import co.topl.consensus.models._
-import xyz.stratalab.crypto.generation.mnemonic.Entropy
-import xyz.stratalab.crypto.hash.{Blake2b256, Blake2b512}
-import xyz.stratalab.crypto.models.SecretKeyKesProduct
-import xyz.stratalab.crypto.signing._
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -23,6 +17,10 @@ import xyz.stratalab.codecs.bytes.typeclasses.implicits._
 import xyz.stratalab.consensus.algebras._
 import xyz.stratalab.consensus.models.{BlockHeaderValidationFailures, VrfArgument, VrfConfig, _}
 import xyz.stratalab.consensus.thresholdEvidence
+import xyz.stratalab.crypto.generation.mnemonic.Entropy
+import xyz.stratalab.crypto.hash.{Blake2b256, Blake2b512}
+import xyz.stratalab.crypto.models.SecretKeyKesProduct
+import xyz.stratalab.crypto.signing._
 import xyz.stratalab.models.ModelGenerators.GenHelper
 import xyz.stratalab.models._
 import xyz.stratalab.models.generators.common.ModelGenerators.genSizedStrictByteString
@@ -31,6 +29,8 @@ import xyz.stratalab.models.utility.HasLength.instances.byteStringLength
 import xyz.stratalab.models.utility._
 import xyz.stratalab.numerics.implicits._
 import xyz.stratalab.numerics.interpreters.{ExpInterpreter, Log1pInterpreter}
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.utils.CatsUnsafeResource
 
 import java.util.UUID
 import scala.util.Random

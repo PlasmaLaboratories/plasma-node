@@ -2,12 +2,12 @@ package xyz.stratalab.genus.orientDb.instances
 
 import co.topl.brambl.models.transaction.UnspentTransactionOutput
 import co.topl.brambl.models.{TransactionInputAddress, TransactionOutputAddress}
-import xyz.stratalab.sdk.syntax._
 import co.topl.genus.services.{Txo, TxoState}
 import com.orientechnologies.orient.core.metadata.schema.OType
 import com.tinkerpop.blueprints.Vertex
 import xyz.stratalab.genus.orientDb.schema.OTyped.Instances._
 import xyz.stratalab.genus.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
+import xyz.stratalab.sdk.syntax._
 
 import VertexSchemaInstances.instances._
 
