@@ -67,7 +67,8 @@ class EtaCalculationSpec extends CatsEffectSuite with ScalaCheckEffectSuite with
                 parentHeaderIdGen = Gen.const(items.last.id)
               ).first
               // scala fmt join these two lines
-              (nextHeader -> (items :+ nextHeader)).some
+              (nextHeader -> (items :+ nextHeader))
+                .some
           }
           .toList
 
