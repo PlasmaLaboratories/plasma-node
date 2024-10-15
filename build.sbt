@@ -60,7 +60,7 @@ lazy val dockerSettings = Seq(
   dockerAliases := dockerAliases.value.flatMap { alias =>
     Seq(
       alias.withRegistryHost(Some("docker.io/stratalab")),
-      alias.withRegistryHost(Some("ghcr.io/stratalab"))
+      alias.withRegistryHost(Some("ghcr.io/plasmalaboratories"))
     )
   }
 )
