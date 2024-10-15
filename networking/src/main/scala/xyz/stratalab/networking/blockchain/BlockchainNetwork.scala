@@ -9,8 +9,6 @@ import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.crypto.signing.Ed25519
-import xyz.stratalab.networking.legacy.{ConnectionLeader, LegacyBlockchainSocketHandler}
-import xyz.stratalab.crypto.signing.Ed25519
 import xyz.stratalab.networking.multiplexer.MultiplexedReaderWriter
 import xyz.stratalab.networking.p2p._
 import xyz.stratalab.typeclasses.implicits._

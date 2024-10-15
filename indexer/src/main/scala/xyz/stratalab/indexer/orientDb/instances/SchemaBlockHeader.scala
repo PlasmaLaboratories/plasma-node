@@ -7,11 +7,6 @@ import xyz.stratalab.consensus.models._
 import xyz.stratalab.indexer.orientDb.schema.OIndexable.Instances
 import xyz.stratalab.indexer.orientDb.schema.OTyped.Instances._
 import xyz.stratalab.indexer.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
-import xyz.stratalab.codecs.bytes.typeclasses.ImmutableCodec
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.indexer.orientDb.schema.OIndexable.Instances
-import xyz.stratalab.indexer.orientDb.schema.OTyped.Instances._
-import xyz.stratalab.indexer.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
 
 object SchemaBlockHeader {
   val SchemaName = "BlockHeader"
