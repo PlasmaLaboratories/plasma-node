@@ -745,6 +745,8 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           indexerServices ::: healthServices,
           (p2pConfig.publicHost, p2pConfig.publicPort).mapN(KnownPeer),
           p2pConfig.networkProperties,
+          appConfig.node.votedVersion,
+          appConfig.node.votedProposal,
           appConfig.node.bigBang match {
             case p: ApplicationConfig.Node.BigBangs.Private => p.regtestEnabled
             case _                                          => false

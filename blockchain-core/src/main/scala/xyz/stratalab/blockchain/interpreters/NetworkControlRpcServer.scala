@@ -2,12 +2,12 @@ package xyz.stratalab.blockchain.interpreters
 
 import cats.Show
 import cats.effect.{Async, Resource}
-import cats.implicits.{showInterpolator, _}
+import cats.implicits._
 import fs2.concurrent.Topic
 import io.grpc.{Metadata, ServerServiceDefinition}
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.models.p2p._
-import xyz.stratalab.models.utility.byteStringToByteVector
+import xyz.stratalab.models.utility.{NetworkCommands, byteStringToByteVector}
 import xyz.stratalab.node.services._
 
 object NetworkControlRpcServer {

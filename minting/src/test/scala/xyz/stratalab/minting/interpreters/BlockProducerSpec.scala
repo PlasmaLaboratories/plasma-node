@@ -56,7 +56,7 @@ class BlockProducerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with 
           val staker = mock[StakingAlgebra[F]]
 
           val version = 1
-          val protocolVersion = ProtocolVersion(version, 0, 0)
+          val protocolVersion = ProtocolVersion(version, 34, 67)
           (() => staker.address).expects().once().returning(stakingAddress.pure[F])
           (staker.elect _)
             .expects(parentSlotData.slotId, parentSlotData.slotId.slot + 1)
@@ -128,7 +128,9 @@ class BlockProducerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with 
               blockPacker,
               rewardCalculator,
               ().pure[F],
-              eventSource
+              eventSource,
+              protocolVersion.getVersionVote.get.pure[F],
+              protocolVersion.getProposalVote.get.pure[F]
             )
             resultFiber <- Async[F].start(Stream.force(underTest.blocks).enqueueNoneTerminated(results).compile.drain)
             _ = (clock.delayedUntilSlot(_)).expects(vrfHit.slot).once().returning(clockDeferment.get)

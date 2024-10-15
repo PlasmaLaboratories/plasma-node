@@ -32,7 +32,9 @@ object ApplicationConfig {
     protocols:           Map[Slot, Node.Protocol],
     cache:               Node.Cache,
     ntp:                 Node.Ntp,
-    versionInfo:         Node.VersionInfo
+    versionInfo:         Node.VersionInfo,
+    votedVersion:        Int = 0,
+    votedProposal:       Int = 0
   )
 
   object Node {
