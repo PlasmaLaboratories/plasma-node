@@ -36,6 +36,7 @@ object RpcServer {
       show"InvalidSchedule(creation=${s.timestamp},maximumSlot=${s.max},minimumSlot=${s.min})"
     case TransactionSyntaxError.InvalidDataLength        => "InvalidDataLength"
     case TransactionSyntaxError.InvalidUpdateProposal(_) => "InvalidUpdateProposal"
+    case TransactionSyntaxError.InconsistentNetworkIDs(ids) => show"InconsistentNetworkIDs(ids=$ids, size=${ids.size})"
   }
 
   // scalastyle:off method.length
