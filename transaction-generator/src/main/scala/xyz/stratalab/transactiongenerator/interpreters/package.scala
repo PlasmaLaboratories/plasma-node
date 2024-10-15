@@ -55,7 +55,13 @@ package object interpreters {
           .get(output.address)
           .map(lock =>
             (
-              transactionId.outputAddress(0, 0, index),
+              // transactionId.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, index),
+              transactionId
+                .outputAddress(
+                  output.address.network,
+                  output.address.ledger,
+                  index
+                ),
               Box(lock, output.value)
             )
           )
