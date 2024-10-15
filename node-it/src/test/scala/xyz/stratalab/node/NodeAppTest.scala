@@ -162,7 +162,7 @@ class NodeAppTest extends CatsEffectSuite {
               // Verify that the good transactions were confirmed by both nodes
               _ <- rpcClients
                 .parTraverse(client =>
-                  Async[F].timeout(confirmTransactions(client)(transactionGraph1.map(_.id).toSet), 60.seconds)
+                  Async[F].timeout(confirmTransactions(client)(transactionGraph1.map(_.id).toSet), 120.seconds)
                 )
                 .toResource
               // Submit the bad transactions

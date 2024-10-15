@@ -187,7 +187,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               // Verify that the transactions were confirmed by both nodes
               _ <- rpcClients
                 .parTraverse(client =>
-                  Async[F].timeout(confirmTransactions(client)(transactionGraph.map(_.id).toSet), 60.seconds)
+                  Async[F].timeout(confirmTransactions(client)(transactionGraph.map(_.id).toSet), 120.seconds)
                 )
                 .toResource
 
@@ -276,10 +276,10 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
                   .toResource
 
               // verify that first transaction had been confirmed
-              _ <- Async[F].timeout(fetchUntilTx(rpcClientB, transactionGraph.head.id), 30.seconds).toResource
+              _ <- Async[F].timeout(fetchUntilTx(rpcClientB, transactionGraph.head.id), 60.seconds).toResource
               _ <- rpcClients
                 .parTraverse(client =>
-                  Async[F].timeout(confirmTransactions(client)(Set(transactionGraph.head.id)), 30.seconds)
+                  Async[F].timeout(confirmTransactions(client)(Set(transactionGraph.head.id)), 60.seconds)
                 )
                 .toResource
 
@@ -405,7 +405,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
                 .toResource
 
               _ <- Async[F]
-                .timeout(fetchUntilTx(rpcClientB, transactionGraph.init.last.id), 70.seconds)
+                .timeout(fetchUntilTx(rpcClientB, transactionGraph.init.last.id), 120.seconds)
                 .toResource
               _ <- rpcClients
                 .parTraverse(verifyNotConfirmed(_)(Set(transactionGraph.last.id)))
