@@ -17,11 +17,4 @@ package object p2p {
   type HostReputationValue =
     Double // will be more complex, to get high reputation host shall fulfill different criteria
 
-  sealed trait NetworkCommands
-
-  object NetworkCommands {
-    case class ForgetPeer(hostId: HostId) extends NetworkCommands
-    case class AddPeer(remoteAddress: RemoteAddress, remotepeerIdOpt: Option[HostId]) extends NetworkCommands
-  }
-
 }

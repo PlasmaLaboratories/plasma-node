@@ -24,6 +24,8 @@ import xyz.stratalab.ledger.models.StaticBodyValidationContext
 import xyz.stratalab.minting.algebras.StakingAlgebra
 import xyz.stratalab.minting.interpreters._
 import xyz.stratalab.models.p2p._
+import xyz.stratalab.models.utility.NetworkCommands
+import xyz.stratalab.models.{ProposalId, VersionId}
 import xyz.stratalab.networking.blockchain._
 import xyz.stratalab.networking.fsnetwork.DnsResolverInstances.DefaultDnsResolver
 import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
@@ -55,6 +57,8 @@ object Blockchain {
     additionalGrpcServices:   List[ServerServiceDefinition],
     peerAsServer:             Option[KnownPeer],
     networkProperties:        NetworkProperties,
+    defaultVotedVersion:      VersionId,
+    defaultVotedProposal:     ProposalId,
     regtestEnabled:           Boolean
   ): Resource[F, Unit] = new BlockchainImpl[F](
     localBlockchain,
@@ -69,6 +73,8 @@ object Blockchain {
     additionalGrpcServices,
     peerAsServer,
     networkProperties,
+    defaultVotedVersion,
+    defaultVotedProposal,
     regtestEnabled
   ).resource
 
@@ -87,6 +93,8 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
   additionalGrpcServices:   List[ServerServiceDefinition],
   peerAsServer:             Option[KnownPeer],
   networkProperties:        NetworkProperties,
+  defaultVotedVersion:      VersionId,
+  defaultVotedProposal:     ProposalId,
   regtestEnabled:           Boolean
 ) {
   implicit private val logger: SelfAwareStructuredLogger[F] = Slf4jLogger.getLoggerFromName[F]("Node.Blockchain")
@@ -161,24 +169,30 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
     } yield ()
 
   def rpc(
-    regtestPermitQueue: Option[Queue[F, Unit]],
-    networkCommandsOpt: Option[Topic[F, NetworkCommands]]
+    regtestPermitQueue:  Option[Queue[F, Unit]],
+    networkCommandsOpt:  Option[Topic[F, NetworkCommands]],
+    updateVotedVersion:  VersionId => F[Unit],
+    updateVotedProposal: ProposalId => F[Unit]
   ): Resource[F, Unit] =
     for {
       _               <- Resource.make(Logger[F].info("Initializing RPC"))(_ => Logger[F].info("RPC Terminated"))
       rpcInterpreter  <- RpcServer.make(localBlockchain).toResource
       nodeGrpcService <- NodeGrpc.Server.service[F](rpcInterpreter)
       regtestServices <- regtestPermitQueue.toList.traverse(queue =>
-        RegtestRpcServer.service[F](Async[F].defer(queue.offer(())))
+        RegtestRpcServer.service[F](Async[F].defer(queue.offer(())), updateVotedVersion, updateVotedProposal)
       )
       _ <- networkCommandsOpt.fold(().pure[F])(_ => Logger[F].error("Network could be controlled via RPC")).toResource
-      networkControl <- NetworkControlRpcServer.service(thisHostId, networkCommandsOpt)
+      debugControl <- NetworkControlRpcServer.service(thisHostId, networkCommandsOpt)
       rpcServer <- Grpc.Server
-        .serve(rpcHost, rpcPort)(networkControl :: nodeGrpcService :: regtestServices ++ additionalGrpcServices)
+        .serve(rpcHost, rpcPort)(debugControl :: nodeGrpcService :: regtestServices ++ additionalGrpcServices)
       _ <- Logger[F].info(s"RPC Server bound at ${rpcServer.getListenSockets.asScala.toList.mkString(",")}").toResource
     } yield ()
 
-  private def blockProduction(regtestPermitQueue: Option[Queue[F, Unit]]): Resource[F, Unit] =
+  private def blockProduction(
+    regtestPermitQueue: Option[Queue[F, Unit]],
+    votedVersionF:      F[VersionId],
+    votedProposalF:     F[ProposalId]
+  ): Resource[F, Unit] =
     for {
       _ <- Resource.make(Logger[F].info("Initializing local blocks (potential no-op)"))(_ =>
         Logger[F].info("Local blocks terminated")
@@ -228,7 +242,9 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
               blockPacker,
               localBlockchain.validators.rewardCalculator,
               productionPermit,
-              eventSourcedStates.votingLocal
+              eventSourcedStates.votingLocal,
+              votedVersionF,
+              votedProposalF
             )
           )
           block <- Stream.force(blockProducer.blocks)
@@ -270,14 +286,19 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
     for {
       _ <- Resource.make(Logger[F].info("Initializing Blockchain"))(_ => Logger[F].info("Blockchain Terminated"))
       // When regtest mode is enabled, allocate a queue to hold commands to produce new blocks
+      versionVoting  <- Ref.of(defaultVotedVersion).toResource
+      proposalVoting <- Ref.of(defaultVotedProposal).toResource
       regtestPermitQueue <-
         if (regtestEnabled) Queue.unbounded[F, Unit].toResource.map(_.some)
         else none[Queue[F, Unit]].pure[F].toResource
+      setVersionVoting     <- (if (regtestEnabled) versionVoting.set _ else (_: Int) => ().pure[F]).pure[F].toResource
+      setProposalVoting    <- (if (regtestEnabled) proposalVoting.set _ else (_: Int) => ().pure[F]).pure[F].toResource
       networkCommandsTopic <- Resource.make(Topic[F, NetworkCommands])(_.close.void)
+      networkTopic = if (rpcNetworkControlEnabled) networkCommandsTopic.some else None
       _ <- (
         p2p(networkCommandsTopic),
-        rpc(regtestPermitQueue, if (rpcNetworkControlEnabled) networkCommandsTopic.some else None),
-        blockProduction(regtestPermitQueue),
+        rpc(regtestPermitQueue, networkTopic, setVersionVoting, setProposalVoting),
+        blockProduction(regtestPermitQueue, versionVoting.get, proposalVoting.get),
         eventSourcedStateUpdater
       ).parTupled
       _ <- Resource.never[F, Unit]
