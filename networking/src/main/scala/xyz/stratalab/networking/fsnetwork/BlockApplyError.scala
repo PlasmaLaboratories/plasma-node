@@ -2,9 +2,8 @@ package xyz.stratalab.networking.fsnetwork
 
 import cats.data.NonEmptyChain
 import cats.implicits._
-import co.topl.consensus.models.BlockId
 import org.apache.commons.lang3.exception.ExceptionUtils
-import xyz.stratalab.consensus.models.BlockHeaderValidationFailure
+import xyz.stratalab.consensus.models.{BlockHeaderValidationFailure, BlockId}
 import xyz.stratalab.ledger.models.BodyValidationError
 import xyz.stratalab.models.p2p._
 

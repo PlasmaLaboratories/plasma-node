@@ -2,11 +2,11 @@ package xyz.stratalab.interpreters
 
 import cats.effect.kernel.Async
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.consensus.models.BlockId
-import co.topl.node.models.BlockBody
 import xyz.stratalab.algebras.Store
+import xyz.stratalab.consensus.models.BlockId
 import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
+import xyz.stratalab.node.models.BlockBody
+import xyz.stratalab.sdk.models.TransactionId
 import xyz.stratalab.typeclasses.implicits._
 
 object TxIdToBlockIdTree {

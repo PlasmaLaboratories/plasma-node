@@ -1,6 +1,6 @@
-package co.topl.crypto.signing.eddsa
+package xyz.stratalab.crypto.signing.eddsa
 
-import co.topl.crypto.signing.eddsa.EC
+import xyz.stratalab.crypto.signing.eddsa.EC
 
 import java.security.SecureRandom
 

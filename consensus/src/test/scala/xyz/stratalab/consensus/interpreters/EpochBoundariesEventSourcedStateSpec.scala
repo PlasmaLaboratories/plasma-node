@@ -4,11 +4,11 @@ import cats.Applicative
 import cats.data.Chain
 import cats.effect.IO
 import cats.implicits._
-import co.topl.consensus.models.{BlockId, SlotData}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.algebras.ClockAlgebra
 import xyz.stratalab.algebras.testInterpreters.TestStore
+import xyz.stratalab.consensus.models.{BlockId, SlotData}
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.models.ModelGenerators._
 import xyz.stratalab.models._

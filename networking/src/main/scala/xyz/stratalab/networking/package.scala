@@ -3,12 +3,12 @@ package xyz.stratalab
 import cats.Monad
 import cats.data.OptionT
 import cats.implicits._
-import co.topl.node.models.KnownHost
 import com.comcast.ip4s.{IpAddress, SocketAddress}
 import fs2.Chunk
 import fs2.io.net.Socket
 import xyz.stratalab.models.p2p._
 import xyz.stratalab.networking.fsnetwork.RemotePeer
+import xyz.stratalab.node.models.KnownHost
 
 import java.net.InetAddress
 import java.nio.ByteBuffer

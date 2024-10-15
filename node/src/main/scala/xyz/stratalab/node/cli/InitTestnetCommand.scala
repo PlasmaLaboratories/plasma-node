@@ -3,17 +3,17 @@ package xyz.stratalab.node.cli
 import cats.effect.std.{Console, SecureRandom}
 import cats.effect.{Async, Sync}
 import cats.implicits._
-import co.topl.brambl.models.box.Value
-import co.topl.brambl.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
-import co.topl.brambl.models.{Datum, Event}
-import co.topl.crypto.hash.Blake2b256
-import co.topl.node.models.FullBlock
 import fs2.io.file.{Files, Path}
 import quivr.models.{Int128, SmallData}
 import xyz.stratalab.blockchain.{BigBang, PrivateTestnet, StakerInitializers, StakingInit}
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.config.ApplicationConfig
+import xyz.stratalab.crypto.hash.Blake2b256
 import xyz.stratalab.node.ProtocolVersioner
+import xyz.stratalab.node.models.FullBlock
+import xyz.stratalab.sdk.models.box.Value
+import xyz.stratalab.sdk.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
+import xyz.stratalab.sdk.models.{Datum, Event}
 import xyz.stratalab.typeclasses.implicits._
 
 import java.nio.charset.StandardCharsets
@@ -56,7 +56,7 @@ class InitTestnetCommandImpl[F[_]: Async: Console](appConfig: ApplicationConfig)
       quantity    <- readStakerQuantity
       initializer = StakerInitializers.Operator(
         seed,
-        (appConfig.bifrost.protocols(0).kesKeyHours, appConfig.bifrost.protocols(0).kesKeyMinutes),
+        (appConfig.node.protocols(0).kesKeyHours, appConfig.node.protocols(0).kesKeyMinutes),
         lockAddress
       )
     } yield StakerInitializerWithQuantity(initializer, quantity, initializer.registrationTransaction(quantity))
@@ -133,7 +133,7 @@ class InitTestnetCommandImpl[F[_]: Async: Console](appConfig: ApplicationConfig)
       genesisConfig = BigBang.Config(
         timestamp,
         stakers.map(_.transaction) :+ tokenTransaction,
-        protocolVersion = ProtocolVersioner(appConfig.bifrost.protocols).appVersion.asProtocolVersion
+        protocolVersion = ProtocolVersioner(appConfig.node.protocols).appVersion.asProtocolVersion
       )
       genesisBlock = BigBang.fromConfig(genesisConfig)
       outputDirectory <- readOutputDirectory(genesisBlock)

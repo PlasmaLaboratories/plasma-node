@@ -4,8 +4,6 @@ import cats.Applicative
 import cats.data.NonEmptyChain
 import cats.effect.{Async, IO}
 import cats.implicits._
-import co.topl.consensus.models.{BlockHeader, BlockId, SlotData, SlotId}
-import co.topl.node.models.{Block, BlockBody}
 import com.github.benmanes.caffeine.cache.{Cache, Caffeine}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.Gen
@@ -16,6 +14,7 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 import scalacache.Entry
 import xyz.stratalab.algebras.Store
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData, SlotId}
 import xyz.stratalab.models.ModelGenerators.GenHelper
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
 import xyz.stratalab.models.generators.node.ModelGenerators
@@ -29,6 +28,7 @@ import xyz.stratalab.networking.fsnetwork.RequestsProxyTest.RequestStatus.{InPro
 import xyz.stratalab.networking.fsnetwork.RequestsProxyTest.ResponseStatus.{DownloadError, DownloadedOk}
 import xyz.stratalab.networking.fsnetwork.RequestsProxyTest.{F, RequestStatus, ResponseStatus}
 import xyz.stratalab.networking.fsnetwork.TestHelper.arbitraryHost
+import xyz.stratalab.node.models.{Block, BlockBody}
 
 import scala.collection.immutable.ListMap
 import scala.concurrent.duration.DurationInt

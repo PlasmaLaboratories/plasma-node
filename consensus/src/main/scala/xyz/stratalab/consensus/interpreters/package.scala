@@ -1,6 +1,6 @@
 package xyz.stratalab.consensus
 
-import co.topl.consensus.models.BlockHeader
+import xyz.stratalab.consensus.models.BlockHeader
 import xyz.stratalab.models._
 
 package object interpreters {

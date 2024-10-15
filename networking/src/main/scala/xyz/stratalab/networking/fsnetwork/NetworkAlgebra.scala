@@ -2,17 +2,13 @@ package xyz.stratalab.networking.fsnetwork
 
 import cats.Parallel
 import cats.effect.{Async, Resource}
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.validation.algebras.TransactionSyntaxVerifier
-import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import co.topl.crypto.signing.Ed25519VRF
-import co.topl.node.models.BlockBody
 import com.github.benmanes.caffeine.cache.Caffeine
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.algebras.{ClockAlgebra, Stats, Store}
 import xyz.stratalab.blockchain.Validators
 import xyz.stratalab.consensus.algebras._
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.ledger.algebras._
 import xyz.stratalab.models.p2p._
@@ -25,6 +21,10 @@ import xyz.stratalab.networking.fsnetwork.PeerBlockHeaderFetcher.PeerBlockHeader
 import xyz.stratalab.networking.fsnetwork.PeerMempoolTransactionSync.PeerMempoolTransactionSyncActor
 import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
 import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
+import xyz.stratalab.node.models.BlockBody
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 
 // scalastyle:off parameter.number
 trait NetworkAlgebra[F[_]] {

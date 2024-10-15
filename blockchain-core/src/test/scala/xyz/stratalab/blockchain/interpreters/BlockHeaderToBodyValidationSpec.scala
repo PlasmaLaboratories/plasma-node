@@ -1,13 +1,13 @@
 package xyz.stratalab.blockchain.interpreters
 
 import cats.effect.IO
-import co.topl.node.models._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.consensus.interpreters.BlockHeaderToBodyValidation
 import xyz.stratalab.consensus.models.BlockHeaderToBodyValidationFailure.IncorrectTxRoot
 import xyz.stratalab.models.generators.node.ModelGenerators._
+import xyz.stratalab.node.models._
 import xyz.stratalab.typeclasses.implicits._
 
 class BlockHeaderToBodyValidationSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {

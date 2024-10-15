@@ -5,14 +5,6 @@ import cats.effect.kernel.Sync
 import cats.effect.{Async, IO, Resource}
 import cats.implicits._
 import cats.{Applicative, Parallel}
-import co.topl.brambl.generators.TransactionGenerator
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.utils.Encoding
-import co.topl.brambl.validation.algebras.TransactionSyntaxVerifier
-import co.topl.consensus.models.{BlockId, SlotData}
-import co.topl.crypto.signing.Ed25519VRF
-import co.topl.node.models.{BlockBody, KnownHost}
 import com.github.benmanes.caffeine.cache.{Cache, Caffeine}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
@@ -22,8 +14,10 @@ import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.{Stats, Store}
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.config.ApplicationConfig.Bifrost.NetworkProperties
+import xyz.stratalab.config.ApplicationConfig.Node.NetworkProperties
 import xyz.stratalab.consensus.algebras.{BlockHeaderToBodyValidationAlgebra, ChainSelectionAlgebra, LocalChainAlgebra}
+import xyz.stratalab.consensus.models.{BlockId, SlotData}
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.ledger.algebras.MempoolAlgebra
 import xyz.stratalab.models.ModelGenerators.GenHelper
@@ -39,6 +33,12 @@ import xyz.stratalab.networking.fsnetwork.PeersManagerTest.F
 import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
 import xyz.stratalab.networking.fsnetwork.TestHelper.{arbitraryHost, arbitraryRemoteAddress}
 import xyz.stratalab.networking.p2p.{ConnectedPeer, DisconnectedPeer}
+import xyz.stratalab.node.models.{BlockBody, KnownHost}
+import xyz.stratalab.sdk.generators.TransactionGenerator
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.utils.Encoding
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 
 import scala.concurrent.duration.{FiniteDuration, SECONDS}
 import scala.jdk.CollectionConverters._

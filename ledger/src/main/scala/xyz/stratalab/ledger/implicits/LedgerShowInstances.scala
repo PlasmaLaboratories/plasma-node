@@ -2,10 +2,10 @@ package xyz.stratalab.ledger.implicits
 
 import cats.Show
 import cats.implicits._
-import co.topl.brambl.syntax._
-import co.topl.brambl.validation.{TransactionAuthorizationError, TransactionSyntaxError}
-import co.topl.quivr.runtime.QuivrRuntimeError
 import xyz.stratalab.ledger.models._
+import xyz.stratalab.quivr.runtime.QuivrRuntimeError
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.{TransactionAuthorizationError, TransactionSyntaxError}
 import xyz.stratalab.typeclasses.implicits._
 
 trait LedgerShowInstances {

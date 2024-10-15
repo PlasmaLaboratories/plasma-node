@@ -5,18 +5,18 @@ import cats.data.EitherT
 import cats.effect.std.Console
 import cats.effect.{Async, Sync}
 import cats.implicits._
-import co.topl.brambl.models.transaction.Schedule
-import co.topl.brambl.models.{Datum, Event}
-import co.topl.consensus.models.StakingAddress
-import co.topl.crypto.generation.EntropyToSeed
-import co.topl.crypto.generation.mnemonic.Entropy
-import co.topl.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
 import com.google.protobuf.ByteString
 import fs2.io.file.Path
 import quivr.models.Int128
 import xyz.stratalab.blockchain.{StakerInitializers, StakingInit}
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.config.ApplicationConfig
+import xyz.stratalab.consensus.models.StakingAddress
+import xyz.stratalab.crypto.generation.EntropyToSeed
+import xyz.stratalab.crypto.generation.mnemonic.Entropy
+import xyz.stratalab.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
+import xyz.stratalab.sdk.models.transaction.Schedule
+import xyz.stratalab.sdk.models.{Datum, Event}
 import xyz.stratalab.typeclasses.implicits._
 
 object RegistrationCommand {
@@ -27,7 +27,7 @@ object RegistrationCommand {
 
 class RegistrationCommandImpl[F[_]: Async](appConfig: ApplicationConfig)(implicit c: Console[F]) {
 
-  private val stakingDirectory = Path(appConfig.bifrost.staking.directory)
+  private val stakingDirectory = Path(appConfig.node.staking.directory)
 
   /**
    * Initial instruction message
@@ -73,7 +73,7 @@ class RegistrationCommandImpl[F[_]: Async](appConfig: ApplicationConfig)(implici
     (writeMessage[F]("Please enter your LockAddress.") >>
     readInput[F].semiflatMap(lockAddressStr =>
       EitherT
-        .fromEither[F](co.topl.brambl.codecs.AddressCodecs.decodeAddress(lockAddressStr))
+        .fromEither[F](xyz.stratalab.sdk.codecs.AddressCodecs.decodeAddress(lockAddressStr))
         .leftSemiflatTap(error => c.println(s"Invalid Lock Address. reason=$error input=$lockAddressStr"))
         .toOption
         .value
@@ -133,7 +133,7 @@ class RegistrationCommandImpl[F[_]: Async](appConfig: ApplicationConfig)(implici
       .map(seed =>
         new KesProduct().createKeyPair(
           seed = seed,
-          height = (appConfig.bifrost.protocols(0).kesKeyHours, appConfig.bifrost.protocols(0).kesKeyMinutes),
+          height = (appConfig.node.protocols(0).kesKeyHours, appConfig.node.protocols(0).kesKeyMinutes),
           0
         )
       )
@@ -156,7 +156,7 @@ class RegistrationCommandImpl[F[_]: Async](appConfig: ApplicationConfig)(implici
 
   private def finalInstructions(isExistingNetwork: Boolean, stakingAddress: StakingAddress) = {
     val configYaml =
-      show"bifrost:\n" +
+      show"node:\n" +
       show"  staking:\n" +
       show"    staking-address: $stakingAddress\n"
     writeMessage[F](

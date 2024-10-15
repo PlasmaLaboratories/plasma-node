@@ -5,13 +5,13 @@ import cats.data.OptionT
 import cats.effect.Async
 import cats.effect.std.{Console, Env}
 import cats.implicits._
-import co.topl.brambl.models.LockAddress
-import co.topl.consensus.models.{BlockId, StakingAddress}
 import fs2.io.file.{Files, Path}
 import io.circe._
 import io.circe.syntax._
 import xyz.stratalab.config.ApplicationConfig
+import xyz.stratalab.consensus.models.{BlockId, StakingAddress}
 import xyz.stratalab.node.AbstractNodeApp
+import xyz.stratalab.sdk.models.LockAddress
 import xyz.stratalab.typeclasses.implicits._
 
 import java.nio.charset.StandardCharsets
@@ -33,7 +33,7 @@ class ConfigureCommandImpl[F[_]: Async: Console](appConfig: ApplicationConfig) {
 
   private val promptDataDir =
     writeMessage[F](
-      s"Where should blockchain data be saved? (current=${appConfig.bifrost.data.directory})"
+      s"Where should blockchain data be saved? (current=${appConfig.node.data.directory})"
     ) >>
     readInput[F].map(_.some.filterNot(_.isEmpty))
 
@@ -44,7 +44,7 @@ class ConfigureCommandImpl[F[_]: Async: Console](appConfig: ApplicationConfig) {
     readYesNo("Enable staking operations?", No.some)(
       ifYes = for {
         _ <- writeMessage[F](
-          s"Where should staking data be saved? (current=${appConfig.bifrost.staking.directory})"
+          s"Where should staking data be saved? (current=${appConfig.node.staking.directory})"
         )
         stakingDir <- readInput[F].map(_.some.filterNot(_.isEmpty))
         rewardAddress <- readOptionalParameter[F, LockAddress](
@@ -78,7 +78,7 @@ class ConfigureCommandImpl[F[_]: Async: Console](appConfig: ApplicationConfig) {
     )
 
   /**
-   * Returns Tuple (rpc bind host, rpc bind port, enable genus)
+   * Returns Tuple (rpc bind host, rpc bind port, enable indexer)
    */
   private val promptRpc =
     for {
@@ -90,11 +90,11 @@ class ConfigureCommandImpl[F[_]: Async: Console](appConfig: ApplicationConfig) {
         "RPC Bind Port",
         List("9084", "8080")
       )
-      enableGenus <- readOptionalParameter[F, Boolean](
-        "Enable Genus",
+      enableIndexer <- readOptionalParameter[F, Boolean](
+        "Enable Indexer",
         List("true", "false")
       )
-    } yield (rpcHost, rpcPort, enableGenus)
+    } yield (rpcHost, rpcPort, enableIndexer)
 
   /**
    * Returns Tuple (p2p expose server port, p2p bind host, p2p bind port, p2p known peers)
@@ -133,7 +133,7 @@ class ConfigureCommandImpl[F[_]: Async: Console](appConfig: ApplicationConfig) {
       dataDir                                                         <- promptDataDir
       (stakingDir, stakingRewardAddress, stakingAddress)              <- promptStakingSettings
       (genesisBlockId, genesisSourcePath)                             <- promptGenesis
-      (rpcHost, rpcPort, enableGenus)                                 <- promptRpc
+      (rpcHost, rpcPort, enableIndexer)                               <- promptRpc
       (p2pHost, p2pPort, p2pPublicHost, p2pPublicPort, p2pKnownPeers) <- promptP2P
     } yield ConfigureCommandInput(
       dataDir,
@@ -144,7 +144,7 @@ class ConfigureCommandImpl[F[_]: Async: Console](appConfig: ApplicationConfig) {
       genesisSourcePath,
       rpcHost,
       rpcPort,
-      enableGenus,
+      enableIndexer,
       p2pHost,
       p2pPort,
       p2pPublicHost,
@@ -226,7 +226,7 @@ private[cli] case class ConfigureCommandInput(
   genesisSourcePath:    Option[String],
   rpcHost:              Option[String],
   rpcPort:              Option[Int],
-  enableGenus:          Option[Boolean],
+  enableIndexer:        Option[Boolean],
   p2pBindHost:          Option[String],
   p2pBindPort:          Option[Int],
   p2pPublicHost:        Option[String],
@@ -237,7 +237,7 @@ private[cli] case class ConfigureCommandInput(
   def toJson: Option[Json] =
     Json
       .obj(
-        "bifrost" -> Json
+        "node" -> Json
           .obj(
             "data" -> Json
               .obj(
@@ -246,11 +246,13 @@ private[cli] case class ConfigureCommandInput(
               .dropNullValues,
             "staking" -> Json
               .obj(
-                "directory"      -> stakingDir.asJson,
-                "reward-address" -> stakingRewardAddress.map(co.topl.brambl.codecs.AddressCodecs.encodeAddress).asJson,
+                "directory" -> stakingDir.asJson,
+                "reward-address" -> stakingRewardAddress
+                  .map(xyz.stratalab.sdk.codecs.AddressCodecs.encodeAddress)
+                  .asJson,
                 "staking-address" -> stakingAddress
                   .map(_.value.toByteArray)
-                  .map(co.topl.brambl.utils.Encoding.encodeToBase58)
+                  .map(xyz.stratalab.sdk.utils.Encoding.encodeToBase58)
                   .asJson
               )
               .dropNullValues,
@@ -278,9 +280,9 @@ private[cli] case class ConfigureCommandInput(
               .dropNullValues
           )
           .dropEmptyValues,
-        "genus" -> Json
+        "indexer" -> Json
           .obj(
-            "enable" -> enableGenus.asJson
+            "enable" -> enableIndexer.asJson
           )
           .dropNullValues
       )

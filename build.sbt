@@ -69,12 +69,12 @@ lazy val nodeDockerSettings =
   dockerSettings ++ Seq(
     dockerExposedPorts := Seq(9084, 9085),
     Docker / packageName := "strata-node",
-    dockerExposedVolumes += "/bifrost",
-    dockerExposedVolumes += "/bifrost-staking",
+    dockerExposedVolumes += "/node",
+    dockerExposedVolumes += "/node-staking",
     dockerEnvVars ++= Map(
-      "BIFROST_APPLICATION_DATA_DIR"    -> "/bifrost/data/{genesisBlockId}",
-      "BIFROST_APPLICATION_STAKING_DIR" -> "/bifrost-staking/{genesisBlockId}",
-      "BIFROST_CONFIG_FILE"             -> "/bifrost/config/user.yaml"
+      "NODE_APPLICATION_DATA_DIR"    -> "/node/data/{genesisBlockId}",
+      "NODE_APPLICATION_STAKING_DIR" -> "/node-staking/{genesisBlockId}",
+      "NODE_CONFIG_FILE"             -> "/node/config/user.yaml"
     ),
     dockerAliases ++= (
       if (sys.env.get("DOCKER_PUBLISH_DEV_TAG").fold(false)(_.toBoolean))
@@ -86,7 +86,7 @@ lazy val nodeDockerSettings =
       )
   )
 
-lazy val genusDockerSettings =
+lazy val indexerDockerSettings =
   dockerSettings ++ Seq(
     dockerExposedPorts := Seq(9084),
     Docker / packageName := "strata-indexer",
@@ -114,7 +114,7 @@ lazy val testnetSimulationOrchestratorDockerSettings =
 def assemblySettings(main: String) = Seq(
   assembly / mainClass := Some(main),
   assembly / test := {},
-  assemblyJarName := s"bifrost-node-${version.value}.jar",
+  assemblyJarName := s"strata-node-${version.value}.jar",
   assembly / assemblyMergeStrategy ~= { old: (String => MergeStrategy) =>
     {
       case ps if ps.endsWith(".SF")  => MergeStrategy.discard
@@ -177,10 +177,10 @@ def versionFmt(out: sbtdynver.GitDescribeOutput): String = {
 
 def fallbackVersion(d: java.util.Date): String = s"HEAD-${sbtdynver.DynVer timestamp d}"
 
-lazy val bifrost = project
+lazy val strataNode = project
   .in(file("."))
   .settings(
-    moduleName := "bifrost",
+    moduleName := "strataNode",
     commonSettings,
     publish / skip := true,
     crossScalaVersions := Nil
@@ -189,7 +189,7 @@ lazy val bifrost = project
     node,
     typeclasses,
     config,
-    toplGrpc,
+    grpc,
     nodeCrypto,
     catsUtils,
     models,
@@ -209,7 +209,7 @@ lazy val bifrost = project
     levelDbStore,
     commonApplication,
     networkDelayer,
-    genus,
+    indexer,
     transactionGenerator,
     testnetSimulationOrchestrator
   )
@@ -217,10 +217,10 @@ lazy val bifrost = project
 lazy val node = project
   .in(file("node"))
   .settings(
-    name := "bifrost-node",
+    name := "strata-node",
     commonSettings,
     assemblySettings("xyz.stratalab.node.NodeApp"),
-    assemblyJarName := s"bifrost-node-${version.value}.jar",
+    assemblyJarName := s"strata-node-${version.value}.jar",
     nodeDockerSettings,
     crossScalaVersions := Seq(scala213),
     Compile / mainClass := Some("xyz.stratalab.node.NodeApp"),
@@ -241,12 +241,12 @@ lazy val node = project
     commonInterpreters,
     networking,
     catsUtils,
-    toplGrpc,
+    grpc,
     blockchainCore,
     blockchain,
     levelDbStore,
     commonApplication,
-    genus
+    indexer
   )
   .enablePlugins(BuildInfoPlugin, JavaAppPackaging, DockerPlugin)
   .settings(scalamacrosParadiseSettings)
@@ -557,7 +557,7 @@ lazy val transactionGenerator = project
     tetraByteCodecs,
     munitScalamock,
     algebras,
-    toplGrpc,
+    grpc,
     commonApplication,
     commonInterpreters,
     numerics
@@ -636,16 +636,16 @@ lazy val blockchain = project
     commonInterpreters,
     networking % "compile->compile;test->test",
     catsUtils,
-    toplGrpc,
+    grpc,
     blockchainCore
   )
 
-lazy val toplGrpc = project
-  .in(file("topl-grpc"))
+lazy val grpc = project
+  .in(file("grpc"))
   .settings(
-    name := "topl-grpc",
+    name := "grpc",
     commonSettings,
-    libraryDependencies ++= Dependencies.toplGrpc
+    libraryDependencies ++= Dependencies.grpc
   )
   .dependsOn(
     models % "compile->compile;test->test",
@@ -694,24 +694,24 @@ lazy val catsUtils = project
   )
   .settings(scalamacrosParadiseSettings)
 
-lazy val genus = project
-  .in(file("genus"))
+lazy val indexer = project
+  .in(file("indexer"))
   .settings(
-    name := "genus",
+    name := "indexer",
     commonSettings,
     scalamacrosParadiseSettings,
     publish / skip := true,
     crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.genus",
-    libraryDependencies ++= Dependencies.genus
+    buildInfoPackage := "xyz.stratalab.buildinfo.indexer",
+    libraryDependencies ++= Dependencies.indexer
   )
-  .settings(genusDockerSettings)
+  .settings(indexerDockerSettings)
   .dependsOn(
     typeclasses,
     models % "compile->compile;test->test",
     tetraByteCodecs,
-    toplGrpc,
+    grpc,
     commonInterpreters,
     commonApplication,
     munitScalamock % "test->test",

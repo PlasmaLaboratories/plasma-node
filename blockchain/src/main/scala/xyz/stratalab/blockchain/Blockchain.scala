@@ -5,9 +5,6 @@ import cats.effect._
 import cats.effect.implicits._
 import cats.effect.std.{Queue, Random}
 import cats.implicits._
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax.ioTransactionAsTransactionSyntaxOps
-import co.topl.node.models.{Block, BlockBody, FullBlock, KnownHost}
 import com.comcast.ip4s.Dns
 import fs2.concurrent.Topic
 import fs2.{io => _, _}
@@ -18,7 +15,7 @@ import xyz.stratalab.algebras._
 import xyz.stratalab.blockchain.interpreters.{NetworkControlRpcServer, RegtestRpcServer}
 import xyz.stratalab.catsutils._
 import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.config.ApplicationConfig.Bifrost.{KnownPeer, NetworkProperties}
+import xyz.stratalab.config.ApplicationConfig.Node.{KnownPeer, NetworkProperties}
 import xyz.stratalab.consensus._
 import xyz.stratalab.grpc._
 import xyz.stratalab.ledger.implicits._
@@ -33,6 +30,9 @@ import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
 import xyz.stratalab.networking.fsnetwork.ReverseDnsResolverInstances.{DefaultReverseDnsResolver, NoOpReverseResolver}
 import xyz.stratalab.networking.fsnetwork._
 import xyz.stratalab.networking.p2p._
+import xyz.stratalab.node.models.{Block, BlockBody, FullBlock, KnownHost}
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
 import xyz.stratalab.typeclasses.implicits._
 
 import scala.jdk.CollectionConverters._
@@ -89,7 +89,7 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
   networkProperties:        NetworkProperties,
   regtestEnabled:           Boolean
 ) {
-  implicit private val logger: SelfAwareStructuredLogger[F] = Slf4jLogger.getLoggerFromName[F]("Bifrost.Blockchain")
+  implicit private val logger: SelfAwareStructuredLogger[F] = Slf4jLogger.getLoggerFromName[F]("Node.Blockchain")
 
   private val thisHostId = HostId(localPeer.p2pVK)
 
@@ -166,14 +166,14 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
   ): Resource[F, Unit] =
     for {
       _               <- Resource.make(Logger[F].info("Initializing RPC"))(_ => Logger[F].info("RPC Terminated"))
-      rpcInterpreter  <- ToplRpcServer.make(localBlockchain).toResource
+      rpcInterpreter  <- RpcServer.make(localBlockchain).toResource
       nodeGrpcService <- NodeGrpc.Server.service[F](rpcInterpreter)
       regtestServices <- regtestPermitQueue.toList.traverse(queue =>
         RegtestRpcServer.service[F](Async[F].defer(queue.offer(())))
       )
       _ <- networkCommandsOpt.fold(().pure[F])(_ => Logger[F].error("Network could be controlled via RPC")).toResource
       networkControl <- NetworkControlRpcServer.service(thisHostId, networkCommandsOpt)
-      rpcServer <- ToplGrpc.Server
+      rpcServer <- Grpc.Server
         .serve(rpcHost, rpcPort)(networkControl :: nodeGrpcService :: regtestServices ++ additionalGrpcServices)
       _ <- Logger[F].info(s"RPC Server bound at ${rpcServer.getListenSockets.asScala.toList.mkString(",")}").toResource
     } yield ()

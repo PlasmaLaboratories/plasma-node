@@ -5,24 +5,24 @@ import cats.effect.kernel.Sync
 import cats.effect.{Async, Resource}
 import cats.implicits._
 import cats.{Applicative, MonadThrow}
-import co.topl.brambl.common.ContainsImmutable
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
-import co.topl.consensus.models.{BlockHeader, BlockId}
-import co.topl.node.models.BlockBody
-import co.topl.proto.node.EpochData
 import xyz.stratalab.algebras.ClockAlgebra.implicits._
 import xyz.stratalab.algebras.{ClockAlgebra, Stats, Store}
 import xyz.stratalab.blockchain.algebras.EpochDataAlgebra
 import xyz.stratalab.codecs.bytes.tetra.TetraScodecCodecs
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import xyz.stratalab.consensus.interpreters.{ConsensusDataEventSourcedState, EpochBoundariesEventSourcedState}
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
 import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
 import xyz.stratalab.ledger.algebras.TransactionRewardCalculatorAlgebra
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility._
+import xyz.stratalab.node.models.BlockBody
 import xyz.stratalab.numerics.implicits._
+import xyz.stratalab.proto.node.EpochData
+import xyz.stratalab.sdk.common.ContainsImmutable
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 /**
@@ -176,16 +176,16 @@ object EpochDataEventSourcedState {
         newEpochData <- applyTransactions(newEpochDataBase)(header)
         _            <- state.put(epoch, newEpochData)
         _ <- Stats[F].recordGauge(
-          "bifrost_epoch_timestamp",
+          "strata_node_epoch_timestamp",
           "Timestamp of the epoch.",
           Map("epoch" -> epoch.toString),
           newEpochData.startTimestamp
         )
-        _ <- Stats[F].recordGauge("bifrost_epoch", "Current value of the Epoch.", Map(), newEpochData.epoch)
-        _ <- Stats[F].recordGauge("bifrost_epoch_eon", "Current value of the Eon.", Map(), newEpochData.eon)
-        _ <- Stats[F].recordGauge("bifrost_epoch_era", "Current value of the Era.", Map(), newEpochData.era)
+        _ <- Stats[F].recordGauge("strata_node_epoch", "Current value of the Epoch.", Map(), newEpochData.epoch)
+        _ <- Stats[F].recordGauge("strata_node_epoch_eon", "Current value of the Eon.", Map(), newEpochData.eon)
+        _ <- Stats[F].recordGauge("strata_node_epoch_era", "Current value of the Era.", Map(), newEpochData.era)
         _ <- Stats[F].recordGauge(
-          "bifrost_epoch_transaction_count",
+          "strata_node_epoch_transaction_count",
           "Current value of the Era.",
           Map("epoch" -> epoch.toString),
           newEpochData.transactionCount

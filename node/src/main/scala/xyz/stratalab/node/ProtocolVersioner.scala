@@ -2,8 +2,8 @@ package xyz.stratalab.node
 
 import cats.syntax.all._
 import cats.{Eq, Order}
-import co.topl.consensus.models.ProtocolVersion
-import xyz.stratalab.config.ApplicationConfig.Bifrost
+import xyz.stratalab.config.ApplicationConfig.Node
+import xyz.stratalab.consensus.models.ProtocolVersion
 import xyz.stratalab.models.Slot
 
 import scala.collection.SortedSet
@@ -34,7 +34,7 @@ case class ProtocolVersioner(appVersion: Version, protocolVersions: SortedSet[Pr
 
 object ProtocolVersioner {
 
-  def apply(protocols: Map[Slot, Bifrost.Protocol]): ProtocolVersioner = {
+  def apply(protocols: Map[Slot, Node.Protocol]): ProtocolVersioner = {
     implicit val protocolSettingsOrder: Ordering[ProtocolSettings] = ProtocolSettings.orderProtocolSettings.toOrdering
     val setProtocols = protocols.flatMap { case (slot, protocol) =>
       Version
@@ -84,7 +84,7 @@ object Version {
  * @param startBlock  starting block height for the protocol settings
  * @param settings config settings
  */
-case class ProtocolSettings(minAppVersion: Version, startBlock: Long, settings: Bifrost.Protocol)
+case class ProtocolSettings(minAppVersion: Version, startBlock: Long, settings: Node.Protocol)
 
 object ProtocolSettings {
 

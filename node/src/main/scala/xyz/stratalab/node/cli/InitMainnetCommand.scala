@@ -3,12 +3,6 @@ package xyz.stratalab.node.cli
 import cats.effect.Async
 import cats.effect.std.Console
 import cats.implicits._
-import co.topl.brambl.constants.NetworkConstants
-import co.topl.brambl.models.box.Value
-import co.topl.brambl.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
-import co.topl.brambl.models.{Datum, Event, LockAddress, LockId}
-import co.topl.brambl.syntax._
-import co.topl.node.models.FullBlock
 import com.google.protobuf.ByteString
 import fs2.io.file.{Files, Path}
 import quivr.models.SmallData
@@ -16,6 +10,12 @@ import xyz.stratalab.blockchain.BigBang
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.config.ApplicationConfig
 import xyz.stratalab.node.ProtocolVersioner
+import xyz.stratalab.node.models.FullBlock
+import xyz.stratalab.sdk.constants.NetworkConstants
+import xyz.stratalab.sdk.models.box.Value
+import xyz.stratalab.sdk.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
+import xyz.stratalab.sdk.models.{Datum, Event, LockAddress, LockId}
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 object InitMainnetCommand {
@@ -125,7 +125,7 @@ class InitMainnetCommandImpl[F[_]: Async: Console](appConfig: ApplicationConfig)
       genesisConfig = BigBang.Config(
         timestamp,
         registrationTransactions :+ tokenTransaction,
-        protocolVersion = ProtocolVersioner(appConfig.bifrost.protocols).appVersion.asProtocolVersion
+        protocolVersion = ProtocolVersioner(appConfig.node.protocols).appVersion.asProtocolVersion
       )
       genesisBlock = BigBang.fromConfig(genesisConfig)
       outputDirectory <- readOutputDirectory(genesisBlock)

@@ -2,13 +2,13 @@ package xyz.stratalab.consensus.interpreters
 
 import cats.effect.IO
 import cats.implicits._
-import co.topl.consensus.models._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.algebras.ClockAlgebra
 import xyz.stratalab.algebras.testInterpreters.TestStore
 import xyz.stratalab.consensus.interpreters.EpochBoundariesEventSourcedState.EpochBoundaries
+import xyz.stratalab.consensus.models._
 import xyz.stratalab.eventtree.EventSourcedState
 import xyz.stratalab.models._
 import xyz.stratalab.models.generators.consensus.ModelGenerators._

@@ -1,15 +1,15 @@
 package xyz.stratalab.codecs.bytes.tetra
 
-import co.topl.consensus.models._
-import co.topl.crypto.{models => nodeCryptoModels}
-import co.topl.node.models.KnownHost
 import scodec.Codec
 import scodec.codecs._
 import shapeless.{::, HList, HNil}
 import xyz.stratalab.codecs.bytes.scodecs._
 import xyz.stratalab.codecs.bytes.scodecs.valuetypes.byteStringCodec
+import xyz.stratalab.consensus.models._
+import xyz.stratalab.crypto.{models => nodeCryptoModels}
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility._
+import xyz.stratalab.node.models.KnownHost
 
 /**
  * Use this object or the package object to access all of the codecs from outside of this package.

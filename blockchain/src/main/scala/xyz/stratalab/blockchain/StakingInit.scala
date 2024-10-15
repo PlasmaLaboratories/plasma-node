@@ -5,11 +5,6 @@ import cats.data.OptionT
 import cats.effect._
 import cats.effect.implicits._
 import cats.implicits._
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.models.{LockAddress, TransactionId}
-import co.topl.brambl.syntax._
-import co.topl.consensus.models._
-import co.topl.node.models.BlockBody
 import com.google.protobuf.ByteString
 import fs2.Chunk
 import fs2.io.file.{Files, Path}
@@ -21,10 +16,14 @@ import xyz.stratalab.blockchain.algebras.NodeMetadataAlgebra
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.config.ApplicationConfig
 import xyz.stratalab.consensus.algebras._
-import xyz.stratalab.consensus.models.VrfConfig
+import xyz.stratalab.consensus.models.{VrfConfig, _}
 import xyz.stratalab.interpreters.CatsSecureStore
 import xyz.stratalab.minting.algebras.StakingAlgebra
 import xyz.stratalab.minting.interpreters._
+import xyz.stratalab.node.models.BlockBody
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.models.{LockAddress, TransactionId}
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 object StakingInit {
@@ -35,7 +34,7 @@ object StakingInit {
   final val RegistrationTxName = "registration.transaction.pbuf"
 
   implicit private def logger[F[_]: Sync]: Logger[F] =
-    Slf4jLogger.getLoggerFromName[F]("Bifrost.StakingInit")
+    Slf4jLogger.getLoggerFromName[F]("Node.StakingInit")
 
   /**
    * Inspects the given stakingDir for the expected keys/files.  If the expected files exist, `true` is returned.
@@ -70,7 +69,7 @@ object StakingInit {
     consensusValidationState: ConsensusValidationStateAlgebra[F],
     leaderElectionThreshold:  LeaderElectionValidationAlgebra[F],
     cryptoResources:          CryptoResources[F],
-    protocol:                 ApplicationConfig.Bifrost.Protocol,
+    protocol:                 ApplicationConfig.Node.Protocol,
     vrfConfig:                VrfConfig,
     protocolVersion:          ProtocolVersion,
     metadata:                 NodeMetadataAlgebra[F],
@@ -170,7 +169,7 @@ object StakingInit {
     consensusValidationState: ConsensusValidationStateAlgebra[F],
     leaderElectionThreshold:  LeaderElectionValidationAlgebra[F],
     cryptoResources:          CryptoResources[F],
-    protocol:                 ApplicationConfig.Bifrost.Protocol,
+    protocol:                 ApplicationConfig.Node.Protocol,
     vrfConfig:                VrfConfig,
     protocolVersion:          ProtocolVersion,
     metadata:                 NodeMetadataAlgebra[F],

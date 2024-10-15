@@ -10,8 +10,8 @@
         <appender-ref ref="STDOUT" />
     </appender>
 
-    <logger name="xyz.stratalab" level="${BIFROST_LOG_LEVEL}" />
-    <logger name="Bifrost" level="${BIFROST_LOG_LEVEL}" />
+    <logger name="xyz.stratalab" level="${NODE_LOG_LEVEL}" />
+    <logger name="Node" level="${NODE_LOG_LEVEL}" />
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />

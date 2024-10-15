@@ -1,7 +1,7 @@
-package co.topl.crypto.signing
+package xyz.stratalab.crypto.signing
 
-import co.topl.crypto.models._
-import co.topl.crypto.signing.kes.SumComposition
+import xyz.stratalab.crypto.models._
+import xyz.stratalab.crypto.signing.kes.SumComposition
 
 /**
  * Credit to Aaron Schutza

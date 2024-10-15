@@ -6,20 +6,20 @@ import cats.effect.implicits._
 import cats.effect.kernel.Async
 import cats.effect.std.Semaphore
 import cats.implicits._
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.models.{TransactionId, TransactionOutputAddress}
-import co.topl.brambl.syntax.ioTransactionAsTransactionSyntaxOps
-import co.topl.brambl.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
-import co.topl.consensus.models.{BlockHeader, BlockId}
 import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.algebras.Stats
 import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.config.ApplicationConfig.Bifrost.MempoolProtection
+import xyz.stratalab.config.ApplicationConfig.Node.MempoolProtection
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
 import xyz.stratalab.ledger.algebras._
 import xyz.stratalab.ledger.implicits._
 import xyz.stratalab.ledger.interpreters.QuivrContext
 import xyz.stratalab.ledger.models._
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.models.{TransactionId, TransactionOutputAddress}
+import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
+import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
 import xyz.stratalab.typeclasses.implicits._
 
 object MempoolProtected {
@@ -174,7 +174,7 @@ object MempoolProtected {
         for {
           _ <- EitherT.liftF(
             Stats[F].recordGauge(
-              "bifrost_mempool_mean_fee_per_kb",
+              "strata_node_mempool_mean_fee_per_kb",
               "Average fee per kb in Topls.",
               Map(),
               meanFeePerKByte.toLong
@@ -182,7 +182,7 @@ object MempoolProtected {
           )
           _ <- EitherT.liftF(
             Stats[F].recordGauge(
-              "bifrost_mempool_free_size",
+              "strata_node_mempool_free_size",
               "Current free size of the mempool.",
               Map(),
               freeMempoolSize.toLong
@@ -190,7 +190,7 @@ object MempoolProtected {
           )
           _ <- EitherT.liftF(
             Stats[F].recordGauge(
-              "bifrost_mempool_free_size_percent",
+              "strata_node_mempool_free_size_percent",
               "Current free size ratio of the mempool.",
               Map(),
               freeMempoolSizePercent.toLong
@@ -198,7 +198,7 @@ object MempoolProtected {
           )
           _ <- EitherT.liftF(
             Stats[F].recordGauge(
-              "bifrost_mempool_minimum_fee_per_kilobyte",
+              "strata_node_mempool_minimum_fee_per_kilobyte",
               "Minimum fee per kb.",
               Map(),
               minimumFeePerKByte.toLong

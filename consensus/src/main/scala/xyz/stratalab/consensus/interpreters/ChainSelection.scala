@@ -4,13 +4,13 @@ import cats._
 import cats.data._
 import cats.effect._
 import cats.implicits._
-import co.topl.consensus.models.{BlockId, SlotData}
-import co.topl.crypto.hash.Blake2b512
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.Stats
 import xyz.stratalab.consensus.algebras.ChainSelectionAlgebra
+import xyz.stratalab.consensus.models.{BlockId, SlotData}
 import xyz.stratalab.consensus.rhoToRhoTestHash
+import xyz.stratalab.crypto.hash.Blake2b512
 import xyz.stratalab.models._
 import xyz.stratalab.models.utility._
 import xyz.stratalab.typeclasses.implicits._
@@ -64,7 +64,7 @@ object ChainSelection {
   ) extends ChainSelectionAlgebra[F, BlockId, SlotData] {
 
     implicit private val logger: Logger[F] =
-      Slf4jLogger.getLoggerFromName("Bifrost.ChainSelection")
+      Slf4jLogger.getLoggerFromName("Node.ChainSelection")
 
     override def enoughHeightToCompare(currentHeight: Long, commonHeight: Long, proposedHeight: Long): F[Long] = {
       val densitySelection = (currentHeight - commonHeight) > kLookback
@@ -103,12 +103,12 @@ object ChainSelection {
             show" tineX=[${xSegment.tineLength}](${xSegment.head.slotId}..${xSegment.last.slotId})" +
             show" tineY=[${ySegment.tineLength}](${ySegment.head.slotId}..${ySegment.last.slotId})"
           ) >> Stats[F].recordHistogram(
-            "bifrost_chain_selection_longest_tinex",
+            "strata_node_chain_selection_longest_tinex",
             "Histogram to track standard chain selection and the tines as attributes.",
             Map("tine_y_length" -> ySegment.tineLength),
             xSegment.tineLength
           ) >> Stats[F].recordHistogram(
-            "bifrost_chain_selection_longest_tiney",
+            "strata_node_chain_selection_longest_tiney",
             "Histogram to track standard chain selection and the tines as attributes.",
             Map("tine_x_length" -> xSegment.tineLength),
             ySegment.tineLength
@@ -119,7 +119,7 @@ object ChainSelection {
             show" tineX=[${xSegment.tineLength}](${xSegment.head.slotId}..${xSegment.last.slotId})" +
             show" tineY=[${ySegment.tineLength}](${ySegment.head.slotId}..${ySegment.last.slotId})"
           ) >> Stats[F].incrementCounter(
-            "bifrost_chain_selection_density",
+            "strata_node_chain_selection_density",
             "Counter to track density chain selection events and the tines as attributes.",
             Map("tine_x_length" -> xSegment.tineLength, "tine_y_length" -> ySegment.tineLength)
           )

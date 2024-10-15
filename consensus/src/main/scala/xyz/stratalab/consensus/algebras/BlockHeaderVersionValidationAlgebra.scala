@@ -1,7 +1,6 @@
 package xyz.stratalab.consensus.algebras
 
-import co.topl.consensus.models.BlockHeader
-import xyz.stratalab.consensus.models.BlockHeaderValidationFailure
+import xyz.stratalab.consensus.models.{BlockHeader, BlockHeaderValidationFailure}
 
 trait BlockHeaderVersionValidationAlgebra[F[_]] {
 

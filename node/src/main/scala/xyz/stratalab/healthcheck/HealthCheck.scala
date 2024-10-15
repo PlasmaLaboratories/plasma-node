@@ -27,8 +27,8 @@ object HealthCheck {
       Ref.of[F, Map[String, ServingStatus]](
         Map(
           ""        -> ServingStatus.SERVING,
-          "Bifrost" -> ServingStatus.SERVING,
-          "Genus"   -> ServingStatus.SERVING
+          "Node"    -> ServingStatus.SERVING,
+          "Indexer" -> ServingStatus.SERVING
         )
       )
 

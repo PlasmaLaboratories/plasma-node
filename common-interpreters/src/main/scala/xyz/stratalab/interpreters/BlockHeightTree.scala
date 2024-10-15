@@ -2,8 +2,8 @@ package xyz.stratalab.interpreters
 
 import cats.effect.kernel.Async
 import cats.implicits._
-import co.topl.consensus.models.{BlockId, SlotData}
 import xyz.stratalab.algebras.{Store, StoreReader}
+import xyz.stratalab.consensus.models.{BlockId, SlotData}
 import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
 import xyz.stratalab.typeclasses.implicits._
 

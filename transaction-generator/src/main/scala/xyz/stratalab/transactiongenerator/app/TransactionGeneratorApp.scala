@@ -4,12 +4,6 @@ import cats.Show
 import cats.effect._
 import cats.effect.std.{Random, SecureRandom}
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
-import co.topl.brambl.validation.algebras.TransactionCostCalculator
-import co.topl.brambl.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
-import co.topl.genus.services.TransactionServiceFs2Grpc
 import com.typesafe.config.Config
 import fs2._
 import org.typelevel.log4cats.Logger
@@ -17,6 +11,12 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.NodeRpc
 import xyz.stratalab.common.application._
 import xyz.stratalab.grpc.NodeGrpc
+import xyz.stratalab.indexer.services.TransactionServiceFs2Grpc
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
+import xyz.stratalab.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
 import xyz.stratalab.transactiongenerator.interpreters._
 import xyz.stratalab.typeclasses.implicits._
 
@@ -39,11 +39,11 @@ object TransactionGeneratorApp
       // Initialize gRPC Clients
       clientAddress <- parseClientAddress(appConfig)
       _             <- Logger[F].info(show"Initializing client=$clientAddress")
-      genusClientResource = xyz.stratalab.grpc
+      indexerClientResource = xyz.stratalab.grpc
         .makeChannel[F](clientAddress._1, clientAddress._2, clientAddress._3)
         .flatMap(TransactionServiceFs2Grpc.stubResource[F])
       _      <- Logger[F].info(show"Initializing wallet")
-      wallet <- genusClientResource.flatMap(GenusWalletInitializer.make[F]).use(_.initialize)
+      wallet <- indexerClientResource.flatMap(IndexerWalletInitializer.make[F]).use(_.initialize)
       _      <- Logger[F].info(show"Initialized wallet with spendableBoxes=${wallet.spendableBoxes}")
       // Produce a stream of Transactions from the base wallet
       targetTps = appConfig.transactionGenerator.broadcaster.tps

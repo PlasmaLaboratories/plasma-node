@@ -5,7 +5,7 @@ import cats.effect._
 import cats.implicits._
 import cats.effect.implicits._
 import xyz.stratalab.buildinfo.node.BuildInfo
-import co.topl.consensus.models.StakingAddress
+import xyz.stratalab.consensus.models.StakingAddress
 import xyz.stratalab.typeclasses.implicits._
 import com.spotify.docker.client.messages.ContainerConfig
 import com.spotify.docker.client.messages.HostConfig
@@ -25,7 +25,7 @@ trait DockerSupport[F[_]] {
     name:          String,
     nodeGroupName: String,
     config:        TestNodeConfig
-  ): Resource[F, BifrostDockerNode]
+  ): Resource[F, DockerNode]
 }
 
 object DockerSupport {
@@ -47,7 +47,7 @@ object DockerSupport {
       implicit0(dockerClient: DockerClient) <- Resource.make(Sync[F].blocking(DefaultDockerClient.fromEnv().build()))(
         c => Sync[F].blocking(c.close())
       )
-      nodeCache <- Resource.make[F, Ref[F, Set[BifrostDockerNode]]](Ref.of(Set.empty[BifrostDockerNode]))(
+      nodeCache <- Resource.make[F, Ref[F, Set[DockerNode]]](Ref.of(Set.empty[DockerNode]))(
         _.get.flatMap(
           _.toList
             .traverse(node =>
@@ -72,12 +72,12 @@ object DockerSupport {
   private class Impl[F[_]: Async](
     containerLogsDirectory: Option[Path],
     debugLoggingEnabled:    Boolean,
-    nodeCache:              Ref[F, Set[BifrostDockerNode]],
+    nodeCache:              Ref[F, Set[DockerNode]],
     networkCache:           Ref[F, Set[NetworkCreation]]
   )(implicit dockerClient: DockerClient)
       extends DockerSupport[F] {
 
-    def createNode(name: String, nodeGroupName: String, config: TestNodeConfig): Resource[F, BifrostDockerNode] =
+    def createNode(name: String, nodeGroupName: String, config: TestNodeConfig): Resource[F, DockerNode] =
       for {
         node <- Resource.make(createContainer(name, nodeGroupName, config))(node =>
           Sync[F].defer(node.stop[F]) >>
@@ -94,14 +94,14 @@ object DockerSupport {
       name:          String,
       nodeGroupName: String,
       config:        TestNodeConfig
-    ): F[BifrostDockerNode] = {
-      val networkNamePrefix: String = "bifrost-it"
+    ): F[DockerNode] = {
+      val networkNamePrefix: String = "node-it"
       for {
         networkName <- (networkNamePrefix + nodeGroupName).pure[F]
-        environment = Map("BIFROST_LOG_LEVEL" -> (if (debugLoggingEnabled) "DEBUG" else "INFO"))
+        environment = Map("NODE_LOG_LEVEL" -> (if (debugLoggingEnabled) "DEBUG" else "INFO"))
         containerConfig   <- buildContainerConfig(name, environment, config).pure[F]
         containerCreation <- Sync[F].blocking(dockerClient.createContainer(containerConfig, name))
-        node              <- BifrostDockerNode(containerCreation.id(), name, config).pure[F]
+        node              <- DockerNode(containerCreation.id(), name, config).pure[F]
         _                 <- nodeCache.update(_ + node)
         networkId <- Sync[F].blocking(dockerClient.listNetworks().asScala.find(_.name == networkName)).flatMap {
           case Some(network) => network.id().pure[F]
@@ -115,7 +115,7 @@ object DockerSupport {
       } yield node
     }
 
-    private def deleteContainer(node: BifrostDockerNode): F[Unit] =
+    private def deleteContainer(node: DockerNode): F[Unit] =
       Sync[F].blocking(
         dockerClient.removeContainer(node.containerId, DockerClient.RemoveContainerParam.forceKill)
       )
@@ -125,7 +125,7 @@ object DockerSupport {
       environment: Map[String, String],
       config:      TestNodeConfig
     ): ContainerConfig = {
-      val bifrostImage: String = s"stratalab/strata-node:${BuildInfo.version}"
+      val nodeImage: String = s"stratalab/strata-node:${BuildInfo.version}"
       val exposedPorts: Seq[String] = List(config.rpcPort, config.p2pPort, config.jmxRemotePort).map(_.toString)
       val env =
         environment.toList.map { case (key, value) => s"$key=$value" }
@@ -138,7 +138,7 @@ object DockerSupport {
           "-Dcom.sun.management.jmxremote.local.only=false",
           "-Dcom.sun.management.jmxremote.authenticate=false",
           "--logbackFile",
-          "/bifrost/config/logback.xml",
+          "/node/config/logback.xml",
           "--debug"
         )
 
@@ -149,7 +149,7 @@ object DockerSupport {
               HostConfig.Bind
                 .builder()
                 .from(sourceDir)
-                .to("/bifrost-staking")
+                .to("/node-staking")
                 .selinuxLabeling(true)
                 .build()
             )
@@ -158,7 +158,7 @@ object DockerSupport {
 
       ContainerConfig
         .builder()
-        .image(bifrostImage)
+        .image(nodeImage)
         .env(env: _*)
         .cmd(cmd: _*)
         .hostname(name)
@@ -178,7 +178,7 @@ case class TestNodeConfig(
   rpcPort:              Int = 9084,
   p2pPort:              Int = 9085,
   jmxRemotePort:        Int = 9083,
-  genusEnabled:         Boolean = false,
+  indexerEnabled:         Boolean = false,
   stakingBindSourceDir: Option[String] = None,
   serverHost:           Option[String] = None,
   serverPort:           Option[Int] = None,
@@ -190,7 +190,7 @@ case class TestNodeConfig(
       _.map(v => s"\"$v\"").mkString("stakes: [", ",", "]")
     )
     s"""
-       |bifrost:
+       |node:
        |  rpc:
        |    bind-host: 0.0.0.0
        |    port: "$rpcPort"
@@ -212,13 +212,13 @@ case class TestNodeConfig(
        |      slot-duration: 500 milli
        |      chain-selection-k-lookback: 6
        |      operational-periods-per-epoch: 2
-       |genus:
-       |  enable: "$genusEnabled"
+       |indexer:
+       |  enable: "$indexerEnabled"
        |""".stripMargin
   }
 
 }
 
 object TestNodeConfig {
-  val epochSlotLength: Long = 150 // See xyz.stratalab.node.ApplicationConfig.Bifrost.Protocol
+  val epochSlotLength: Long = 150 // See xyz.stratalab.node.ApplicationConfig.Node.Protocol
 }

@@ -2,9 +2,9 @@ package xyz.stratalab.consensus.interpreters
 
 import cats.effect.Async
 import cats.implicits._
-import co.topl.consensus.models.{BlockId, SlotData}
 import xyz.stratalab.algebras.ClockAlgebra.implicits._
 import xyz.stratalab.algebras._
+import xyz.stratalab.consensus.models.{BlockId, SlotData}
 import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
 import xyz.stratalab.models._
 import xyz.stratalab.typeclasses.implicits._

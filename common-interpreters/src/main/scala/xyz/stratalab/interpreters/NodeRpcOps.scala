@@ -4,11 +4,11 @@ import cats.data.OptionT
 import cats.effect._
 import cats.implicits._
 import cats.{Applicative, MonadThrow}
-import co.topl.consensus.models.{BlockHeader, BlockId}
-import co.topl.node.models.{FullBlock, FullBlockBody}
 import fs2.Stream
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.algebras.{NodeRpc, SynchronizationTraversalSteps}
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
+import xyz.stratalab.node.models.{FullBlock, FullBlockBody}
 
 import scala.concurrent.duration._
 import scala.language.implicitConversions

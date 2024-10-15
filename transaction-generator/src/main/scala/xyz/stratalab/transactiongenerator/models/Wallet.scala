@@ -1,7 +1,7 @@
 package xyz.stratalab.transactiongenerator.models
 
-import co.topl.brambl.models.box.{Box, Lock}
-import co.topl.brambl.models.{LockAddress, TransactionOutputAddress}
+import xyz.stratalab.sdk.models.box.{Box, Lock}
+import xyz.stratalab.sdk.models.{LockAddress, TransactionOutputAddress}
 
 case class Wallet(
   spendableBoxes: Map[TransactionOutputAddress, Box],

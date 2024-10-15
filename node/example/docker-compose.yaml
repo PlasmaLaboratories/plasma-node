@@ -14,18 +14,18 @@ services:
     volumes:
       - ./special-config.conf:/mnt/special-config.conf
     environment:
-      - BIFROST_P2P_KNOWN_PEERS=node1:9085
+      - NODE_P2P_KNOWN_PEERS=node1:9085
   node3:
     image: stratalab/strata-node
     command: --config /mnt/special-config.conf --testnetStakerIndex 2
     volumes:
       - ./special-config.conf:/mnt/special-config.conf
     environment:
-      - BIFROST_P2P_KNOWN_PEERS=node1:9085
+      - NODE_P2P_KNOWN_PEERS=node1:9085
   node4:
     image: stratalab/strata-node
     command: --config /mnt/special-config.conf --testnetStakerIndex 3
     volumes:
       - ./special-config.conf:/mnt/special-config.conf
     environment:
-      - BIFROST_P2P_KNOWN_PEERS=node1:9085,node3:9085
+      - NODE_P2P_KNOWN_PEERS=node1:9085,node3:9085

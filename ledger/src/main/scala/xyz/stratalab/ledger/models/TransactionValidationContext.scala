@@ -1,8 +1,8 @@
 package xyz.stratalab.ledger.models
 
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.consensus.models.BlockId
+import xyz.stratalab.consensus.models.BlockId
 import xyz.stratalab.models.Slot
+import xyz.stratalab.sdk.models.transaction.IoTransaction
 
 /**
  * The context to use when validating the semantics of a Transaction

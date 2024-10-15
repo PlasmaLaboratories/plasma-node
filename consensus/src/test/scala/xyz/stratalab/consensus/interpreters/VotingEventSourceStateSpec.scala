@@ -2,15 +2,6 @@ package xyz.stratalab.consensus.interpreters
 
 import cats.effect.{Async, IO}
 import cats.implicits._
-import co.topl.brambl.generators.TransactionGenerator
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.box.Value
-import co.topl.brambl.models.box.Value.UpdateProposal
-import co.topl.brambl.models.transaction._
-import co.topl.consensus.models.{BlockHeader, BlockId, _}
-import co.topl.crypto.signing.Ed25519VRF
-import co.topl.node.models.BlockBody
-import co.topl.proto.node.EpochData
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
@@ -23,13 +14,22 @@ import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.consensus._
 import xyz.stratalab.consensus.algebras.VersionInfoAlgebra
 import xyz.stratalab.consensus.interpreters.VotingEventSourceState
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId, _}
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
 import xyz.stratalab.ledger.interpreters.ProposalEventSourceState
 import xyz.stratalab.ledger.interpreters.ProposalEventSourceState._
 import xyz.stratalab.models.ModelGenerators._
 import xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryHeader
 import xyz.stratalab.models.{ProposalId, Slot, Timestamp, VersionId, _}
+import xyz.stratalab.node.models.BlockBody
 import xyz.stratalab.numerics.implicits._
+import xyz.stratalab.proto.node.EpochData
+import xyz.stratalab.sdk.generators.TransactionGenerator
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.box.Value
+import xyz.stratalab.sdk.models.box.Value.UpdateProposal
+import xyz.stratalab.sdk.models.transaction._
 import xyz.stratalab.typeclasses.implicits._
 
 import scala.collection.immutable.NumericRange
@@ -166,8 +166,8 @@ class VotingEventSourceStateSpec
   }
 
   private def addProposalToBlock(blockId: BlockId, proposal: UpdateProposal, storages: BlocksStorages): Unit = {
-    val valueValueProposal: co.topl.brambl.models.box.Value.Value = Value.Value.UpdateProposal(proposal)
-    val value: co.topl.brambl.models.box.Value = new co.topl.brambl.models.box.Value(value = valueValueProposal)
+    val valueValueProposal: xyz.stratalab.sdk.models.box.Value.Value = Value.Value.UpdateProposal(proposal)
+    val value: xyz.stratalab.sdk.models.box.Value = new xyz.stratalab.sdk.models.box.Value(value = valueValueProposal)
     val unspentOutputWithProposal = arbitraryUnspentTransactionOutput.arbitrary.first.copy(value = value)
     val transaction = arbitraryIoTransaction.arbitrary.first
     val transactionWithProposal = transaction.copy(outputs = transaction.outputs :+ unspentOutputWithProposal)

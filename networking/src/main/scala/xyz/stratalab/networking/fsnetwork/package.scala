@@ -4,8 +4,6 @@ import cats.data.{Chain, NonEmptyChain, OptionT}
 import cats.effect.Async
 import cats.implicits._
 import cats.{Applicative, Monad, MonadThrow}
-import co.topl.consensus.models._
-import co.topl.node.models.BlockBody
 import com.github.benmanes.caffeine.cache.Cache
 import org.typelevel.log4cats.Logger
 import scodec.Codec
@@ -13,8 +11,10 @@ import scodec.codecs.{cstring, double, int32, vlong}
 import xyz.stratalab.algebras.Store
 import xyz.stratalab.codecs.bytes.scodecs.valuetypes._
 import xyz.stratalab.consensus.algebras.LocalChainAlgebra
+import xyz.stratalab.consensus.models._
 import xyz.stratalab.models.p2p._
 import xyz.stratalab.networking.blockchain.BlockchainPeerClient
+import xyz.stratalab.node.models.BlockBody
 
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
 

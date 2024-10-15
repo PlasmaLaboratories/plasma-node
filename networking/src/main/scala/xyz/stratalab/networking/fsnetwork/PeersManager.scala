@@ -5,12 +5,6 @@ import cats.effect.implicits.effectResourceOps
 import cats.effect.{Async, Resource}
 import cats.implicits._
 import cats.{Parallel, Show}
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.validation.algebras.TransactionSyntaxVerifier
-import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import co.topl.crypto.signing.Ed25519VRF
-import co.topl.node.models.{BlockBody, KnownHost}
 import com.github.benmanes.caffeine.cache.Cache
 import org.typelevel.log4cats.Logger
 import scodec.bits.ByteVector
@@ -18,6 +12,8 @@ import xyz.stratalab.actor.{Actor, Fsm}
 import xyz.stratalab.algebras.{Stats, Store}
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import xyz.stratalab.consensus.algebras.{BlockHeaderToBodyValidationAlgebra, ChainSelectionAlgebra, LocalChainAlgebra}
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.ledger.algebras.MempoolAlgebra
 import xyz.stratalab.models.p2p._
@@ -32,6 +28,10 @@ import xyz.stratalab.networking.fsnetwork.PeersManager.Message._
 import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
 import xyz.stratalab.networking.fsnetwork.ReverseDnsResolverHTInstances._
 import xyz.stratalab.networking.p2p._
+import xyz.stratalab.node.models.{BlockBody, KnownHost}
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import xyz.stratalab.typeclasses.implicits._
 
 /**
@@ -463,7 +463,7 @@ object PeersManager {
   ): F[(State[F], Response[F])] =
     Async[F].defer(
       Stats[F].recordGauge(
-        "bifrost_header_download_time",
+        "strata_node_header_download_time",
         "Header download time from other peer in millisecconds",
         Map("from_host" -> show"${hostId.id}"),
         delay
@@ -481,7 +481,7 @@ object PeersManager {
     val maxDelay = (tsDelays :+ delay).max
     Async[F].defer(
       Stats[F].recordGauge(
-        "bifrost_block_download_time",
+        "strata_node_block_download_time",
         "Block download time from other peer in millisecconds",
         Map("from_host" -> show"${hostId.id}"),
         delay
@@ -649,7 +649,7 @@ object PeersManager {
     printQueueSizeInfo(thisActor, state) >>
     Async[F].defer(
       Stats[F].recordGauge(
-        "bifrost_hot_peers_count",
+        "strata_node_hot_peers_count",
         "Number of peers in hot state for given node.",
         hotPeerAttributes,
         hotPeers.size
@@ -657,7 +657,7 @@ object PeersManager {
     ) >>
     Async[F].defer(
       Stats[F].recordGauge(
-        "bifrost_warm_peers_count",
+        "strata_node_warm_peers_count",
         "Number of peers in warm state for given node.",
         Map("host_id" -> (show"${state.thisHostId}")),
         warmPeers.size
@@ -665,7 +665,7 @@ object PeersManager {
     ) >>
     Async[F].defer(
       Stats[F].recordGauge(
-        "bifrost_cold_peers_count",
+        "strata_node_cold_peers_count",
         "Number of peers in cold state for given node.",
         Map("host_id" -> (show"${state.thisHostId}")),
         coldPeers.size
@@ -673,7 +673,7 @@ object PeersManager {
     ) >>
     Async[F].defer(
       Stats[F].incrementCounter(
-        "bifrost_peer_id",
+        "strata_node_peer_id",
         "Counter with the sole purpose of adding the host attribute to track the peer id.",
         Map("host_id" -> (show"${state.thisHostId}"))
       )

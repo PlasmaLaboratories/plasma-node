@@ -1,7 +1,7 @@
 package xyz.stratalab.minting.algebras
 
-import co.topl.consensus.models.BlockId
-import co.topl.node.models.FullBlockBody
+import xyz.stratalab.consensus.models.BlockId
+import xyz.stratalab.node.models.FullBlockBody
 
 /**
  * Assembles block bodies

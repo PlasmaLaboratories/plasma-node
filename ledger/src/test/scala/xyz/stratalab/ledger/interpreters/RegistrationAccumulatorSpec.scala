@@ -2,20 +2,20 @@ package xyz.stratalab.ledger.interpreters
 
 import cats.effect.IO
 import cats.implicits._
-import co.topl.brambl.constants.NetworkConstants
-import co.topl.brambl.models.box.{Attestation, Lock, Value}
-import co.topl.brambl.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
-import co.topl.brambl.models.{Datum, LockAddress}
-import co.topl.brambl.syntax._
-import co.topl.consensus.models.{BlockId, StakingAddress}
-import co.topl.node.models.BlockBody
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.algebras.testInterpreters.TestStore
+import xyz.stratalab.consensus.models.{BlockId, StakingAddress}
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.models.ModelGenerators._
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
+import xyz.stratalab.node.models.BlockBody
 import xyz.stratalab.numerics.implicits._
+import xyz.stratalab.sdk.constants.NetworkConstants
+import xyz.stratalab.sdk.models.box.{Attestation, Lock, Value}
+import xyz.stratalab.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
+import xyz.stratalab.sdk.models.{Datum, LockAddress}
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 class RegistrationAccumulatorSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
@@ -51,7 +51,7 @@ class RegistrationAccumulatorSpec extends CatsEffectSuite with ScalaCheckEffectS
         .withInputs(
           List(
             SpentTransactionOutput(
-              tx1.id.outputAddress(0, 0, 0),
+              tx1.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 0),
               Attestation().withPredicate(Attestation.Predicate.defaultInstance),
               tx1.outputs(0).value
             )
@@ -68,7 +68,7 @@ class RegistrationAccumulatorSpec extends CatsEffectSuite with ScalaCheckEffectS
         .withInputs(
           List(
             SpentTransactionOutput(
-              tx2.id.outputAddress(0, 0, 0),
+              tx2.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 0),
               Attestation().withPredicate(Attestation.Predicate.defaultInstance),
               tx2.outputs(0).value
             )

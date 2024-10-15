@@ -3,9 +3,6 @@ package xyz.stratalab.networking.fsnetwork
 import cats.data._
 import cats.effect.{Async, Resource}
 import cats.implicits._
-import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import co.topl.crypto.signing.Ed25519VRF
-import co.topl.node.models._
 import fs2.Stream
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.typelevel.log4cats.Logger
@@ -15,6 +12,8 @@ import xyz.stratalab.blockchain.Validators
 import xyz.stratalab.catsutils.faAsFAClockOps
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import xyz.stratalab.consensus.algebras._
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.ledger.implicits._
 import xyz.stratalab.ledger.interpreters.QuivrContext
 import xyz.stratalab.ledger.models.{BodyProposalValidationContext, BodyValidationError, StaticBodyValidationContext}
@@ -25,6 +24,7 @@ import xyz.stratalab.networking.fsnetwork.BlockApplyError.{BodyApplyException, H
 import xyz.stratalab.networking.fsnetwork.BlockChecker.Message._
 import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
 import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
+import xyz.stratalab.node.models._
 import xyz.stratalab.typeclasses.implicits._
 
 import scala.collection.Searching

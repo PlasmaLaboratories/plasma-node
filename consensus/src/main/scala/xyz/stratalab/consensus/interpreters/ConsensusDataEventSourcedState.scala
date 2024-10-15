@@ -3,13 +3,13 @@ package xyz.stratalab.consensus.interpreters
 import cats.MonadThrow
 import cats.effect.Async
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.box.Value
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.consensus.models.{ActiveStaker, BlockId, StakingAddress}
-import co.topl.node.models.BlockBody
 import xyz.stratalab.algebras._
+import xyz.stratalab.consensus.models.{ActiveStaker, BlockId, StakingAddress}
 import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
+import xyz.stratalab.node.models.BlockBody
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.box.Value
+import xyz.stratalab.sdk.models.transaction.IoTransaction
 import xyz.stratalab.typeclasses.implicits._
 
 /**

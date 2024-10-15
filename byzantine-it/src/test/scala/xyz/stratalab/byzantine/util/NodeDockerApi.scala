@@ -3,8 +3,8 @@ package xyz.stratalab.byzantine.util
 import cats.effect._
 import cats.effect.implicits._
 import cats.implicits._
-import xyz.stratalab.algebras.{NodeRpc, ToplGenusRpc}
-import xyz.stratalab.genus.GenusGrpc
+import xyz.stratalab.algebras.{NodeRpc, IndexerRpc}
+import xyz.stratalab.indexer.IndexerGrpc
 import xyz.stratalab.grpc.NodeGrpc
 import com.spotify.docker.client.DockerClient
 import com.spotify.docker.client.messages.HostConfig
@@ -49,8 +49,8 @@ class NodeDockerApi(containerId: String)(implicit dockerClient: DockerClient) {
   def rpcClient[F[_]: Async](port: Int, tls: Boolean = false): Resource[F, NodeRpc[F, Stream[F, *]]] =
     ipAddress.toResource.flatMap(NodeGrpc.Client.make[F](_, port, tls))
 
-  def rpcGenusClient[F[_]: Async](port: Int, tls: Boolean = false): Resource[F, ToplGenusRpc[F]] =
-    ipAddress.toResource.flatMap(GenusGrpc.Client.make[F](_, port, tls))
+  def rpcIndexerClient[F[_]: Async](port: Int, tls: Boolean = false): Resource[F, IndexerRpc[F]] =
+    ipAddress.toResource.flatMap(IndexerGrpc.Client.make[F](_, port, tls))
 
   def configure[F[_]: Async](configYaml: String): F[Unit] =
     for {
@@ -79,7 +79,7 @@ class NodeDockerApi(containerId: String)(implicit dockerClient: DockerClient) {
               .through(Files.forAsync[F].writeAll(tmpLogFile))
               .compile
               .drain
-            _ <- copyDirectoryIntoContainer(tmpDir, Path("/bifrost"))
+            _ <- copyDirectoryIntoContainer(tmpDir, Path("/node"))
           } yield ()
         )
     } yield ()

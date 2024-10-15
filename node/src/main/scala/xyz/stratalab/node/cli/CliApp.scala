@@ -39,7 +39,7 @@ class ConfiguredCliApp(appConfig: ApplicationConfig) {
   private val applicationResource: Resource[F, Unit] =
     Sync[F]
       .defer(
-        writeMessage[F]("Welcome to the Bifrost CLI").value >>
+        writeMessage[F]("Welcome to the Node CLI").value >>
         (readUserCommand >>= handleUserCommand).value
           .iterateWhile(_ != StageResult.Exit)
           .void

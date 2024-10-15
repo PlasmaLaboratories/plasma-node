@@ -3,19 +3,19 @@ package xyz.stratalab.networking.blockchain
 import cats.data.Chain
 import cats.effect.{Async, Resource}
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import co.topl.node.models._
 import fs2.Stream
 import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.blockchain.{BlockchainCore, _}
 import xyz.stratalab.catsutils._
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
 import xyz.stratalab.networking.fsnetwork.RemotePeer
 import xyz.stratalab.networking.p2p.PeerConnectionChanges.RemotePeerApplicationLevel
 import xyz.stratalab.networking.p2p.{ConnectedPeer, PeerConnectionChange}
+import xyz.stratalab.node.models._
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
 import xyz.stratalab.typeclasses.implicits._
 
 object BlockchainPeerServer {

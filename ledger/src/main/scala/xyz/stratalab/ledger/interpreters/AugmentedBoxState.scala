@@ -2,11 +2,11 @@ package xyz.stratalab.ledger.interpreters
 
 import cats.effect.Sync
 import cats.implicits._
-import co.topl.brambl.models.TransactionOutputAddress
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
-import co.topl.consensus.models.BlockId
+import xyz.stratalab.consensus.models.BlockId
 import xyz.stratalab.ledger.algebras.BoxStateAlgebra
+import xyz.stratalab.sdk.models.TransactionOutputAddress
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.syntax._
 
 object AugmentedBoxState {
 
@@ -46,7 +46,14 @@ object AugmentedBoxState {
       val transactionId = transaction.id
       val transactionNewBoxIds =
         transaction.outputs
-          .mapWithIndex((_, idx) => transactionId.outputAddress(0, 0, idx))
+          .mapWithIndex((output, idx) =>
+            transactionId
+              .outputAddress(
+                output.address.network,
+                output.address.ledger,
+                idx
+              )
+          )
           .toSet
       StateAugmentation(
         spentBoxIds ++ transactionSpentBoxIds,

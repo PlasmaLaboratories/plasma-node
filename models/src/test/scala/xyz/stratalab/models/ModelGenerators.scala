@@ -1,10 +1,10 @@
 package xyz.stratalab.models
 
 import cats.data.{NonEmptyChain, NonEmptyList}
-import co.topl.consensus.models.StakingAddress
 import com.google.protobuf.ByteString
 import org.scalacheck.rng.Seed
 import org.scalacheck.{Arbitrary, Gen}
+import xyz.stratalab.consensus.models.StakingAddress
 import xyz.stratalab.models.generators.common.ModelGenerators.genSizedStrictByteString
 import xyz.stratalab.models.utility.HasLength.instances._
 import xyz.stratalab.models.utility.Lengths._
@@ -49,7 +49,7 @@ trait ModelGenerators {
     } yield UnsignedBlockHeader.PartialOperationalCertificate(parentVK, parentSignature, childVK)
 
   def unsignedHeaderGen(
-    parentHeaderIdGen: Gen[co.topl.consensus.models.BlockId] =
+    parentHeaderIdGen: Gen[xyz.stratalab.consensus.models.BlockId] =
       xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryBlockId.arbitrary,
     parentSlotGen:  Gen[Slot] = Gen.chooseNum(0L, 50L),
     txRootGen:      Gen[ByteString] = genSizedStrictByteString[Lengths.`32`.type]().map(_.data),
@@ -57,7 +57,7 @@ trait ModelGenerators {
     timestampGen:   Gen[Timestamp] = Gen.chooseNum(0L, 50L),
     heightGen:      Gen[Long] = Gen.chooseNum(0L, 20L),
     slotGen:        Gen[Slot] = Gen.chooseNum(0L, 50L),
-    eligibilityCertificateGen: Gen[co.topl.consensus.models.EligibilityCertificate] =
+    eligibilityCertificateGen: Gen[xyz.stratalab.consensus.models.EligibilityCertificate] =
       xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryEligibilityCertificate.arbitrary,
     partialOperationalCertificateGen: Gen[UnsignedBlockHeader.PartialOperationalCertificate] =
       partialOperationalCertificateGen,

@@ -1,4 +1,4 @@
-package co.topl.crypto.models
+package xyz.stratalab.crypto.models
 
 import BinaryTree.Empty
 import BinaryTree.Leaf

@@ -2,11 +2,6 @@ package xyz.stratalab.networking.blockchain
 
 import cats.effect.IO
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import co.topl.crypto.hash.Blake2b256
-import co.topl.node.models._
 import com.google.protobuf.ByteString
 import fs2._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -14,7 +9,12 @@ import org.scalacheck.Gen
 import org.scalacheck.effect.PropF
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
+import xyz.stratalab.crypto.hash.Blake2b256
 import xyz.stratalab.networking.p2p.ConnectedPeer
+import xyz.stratalab.node.models._
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
 
 import java.nio.charset.StandardCharsets
 

@@ -3,17 +3,18 @@ package xyz.stratalab.ledger.interpreters
 import cats.data.NonEmptySet
 import cats.effect.IO
 import cats.implicits._
-import co.topl.brambl.generators.ModelGenerators._
-import co.topl.brambl.models._
-import co.topl.brambl.models.transaction._
-import co.topl.brambl.syntax._
-import co.topl.consensus.models.BlockId
-import co.topl.node.models.BlockBody
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import xyz.stratalab.algebras.testInterpreters.TestStore
+import xyz.stratalab.consensus.models.BlockId
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
+import xyz.stratalab.node.models.BlockBody
+import xyz.stratalab.sdk.constants.NetworkConstants
+import xyz.stratalab.sdk.generators.ModelGenerators._
+import xyz.stratalab.sdk.models._
+import xyz.stratalab.sdk.models.transaction._
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.typeclasses.implicits._
 
 class BoxStateSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
@@ -28,7 +29,11 @@ class BoxStateSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
         blockId2: BlockId
       ) =>
         val transaction1 = IoTransaction.defaultInstance.withOutputs(List(output))
-        val outputBoxId = transaction1.id.outputAddress(0, 0, transaction1.outputs.length - 1)
+        val outputBoxId = transaction1.id.outputAddress(
+          NetworkConstants.PRIVATE_NETWORK_ID,
+          NetworkConstants.MAIN_LEDGER_ID,
+          transaction1.outputs.length - 1
+        )
 
         val transaction2 = IoTransaction.defaultInstance.withInputs(List(input.copy(address = outputBoxId)))
 

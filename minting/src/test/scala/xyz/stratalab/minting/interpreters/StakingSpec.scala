@@ -4,9 +4,6 @@ import cats.Monad
 import cats.effect.IO.asyncForIO
 import cats.effect._
 import cats.implicits._
-import co.topl.brambl.models.{LockAddress, LockId}
-import co.topl.consensus.models._
-import co.topl.crypto.hash.Blake2b256
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
@@ -14,7 +11,9 @@ import org.scalamock.munit.AsyncMockFactory
 import scodec.bits._
 import xyz.stratalab.algebras.Stats.Implicits._
 import xyz.stratalab.consensus.algebras._
+import xyz.stratalab.consensus.models._
 import xyz.stratalab.consensus.thresholdEvidence
+import xyz.stratalab.crypto.hash.Blake2b256
 import xyz.stratalab.minting.algebras.{OperationalKeyMakerAlgebra, VrfCalculatorAlgebra}
 import xyz.stratalab.minting.models.{OperationalKeyOut, VrfHit}
 import xyz.stratalab.models.ModelGenerators.GenHelper
@@ -23,6 +22,7 @@ import xyz.stratalab.models.generators.consensus.ModelGenerators._
 import xyz.stratalab.models.utility.HasLength.instances._
 import xyz.stratalab.models.utility.Lengths._
 import xyz.stratalab.models.utility._
+import xyz.stratalab.sdk.models.{LockAddress, LockId}
 
 class StakingSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]

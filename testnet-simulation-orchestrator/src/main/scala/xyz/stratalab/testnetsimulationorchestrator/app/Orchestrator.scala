@@ -5,11 +5,6 @@ import cats.data.OptionT
 import cats.effect._
 import cats.effect.std.{Random, SecureRandom}
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.syntax._
-import co.topl.brambl.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
-import co.topl.consensus.models.{BlockHeader, BlockId}
-import co.topl.genus.services.TransactionServiceFs2Grpc
 import com.typesafe.config.Config
 import fs2._
 import fs2.concurrent.Topic
@@ -17,13 +12,18 @@ import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.{NodeRpc, SynchronizationTraversalSteps}
 import xyz.stratalab.common.application.IOBaseApp
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
 import xyz.stratalab.grpc.NodeGrpc
+import xyz.stratalab.indexer.services.TransactionServiceFs2Grpc
 import xyz.stratalab.interpreters.MultiNodeRpc
 import xyz.stratalab.models.utility._
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
 import xyz.stratalab.testnetsimulationorchestrator.algebras.DataPublisher
 import xyz.stratalab.testnetsimulationorchestrator.interpreters.{GcpCsvDataPublisher, K8sSimulationController}
 import xyz.stratalab.testnetsimulationorchestrator.models.{AdoptionDatum, BlockDatum, TransactionDatum}
-import xyz.stratalab.transactiongenerator.interpreters.{Fs2TransactionGenerator, GenusWalletInitializer}
+import xyz.stratalab.transactiongenerator.interpreters.{Fs2TransactionGenerator, IndexerWalletInitializer}
 import xyz.stratalab.transactiongenerator.models.Wallet
 import xyz.stratalab.typeclasses.implicits._
 
@@ -74,10 +74,10 @@ object Orchestrator
             .tupleLeft(n.name)
         )
         .map(_.toMap)
-      genusClient <- xyz.stratalab.grpc
+      indexerClient <- xyz.stratalab.grpc
         .makeChannel[F](nodeConfigs.head.host, nodeConfigs.head.port, tls = false)
         .flatMap(TransactionServiceFs2Grpc.stubResource[F])
-      walletInitializer <- GenusWalletInitializer.make(genusClient)
+      walletInitializer <- IndexerWalletInitializer.make(indexerClient)
       wallet            <- walletInitializer.initialize.toResource
     } yield (csvPublisher, nodeRpcClients, wallet)
 

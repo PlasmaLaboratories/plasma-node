@@ -5,11 +5,11 @@ import cats.effect.Async
 import cats.implicits._
 import xyz.stratalab.algebras.NodeRpc
 import xyz.stratalab.blockchain.PrivateTestnet
-import co.topl.brambl.builders.locks.PropositionTemplate
-import co.topl.brambl.models._
-import co.topl.brambl.models.box._
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.builders.locks.PropositionTemplate
+import xyz.stratalab.sdk.models._
+import xyz.stratalab.sdk.models.box._
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.byzantine.transactions.{Locks, TransactionFactory, Wallet}
 import xyz.stratalab.byzantine.util._
 import xyz.stratalab.interpreters.NodeRpcOps._
@@ -19,6 +19,7 @@ import fs2.Stream
 import munit.{FailSuiteException, Location}
 import org.typelevel.log4cats.Logger
 import scala.concurrent.duration.{Duration, DurationInt}
+import xyz.stratalab.sdk.constants.NetworkConstants
 
 class TransactionTest extends IntegrationSuite {
 
@@ -64,17 +65,17 @@ class TransactionTest extends IntegrationSuite {
         node1 <- dockerSupport.createNode(
           "TransactionTest-node1",
           "TransactionTest",
-          TestNodeConfig(genusEnabled = true)
+          TestNodeConfig(indexerEnabled = true)
         )
         _ <- node1.startContainer[F].toResource
 
-        node1Client  <- node1.rpcClient[F](node1.config.rpcPort, tls = false)
-        genus1Client <- node1.rpcGenusClient[F](node1.config.rpcPort, tls = false)
-        _            <- node1Client.waitForRpcStartUp.toResource
-        _            <- genus1Client.waitForRpcStartUp.toResource
+        node1Client    <- node1.rpcClient[F](node1.config.rpcPort, tls = false)
+        indexer1Client <- node1.rpcIndexerClient[F](node1.config.rpcPort, tls = false)
+        _              <- node1Client.waitForRpcStartUp.toResource
+        _              <- indexer1Client.waitForRpcStartUp.toResource
 
-        _             <- Logger[F].info("Fetching genesis block Genus Grpc Client").toResource
-        blockResponse <- genus1Client.blockIdAtHeight(1).toResource
+        _             <- Logger[F].info("Fetching genesis block Indexer Grpc Client").toResource
+        blockResponse <- indexer1Client.blockIdAtHeight(1).toResource
         // blockResponse transactions outputs(10000000 TOPL and 10000000 LVL)
         genesisToplTx = blockResponse.block.fullBody.transactions(0) // 10000000 TOPL
         genesisLvlTx = blockResponse.block.fullBody.transactions(1) // 10000000 LVL
@@ -93,7 +94,11 @@ class TransactionTest extends IntegrationSuite {
           .toResource
 
         // a box populated with the genesis iotx Lvls
-        inputBoxId = genesisLvlTx.id.outputAddress(0, 0, 0)
+        inputBoxId = genesisLvlTx.id.outputAddress(
+          NetworkConstants.PRIVATE_NETWORK_ID,
+          NetworkConstants.MAIN_LEDGER_ID,
+          0
+        )
         box = Box(Locks.HeightRangeLock, genesisLvlTx.outputs.head.value) // 10000000 LVL
 
         // A. No Success is expected, InsufficientInputFunds create tx from genesis block using: (10000000 lvl in total)
@@ -308,7 +313,8 @@ class TransactionTest extends IntegrationSuite {
         // R. Success create a transaction which consumes TOPLs
         walletWithSpendableTopls = Wallet(
           spendableBoxes = Map(
-            genesisToplTx.id.outputAddress(0, 0, 0) -> Box(
+            genesisToplTx.id
+              .outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 0) -> Box(
               PrivateTestnet.HeightLockOneLock,
               genesisToplTx.outputs.head.value
             ) // 10000000 TOPLs
@@ -333,7 +339,8 @@ class TransactionTest extends IntegrationSuite {
         // S. Success Create a group transaction token , using iotxRes_B lvl Tx
         iotx_S <- TransactionFactory
           .createTransactionGroupTamV2[F](
-            inputBoxId = iotxRes_B.id.outputAddress(0, 0, 9),
+            inputBoxId =
+              iotxRes_B.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 9),
             Box(Locks.HeightRangeLock, iotxRes_B.outputs(9).value),
             quantity = BigInt(1)
           )
@@ -347,7 +354,8 @@ class TransactionTest extends IntegrationSuite {
         // T. Success Create a series transaction token , using iotxRes_B lvl Tx
         iotx_T <- TransactionFactory
           .createTransactionSeriesTamV2[F](
-            inputBoxId = iotxRes_B.id.outputAddress(0, 0, 10),
+            inputBoxId =
+              iotxRes_B.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 10),
             Box(Locks.HeightRangeLock, iotxRes_B.outputs(10).value),
             quantity = BigInt(1)
           )
@@ -361,8 +369,10 @@ class TransactionTest extends IntegrationSuite {
         // U_Fail_1. Failure, Create a Series and Group constructor token, in the same transaction, same outputAddress wrong
         iotx_U_Fail_1 <- TransactionFactory
           .createTransactionGroupANDSeriesTamV2[F](
-            inputBoxIdGroup = iotxRes_B.id.outputAddress(0, 0, 11),
-            inputBoxIdSeries = iotxRes_B.id.outputAddress(0, 0, 11),
+            inputBoxIdGroup =
+              iotxRes_B.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 11),
+            inputBoxIdSeries =
+              iotxRes_B.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 11),
             lock = Locks.HeightRangeLock, // using the same lock boths
             valueInputGroup = iotxRes_B.outputs(11).value,
             valueInputSeries = iotxRes_B.outputs(12).value,
@@ -377,8 +387,10 @@ class TransactionTest extends IntegrationSuite {
         // U_Success. Create a Series and Group constructor token, in the same transaction, quantities good
         iotx_U <- TransactionFactory
           .createTransactionGroupANDSeriesTamV2[F](
-            inputBoxIdGroup = iotxRes_B.id.outputAddress(0, 0, 11),
-            inputBoxIdSeries = iotxRes_B.id.outputAddress(0, 0, 12),
+            inputBoxIdGroup =
+              iotxRes_B.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 11),
+            inputBoxIdSeries =
+              iotxRes_B.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 12),
             lock = Locks.HeightRangeLock, // using the same lock boths
             valueInputGroup = iotxRes_B.outputs(11).value,
             valueInputSeries = iotxRes_B.outputs(12).value,
@@ -393,7 +405,8 @@ class TransactionTest extends IntegrationSuite {
         // V_Fail_1. Moving a Group constructor token, It was created on step S.
         iotx_V_Fail_1 <- TransactionFactory
           .createTransactionMoveGroupANDSeriesTamV2[F](
-            inputBoxIdGroup = iotxRes_S.id.outputAddress(0, 0, 0),
+            inputBoxIdGroup =
+              iotxRes_S.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 0),
             lock = Locks.HeightRangeLock,
             valueInputGroup = iotxRes_S.outputs.head.value,
             valueOutputGroup = Value.defaultInstance.withGroup(
@@ -411,7 +424,8 @@ class TransactionTest extends IntegrationSuite {
         // V_Succed. Moving a Group constructor token, It was created on step S.
         iotx_V <- TransactionFactory
           .createTransactionMoveGroupANDSeriesTamV2[F](
-            inputBoxIdGroup = iotxRes_S.id.outputAddress(0, 0, 0),
+            inputBoxIdGroup =
+              iotxRes_S.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 0),
             lock = Locks.HeightRangeLock,
             valueInputGroup = iotxRes_S.outputs.head.value,
             valueOutputGroup = Value.defaultInstance.withGroup(
@@ -429,7 +443,8 @@ class TransactionTest extends IntegrationSuite {
         // W_Fail_1. Moving a Series constructor token, It was created on step T.
         iotx_W_Fail_1 <- TransactionFactory
           .createTransactionMoveGroupANDSeriesTamV2[F](
-            inputBoxIdGroup = iotxRes_T.id.outputAddress(0, 0, 0),
+            inputBoxIdGroup =
+              iotxRes_T.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 0),
             lock = Locks.HeightRangeLock,
             valueInputGroup = iotxRes_T.outputs.head.value,
             valueOutputGroup = Value.defaultInstance.withSeries(
@@ -447,7 +462,8 @@ class TransactionTest extends IntegrationSuite {
         // W_Succed. Moving a Series constructor token, It was created on step T.
         iotx_W <- TransactionFactory
           .createTransactionMoveGroupANDSeriesTamV2[F](
-            inputBoxIdGroup = iotxRes_T.id.outputAddress(0, 0, 0),
+            inputBoxIdGroup =
+              iotxRes_T.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 0),
             lock = Locks.HeightRangeLock,
             valueInputGroup = iotxRes_T.outputs.head.value,
             valueOutputGroup = Value.defaultInstance.withSeries(
@@ -535,7 +551,12 @@ class TransactionTest extends IntegrationSuite {
     val newBoxes = ioTransaction.outputs.zipWithIndex.flatMap { case (output, index) =>
       propositions
         .get(output.address)
-        .map(lock => (ioTransaction.id.outputAddress(0, 0, index), Box(lock, output.value)))
+        .map(lock =>
+          (
+            ioTransaction.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, index),
+            Box(lock, output.value)
+          )
+        )
     }
     Wallet(spendableBoxes = newBoxes.toMap, propositions)
   }

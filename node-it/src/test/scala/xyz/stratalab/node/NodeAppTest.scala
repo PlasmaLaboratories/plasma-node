@@ -5,10 +5,10 @@ import cats.effect._
 import cats.effect.implicits._
 import cats.effect.std.{Random, SecureRandom}
 import cats.implicits._
-import co.topl.brambl.syntax._
+import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import co.topl.consensus.models.BlockId
-import co.topl.genus.services._
+import xyz.stratalab.consensus.models.BlockId
+import xyz.stratalab.indexer.services._
 import xyz.stratalab.grpc.NodeGrpc
 import xyz.stratalab.interpreters.NodeRpcOps.clientAsNodeRpcApi
 import xyz.stratalab.node.Util._
@@ -34,7 +34,7 @@ class NodeAppTest extends CatsEffectSuite {
     val targetConsensusHeight = 8
     def configNodeA(dataDir: Path, stakingDir: Path, genesisBlockId: BlockId, genesisSourcePath: String) =
       s"""
-         |bifrost:
+         |node:
          |  data:
          |    directory: $dataDir
          |  staking:
@@ -51,12 +51,12 @@ class NodeAppTest extends CatsEffectSuite {
          |  mempool:
          |    protection:
          |      enabled: false
-         |genus:
+         |indexer:
          |  enable: true
          |""".stripMargin
     def configNodeB(dataDir: Path, stakingDir: Path, genesisBlockId: BlockId, genesisSourcePath: String) =
       s"""
-         |bifrost:
+         |node:
          |  data:
          |    directory: $dataDir
          |  staking:
@@ -74,7 +74,7 @@ class NodeAppTest extends CatsEffectSuite {
          |  mempool:
          |    protection:
          |      enabled: false
-         |genus:
+         |indexer:
          |  enable: false
          |""".stripMargin
 
@@ -112,16 +112,16 @@ class NodeAppTest extends CatsEffectSuite {
           .parMapN(_.race(_).map(_.merge).flatMap(_.embedNever))
           .flatMap(nodeCompletion =>
             nodeCompletion.toResource.race(for {
-              rpcClientA      <- NodeGrpc.Client.make[F]("127.0.0.2", 9151, tls = false)
-              rpcClientB      <- NodeGrpc.Client.make[F]("localhost", 9153, tls = false)
+              rpcClientA <- NodeGrpc.Client.make[F]("127.0.0.2", 9151, tls = false)
+              rpcClientB <- NodeGrpc.Client.make[F]("localhost", 9153, tls = false)
               rpcClients = List(rpcClientA, rpcClientB)
               implicit0(logger: Logger[F]) <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
-              genusChannelA                <- xyz.stratalab.grpc.makeChannel[F]("localhost", 9151, tls = false)
-              genusTxServiceA              <- TransactionServiceFs2Grpc.stubResource[F](genusChannelA)
-              genusBlockServiceA           <- BlockServiceFs2Grpc.stubResource[F](genusChannelA)
-              _                            <- awaitGenusReady(genusBlockServiceA).timeout(45.seconds).toResource
-              wallet                       <- makeWallet(genusTxServiceA)
+              indexerChannelA              <- xyz.stratalab.grpc.makeChannel[F]("localhost", 9151, tls = false)
+              indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
+              indexerBlockServiceA         <- BlockServiceFs2Grpc.stubResource[F](indexerChannelA)
+              _                            <- awaitIndexerReady(indexerBlockServiceA).timeout(45.seconds).toResource
+              wallet                       <- makeWallet(indexerTxServiceA)
               _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
               implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F].toResource
               // Construct two competing graphs of transactions.
@@ -179,7 +179,7 @@ class NodeAppTest extends CatsEffectSuite {
               _ <- rpcClients
                 .parTraverse(verifyNotConfirmed(_)(transactionGraph2.map(_.id).toSet))
                 .toResource
-              spentTxos <- genusTxServiceA
+              spentTxos <- indexerTxServiceA
                 .getTxosByLockAddress(
                   QueryByLockAddressRequest(wallet.propositions.keys.head, None, TxoState.SPENT),
                   new Metadata()

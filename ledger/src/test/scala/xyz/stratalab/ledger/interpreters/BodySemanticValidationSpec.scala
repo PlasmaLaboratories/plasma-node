@@ -2,22 +2,22 @@ package xyz.stratalab.ledger.interpreters
 
 import cats.effect.IO
 import cats.implicits._
-import co.topl.brambl.constants.NetworkConstants
-import co.topl.brambl.generators.ModelGenerators._
-import co.topl.brambl.models.box.{Lock, Value}
-import co.topl.brambl.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
-import co.topl.brambl.models.{Datum, LockAddress, TransactionId}
-import co.topl.brambl.syntax._
-import co.topl.consensus.models.{BlockId, StakingAddress}
-import co.topl.node.models.BlockBody
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
+import xyz.stratalab.consensus.models.{BlockId, StakingAddress}
 import xyz.stratalab.ledger.algebras.{RegistrationAccumulatorAlgebra, TransactionSemanticValidationAlgebra}
 import xyz.stratalab.ledger.models._
 import xyz.stratalab.models.ModelGenerators._
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
+import xyz.stratalab.node.models.BlockBody
 import xyz.stratalab.numerics.implicits._
+import xyz.stratalab.sdk.constants.NetworkConstants
+import xyz.stratalab.sdk.generators.ModelGenerators._
+import xyz.stratalab.sdk.models.box.{Lock, Value}
+import xyz.stratalab.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
+import xyz.stratalab.sdk.models.{Datum, LockAddress, TransactionId}
+import xyz.stratalab.sdk.syntax._
 
 class BodySemanticValidationSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

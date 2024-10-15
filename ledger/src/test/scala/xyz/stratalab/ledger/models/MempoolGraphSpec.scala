@@ -2,16 +2,16 @@ package xyz.stratalab.ledger.models
 
 import cats.effect.IO
 import cats.implicits._
-import co.topl.brambl.models.box.{Attestation, Value}
-import co.topl.brambl.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
-import co.topl.brambl.models.{Datum, LockAddress, LockId, TransactionOutputAddress}
-import co.topl.brambl.syntax._
-import co.topl.brambl.validation.algebras.TransactionCostCalculator
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import quivr.models.Int128
 import xyz.stratalab.ledger.algebras.TransactionRewardCalculatorAlgebra
+import xyz.stratalab.sdk.models.box.{Attestation, Value}
+import xyz.stratalab.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
+import xyz.stratalab.sdk.models.{Datum, LockAddress, LockId, TransactionOutputAddress}
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
 
 class MempoolGraphSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

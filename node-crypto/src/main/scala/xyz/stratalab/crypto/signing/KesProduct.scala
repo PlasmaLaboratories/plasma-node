@@ -1,7 +1,12 @@
-package co.topl.crypto.signing
+package xyz.stratalab.crypto.signing
 
-import co.topl.crypto.models.{SecretKeyKesProduct, SignatureKesProduct, SignatureKesSum, VerificationKeyKesProduct}
-import co.topl.crypto.signing.kes.ProductComposition
+import xyz.stratalab.crypto.models.{
+  SecretKeyKesProduct,
+  SignatureKesProduct,
+  SignatureKesSum,
+  VerificationKeyKesProduct
+}
+import xyz.stratalab.crypto.signing.kes.ProductComposition
 
 /**
  * Credit to Aaron Schutza

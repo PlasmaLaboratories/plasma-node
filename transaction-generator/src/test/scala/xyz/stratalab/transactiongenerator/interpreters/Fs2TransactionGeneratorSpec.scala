@@ -3,13 +3,13 @@ package xyz.stratalab.transactiongenerator.interpreters
 import cats.effect.IO
 import cats.effect.std.{Random, SecureRandom}
 import cats.implicits._
-import co.topl.brambl.models.box.Value
-import co.topl.brambl.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
-import co.topl.brambl.models.{Datum, Event}
-import co.topl.brambl.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
 import munit.CatsEffectSuite
 import quivr.models.SmallData
 import xyz.stratalab.numerics.implicits._
+import xyz.stratalab.sdk.models.box.Value
+import xyz.stratalab.sdk.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
+import xyz.stratalab.sdk.models.{Datum, Event}
+import xyz.stratalab.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
 
 class Fs2TransactionGeneratorSpec extends CatsEffectSuite {
   type F[A] = IO[A]

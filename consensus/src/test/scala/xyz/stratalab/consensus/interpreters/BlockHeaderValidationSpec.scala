@@ -4,13 +4,6 @@ import cats.data.EitherT
 import cats.effect._
 import cats.implicits._
 import cats.{Monad, MonadThrow, Show}
-import co.topl.brambl.syntax._
-import co.topl.brambl.utils.CatsUnsafeResource
-import co.topl.consensus.models._
-import co.topl.crypto.generation.mnemonic.Entropy
-import co.topl.crypto.hash.{Blake2b256, Blake2b512}
-import co.topl.crypto.models.SecretKeyKesProduct
-import co.topl.crypto.signing._
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -21,8 +14,21 @@ import xyz.stratalab.algebras.{ClockAlgebra, Store}
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.codecs.bytes.typeclasses.implicits._
 import xyz.stratalab.consensus.algebras._
-import xyz.stratalab.consensus.models.{BlockHeaderValidationFailures, VrfArgument, VrfConfig, _}
+import xyz.stratalab.consensus.interpreters._
+import xyz.stratalab.consensus.models.{
+  ActiveStaker,
+  BlockHeaderValidationFailures,
+  BlockId,
+  StakingAddress,
+  VrfArgument,
+  VrfConfig,
+  _
+}
 import xyz.stratalab.consensus.thresholdEvidence
+import xyz.stratalab.crypto.generation.mnemonic.Entropy
+import xyz.stratalab.crypto.hash.{Blake2b256, Blake2b512}
+import xyz.stratalab.crypto.models.SecretKeyKesProduct
+import xyz.stratalab.crypto.signing.{Ed25519, _}
 import xyz.stratalab.models.ModelGenerators.GenHelper
 import xyz.stratalab.models._
 import xyz.stratalab.models.generators.common.ModelGenerators.genSizedStrictByteString
@@ -31,6 +37,8 @@ import xyz.stratalab.models.utility.HasLength.instances.byteStringLength
 import xyz.stratalab.models.utility._
 import xyz.stratalab.numerics.implicits._
 import xyz.stratalab.numerics.interpreters.{ExpInterpreter, Log1pInterpreter}
+import xyz.stratalab.sdk.syntax._
+import xyz.stratalab.sdk.utils.CatsUnsafeResource
 
 import java.util.UUID
 import scala.util.Random
@@ -688,7 +696,7 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
     eta:                  Eta,
     relativeStake:        Ratio,
     parentSlot:           Slot
-  ): (co.topl.consensus.models.EligibilityCertificate, Slot) = {
+  ): (xyz.stratalab.consensus.models.EligibilityCertificate, Slot) = {
     def proof(slot: Slot) =
       ByteString.copyFrom(
         Ed25519VRF.precomputed().sign(skVrf.toByteArray, VrfArgument(eta, slot).signableBytes.toByteArray)
@@ -709,7 +717,7 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
       testProof = proof(slot)
       threshold = thresholdInterpreter.getThreshold(relativeStake, slot).unsafeRunSync()
     }
-    val cert = co.topl.consensus.models.EligibilityCertificate(
+    val cert = xyz.stratalab.consensus.models.EligibilityCertificate(
       testProof,
       ByteString.copyFrom(Ed25519VRF.precomputed().getVerificationKey(skVrf.toByteArray)),
       thresholdEvidence(threshold)(new Blake2b256),
@@ -798,7 +806,7 @@ class BlockHeaderValidationSpec extends CatsEffectSuite with ScalaCheckEffectSui
       val unsigned = preSign(unsignedOriginal)
 
       val operationalCertificate =
-        co.topl.consensus.models.OperationalCertificate(
+        xyz.stratalab.consensus.models.OperationalCertificate(
           unsigned.partialOperationalCertificate.parentVK,
           unsigned.partialOperationalCertificate.parentSignature,
           unsigned.partialOperationalCertificate.childVK,

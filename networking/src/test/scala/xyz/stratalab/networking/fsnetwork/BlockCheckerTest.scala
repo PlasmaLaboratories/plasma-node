@@ -4,13 +4,6 @@ import cats.data._
 import cats.effect.{IO, Resource}
 import cats.implicits._
 import cats.{MonadThrow, Show}
-import co.topl.brambl.models.Datum
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.validation.algebras.{TransactionAuthorizationVerifier, TransactionSyntaxVerifier}
-import co.topl.consensus.models.{BlockHeader, BlockId, _}
-import co.topl.crypto.signing.Ed25519VRF
-import co.topl.node.models.{Block, BlockBody}
-import co.topl.quivr.runtime.DynamicContext
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.Gen
 import org.scalacheck.effect.PropF
@@ -20,11 +13,12 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.Store
 import xyz.stratalab.blockchain.{Validators, ValidatorsImpl}
 import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.config.ApplicationConfig.Bifrost.NetworkProperties
+import xyz.stratalab.config.ApplicationConfig.Node.NetworkProperties
 import xyz.stratalab.consensus._
 import xyz.stratalab.consensus.algebras._
-import xyz.stratalab.consensus.models.BlockHeaderValidationFailure
 import xyz.stratalab.consensus.models.BlockHeaderValidationFailures.NonForwardSlot
+import xyz.stratalab.consensus.models.{BlockHeader, BlockHeaderValidationFailure, BlockId, _}
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.ledger.algebras._
 import xyz.stratalab.ledger.models.BodySemanticErrors.TransactionSemanticErrors
 import xyz.stratalab.ledger.models.TransactionSemanticErrors.InputDataMismatch
@@ -37,6 +31,11 @@ import xyz.stratalab.networking.fsnetwork.BlockCheckerTest.F
 import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
 import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
 import xyz.stratalab.networking.fsnetwork.TestHelper._
+import xyz.stratalab.node.models.{Block, BlockBody}
+import xyz.stratalab.quivr.runtime.DynamicContext
+import xyz.stratalab.sdk.models.Datum
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionSyntaxVerifier}
 import xyz.stratalab.typeclasses.implicits._
 
 import scala.collection.mutable

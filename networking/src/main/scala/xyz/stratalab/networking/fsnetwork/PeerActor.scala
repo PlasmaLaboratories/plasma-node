@@ -4,16 +4,12 @@ import cats.data.{EitherT, NonEmptyChain, OptionT}
 import cats.effect.implicits._
 import cats.effect.{Async, Concurrent, Resource}
 import cats.implicits._
-import co.topl.brambl.models.TransactionId
-import co.topl.brambl.models.transaction.IoTransaction
-import co.topl.brambl.validation.algebras.TransactionSyntaxVerifier
-import co.topl.consensus.models.{BlockHeader, BlockId, SlotData}
-import co.topl.crypto.signing.Ed25519VRF
-import co.topl.node.models.{BlockBody, CurrentKnownHostsReq, PingMessage}
 import org.typelevel.log4cats.Logger
 import xyz.stratalab.actor.{Actor, Fsm}
 import xyz.stratalab.algebras.Store
 import xyz.stratalab.consensus.algebras.{BlockHeaderToBodyValidationAlgebra, ChainSelectionAlgebra, LocalChainAlgebra}
+import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
+import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.ledger.algebras.MempoolAlgebra
 import xyz.stratalab.models.p2p._
@@ -26,6 +22,10 @@ import xyz.stratalab.networking.fsnetwork.PeerBlockHeaderFetcher.PeerBlockHeader
 import xyz.stratalab.networking.fsnetwork.PeerMempoolTransactionSync.PeerMempoolTransactionSyncActor
 import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
 import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
+import xyz.stratalab.node.models.{BlockBody, CurrentKnownHostsReq, PingMessage}
+import xyz.stratalab.sdk.models.TransactionId
+import xyz.stratalab.sdk.models.transaction.IoTransaction
+import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
 import xyz.stratalab.typeclasses.implicits._
 
 import scala.util.Random
@@ -307,7 +307,7 @@ object PeerActor {
 
   private val incorrectPongMessage: NetworkQualityError = NetworkQualityError.IncorrectPongMessage: NetworkQualityError
 
-  // 1024 hardcoded on protobuf level, see co.topl.node.models.PingMessageValidator.validate
+  // 1024 hardcoded on protobuf level, see xyz.stratalab.node.models.PingMessageValidator.validate
   private val pingMessageSize = 1024
 
   private def getPing[F[_]: Concurrent](state: State[F]): EitherT[F, NetworkQualityError, Long] =

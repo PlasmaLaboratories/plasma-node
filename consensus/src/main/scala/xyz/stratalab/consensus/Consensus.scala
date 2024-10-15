@@ -1,7 +1,7 @@
 package xyz.stratalab.consensus
 
-import co.topl.consensus.models.{BlockId, SlotData}
 import xyz.stratalab.consensus.algebras._
+import xyz.stratalab.consensus.models.{BlockId, SlotData}
 
 trait Consensus[F[_]] {
   def headerValidation: BlockHeaderValidationAlgebra[F]
