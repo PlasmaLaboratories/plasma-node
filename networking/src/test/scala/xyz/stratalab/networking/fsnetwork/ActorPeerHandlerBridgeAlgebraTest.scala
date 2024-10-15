@@ -16,8 +16,8 @@ import xyz.stratalab.algebras.testInterpreters.TestStore
 import xyz.stratalab.blockchain.{BlockchainCore, DataStores, Validators}
 import xyz.stratalab.config.ApplicationConfig.Node.NetworkProperties
 import xyz.stratalab.consensus.Consensus
-import xyz.stratalab.consensus.algebras.{ChainSelectionAlgebra, _}
-import xyz.stratalab.consensus.models.{BlockHeaderToBodyValidationFailure, BlockHeaderValidationFailure, _}
+import xyz.stratalab.consensus.algebras._
+import xyz.stratalab.consensus.models._
 import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.eventtree.ParentChildTree
 import xyz.stratalab.interpreters.SchedulerClock
@@ -27,6 +27,7 @@ import xyz.stratalab.ledger.models._
 import xyz.stratalab.models.ModelGenerators.GenHelper
 import xyz.stratalab.models.generators.consensus.ModelGenerators.arbitrarySlotData
 import xyz.stratalab.models.p2p._
+import xyz.stratalab.models.utility.NetworkCommands
 import xyz.stratalab.networking.blockchain.{BlockchainPeerClient, NetworkProtocolVersions}
 import xyz.stratalab.networking.fsnetwork.ActorPeerHandlerBridgeAlgebraTest._
 import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError

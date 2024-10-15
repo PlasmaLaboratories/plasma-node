@@ -1,19 +1,33 @@
 package xyz.stratalab.consensus
 
-import xyz.stratalab.consensus.models.BlockHeader
+import xyz.stratalab.consensus.models.{BlockHeader, ProtocolVersion}
 import xyz.stratalab.models._
 
 package object interpreters {
 
   implicit class BlockHeaderVersionsOps(header: BlockHeader) {
 
+    def getProposalVote: Option[ProposalId] = header.version.getProposalVote
+
+    def getVersionVote: Option[VersionId] = header.version.getVersionVote
+
+    def versionId: VersionId = header.version.versionId
+  }
+
+  implicit class ProtocolVersionOps(protocolVersion: ProtocolVersion) {
+
     def getProposalVote: Option[ProposalId] =
-      Option.when(header.version.thirdDigit != emptyProposal)(header.version.thirdDigit)
+      Option.when(protocolVersion.thirdDigit != emptyProposal)(protocolVersion.thirdDigit)
+
+    def setProposalVote(proposalId: ProposalId): ProtocolVersion = protocolVersion.copy(thirdDigit = proposalId)
 
     def getVersionVote: Option[VersionId] =
-      Option.when(header.version.secondDigit != emptyVersion)(header.version.secondDigit)
+      Option.when(protocolVersion.secondDigit != emptyVersion)(protocolVersion.secondDigit)
 
-    def versionId: VersionId = header.version.firstDigit
+    def setVersionVote(versionVote: VersionId): ProtocolVersion = protocolVersion.copy(secondDigit = versionVote)
+
+    def setVersionId(version: VersionId): ProtocolVersion = protocolVersion.copy(firstDigit = version)
+    def versionId: VersionId = protocolVersion.firstDigit
   }
 
 }

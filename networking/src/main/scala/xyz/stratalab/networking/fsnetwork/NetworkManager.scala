@@ -14,6 +14,7 @@ import xyz.stratalab.blockchain.BlockchainCore
 import xyz.stratalab.config.ApplicationConfig.Node.NetworkProperties
 import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.models.p2p._
+import xyz.stratalab.models.utility.NetworkCommands
 import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
 import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
 import xyz.stratalab.networking.p2p.{DisconnectedPeer, PeerConnectionChange, PeerConnectionChanges}
@@ -140,6 +141,7 @@ object NetworkManager {
           val hostId = remotePeerIdOpt.getOrElse(HostId(ByteString.copyFrom(Random.nextBytes(hostIdBytesLen))))
           val knownPeer = KnownRemotePeer(hostId, remoteAddress, 0, 0, None)
           peersManager.sendNoWait(PeersManager.Message.AddKnownPeers(NonEmptyChain.one(knownPeer)))
+        case _ => Async[F].unit
       }
       .compile
       .drain

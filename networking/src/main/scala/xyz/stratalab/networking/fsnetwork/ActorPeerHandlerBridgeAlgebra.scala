@@ -14,11 +14,12 @@ import xyz.stratalab.config.ApplicationConfig.Node.NetworkProperties
 import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
 import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.models.p2p._
+import xyz.stratalab.models.utility.NetworkCommands
 import xyz.stratalab.networking.blockchain.{BlockchainPeerClient, BlockchainPeerHandlerAlgebra}
 import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
 import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
 import xyz.stratalab.networking.p2p.{ConnectedPeer, DisconnectedPeer, PeerConnectionChange}
-import xyz.stratalab.node.models.{KnownHost, _}
+import xyz.stratalab.node.models._
 import xyz.stratalab.sdk.models.TransactionId
 import xyz.stratalab.sdk.models.transaction.IoTransaction
 import xyz.stratalab.typeclasses.implicits._
