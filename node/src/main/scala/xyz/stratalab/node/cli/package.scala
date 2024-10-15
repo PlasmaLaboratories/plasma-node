@@ -9,7 +9,6 @@ import fs2.Chunk
 import fs2.io.file.{Files, Path}
 import quivr.models.{Int128, Ratio}
 import xyz.stratalab.consensus.models.{BlockId, StakingAddress}
-import xyz.stratalab.consensus.models.{BlockId, StakingAddress}
 import xyz.stratalab.models.utility._
 import xyz.stratalab.sdk.models.LockAddress
 import xyz.stratalab.sdk.syntax._

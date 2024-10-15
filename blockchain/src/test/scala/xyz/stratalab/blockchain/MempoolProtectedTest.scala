@@ -24,12 +24,6 @@ import xyz.stratalab.sdk.models.{Datum, TransactionId, TransactionOutputAddress}
 import xyz.stratalab.sdk.syntax._
 import xyz.stratalab.sdk.validation.TransactionAuthorizationError
 import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
-import xyz.stratalab.quivr.runtime.DynamicContext
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.models.{Datum, TransactionId, TransactionOutputAddress}
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.validation.TransactionAuthorizationError
-import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
 
 import scala.annotation.tailrec
 
