@@ -169,17 +169,18 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
     } yield ()
 
   def rpc(
-    regtestPermitQueue:  Option[Queue[F, Unit]],
-    networkCommandsOpt:  Option[Topic[F, NetworkCommands]],
-    updateVotedVersion:  VersionId => F[Unit],
-    updateVotedProposal: ProposalId => F[Unit]
+    regtestPermitQueue:         Option[Queue[F, Unit]],
+    networkCommandsOpt:         Option[Topic[F, NetworkCommands]],
+    regtestUpdateVotedVersion:  VersionId => F[Unit],
+    regtestUpdateVotedProposal: ProposalId => F[Unit]
   ): Resource[F, Unit] =
     for {
       _               <- Resource.make(Logger[F].info("Initializing RPC"))(_ => Logger[F].info("RPC Terminated"))
       rpcInterpreter  <- RpcServer.make(localBlockchain).toResource
       nodeGrpcService <- NodeGrpc.Server.service[F](rpcInterpreter)
       regtestServices <- regtestPermitQueue.toList.traverse(queue =>
-        RegtestRpcServer.service[F](Async[F].defer(queue.offer(())), updateVotedVersion, updateVotedProposal)
+        RegtestRpcServer
+          .service[F](Async[F].defer(queue.offer(())), regtestUpdateVotedVersion, regtestUpdateVotedProposal)
       )
       _ <- networkCommandsOpt.fold(().pure[F])(_ => Logger[F].error("Network could be controlled via RPC")).toResource
       debugControl <- NetworkControlRpcServer.service(thisHostId, networkCommandsOpt)
