@@ -10,7 +10,6 @@ import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import xyz.stratalab.algebras.NodeRpc
 import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
-import xyz.stratalab.indexer.interpreter.NodeBlockFetcher
 import xyz.stratalab.indexer.model.GEs._
 import xyz.stratalab.indexer.services.BlockData
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
@@ -31,7 +30,7 @@ class NodeBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
   private val nodeBlockFetcher = NodeBlockFetcher.make[F](toplRpc, 1)
 
   test("On no block at given height, a None should be returned") {
-    PropF.forAllF { height: Long =>
+    PropF.forAllF { (height: Long) =>
       withMock {
 
         (toplRpc.blockIdAtHeight _)

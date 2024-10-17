@@ -12,7 +12,7 @@ object Dependencies {
   val ioGrpcVersion = "1.64.0"
   val http4sVersion = "0.23.26"
   val protobufSpecsVersion = "0.1.0+2-12fdb246-SNAPSHOT"
-  val strataSdkVersion = "0.0.0+252-20864ede-SNAPSHOT"
+  val strataScVersion = "0.0.0-247-469e78be-20241008-2121"
 
   val catsSlf4j =
     "org.typelevel" %% "log4cats-slf4j" % "2.7.0"
@@ -75,10 +75,13 @@ object Dependencies {
   )
 
   val scodec = Seq(
-    "org.scodec" %% "scodec-core" % "1.11.10",
-    "org.scodec" %% "scodec-bits" % "1.1.38",
+    "org.scodec" %% "scodec-core" % "2.3.2",
+    "org.scodec" %% "scodec-bits" % "1.2.1",
     "org.scodec" %% "scodec-cats" % "1.2.0"
   )
+
+  val scodec213ExlusionRule = ExclusionRule("org.scodec", "scodec-bits_2.13")
+  val geny213ExlusionRule = ExclusionRule("com.lihaoyi", "geny_2.13")
 
   val mainargs = Seq(
     "com.lihaoyi" %% "mainargs" % "0.6.3"
@@ -87,14 +90,15 @@ object Dependencies {
   val fastparse = "com.lihaoyi" %% "fastparse" % "3.1.0"
 
   val monocle: Seq[ModuleID] = Seq(
-    "com.github.julien-truffaut" %% "monocle-core"  % "3.0.0-M6",
-    "com.github.julien-truffaut" %% "monocle-macro" % "3.0.0-M6"
+    "dev.optics" %% "monocle-core"  % "3.3.0",
+    "dev.optics" %% "monocle-macro" % "3.3.0"
   )
 
   val fs2Core = "co.fs2"                   %% "fs2-core"             % fs2Version
   val fs2IO = "co.fs2"                     %% "fs2-io"               % fs2Version
   val fs2ReactiveStreams = "co.fs2"        %% "fs2-reactive-streams" % fs2Version
-  val pureConfig = "com.github.pureconfig" %% "pureconfig"           % "0.17.6"
+  val pureConfig = "com.github.pureconfig" %% "pureconfig-core"      % "0.17.7"
+  val pureConfigGeneric = "com.github.pureconfig" %% "pureconfig-generic-scala3" % "0.17.7"
   val circeYaml = "io.circe"               %% "circe-yaml"           % "1.15.0"
   val kubernetes = "io.kubernetes"          % "client-java"          % "20.0.1"
 
@@ -107,9 +111,9 @@ object Dependencies {
     "org.http4s" %% "http4s-ember-server" % http4sVersion
   )
 
-  val bramblScCrypto = "xyz.stratalab" %% "crypto"     % strataSdkVersion
-  val bramblScSdk = "xyz.stratalab"    %% "strata-sdk" % strataSdkVersion
-  val quivr4s = "xyz.stratalab"        %% "quivr4s"    % strataSdkVersion
+//  val strataScCrypto = "xyz.stratalab" %% "crypto"     % strataScVersion
+//  val strataScSdk = "xyz.stratalab"    %% "strata-sdk" % strataScVersion
+//  val strataQuivr4s = "xyz.stratalab"  %% "quivr4s"    % strataScVersion
 
   val protobufSpecs: Seq[ModuleID] = Seq(
     "xyz.stratalab" %% "protobuf-fs2" % protobufSpecsVersion
@@ -128,7 +132,7 @@ object Dependencies {
   val grpcServices = "io.grpc" % "grpc-services" % ioGrpcVersion
 
   val jacksonScala = "com.fasterxml.jackson.module"   %% "jackson-module-scala"             % "2.18.0"
-  val jacksonScalaReflection = "com.github.pjfanning" %% "jackson-scala-reflect-extensions" % "2.16.0"
+//  val jacksonScalaReflection = "com.github.pjfanning" %% "jackson-scala3-reflection-extensions" % "2.16.0"
 
   val node: Seq[ModuleID] =
     Seq(
@@ -154,7 +158,8 @@ object Dependencies {
       catsSlf4j,
       fs2Core,
       fs2IO,
-      pureConfig
+      pureConfig,
+      pureConfigGeneric
     )
 
   val testnetSimulationOrchestator: Seq[ModuleID] =
@@ -163,6 +168,7 @@ object Dependencies {
       fs2Core,
       fs2IO,
       pureConfig,
+      pureConfigGeneric,
       kubernetes,
       "com.google.cloud" % "google-cloud-storage" % "2.36.1"
     )
@@ -181,6 +187,7 @@ object Dependencies {
     http4s ++ Seq(
       catsSlf4j,
       pureConfig,
+      pureConfigGeneric,
       circeYaml
     )
 
@@ -189,7 +196,7 @@ object Dependencies {
     externalCrypto ++
     cats ++
     mUnitTest ++
-    Seq(bramblScCrypto, bramblScCrypto.classifier("tests") % Test) ++
+//    Seq(strataScCrypto, strataScCrypto.classifier("tests") % Test) ++
     circe.map(_ % Test)
 
   lazy val eventTree: Seq[ModuleID] =
@@ -200,9 +207,9 @@ object Dependencies {
 
   lazy val models: Seq[ModuleID] =
     cats ++ scodec ++ protobufSpecs ++
-    Seq(bramblScSdk, bramblScSdk.classifier("tests") % Test) ++
-    Seq(quivr4s, quivr4s.classifier("tests") % Test) ++
-    Seq(jacksonScala, jacksonScalaReflection)
+    Seq(jacksonScala)//, jacksonScalaReflection)
+//  Seq(bramblScSdk, bramblScSdk.classifier("tests") % Test) ++
+//  Seq(quivr4s, quivr4s.classifier("tests") % Test) ++
 
   lazy val consensus: Seq[ModuleID] =
     Dependencies.mUnitTest ++ externalCrypto ++ catsEffect ++ logging ++ scalacache
@@ -217,8 +224,8 @@ object Dependencies {
     Dependencies.mUnitTest ++ Dependencies.catsEffect ++ Seq(Dependencies.fs2Core)
 
   lazy val ledger: Seq[ModuleID] =
-    Dependencies.mUnitTest ++ Dependencies.catsEffect ++ Dependencies.protobufSpecs ++ scalacache ++
-    Seq(Dependencies.bramblScSdk, Dependencies.bramblScSdk.classifier("tests") % Test)
+    Dependencies.mUnitTest ++ Dependencies.catsEffect ++ Dependencies.protobufSpecs ++ scalacache // ++
+//    Seq(Dependencies.strataScSdk, Dependencies.strataScSdk.classifier("tests") % Test)
 
   lazy val blockchain: Seq[ModuleID] =
     Dependencies.mUnitTest ++ Dependencies.catsEffect ++ logging ++ Seq(fs2Core)

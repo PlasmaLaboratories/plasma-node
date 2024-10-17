@@ -2,7 +2,6 @@ package xyz.stratalab.indexer.model
 
 import com.google.protobuf.ByteString
 import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.indexer.model.{GE, GEs}
 import xyz.stratalab.sdk.models.TransactionId
 
 import scala.collection.immutable.ListSet

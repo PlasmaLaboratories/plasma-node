@@ -29,10 +29,12 @@ trait ValuetypesCodecs {
   implicit val uLongCodec: Codec[ULong] = ULongFastCodec
 
   implicit val uIntCodec: Codec[UInt] =
-    uLongCodec.exmapc[UInt](uLong =>
-      if (uLong >= minUIntValue && uLong <= maxUIntValue) Attempt.successful(uLong)
-      else Attempt.failure(Err("UInt value is outside of valid range."))
-    )(uInt => Attempt.successful(uInt))
+    uLongCodec.exmap[UInt](
+      uLong =>
+        if (uLong >= minUIntValue && uLong <= maxUIntValue) Attempt.successful(uLong)
+        else Attempt.failure(Err("UInt value is outside of valid range.")),
+      uInt => Attempt.successful(uInt)
+    )
 
   private val trueByte: Byte = 0x01
   private val falseByte: Byte = 0x00
@@ -50,12 +52,14 @@ trait ValuetypesCodecs {
     uLongCodec.xmap(uLong => decodeZigZagInt(uLong.toInt).toShort, short => encodeZigZagInt(short))
 
   implicit val uShortCodec: Codec[UShort] =
-    uLongCodec.exmapc(uLong =>
-      if (uLong >= minUShortValue && uLong <= maxUShortValue)
-        Attempt.successful(uLong.toInt)
-      else
-        Attempt.failure(Err("UShort value is outside of valid range."))
-    )(uShort => Attempt.successful(uShort))
+    uLongCodec.exmap(
+      uLong =>
+        if (uLong >= minUShortValue && uLong <= maxUShortValue)
+          Attempt.successful(uLong.toInt)
+        else
+          Attempt.failure(Err("UShort value is outside of valid range.")),
+      uShort => Attempt.successful(uShort)
+    )
 
   def byteStringCodecSized(size: Int): Codec[ByteString] =
     byteArrayCodecSized(size).xmap(ByteString.copyFrom, _.toByteArray)

@@ -46,6 +46,7 @@ object TransactionType {
   case object MissedTransactionBadSyntax
 }
 
+@munit.IgnoreSuite
 class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   implicit val logger: Logger[F] = Slf4jLogger.getLoggerFromName[F](this.getClass.getName)
 

@@ -121,7 +121,7 @@ class NodeNetworkControlTest extends CatsEffectSuite {
               networkControlA <- NetworkControlClient.make[F](nodeAIp, nodeARpcPort, tls = false)
               networkControlB <- NetworkControlClient.make[F](nodeBIp, nodeBRpcPort, tls = false)
               rpcClients = List(rpcClientA, rpcClientB)
-              implicit0(logger: Logger[F]) <- Slf4jLogger.fromName[F]("NodeNetworkControlTest").toResource
+              given Logger[F] <- Slf4jLogger.fromName[F]("NodeNetworkControlTest").toResource
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
               indexerChannelA                <- xyz.stratalab.grpc.makeChannel[F](nodeAIp, nodeARpcPort, tls = false)
               indexerTxServiceA              <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)

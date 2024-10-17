@@ -7,7 +7,6 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.indexer.algebras.VertexFetcherAlgebra
-import xyz.stratalab.indexer.interpreter.GraphTokenFetcher
 import xyz.stratalab.indexer.model.{GE, GEs}
 import xyz.stratalab.indexer.orientDb.instances.{SchemaGroupPolicy, SchemaSeriesPolicy}
 import xyz.stratalab.sdk.generators.ModelGenerators._

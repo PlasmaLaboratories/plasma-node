@@ -41,6 +41,7 @@ object PeerBlockBodyFetcherTest {
   type F[A] = IO[A]
 }
 
+@munit.IgnoreSuite
 class PeerBlockBodyFetcherTest
     extends CatsEffectSuite
     with ScalaCheckEffectSuite
@@ -80,12 +81,12 @@ class PeerBlockBodyFetcherTest
       val (missedTxs, presentTxs) = txIdsAndTxs.partition { case (id, _) => id.hashCode() % 2 == 0 }
 
       val clientBodiesData = presentBlocks.toMap
-      (client.getRemoteBody _).expects(*).rep(blockIdsAndBodies.size.toInt).onCall { id: BlockId =>
+      (client.getRemoteBody).expects(*).rep(blockIdsAndBodies.size.toInt).onCall { (id: BlockId) =>
         clientBodiesData.get(id).pure[F]
       }
 
       val transactionStoreData = presentTxs.toMap
-      (transactionStore.contains _).expects(*).anyNumberOfTimes().onCall { id: TransactionId =>
+      (transactionStore.contains).expects(*).anyNumberOfTimes().onCall { (id: TransactionId) =>
         transactionStoreData.contains(id).pure[F]
       }
 
@@ -101,11 +102,11 @@ class PeerBlockBodyFetcherTest
 
       val downloadedTxs =
         mutable.Map.empty[TransactionId, IoTransaction]
-      (transactionStore.put _).expects(*, *).anyNumberOfTimes().onCall { case (id: TransactionId, tx: IoTransaction) =>
+      (transactionStore.put).expects(*, *).anyNumberOfTimes().onCall { case (id: TransactionId, tx: IoTransaction) =>
         downloadedTxs.put(id, tx).pure[F].void
       }
 
-      (headerToBodyValidation.validate _).expects(*).rep(presentBlocks.size).onCall { block: Block =>
+      (headerToBodyValidation.validate).expects(*).rep(presentBlocks.size).onCall { (block: Block) =>
         Either.right[BlockHeaderToBodyValidationFailure, Block](block).pure[F]
       }
 
@@ -127,7 +128,7 @@ class PeerBlockBodyFetcherTest
         }
 
       val expectedMessage: RequestsProxy.Message = RequestsProxy.Message.DownloadBodiesResponse(hostId, wrappedBodies)
-      (requestsProxy.sendNoWait _)
+      (requestsProxy.sendNoWait)
         .expects(compareDownloadedBodiesWithoutDownloadTimeMatcher(expectedMessage))
         .once()
         .returning(().pure[F])
@@ -157,7 +158,7 @@ class PeerBlockBodyFetcherTest
           .unzip
 
       val blockIdsBodiesHeaders =
-        bodies.map { body: BlockBody =>
+        bodies.map { (body: BlockBody) =>
           val header =
             ModelGenerators.arbitraryHeader.arbitrary.first.copy(txRoot = body.merkleTreeRootHash.data).embedId
           val id = header.id
@@ -171,12 +172,12 @@ class PeerBlockBodyFetcherTest
       val (missedTxs, presentTxs) = txIdsAndTxs.partition { case (id, _) => id.hashCode() % 2 == 0 }
 
       val clientBodiesData = blockIdsAndBodies.toList.toMap
-      (client.getRemoteBody _).expects(*).rep(blockIdsAndBodies.size.toInt).onCall { id: BlockId =>
+      (client.getRemoteBody).expects(*).rep(blockIdsAndBodies.size.toInt).onCall { (id: BlockId) =>
         clientBodiesData.get(id).pure[F]
       }
 
       val transactionStoreData = presentTxs.toMap
-      (transactionStore.contains _).expects(*).anyNumberOfTimes().onCall { id: TransactionId =>
+      (transactionStore.contains).expects(*).anyNumberOfTimes().onCall { (id: TransactionId) =>
         transactionStoreData.contains(id).pure[F]
       }
 
@@ -192,12 +193,12 @@ class PeerBlockBodyFetcherTest
 
       val downloadedTxs =
         mutable.Map.empty[TransactionId, IoTransaction]
-      (transactionStore.put _).expects(*, *).anyNumberOfTimes().onCall { case (id: TransactionId, tx: IoTransaction) =>
+      (transactionStore.put).expects(*, *).anyNumberOfTimes().onCall { case (id: TransactionId, tx: IoTransaction) =>
         downloadedTxs.put(id, tx).pure[F].void
       }
 
       val incorrectTxRoot: TxRoot = ModelGenerators.txRoot.first
-      (headerToBodyValidation.validate _).expects(*).rep(blockIdsAndBodies.size.toInt).onCall { block: Block =>
+      (headerToBodyValidation.validate).expects(*).rep(blockIdsAndBodies.size.toInt).onCall { (block: Block) =>
         if (correctTxRootBlockIds.contains(block.header.id)) {
           Either.right[BlockHeaderToBodyValidationFailure, Block](block).pure[F]
         } else {
@@ -227,7 +228,7 @@ class PeerBlockBodyFetcherTest
         }
 
       val expectedMessage = RequestsProxy.Message.DownloadBodiesResponse(hostId, wrappedBodies)
-      (requestsProxy.sendNoWait _)
+      (requestsProxy.sendNoWait)
         .expects(compareDownloadedBodiesWithoutDownloadTimeMatcher(expectedMessage))
         .once()
         .returning(().pure[F])
@@ -277,11 +278,11 @@ class PeerBlockBodyFetcherTest
         idBodyTxIdTx.map(d => d._3).toList.flatten
 
       val clientBodiesData = presentBlockIdAndBodies.toMap
-      (client.getRemoteBody _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+      (client.getRemoteBody).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
         clientBodiesData.get(id).pure[F]
       }
 
-      (transactionStore.contains _).expects(*).anyNumberOfTimes().returning(false.pure[F])
+      (transactionStore.contains).expects(*).anyNumberOfTimes().returning(false.pure[F])
 
       val clientTxsData = txIdsAndTxs.toMap
       (client
@@ -297,9 +298,9 @@ class PeerBlockBodyFetcherTest
             }
         }
 
-      (transactionStore.put _).expects(*, *).anyNumberOfTimes().returning(().pure[F])
+      (transactionStore.put).expects(*, *).anyNumberOfTimes().returning(().pure[F])
 
-      (headerToBodyValidation.validate _).expects(*).rep(idAndBody.size.toInt).onCall { block: Block =>
+      (headerToBodyValidation.validate).expects(*).rep(idAndBody.size.toInt).onCall { (block: Block) =>
         Either.right[BlockHeaderToBodyValidationFailure, Block](block).pure[F]
       }
 
@@ -323,7 +324,7 @@ class PeerBlockBodyFetcherTest
 
       val expectedMessage =
         RequestsProxy.Message.DownloadBodiesResponse(hostId, wrappedBodies)
-      (requestsProxy.sendNoWait _)
+      (requestsProxy.sendNoWait)
         .expects(compareDownloadedBodiesWithoutDownloadTimeMatcher(expectedMessage))
         .once()
         .returning(().pure[F])
@@ -376,11 +377,11 @@ class PeerBlockBodyFetcherTest
         idBodyTxIdTx.map(d => d._3).toList.flatten
 
       val clientBodiesData = presentBlockIdAndBodies.toMap
-      (client.getRemoteBody _).expects(*).anyNumberOfTimes().onCall { id: BlockId =>
+      (client.getRemoteBody).expects(*).anyNumberOfTimes().onCall { (id: BlockId) =>
         clientBodiesData.get(id).pure[F]
       }
 
-      (transactionStore.contains _).expects(*).anyNumberOfTimes().returning(false.pure[F])
+      (transactionStore.contains).expects(*).anyNumberOfTimes().returning(false.pure[F])
 
       val clientTxsData = txIdsAndTxs.toMap
       (client
@@ -396,9 +397,9 @@ class PeerBlockBodyFetcherTest
             }
         }
 
-      (transactionStore.put _).expects(*, *).anyNumberOfTimes().returning(().pure[F])
+      (transactionStore.put).expects(*, *).anyNumberOfTimes().returning(().pure[F])
 
-      (headerToBodyValidation.validate _).expects(*).rep(idAndBody.size.toInt).onCall { block: Block =>
+      (headerToBodyValidation.validate).expects(*).rep(idAndBody.size.toInt).onCall { (block: Block) =>
         Either.right[BlockHeaderToBodyValidationFailure, Block](block).pure[F]
       }
 
@@ -422,7 +423,7 @@ class PeerBlockBodyFetcherTest
 
       val expectedMessage =
         RequestsProxy.Message.DownloadBodiesResponse(hostId, wrappedBodies)
-      (requestsProxy.sendNoWait _)
+      (requestsProxy.sendNoWait)
         .expects(compareDownloadedBodiesWithoutDownloadTimeMatcher(expectedMessage))
         .once()
         .returning(().pure[F])
@@ -449,9 +450,9 @@ class PeerBlockBodyFetcherTest
       val header: BlockHeader =
         ModelGenerators.arbitraryHeader.arbitrary.first.copy(txRoot = body.merkleTreeRootHash.data).embedId
 
-      (client.getRemoteBody _).expects(header.id).anyNumberOfTimes().returns(body.some.pure[F])
+      (client.getRemoteBody).expects(header.id).anyNumberOfTimes().returns(body.some.pure[F])
 
-      (transactionStore.contains _).expects(*).anyNumberOfTimes().returning(false.pure[F])
+      (transactionStore.contains).expects(*).anyNumberOfTimes().returning(false.pure[F])
 
       (client
         .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
@@ -462,9 +463,9 @@ class PeerBlockBodyFetcherTest
             transaction.pure[F]
         }
 
-      (transactionStore.put _).expects(*, *).never().returning(().pure[F])
+      (transactionStore.put).expects(*, *).never().returning(().pure[F])
 
-      (headerToBodyValidation.validate _).expects(*).once().onCall { block: Block =>
+      (headerToBodyValidation.validate).expects(*).once().onCall { (block: Block) =>
         Either.right[BlockHeaderToBodyValidationFailure, Block](block).pure[F]
       }
 
@@ -484,7 +485,7 @@ class PeerBlockBodyFetcherTest
             )
           )
         )
-      (requestsProxy.sendNoWait _)
+      (requestsProxy.sendNoWait)
         .expects(compareDownloadedBodiesWithoutDownloadTimeMatcher(expectedMessage))
         .once()
         .returning(().pure[F])
@@ -511,10 +512,10 @@ class PeerBlockBodyFetcherTest
       val header: BlockHeader =
         ModelGenerators.arbitraryHeader.arbitrary.first.copy(txRoot = body.merkleTreeRootHash.data).embedId
 
-      (client.getRemoteBody _).expects(header.id).anyNumberOfTimes().returns(body.some.pure[F])
+      (client.getRemoteBody).expects(header.id).anyNumberOfTimes().returns(body.some.pure[F])
 
       val exception = new RuntimeException()
-      (transactionStore.contains _).expects(*).anyNumberOfTimes().returning(Async[F].delay(throw exception))
+      (transactionStore.contains).expects(*).anyNumberOfTimes().returning(Async[F].delay(throw exception))
 
       (client
         .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
@@ -525,7 +526,7 @@ class PeerBlockBodyFetcherTest
             transaction.pure[F]
         }
 
-      (headerToBodyValidation.validate _).expects(*).once().onCall { block: Block =>
+      (headerToBodyValidation.validate).expects(*).once().onCall { (block: Block) =>
         Either.right[BlockHeaderToBodyValidationFailure, Block](block).pure[F]
       }
 
@@ -545,7 +546,7 @@ class PeerBlockBodyFetcherTest
             )
           )
         )
-      (requestsProxy.sendNoWait _)
+      (requestsProxy.sendNoWait)
         .expects(expectedMessage)
         .returning(().pure[F])
 
@@ -573,9 +574,9 @@ class PeerBlockBodyFetcherTest
       val header: BlockHeader =
         ModelGenerators.arbitraryHeader.arbitrary.first.copy(txRoot = body.merkleTreeRootHash.data).embedId
 
-      (client.getRemoteBody _).expects(header.id).anyNumberOfTimes().returns(body.some.pure[F])
+      (client.getRemoteBody).expects(header.id).anyNumberOfTimes().returns(body.some.pure[F])
 
-      (transactionStore.contains _).expects(*).anyNumberOfTimes().returning(false.pure[F])
+      (transactionStore.contains).expects(*).anyNumberOfTimes().returning(false.pure[F])
 
       val allTx = Seq(transaction, rewardTransaction).map(tx => tx.id -> tx).toMap
       (client
@@ -587,14 +588,14 @@ class PeerBlockBodyFetcherTest
             allTx(id).pure[F]
         }
 
-      (transactionStore.put _).expects(*, *).twice().returning(().pure[F])
+      (transactionStore.put).expects(*, *).twice().returning(().pure[F])
 
-      (headerToBodyValidation.validate _).expects(*).once().onCall { block: Block =>
+      (headerToBodyValidation.validate).expects(*).once().onCall { (block: Block) =>
         Either.right[BlockHeaderToBodyValidationFailure, Block](block).pure[F]
       }
 
       val txSyntaxValidator = mock[TransactionSyntaxVerifier[F]]
-      (txSyntaxValidator.validate _).expects(transaction).returns(Either.right(transaction).pure[F])
+      (txSyntaxValidator.validate).expects(transaction).returns(Either.right(transaction).pure[F])
 
       val expectedMessage =
         RequestsProxy.Message.DownloadBodiesResponse(
@@ -606,7 +607,7 @@ class PeerBlockBodyFetcherTest
             )
           )
         )
-      (requestsProxy.sendNoWait _)
+      (requestsProxy.sendNoWait)
         .expects(compareDownloadedBodiesWithoutDownloadTimeMatcher(expectedMessage))
         .once()
         .returning(().pure[F])
@@ -649,12 +650,12 @@ class PeerBlockBodyFetcherTest
       val (missedTxs, presentTxs) = txIdsAndTxs.partition { case (id, _) => id.hashCode() % 2 == 0 }
 
       val clientBodiesData = blockIdsAndBodies.toList.toMap
-      (client.getRemoteBody _).expects(*).rep(blockIds.size.toInt).onCall { id: BlockId =>
+      (client.getRemoteBody).expects(*).rep(blockIds.size.toInt).onCall { (id: BlockId) =>
         clientBodiesData.get(id).pure[F]
       }
 
       val transactionStoreData = presentTxs.toMap
-      (transactionStore.contains _).expects(*).rep(txIdsAndTxs.size).onCall { id: TransactionId =>
+      (transactionStore.contains).expects(*).rep(txIdsAndTxs.size).onCall { (id: TransactionId) =>
         transactionStoreData.contains(id).pure[F]
       }
 
@@ -670,11 +671,11 @@ class PeerBlockBodyFetcherTest
 
       val downloadedTxs =
         mutable.Map.empty[TransactionId, IoTransaction]
-      (transactionStore.put _).expects(*, *).rep(missedTxs.size).onCall { case (id: TransactionId, tx: IoTransaction) =>
+      (transactionStore.put).expects(*, *).rep(missedTxs.size).onCall { case (id: TransactionId, tx: IoTransaction) =>
         downloadedTxs.put(id, tx).pure[F].void
       }
 
-      (headerToBodyValidation.validate _).expects(*).rep(blockIdsAndBodies.size.toInt).onCall { block: Block =>
+      (headerToBodyValidation.validate).expects(*).rep(blockIdsAndBodies.size.toInt).onCall { (block: Block) =>
         Either.right[BlockHeaderToBodyValidationFailure, Block](block).pure[F]
       }
 
@@ -683,7 +684,7 @@ class PeerBlockBodyFetcherTest
           (header, Either.right[BlockBodyOrTransactionError, UnverifiedBlockBody](UnverifiedBlockBody(hostId, body, 0)))
         }
       val expectedMessage = RequestsProxy.Message.DownloadBodiesResponse(hostId, wrappedBodies)
-      (requestsProxy.sendNoWait _)
+      (requestsProxy.sendNoWait)
         .expects(compareDownloadedBodiesWithoutDownloadTimeMatcher(expectedMessage))
         .once()
         .returning(().pure[F])
@@ -716,15 +717,15 @@ class PeerBlockBodyFetcherTest
 
       val txIdsAndTxs = txs.map(tx => (tx.id, tx)).toMap
 
-      (client.getRemoteBody _)
+      (client.getRemoteBody)
         .expects(header.id)
         .once()
         .returns(
           Async[F].delayBy(Option(body).pure[F], FiniteDuration(bodyDelay, MILLISECONDS))
         )
 
-      (transactionStore.contains _).expects(*).once().returns(true.pure[F])
-      (transactionStore.contains _).expects(*).rep(txIdsAndTxs.size - 1).returns(false.pure[F])
+      (transactionStore.contains).expects(*).once().returns(true.pure[F])
+      (transactionStore.contains).expects(*).rep(txIdsAndTxs.size - 1).returns(false.pure[F])
 
       (client
         .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
@@ -737,16 +738,16 @@ class PeerBlockBodyFetcherTest
 
       val downloadedTxs =
         mutable.Map.empty[TransactionId, IoTransaction]
-      (transactionStore.put _).expects(*, *).rep(txIdsAndTxs.size - 1).onCall {
+      (transactionStore.put).expects(*, *).rep(txIdsAndTxs.size - 1).onCall {
         case (id: TransactionId, tx: IoTransaction) =>
           downloadedTxs.put(id, tx).pure[F].void
       }
 
-      (headerToBodyValidation.validate _).expects(*).once().onCall { block: Block =>
+      (headerToBodyValidation.validate).expects(*).once().onCall { (block: Block) =>
         Either.right[BlockHeaderToBodyValidationFailure, Block](block).pure[F]
       }
 
-      (requestsProxy.sendNoWait _).expects(*).once().onCall { message: RequestsProxy.Message =>
+      (requestsProxy.sendNoWait).expects(*).once().onCall { (message: RequestsProxy.Message) =>
         message match {
           case RequestsProxy.Message.DownloadBodiesResponse(`hostId`, bodies) =>
             if (

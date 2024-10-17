@@ -4,7 +4,7 @@ import cats.Show
 import cats.implicits._
 import com.google.protobuf.ByteString
 import mainargs._
-import monocle.macros.{GenLens, Lenses}
+import monocle.macros.GenLens
 import monocle.syntax.all._
 import xyz.stratalab.common.application.{ContainsDebugFlag, ContainsUserConfigs}
 import xyz.stratalab.consensus.models.StakingAddress
@@ -12,12 +12,12 @@ import xyz.stratalab.sdk.models.LockAddress
 
 // $COVERAGE-OFF$
 
-@main @Lenses
+@main
 case class Args(startup: Args.Startup, runtime: Args.Runtime)
 
 object Args {
 
-  @main @Lenses
+  @main
   case class Startup(
     @arg(
       doc = "Zero or more config files (.conf, .json, .yaml) to apply to the node." +
@@ -49,7 +49,7 @@ object Args {
     idle: Boolean = false
   )
 
-  @main @Lenses
+  @main
   case class Runtime(
     @arg(
       doc = "The directory to use when saving/reading blockchain data"
@@ -92,7 +92,7 @@ object Args {
     indexerArgs: IndexerArgs
   )
 
-  @main @Lenses
+  @main
   case class PrivateTestnetArgs(
     @arg(
       doc = "A UTC Unix epoch timestamp (ms) to use when seeding a private testnet."
@@ -112,7 +112,7 @@ object Args {
     regtest: Flag
   )
 
-  @main @Lenses
+  @main
   case class IndexerArgs(
     @arg(
       doc = "Disables the Indexer server and Indexer gRPC services"
@@ -128,7 +128,7 @@ object Args {
     orientDbPassword: Option[String]
   )
 
-  @main @Lenses
+  @main
   case class StakingArgs(
     @arg(
       doc = "The directory of the block producer's staking keys"

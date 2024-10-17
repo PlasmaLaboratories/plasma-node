@@ -54,8 +54,8 @@ object OperationalKeyMaker {
           clock.operationalPeriodRange(activationOperationalPeriod).map(_.start).flatMap(clock.delayedUntilSlot)
         )
         .toResource
-      stateRef                     <- Ref.of(none[(Long, Map[Long, Deferred[F, Option[OperationalKeyOut]]])]).toResource
-      implicit0(logger: Logger[F]) <- Slf4jLogger.fromName("OperationalKeyMaker").toResource
+      stateRef        <- Ref.of(none[(Long, Map[Long, Deferred[F, Option[OperationalKeyOut]]])]).toResource
+      given Logger[F] <- Slf4jLogger.fromName("OperationalKeyMaker").toResource
       impl = new Impl[F](
         activationOperationalPeriod,
         address,

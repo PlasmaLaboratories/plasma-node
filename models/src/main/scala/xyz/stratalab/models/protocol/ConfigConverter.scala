@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind._
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.scala._
-import com.github.pjfanning.jackson.reflect.ScalaReflectExtensions
 import quivr.models
 import quivr.models.Int128
 import xyz.stratalab.models.utility.Ratio
@@ -27,7 +26,7 @@ object ConfigConverter {
     .addModule(module)
     .enable(DeserializationFeature.FAIL_ON_NULL_CREATOR_PROPERTIES)
     .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
-    .build() :: ClassTagExtensions) :: ScalaReflectExtensions
+    .build() :: ClassTagExtensions)
 
   val jsonConfigKey: String = "jsonConfig"
 

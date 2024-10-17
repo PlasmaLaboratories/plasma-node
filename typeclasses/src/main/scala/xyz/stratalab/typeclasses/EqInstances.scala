@@ -7,7 +7,7 @@ import grpc.health.v1.ServingStatus
 import xyz.stratalab.consensus.models._
 import xyz.stratalab.crypto.generation.mnemonic.Entropy
 import xyz.stratalab.models._
-import xyz.stratalab.models.utility.Sized
+import xyz.stratalab.models.utility.{Sized, _}
 import xyz.stratalab.sdk.models.TransactionId
 
 trait EqInstances {
@@ -18,17 +18,27 @@ trait EqInstances {
   implicit val bytesStringEq: Eq[ByteString] =
     Eq.fromUniversalEquals
 
-  implicit def sizedMaxEq[T: Eq, L]: Eq[Sized.Max[T, L]] =
+// does not compile for scala 3, TODO
+//  implicit def sizedMaxEq[T: Eq, L]: Eq[Sized.Max[T, L]] =
+//    (a, b) => a.data === b.data
+//
+//  implicit def sizedStrictEq[T: Eq, L]: Eq[Sized.Strict[T, L]] =
+//    (a, b) => a.data === b.data
+
+//  implicit def etaEq: Eq[Eta] =
+//    (a, b) => a.data === b.data
+
+  implicit def sizedStrictEq: Eq[Sized.Strict[ByteString, Lengths.`32`.type]] =
     (a, b) => a.data === b.data
 
-  implicit def sizedStrictEq[T: Eq, L]: Eq[Sized.Strict[T, L]] =
+  implicit def bloomFilterEq: Eq[BloomFilter] =
     (a, b) => a.data === b.data
 
   implicit val entropyEq: Eq[Entropy] =
     (a, b) => a.value === b.value
 
   implicit val rhoEq: Eq[Rho] =
-    (a, b) => a.sizedBytes === b.sizedBytes
+    (a, b) => a.sizedBytes.data === b.sizedBytes.data
 
   implicit val blockIdEq: Eq[BlockId] =
     (a, b) => a.value === b.value

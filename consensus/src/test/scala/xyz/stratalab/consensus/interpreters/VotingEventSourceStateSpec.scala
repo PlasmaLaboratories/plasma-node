@@ -13,7 +13,6 @@ import xyz.stratalab.codecs.bytes.tetra.ModelGenerators._
 import xyz.stratalab.codecs.bytes.tetra.instances._
 import xyz.stratalab.consensus._
 import xyz.stratalab.consensus.algebras.VersionInfoAlgebra
-import xyz.stratalab.consensus.interpreters.VotingEventSourceState
 import xyz.stratalab.consensus.models.{BlockHeader, BlockId, _}
 import xyz.stratalab.crypto.signing.Ed25519VRF
 import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}

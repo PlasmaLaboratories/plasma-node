@@ -7,10 +7,10 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import quivr.models.Int128
 import xyz.stratalab.ledger.models.AssetId
 import xyz.stratalab.models.ModelGenerators.GenHelper
+import xyz.stratalab.numerics.implicits.intAsInt128
 import xyz.stratalab.sdk.generators.ModelGenerators._
 import xyz.stratalab.sdk.models.box.{Attestation, FungibilityType, QuantityDescriptorType, Value}
 import xyz.stratalab.sdk.models.transaction._
-import xyz.stratalab.sdk.syntax._
 
 class TransactionRewardCalculatorSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
 

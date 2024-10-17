@@ -177,7 +177,7 @@ object MempoolProtected {
               "strata_node_mempool_mean_fee_per_kb",
               "Average fee per kb in Topls.",
               Map(),
-              meanFeePerKByte.toLong
+              longToJson(meanFeePerKByte.toLong)
             )
           )
           _ <- EitherT.liftF(
@@ -185,7 +185,7 @@ object MempoolProtected {
               "strata_node_mempool_free_size",
               "Current free size of the mempool.",
               Map(),
-              freeMempoolSize.toLong
+              longToJson(freeMempoolSize.toLong)
             )
           )
           _ <- EitherT.liftF(
@@ -193,7 +193,7 @@ object MempoolProtected {
               "strata_node_mempool_free_size_percent",
               "Current free size ratio of the mempool.",
               Map(),
-              freeMempoolSizePercent.toLong
+              longToJson(freeMempoolSizePercent.toLong)
             )
           )
           _ <- EitherT.liftF(
@@ -201,7 +201,7 @@ object MempoolProtected {
               "strata_node_mempool_minimum_fee_per_kilobyte",
               "Minimum fee per kb.",
               Map(),
-              minimumFeePerKByte.toLong
+              longToJson(minimumFeePerKByte.toLong)
             )
           )
 

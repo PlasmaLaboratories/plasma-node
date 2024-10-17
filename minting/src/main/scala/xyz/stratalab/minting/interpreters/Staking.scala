@@ -80,7 +80,7 @@ object Staking {
                   "strata_node_staking_is_eligible",
                   "Boolean indicating if the staker is eligible in the current operational period.",
                   Map(),
-                  if (isLeader) 1L else 0L
+                  longToJson(if (isLeader) 1L else 0L)
                 )
               )
               _ <- OptionT.liftF(
@@ -88,7 +88,7 @@ object Staking {
                   "strata_node_staking_relative_stake",
                   "Percentage of stake owned by the operator at the given slot.",
                   Map(),
-                  (relativeStake.numerator / relativeStake.denominator).toLong
+                  longToJson((relativeStake.numerator / relativeStake.denominator).toLong)
                 )
               )
               _ <- OptionT.liftF(if (isLeader) Logger[F].info(logMessage) else Logger[F].debug(logMessage))

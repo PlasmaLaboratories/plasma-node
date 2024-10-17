@@ -40,7 +40,7 @@ class LocalChainSpec extends CatsEffectSuite with ScalaCheckEffectSuite with Asy
       override def enoughHeightToCompare(currentHeight: Long, commonHeight: Long, proposedHeight: Long): F[Long] = ???
     }
 
-  val emptyFetcher: BlockId => F[SlotData] = { _: BlockId =>
+  val emptyFetcher: BlockId => F[SlotData] = { (_: BlockId) =>
     SlotData(SlotId.of(1, blockId1), SlotId.of(0, blockId0)).pure[F]
   }
 

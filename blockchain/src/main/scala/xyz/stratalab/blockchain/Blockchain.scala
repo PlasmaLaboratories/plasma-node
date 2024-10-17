@@ -130,8 +130,8 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
       currentPeers            <- Ref.of[F, Set[RemotePeer]](Set.empty[RemotePeer]).toResource
       initialPeers = knownPeers.map(kp => DisconnectedPeer(RemoteAddress(kp.host, kp.port), none))
       remotePeersStream = Stream.fromQueueUnterminated[F, DisconnectedPeer](remotePeers)
-      implicit0(dnsResolver: DnsResolver[F]) = new DefaultDnsResolver[F]()
-      implicit0(reverseDnsResolver: ReverseDnsResolver[F]) =
+      given DnsResolver[F] = new DefaultDnsResolver[F]()
+      given ReverseDnsResolver[F] =
         if (networkProperties.useHostNames) new DefaultReverseDnsResolver[F]() else new NoOpReverseResolver[F]
       bridge <- ActorPeerHandlerBridgeAlgebra
         .make(

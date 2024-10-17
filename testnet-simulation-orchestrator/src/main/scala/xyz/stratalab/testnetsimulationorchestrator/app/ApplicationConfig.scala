@@ -2,40 +2,33 @@ package xyz.stratalab.testnetsimulationorchestrator.app
 
 import cats.Show
 import com.typesafe.config.Config
-import monocle.macros.Lenses
-import pureconfig.ConfigSource
-import pureconfig.generic.auto._
+import pureconfig.generic.derivation.default._
+import pureconfig.{ConfigSource, _}
 
 import scala.concurrent.duration.FiniteDuration
 
-@Lenses
 case class ApplicationConfig(
   simulationOrchestrator: ApplicationConfig.SimulationOrchestrator
-)
+) derives ConfigReader
 
 object ApplicationConfig {
 
-  @Lenses
   case class SimulationOrchestrator(
     kubernetes: SimulationOrchestrator.Kubernetes,
     scenario:   SimulationOrchestrator.Scenario,
     nodes:      List[SimulationOrchestrator.Node],
     publish:    SimulationOrchestrator.Publish
-  )
+  ) derives ConfigReader
 
   object SimulationOrchestrator {
 
-    @Lenses
-    case class Kubernetes(namespace: String)
+    case class Kubernetes(namespace: String) derives ConfigReader
 
-    @Lenses
-    case class Scenario(targetHeight: Long, transactionsPerSecond: Double, timeout: FiniteDuration)
+    case class Scenario(targetHeight: Long, transactionsPerSecond: Double, timeout: FiniteDuration) derives ConfigReader
 
-    @Lenses
-    case class Node(name: String, host: String, port: Int)
+    case class Node(name: String, host: String, port: Int) derives ConfigReader
 
-    @Lenses
-    case class Publish(bucket: String, filePrefix: String)
+    case class Publish(bucket: String, filePrefix: String) derives ConfigReader
   }
 
   def unsafe(config: Config): ApplicationConfig =

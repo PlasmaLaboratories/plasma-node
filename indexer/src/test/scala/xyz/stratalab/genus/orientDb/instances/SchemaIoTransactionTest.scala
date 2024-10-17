@@ -9,7 +9,6 @@ import xyz.stratalab.indexer.DbFixtureUtil
 import xyz.stratalab.indexer.orientDb.OrientThread
 import xyz.stratalab.indexer.orientDb.instances.SchemaIoTransaction.Field
 import xyz.stratalab.indexer.orientDb.instances.VertexSchemaInstances.instances.{blockHeaderSchema, ioTransactionSchema}
-import xyz.stratalab.indexer.orientDb.instances.{SchemaBlockHeader, SchemaIoTransaction}
 import xyz.stratalab.models.ModelGenerators.GenHelper
 import xyz.stratalab.models.generators.consensus.ModelGenerators
 import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGenerator}
@@ -23,7 +22,7 @@ class SchemaIoTransactionTest
     with AsyncMockFactory
     with DbFixtureUtil {
 
-  orientDbFixture.test("IoTransaction Schema Metadata") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixture.test("IoTransaction Schema Metadata") { case (odbFactory, oThread: OrientThread[F]) =>
     val res = for {
       dbNoTx             <- oThread.delay(odbFactory.getNoTx).toResource
       databaseDocumentTx <- oThread.delay(dbNoTx.getRawGraph).toResource
@@ -72,7 +71,7 @@ class SchemaIoTransactionTest
   }
 
   orientDbFixture.test("Transaction and Block Header Schema Add vertex") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, oThread: OrientThread[F]) =>
       val res = for {
 
         dbTx        <- oThread.delay(odbFactory.getTx).toResource

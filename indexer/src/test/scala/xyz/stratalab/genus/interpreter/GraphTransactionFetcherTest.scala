@@ -10,7 +10,6 @@ import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import xyz.stratalab.consensus.models.BlockHeader
 import xyz.stratalab.indexer.algebras.VertexFetcherAlgebra
-import xyz.stratalab.indexer.interpreter.GraphTransactionFetcher
 import xyz.stratalab.indexer.model.{GE, GEs}
 import xyz.stratalab.indexer.orientDb.OrientThread
 import xyz.stratalab.indexer.orientDb.instances.{SchemaBlockHeader, SchemaIoTransaction, SchemaTxo}
@@ -31,8 +30,8 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
       withMock {
 
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          given OrientThread[F] <- OrientThread.create[F]
+          vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           expectedTh = new IllegalStateException("boom!")
           _ = (vertexFetcher.fetchTransaction _)
             .expects(transactionId)
@@ -63,8 +62,8 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
       withMock {
 
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          given OrientThread[F] <- OrientThread.create[F]
+          vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           _ = (vertexFetcher.fetchTransaction _)
             .expects(transactionId)
             .once()
@@ -88,9 +87,9 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
       withMock {
 
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
-          vertex                                   <- mock[Vertex].pure[F].toResource
+          given OrientThread[F] <- OrientThread.create[F]
+          vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          vertex                <- mock[Vertex].pure[F].toResource
 
           _ = (vertex.getProperty[Array[Byte]] _)
             .expects(SchemaIoTransaction.Field.Transaction)
@@ -121,8 +120,8 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
       withMock {
 
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          given OrientThread[F] <- OrientThread.create[F]
+          vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           expectedTh = new IllegalStateException("boom!")
           _ = (vertexFetcher.fetchTransaction _)
             .expects(transactionId)
@@ -153,8 +152,8 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
       withMock {
 
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          given OrientThread[F] <- OrientThread.create[F]
+          vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           _ = (vertexFetcher.fetchTransaction _)
             .expects(transactionId)
             .once()
@@ -181,8 +180,8 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
         val iotxVertex = mock[Vertex]
 
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          given OrientThread[F] <- OrientThread.create[F]
+          vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
 
           _ = (vertexFetcher.fetchTransaction _)
             .expects(transactionId)
@@ -305,8 +304,8 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
       withMock {
 
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          given OrientThread[F] <- OrientThread.create[F]
+          vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           expectedTh = new IllegalStateException("boom!")
           _ = (vertexFetcher.fetchLockAddress _)
             .expects(lockAddress)
@@ -337,8 +336,8 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
       withMock {
 
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          given OrientThread[F] <- OrientThread.create[F]
+          vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           vertex = mock[Vertex]
 
           _ = (vertexFetcher.fetchLockAddress _)
@@ -374,8 +373,8 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
         withMock {
 
           val res = for {
-            implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-            vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+            given OrientThread[F] <- OrientThread.create[F]
+            vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
             lockAddressVertex = mock[Vertex]
 
             _ = (vertexFetcher.fetchLockAddress _)
@@ -414,8 +413,8 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
         withMock {
 
           val res = for {
-            implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-            vertexFetcher                            <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+            given OrientThread[F] <- OrientThread.create[F]
+            vertexFetcher         <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
             lockAddressVertex = mock[Vertex]
             spendingTransactionVertex = mock[Vertex]
             txoVertex = mock[Vertex]

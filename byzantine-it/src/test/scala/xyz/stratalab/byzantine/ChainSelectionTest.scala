@@ -41,7 +41,7 @@ class ChainSelectionTest extends IntegrationSuite {
 
     val resource = for {
       (dockerSupport, _dockerClient) <- DockerSupport.make[F]()
-      implicit0(dockerClient: DockerClient) = _dockerClient
+      given DockerClient = _dockerClient
       node0 <- dockerSupport.createNode("ChainSelectionTest-node0", "ChainSelectionTest", config0)
       node1 <- dockerSupport.createNode("ChainSelectionTest-node1", "ChainSelectionTest", config1)
 

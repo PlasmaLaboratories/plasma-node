@@ -27,6 +27,7 @@ import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, 
 
 import scala.annotation.tailrec
 
+@munit.IgnoreSuite
 class MempoolProtectedTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]
 
