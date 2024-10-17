@@ -55,11 +55,11 @@ lazy val dockerSettings = Seq(
   dockerBaseImage := "eclipse-temurin:11-jre",
   dockerUpdateLatest := sys.env.get("DOCKER_PUBLISH_LATEST_TAG").fold(false)(_.toBoolean),
   dockerLabels ++= Map(
-    "strata-node.version" -> version.value
+    "plasma-node.version" -> version.value
   ),
   dockerAliases := dockerAliases.value.flatMap { alias =>
     Seq(
-      alias.withRegistryHost(Some("docker.io/stratalab")),
+      alias.withRegistryHost(Some("docker.io/plasmalabs")),
       alias.withRegistryHost(Some("ghcr.io/plasmalaboratories"))
     )
   }
@@ -68,7 +68,7 @@ lazy val dockerSettings = Seq(
 lazy val nodeDockerSettings =
   dockerSettings ++ Seq(
     dockerExposedPorts := Seq(9084, 9085),
-    Docker / packageName := "strata-node",
+    Docker / packageName := "plasma-node",
     dockerExposedVolumes += "/node",
     dockerExposedVolumes += "/node-staking",
     dockerEnvVars ++= Map(
@@ -79,8 +79,8 @@ lazy val nodeDockerSettings =
     dockerAliases ++= (
       if (sys.env.get("DOCKER_PUBLISH_DEV_TAG").fold(false)(_.toBoolean))
         Seq(
-          DockerAlias(Some("docker.io"), Some("stratalab"), "strata-node", Some("dev")),
-          DockerAlias(Some("ghcr.io"), Some("plasmalaboratories"), "strata-node", Some("dev"))
+          DockerAlias(Some("docker.io"), Some("plasmalabs"), "plasma-node", Some("dev")),
+          DockerAlias(Some("ghcr.io"), Some("plasmalaboratories"), "plasma-node", Some("dev"))
         )
       else Seq()
       )
@@ -89,13 +89,13 @@ lazy val nodeDockerSettings =
 lazy val indexerDockerSettings =
   dockerSettings ++ Seq(
     dockerExposedPorts := Seq(9084),
-    Docker / packageName := "strata-indexer",
+    Docker / packageName := "plasma-indexer",
     dockerExposedVolumes += "/indexer",
     dockerAliases ++= (
       if (sys.env.get("DOCKER_PUBLISH_DEV_TAG").fold(false)(_.toBoolean))
         Seq(
-          DockerAlias(Some("docker.io"), Some("stratalab"), "strata-indexer", Some("dev")),
-          DockerAlias(Some("ghcr.io"), Some("plasmalaboratories"), "strata-indexer", Some("dev"))
+          DockerAlias(Some("docker.io"), Some("plasmalabs"), "plasma-indexer", Some("dev")),
+          DockerAlias(Some("ghcr.io"), Some("plasmalaboratories"), "plasma-indexer", Some("dev"))
         )
       else Seq()
       )
@@ -114,7 +114,7 @@ lazy val testnetSimulationOrchestratorDockerSettings =
 def assemblySettings(main: String) = Seq(
   assembly / mainClass := Some(main),
   assembly / test := {},
-  assemblyJarName := s"strata-node-${version.value}.jar",
+  assemblyJarName := s"plasma-node-${version.value}.jar",
   assembly / assemblyMergeStrategy ~= { old: (String => MergeStrategy) =>
     {
       case ps if ps.endsWith(".SF")  => MergeStrategy.discard
@@ -177,10 +177,10 @@ def versionFmt(out: sbtdynver.GitDescribeOutput): String = {
 
 def fallbackVersion(d: java.util.Date): String = s"HEAD-${sbtdynver.DynVer timestamp d}"
 
-lazy val strataNode = project
+lazy val plasmaNode = project
   .in(file("."))
   .settings(
-    moduleName := "strataNode",
+    moduleName := "plasmaNode",
     commonSettings,
     publish / skip := true,
     crossScalaVersions := Nil
@@ -217,10 +217,10 @@ lazy val strataNode = project
 lazy val node = project
   .in(file("node"))
   .settings(
-    name := "strata-node",
+    name := "plasma-node",
     commonSettings,
     assemblySettings("org.plasmalabs.node.NodeApp"),
-    assemblyJarName := s"strata-node-${version.value}.jar",
+    assemblyJarName := s"plasma-node-${version.value}.jar",
     nodeDockerSettings,
     crossScalaVersions := Seq(scala213),
     Compile / mainClass := Some("org.plasmalabs.node.NodeApp"),
