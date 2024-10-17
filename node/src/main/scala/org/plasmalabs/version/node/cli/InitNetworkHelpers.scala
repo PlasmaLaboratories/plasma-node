@@ -8,7 +8,6 @@ import cats.implicits._
 import com.google.protobuf.ByteString
 import com.google.protobuf.duration.Duration
 import fs2.io.file.Path
-import quivr.models.{Int128, Ratio}
 import org.plasmalabs.blockchain._
 import org.plasmalabs.codecs.bytes.tetra.instances._
 import org.plasmalabs.consensus.models.BlockId
@@ -20,6 +19,7 @@ import org.plasmalabs.sdk.models.box.Value.ConfigProposal
 import org.plasmalabs.sdk.models.transaction.UnspentTransactionOutput
 import org.plasmalabs.sdk.syntax._
 import org.plasmalabs.typeclasses.implicits._
+import quivr.models.{Int128, Ratio}
 
 import java.nio.charset.StandardCharsets
 import java.time.format.DateTimeFormatter

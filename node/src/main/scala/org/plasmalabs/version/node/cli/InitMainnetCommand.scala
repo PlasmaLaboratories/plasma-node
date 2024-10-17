@@ -5,7 +5,6 @@ import cats.effect.std.Console
 import cats.implicits._
 import com.google.protobuf.ByteString
 import fs2.io.file.{Files, Path}
-import quivr.models.SmallData
 import org.plasmalabs.blockchain.BigBang
 import org.plasmalabs.codecs.bytes.tetra.instances._
 import org.plasmalabs.config.ApplicationConfig
@@ -17,6 +16,7 @@ import org.plasmalabs.sdk.models.transaction.{IoTransaction, Schedule, UnspentTr
 import org.plasmalabs.sdk.models.{Datum, Event, LockAddress, LockId}
 import org.plasmalabs.sdk.syntax._
 import org.plasmalabs.typeclasses.implicits._
+import quivr.models.SmallData
 
 object InitMainnetCommand {
 

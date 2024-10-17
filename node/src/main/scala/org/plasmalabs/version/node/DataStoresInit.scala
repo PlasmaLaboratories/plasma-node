@@ -8,7 +8,6 @@ import cats.implicits._
 import com.google.protobuf.ByteString
 import fs2.io.file.{Files, Path}
 import org.iq80.leveldb.DBFactory
-import org.typelevel.log4cats.Logger
 import org.plasmalabs.algebras.Store
 import org.plasmalabs.blockchain._
 import org.plasmalabs.codecs.bytes.scodecs.valuetypes.ValuetypesCodecs.intCodec
@@ -33,6 +32,7 @@ import org.plasmalabs.sdk.models.box.Value.ConfigProposal
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.sdk.syntax._
 import org.plasmalabs.typeclasses.implicits._
+import org.typelevel.log4cats.Logger
 
 import DataStoresInit.DataStoreNames._
 

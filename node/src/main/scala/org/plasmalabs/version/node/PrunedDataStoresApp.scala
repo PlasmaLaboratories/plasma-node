@@ -5,8 +5,6 @@ import cats.effect.std.Queue
 import cats.effect.{IO, Resource}
 import cats.implicits._
 import fs2.io.file.{Files, Path}
-import org.typelevel.log4cats.Logger
-import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.plasmalabs.algebras.Store
 import org.plasmalabs.blockchain.{DataStores, PrunedDataStores}
 import org.plasmalabs.codecs.bytes.tetra.instances._
@@ -17,6 +15,8 @@ import org.plasmalabs.node.models._
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.typeclasses.implicits._
+import org.typelevel.log4cats.Logger
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import DataStoresInit.DataStoreNames._
 

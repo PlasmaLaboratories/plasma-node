@@ -2,12 +2,12 @@ package org.plasmalabs.node
 
 import cats.effect.{IO, Resource}
 import cats.implicits._
-import org.typelevel.log4cats.Logger
-import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.plasmalabs.config.ApplicationConfig
 import org.plasmalabs.grpc.{HealthCheckGrpc, NodeGrpc}
 import org.plasmalabs.healthcheck.HealthCheck
 import org.plasmalabs.node.ApplicationConfigOps._
+import org.typelevel.log4cats.Logger
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 class IdleApp(appConfig: ApplicationConfig) {
 

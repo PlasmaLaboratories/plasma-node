@@ -6,11 +6,6 @@ import com.google.protobuf.ByteString
 import com.typesafe.config.Config
 import monocle._
 import monocle.macros._
-import pureconfig._
-import pureconfig.configurable._
-import pureconfig.generic.ProductHint
-import pureconfig.generic.auto._
-import scodec.bits.ByteVector
 import org.plasmalabs.config.ApplicationConfig
 import org.plasmalabs.config.ApplicationConfig.Node
 import org.plasmalabs.config.ApplicationConfig.Node.KnownPeer
@@ -20,6 +15,11 @@ import org.plasmalabs.models.utility._
 import org.plasmalabs.sdk.codecs.AddressCodecs.decodeAddress
 import org.plasmalabs.sdk.models.LockAddress
 import org.plasmalabs.sdk.utils.Encoding
+import pureconfig._
+import pureconfig.configurable._
+import pureconfig.generic.ProductHint
+import pureconfig.generic.auto._
+import scodec.bits.ByteVector
 
 import scala.util.Try
 

@@ -7,7 +7,6 @@ import cats.effect.{Async, Sync}
 import cats.implicits._
 import com.google.protobuf.ByteString
 import fs2.io.file.Path
-import quivr.models.Int128
 import org.plasmalabs.blockchain.{StakerInitializers, StakingInit}
 import org.plasmalabs.codecs.bytes.tetra.instances._
 import org.plasmalabs.config.ApplicationConfig
@@ -18,6 +17,7 @@ import org.plasmalabs.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
 import org.plasmalabs.sdk.models.transaction.Schedule
 import org.plasmalabs.sdk.models.{Datum, Event}
 import org.plasmalabs.typeclasses.implicits._
+import quivr.models.Int128
 
 object RegistrationCommand {
 

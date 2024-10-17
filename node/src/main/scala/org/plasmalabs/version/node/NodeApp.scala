@@ -9,8 +9,6 @@ import com.google.protobuf.ByteString
 import com.typesafe.config.Config
 import fs2.io.file.Path
 import kamon.Kamon
-import org.typelevel.log4cats.Logger
-import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.plasmalabs.algebras.Stats
 import org.plasmalabs.blockchain._
 import org.plasmalabs.blockchain.interpreters.{EpochDataEventSourcedState, EpochDataInterpreter, NodeMetadata}
@@ -45,6 +43,8 @@ import org.plasmalabs.numerics.interpreters.{ExpInterpreter, Log1pInterpreter}
 import org.plasmalabs.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
 import org.plasmalabs.typeclasses.implicits._
 import org.plasmalabs.version.VersionReplicator
+import org.typelevel.log4cats.Logger
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import java.time.Instant
 import scala.concurrent.duration._
