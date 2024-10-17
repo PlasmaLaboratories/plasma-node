@@ -59,7 +59,7 @@ lazy val dockerSettings = Seq(
   ),
   dockerAliases := dockerAliases.value.flatMap { alias =>
     Seq(
-      alias.withRegistryHost(Some("docker.io/plasmalabs")),
+      alias.withRegistryHost(Some("docker.io/stratalab")),
       alias.withRegistryHost(Some("ghcr.io/plasmalaboratories"))
     )
   }
@@ -79,7 +79,7 @@ lazy val nodeDockerSettings =
     dockerAliases ++= (
       if (sys.env.get("DOCKER_PUBLISH_DEV_TAG").fold(false)(_.toBoolean))
         Seq(
-          DockerAlias(Some("docker.io"), Some("plasmalabs"), "plasma-node", Some("dev")),
+          DockerAlias(Some("docker.io"), Some("stratalab"), "plasma-node", Some("dev")),
           DockerAlias(Some("ghcr.io"), Some("plasmalaboratories"), "plasma-node", Some("dev"))
         )
       else Seq()
@@ -94,7 +94,7 @@ lazy val indexerDockerSettings =
     dockerAliases ++= (
       if (sys.env.get("DOCKER_PUBLISH_DEV_TAG").fold(false)(_.toBoolean))
         Seq(
-          DockerAlias(Some("docker.io"), Some("plasmalabs"), "plasma-indexer", Some("dev")),
+          DockerAlias(Some("docker.io"), Some("stratalab"), "plasma-indexer", Some("dev")),
           DockerAlias(Some("ghcr.io"), Some("plasmalaboratories"), "plasma-indexer", Some("dev"))
         )
       else Seq()

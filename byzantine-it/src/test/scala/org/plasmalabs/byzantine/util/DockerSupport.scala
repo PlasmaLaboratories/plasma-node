@@ -125,7 +125,7 @@ object DockerSupport {
       environment: Map[String, String],
       config:      TestNodeConfig
     ): ContainerConfig = {
-      val nodeImage: String = s"plasmalabs/plasma-node:${BuildInfo.version}"
+      val nodeImage: String = s"stratalab/plasma-node:${BuildInfo.version}"
       val exposedPorts: Seq[String] = List(config.rpcPort, config.p2pPort, config.jmxRemotePort).map(_.toString)
       val env =
         environment.toList.map { case (key, value) => s"$key=$value" }
