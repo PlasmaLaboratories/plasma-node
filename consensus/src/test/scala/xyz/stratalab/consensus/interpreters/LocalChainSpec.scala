@@ -1,4 +1,4 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats.Applicative
 import cats.data.{NonEmptyChain, Validated}
@@ -9,14 +9,14 @@ import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.algebras.Stats.Implicits._
-import xyz.stratalab.consensus.algebras.ChainSelectionAlgebra
-import xyz.stratalab.consensus.models.{BlockId, SlotData, SlotId}
-import xyz.stratalab.eventtree.EventSourcedState
-import xyz.stratalab.models.ModelGenerators._
-import xyz.stratalab.models.generators.common.ModelGenerators.genSizedStrictByteString
-import xyz.stratalab.models.generators.consensus.ModelGenerators.etaGen
-import xyz.stratalab.models.utility.Lengths
+import org.plasmalabs.algebras.Stats.Implicits._
+import org.plasmalabs.consensus.algebras.ChainSelectionAlgebra
+import org.plasmalabs.consensus.models.{BlockId, SlotData, SlotId}
+import org.plasmalabs.eventtree.EventSourcedState
+import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.models.generators.common.ModelGenerators.genSizedStrictByteString
+import org.plasmalabs.models.generators.consensus.ModelGenerators.etaGen
+import org.plasmalabs.models.utility.Lengths
 
 import scala.concurrent.duration._
 

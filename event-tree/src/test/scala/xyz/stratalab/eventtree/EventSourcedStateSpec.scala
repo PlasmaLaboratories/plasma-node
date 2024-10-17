@@ -1,12 +1,12 @@
-package xyz.stratalab.eventtree
+package org.plasmalabs.eventtree
 
 import cats.data.OptionT
 import cats.effect.{IO, Sync}
 import cats.implicits._
 import cats.{Applicative, Eq, Functor, MonadThrow, Semigroupal, Show}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.algebras.testInterpreters.TestStore
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.algebras.testInterpreters.TestStore
 
 import java.nio.charset.StandardCharsets
 

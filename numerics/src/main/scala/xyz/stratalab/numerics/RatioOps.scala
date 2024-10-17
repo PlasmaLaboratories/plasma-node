@@ -1,6 +1,6 @@
-package xyz.stratalab.numerics
+package org.plasmalabs.numerics
 
-import xyz.stratalab.models.utility.Ratio
+import org.plasmalabs.models.utility.Ratio
 
 import scala.language.implicitConversions
 

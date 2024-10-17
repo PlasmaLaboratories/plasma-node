@@ -1,13 +1,13 @@
-package xyz.stratalab.ledger.interpreters
+package org.plasmalabs.ledger.interpreters
 
 import cats.effect.Sync
 import cats.implicits._
-import xyz.stratalab.consensus.models.BlockHeader
-import xyz.stratalab.models.Slot
-import xyz.stratalab.quivr.runtime.DynamicContext
-import xyz.stratalab.sdk.Context
-import xyz.stratalab.sdk.models._
-import xyz.stratalab.sdk.models.transaction.IoTransaction
+import org.plasmalabs.consensus.models.BlockHeader
+import org.plasmalabs.models.Slot
+import org.plasmalabs.quivr.runtime.DynamicContext
+import org.plasmalabs.sdk.Context
+import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.models.transaction.IoTransaction
 
 object QuivrContext {
 

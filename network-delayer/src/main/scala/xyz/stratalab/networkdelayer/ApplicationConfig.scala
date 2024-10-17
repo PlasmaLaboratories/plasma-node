@@ -1,4 +1,4 @@
-package xyz.stratalab.networkdelayer
+package org.plasmalabs.networkdelayer
 
 import cats.Show
 import com.typesafe.config.Config

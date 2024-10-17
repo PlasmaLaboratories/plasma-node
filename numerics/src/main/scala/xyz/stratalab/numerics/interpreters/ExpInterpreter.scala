@@ -1,10 +1,10 @@
-package xyz.stratalab.numerics.interpreters
+package org.plasmalabs.numerics.interpreters
 
 import cats.Monad
 import cats.implicits._
-import xyz.stratalab.models.utility._
-import xyz.stratalab.numerics.algebras.Exp
-import xyz.stratalab.numerics.implicits._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.numerics.algebras.Exp
+import org.plasmalabs.numerics.implicits._
 
 object ExpInterpreter extends LentzMethod {
 

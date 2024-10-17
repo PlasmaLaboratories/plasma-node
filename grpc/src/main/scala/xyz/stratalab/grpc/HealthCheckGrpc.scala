@@ -1,12 +1,12 @@
-package xyz.stratalab.grpc
+package org.plasmalabs.grpc
 
 import cats.effect.kernel.{Async, Resource}
 import cats.implicits._
 import fs2.Stream
 import grpc.health.v1._
 import io.grpc.ServerServiceDefinition
-import xyz.stratalab.algebras.HealthCheckAlgebra
-import xyz.stratalab.grpc.services.HealthCheckService
+import org.plasmalabs.algebras.HealthCheckAlgebra
+import org.plasmalabs.grpc.services.HealthCheckService
 
 object HealthCheckGrpc {
 

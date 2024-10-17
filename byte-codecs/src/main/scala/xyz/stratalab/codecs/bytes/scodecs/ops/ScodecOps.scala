@@ -1,4 +1,4 @@
-package xyz.stratalab.codecs.bytes.scodecs.ops
+package org.plasmalabs.codecs.bytes.scodecs.ops
 
 import scodec.bits.BitVector
 import scodec.{Attempt, Codec, DecodeResult, Err, SizeBound}

@@ -1,21 +1,21 @@
-package xyz.stratalab.typeclasses
+package org.plasmalabs.typeclasses
 
 import cats.Foldable
 import cats.data.ValidatedNec
 import cats.implicits._
 import com.google.protobuf.ByteString
-import xyz.stratalab.crypto.accumulators.LeafData
-import xyz.stratalab.crypto.accumulators.merkle.MerkleTree
-import xyz.stratalab.crypto.hash.digest.{Digest, Digest32, InvalidDigestFailure}
-import xyz.stratalab.crypto.hash.{Blake2b, Blake2bHash}
-import xyz.stratalab.models._
-import xyz.stratalab.models.utility.HasLength.instances._
-import xyz.stratalab.models.utility.Lengths._
-import xyz.stratalab.models.utility._
-import xyz.stratalab.node.models.FullBlockBody
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
+import org.plasmalabs.crypto.accumulators.LeafData
+import org.plasmalabs.crypto.accumulators.merkle.MerkleTree
+import org.plasmalabs.crypto.hash.digest.{Digest, Digest32, InvalidDigestFailure}
+import org.plasmalabs.crypto.hash.{Blake2b, Blake2bHash}
+import org.plasmalabs.models._
+import org.plasmalabs.models.utility.HasLength.instances._
+import org.plasmalabs.models.utility.Lengths._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.node.models.FullBlockBody
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax._
 
 import scala.language.implicitConversions
 
@@ -64,7 +64,7 @@ object ContainsTransactionIds {
 
   trait Instances {
 
-    implicit val blockNodeBody: ContainsTransactionIds[xyz.stratalab.node.models.BlockBody] = _.allTransactionIds
+    implicit val blockNodeBody: ContainsTransactionIds[org.plasmalabs.node.models.BlockBody] = _.allTransactionIds
 
     implicit def containsTxToContainTxsId[G: ContainsTransactions]: ContainsTransactionIds[G] = txs =>
       implicitly[ContainsTransactions[G]].transactionsOf(txs).map(_.id)

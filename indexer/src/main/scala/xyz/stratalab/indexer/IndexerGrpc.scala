@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer
+package org.plasmalabs.indexer
 
 import cats.effect.kernel.{Async, Resource}
 import cats.implicits._
@@ -6,14 +6,14 @@ import cats.{Eval, Now}
 import fs2.grpc.syntax.all._
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder
 import io.grpc.{Metadata, ServerServiceDefinition}
-import xyz.stratalab.algebras.IndexerRpc
-import xyz.stratalab.indexer.algebras.{
+import org.plasmalabs.algebras.IndexerRpc
+import org.plasmalabs.indexer.algebras.{
   BlockFetcherAlgebra,
   TokenFetcherAlgebra,
   TransactionFetcherAlgebra,
   VertexFetcherAlgebra
 }
-import xyz.stratalab.indexer.services._
+import org.plasmalabs.indexer.services._
 
 object IndexerGrpc {
 

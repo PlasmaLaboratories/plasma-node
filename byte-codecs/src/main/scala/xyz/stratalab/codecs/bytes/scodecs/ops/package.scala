@@ -1,4 +1,4 @@
-package xyz.stratalab.codecs.bytes.scodecs
+package org.plasmalabs.codecs.bytes.scodecs
 
 package object ops {
   trait Implicits extends ScodecOps.ToScodecOps

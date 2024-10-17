@@ -1,14 +1,14 @@
-package xyz.stratalab.indexer
+package org.plasmalabs.indexer
 
 import cats.data.EitherT
 import cats.effect.kernel.Async
 import cats.implicits._
 import io.grpc.Metadata
-import xyz.stratalab.indexer.algebras.BlockFetcherAlgebra
-import xyz.stratalab.indexer.model.GEs
-import xyz.stratalab.indexer.services._
-import xyz.stratalab.node.models.FullBlock
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.indexer.algebras.BlockFetcherAlgebra
+import org.plasmalabs.indexer.model.GEs
+import org.plasmalabs.indexer.services._
+import org.plasmalabs.node.models.FullBlock
+import org.plasmalabs.typeclasses.implicits._
 
 class GrpcBlockService[F[_]: Async](blockFetcher: BlockFetcherAlgebra[F]) extends BlockServiceFs2Grpc[F, Metadata] {
 

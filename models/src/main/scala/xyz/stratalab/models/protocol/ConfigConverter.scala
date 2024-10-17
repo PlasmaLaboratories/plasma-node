@@ -1,4 +1,4 @@
-package xyz.stratalab.models.protocol
+package org.plasmalabs.models.protocol
 
 import com.fasterxml.jackson.core.{JsonGenerator, JsonParser}
 import com.fasterxml.jackson.databind._
@@ -8,9 +8,9 @@ import com.fasterxml.jackson.module.scala._
 import com.github.pjfanning.jackson.reflect.ScalaReflectExtensions
 import quivr.models
 import quivr.models.Int128
-import xyz.stratalab.models.utility.Ratio
-import xyz.stratalab.sdk.models.box.Value._
-import xyz.stratalab.sdk.syntax._
+import org.plasmalabs.models.utility.Ratio
+import org.plasmalabs.sdk.models.box.Value._
+import org.plasmalabs.sdk.syntax._
 
 import scala.language.implicitConversions
 import scala.reflect.ClassTag

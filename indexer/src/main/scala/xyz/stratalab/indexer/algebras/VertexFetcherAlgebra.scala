@@ -1,10 +1,10 @@
-package xyz.stratalab.indexer.algebras
+package org.plasmalabs.indexer.algebras
 
 import com.tinkerpop.blueprints.Vertex
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.indexer.model.GE
-import xyz.stratalab.indexer.services.{BlockStats, BlockchainSizeStats, TxoState, TxoStats}
-import xyz.stratalab.sdk.models.{GroupId, LockAddress, SeriesId, TransactionId, TransactionOutputAddress}
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.indexer.model.GE
+import org.plasmalabs.indexer.services.{BlockStats, BlockchainSizeStats, TxoState, TxoStats}
+import org.plasmalabs.sdk.models.{GroupId, LockAddress, SeriesId, TransactionId, TransactionOutputAddress}
 
 /**
  * Vertex finder on the stored Ledger

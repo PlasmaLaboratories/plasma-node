@@ -1,8 +1,8 @@
-package xyz.stratalab.minting.algebras
+package org.plasmalabs.minting.algebras
 
-import xyz.stratalab.consensus.models.SlotId
-import xyz.stratalab.minting.models.OperationalKeyOut
-import xyz.stratalab.models.{Eta, Slot}
+import org.plasmalabs.consensus.models.SlotId
+import org.plasmalabs.minting.models.OperationalKeyOut
+import org.plasmalabs.models.{Eta, Slot}
 
 /**
  * A KeyEvolverAlgebra is responsible for encapsulating a key locally and emitting an evolved version of

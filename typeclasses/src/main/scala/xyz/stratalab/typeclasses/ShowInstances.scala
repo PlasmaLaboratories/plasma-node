@@ -1,17 +1,17 @@
-package xyz.stratalab.typeclasses
+package org.plasmalabs.typeclasses
 
 import cats.Show
 import cats.implicits._
 import com.google.protobuf.ByteString
 import quivr.models.Int128
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.consensus.models.{BlockHeader, SlotId, StakingAddress}
-import xyz.stratalab.models._
-import xyz.stratalab.models.utility._
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.sdk.models.box.{Box, Value}
-import xyz.stratalab.sdk.models.transaction.SpentTransactionOutput
-import xyz.stratalab.sdk.models.{GroupId, SeriesId, TransactionId, TransactionOutputAddress}
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.consensus.models.{BlockHeader, SlotId, StakingAddress}
+import org.plasmalabs.models._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.sdk.models.box.{Box, Value}
+import org.plasmalabs.sdk.models.transaction.SpentTransactionOutput
+import org.plasmalabs.sdk.models.{GroupId, SeriesId, TransactionId, TransactionOutputAddress}
 
 import java.time.Instant
 
@@ -26,7 +26,7 @@ trait ShowInstances {
   implicit val showIoTransactionId: Show[TransactionId] =
     t => show"t_${t.value: Bytes}"
 
-  implicit val showBlockId: Show[xyz.stratalab.consensus.models.BlockId] =
+  implicit val showBlockId: Show[org.plasmalabs.consensus.models.BlockId] =
     b => show"b_${b.value: Bytes}"
 
   implicit val showConsensusSlotId: Show[SlotId] =
@@ -85,7 +85,7 @@ trait ShowInstances {
   implicit val showBox: Show[Box] =
     box => show"Box(value=${box.value})"
 
-  implicit val showRatio: Show[xyz.stratalab.models.utility.Ratio] =
+  implicit val showRatio: Show[org.plasmalabs.models.utility.Ratio] =
     r => s"${r.numerator}/${r.denominator}"
 
 }

@@ -1,4 +1,4 @@
-package xyz.stratalab.actor
+package org.plasmalabs.actor
 
 import cats.effect.{Concurrent, Deferred, IO, Ref, Resource}
 import cats.implicits._
@@ -7,7 +7,7 @@ import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.actor.ActorSpec._
+import org.plasmalabs.actor.ActorSpec._
 
 object ActorSpec {
   type F[A] = IO[A]

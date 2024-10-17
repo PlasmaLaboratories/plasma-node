@@ -1,11 +1,11 @@
-package xyz.stratalab.interpreters
+package org.plasmalabs.interpreters
 
 import cats.effect.kernel.Async
 import cats.implicits._
-import xyz.stratalab.algebras.{Store, StoreReader}
-import xyz.stratalab.consensus.models.{BlockId, SlotData}
-import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.{Store, StoreReader}
+import org.plasmalabs.consensus.models.{BlockId, SlotData}
+import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
+import org.plasmalabs.typeclasses.implicits._
 
 object BlockHeightTree {
 

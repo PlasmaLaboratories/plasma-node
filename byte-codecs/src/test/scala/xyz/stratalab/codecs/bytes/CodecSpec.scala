@@ -1,4 +1,4 @@
-package xyz.stratalab.codecs.bytes
+package org.plasmalabs.codecs.bytes
 
 import cats.Eq
 import cats.effect.IO

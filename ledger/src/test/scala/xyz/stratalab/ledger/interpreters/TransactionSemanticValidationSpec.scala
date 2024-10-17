@@ -1,20 +1,20 @@
-package xyz.stratalab.ledger.interpreters
+package org.plasmalabs.ledger.interpreters
 
 import cats.effect.IO
 import cats.implicits._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.ledger.algebras._
-import xyz.stratalab.ledger.models._
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.sdk.constants.NetworkConstants
-import xyz.stratalab.sdk.generators.ModelGenerators._
-import xyz.stratalab.sdk.models._
-import xyz.stratalab.sdk.models.box.Value
-import xyz.stratalab.sdk.models.transaction._
-import xyz.stratalab.sdk.syntax._
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.ledger.algebras._
+import org.plasmalabs.ledger.models._
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.sdk.constants.NetworkConstants
+import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.models.box.Value
+import org.plasmalabs.sdk.models.transaction._
+import org.plasmalabs.sdk.syntax._
 
 class TransactionSemanticValidationSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]

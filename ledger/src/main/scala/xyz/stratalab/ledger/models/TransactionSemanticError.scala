@@ -1,8 +1,8 @@
-package xyz.stratalab.ledger.models
+package org.plasmalabs.ledger.models
 
-import xyz.stratalab.models.Slot
-import xyz.stratalab.sdk.models.TransactionOutputAddress
-import xyz.stratalab.sdk.models.transaction.{Schedule, SpentTransactionOutput}
+import org.plasmalabs.models.Slot
+import org.plasmalabs.sdk.models.TransactionOutputAddress
+import org.plasmalabs.sdk.models.transaction.{Schedule, SpentTransactionOutput}
 
 sealed abstract class TransactionSemanticError
 

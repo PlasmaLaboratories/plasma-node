@@ -1,4 +1,4 @@
-package xyz.stratalab.blockchain.interpreters
+package org.plasmalabs.blockchain.interpreters
 
 import cats.Show
 import cats.effect.{Async, Resource}
@@ -6,9 +6,9 @@ import cats.implicits._
 import fs2.concurrent.Topic
 import io.grpc.{Metadata, ServerServiceDefinition}
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.models.utility.{NetworkCommands, byteStringToByteVector}
-import xyz.stratalab.node.services._
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.utility.{NetworkCommands, byteStringToByteVector}
+import org.plasmalabs.node.services._
 
 object NetworkControlRpcServer {
   implicit val showHostId: Show[HostId] = id => show"${id.id.toBase58}"

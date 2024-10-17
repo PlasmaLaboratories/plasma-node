@@ -1,11 +1,11 @@
-package xyz.stratalab.algebras
+package org.plasmalabs.algebras
 
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
-import xyz.stratalab.models.Epoch
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.proto.node.{EpochData, NodeConfig}
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
+import org.plasmalabs.models.Epoch
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.proto.node.{EpochData, NodeConfig}
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
 
 /**
  * Node Rpc

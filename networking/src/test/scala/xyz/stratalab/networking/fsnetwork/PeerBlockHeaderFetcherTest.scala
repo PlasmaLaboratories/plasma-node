@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.data.{NonEmptyChain, OptionT}
 import cats.effect.kernel.Sync
@@ -11,23 +11,23 @@ import org.scalacheck.Gen
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.{ClockAlgebra, Store}
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.consensus.algebras.{ChainSelectionAlgebra, LocalChainAlgebra}
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
-import xyz.stratalab.crypto.signing.Ed25519VRF
-import xyz.stratalab.eventtree.ParentChildTree
-import xyz.stratalab.models.ModelGenerators.GenHelper
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.networking.blockchain.BlockchainPeerClient
-import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError
-import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError._
-import xyz.stratalab.networking.fsnetwork.PeerBlockHeaderFetcherTest.{BlockHeaderDownloadErrorByName, F}
-import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
-import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
-import xyz.stratalab.networking.fsnetwork.TestHelper._
-import xyz.stratalab.node.models.BlockBody
+import org.plasmalabs.algebras.{ClockAlgebra, Store}
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.consensus.algebras.{ChainSelectionAlgebra, LocalChainAlgebra}
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
+import org.plasmalabs.crypto.signing.Ed25519VRF
+import org.plasmalabs.eventtree.ParentChildTree
+import org.plasmalabs.models.ModelGenerators.GenHelper
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.networking.blockchain.BlockchainPeerClient
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError._
+import org.plasmalabs.networking.fsnetwork.PeerBlockHeaderFetcherTest.{BlockHeaderDownloadErrorByName, F}
+import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
+import org.plasmalabs.networking.fsnetwork.RequestsProxy.RequestsProxyActor
+import org.plasmalabs.networking.fsnetwork.TestHelper._
+import org.plasmalabs.node.models.BlockBody
 
 import scala.collection.mutable
 import scala.concurrent.duration.{FiniteDuration, MILLISECONDS}

@@ -1,12 +1,12 @@
-package xyz.stratalab.blockchain
+package org.plasmalabs.blockchain
 
 import fs2.Stream
-import xyz.stratalab.algebras.{ClockAlgebra, ProtocolConfigurationAlgebra}
-import xyz.stratalab.blockchain.algebras.EpochDataAlgebra
-import xyz.stratalab.consensus.Consensus
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.eventtree.ParentChildTree
-import xyz.stratalab.ledger.Ledger
+import org.plasmalabs.algebras.{ClockAlgebra, ProtocolConfigurationAlgebra}
+import org.plasmalabs.blockchain.algebras.EpochDataAlgebra
+import org.plasmalabs.consensus.Consensus
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.eventtree.ParentChildTree
+import org.plasmalabs.ledger.Ledger
 
 trait BlockchainCore[F[_]] {
   def clock: ClockAlgebra[F]

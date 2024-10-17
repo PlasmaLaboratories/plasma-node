@@ -1,10 +1,10 @@
-package xyz.stratalab.indexer
+package org.plasmalabs.indexer
 
 import cats.data.EitherT
 import cats.effect.kernel.Async
 import io.grpc.Metadata
-import xyz.stratalab.indexer.algebras.TokenFetcherAlgebra
-import xyz.stratalab.indexer.services._
+import org.plasmalabs.indexer.algebras.TokenFetcherAlgebra
+import org.plasmalabs.indexer.services._
 
 class GrpcTokenService[F[_]: Async](
   tokenFetcherAlgebra: TokenFetcherAlgebra[F]

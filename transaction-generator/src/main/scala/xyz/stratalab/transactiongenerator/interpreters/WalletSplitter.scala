@@ -1,6 +1,6 @@
-package xyz.stratalab.transactiongenerator.interpreters
+package org.plasmalabs.transactiongenerator.interpreters
 
-import xyz.stratalab.transactiongenerator.models.Wallet
+import org.plasmalabs.transactiongenerator.models.Wallet
 
 object WalletSplitter {
 

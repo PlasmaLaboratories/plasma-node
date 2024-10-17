@@ -1,4 +1,4 @@
-package xyz.stratalab.catsutils
+package org.plasmalabs.catsutils
 
 import cats.effect.{Async, Resource}
 import cats.implicits._

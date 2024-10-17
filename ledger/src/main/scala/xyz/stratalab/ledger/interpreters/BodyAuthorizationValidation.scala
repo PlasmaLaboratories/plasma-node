@@ -1,15 +1,15 @@
-package xyz.stratalab.ledger.interpreters
+package org.plasmalabs.ledger.interpreters
 
 import cats.data.ValidatedNec
 import cats.effect.Sync
 import cats.implicits._
-import xyz.stratalab.ledger.algebras._
-import xyz.stratalab.ledger.models._
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.quivr.runtime.DynamicContext
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.models.{Datum, TransactionId}
-import xyz.stratalab.sdk.validation.algebras.TransactionAuthorizationVerifier
+import org.plasmalabs.ledger.algebras._
+import org.plasmalabs.ledger.models._
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.quivr.runtime.DynamicContext
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.models.{Datum, TransactionId}
+import org.plasmalabs.sdk.validation.algebras.TransactionAuthorizationVerifier
 
 object BodyAuthorizationValidation {
 

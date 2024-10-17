@@ -1,15 +1,15 @@
-package xyz.stratalab.blockchain.interpreters
+package org.plasmalabs.blockchain.interpreters
 
 import cats.Monad
 import cats.data.OptionT
 import cats.effect.Resource
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.blockchain.algebras.NodeMetadataAlgebra
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.models.Bytes
-import xyz.stratalab.sdk.models.TransactionId
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.blockchain.algebras.NodeMetadataAlgebra
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.models.Bytes
+import org.plasmalabs.sdk.models.TransactionId
 
 import java.nio.charset.StandardCharsets
 

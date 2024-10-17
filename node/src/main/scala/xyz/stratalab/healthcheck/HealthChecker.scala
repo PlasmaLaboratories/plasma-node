@@ -1,4 +1,4 @@
-package xyz.stratalab.healthcheck
+package org.plasmalabs.healthcheck
 
 import cats.MonadThrow
 import cats.effect.{Async, Ref, Resource}
@@ -7,9 +7,9 @@ import fs2.Stream
 import fs2.concurrent.SignallingRef
 import grpc.health.v1.{HealthCheckRequest, HealthCheckResponse, ServingStatus}
 import io.grpc.{Status, StatusException}
-import xyz.stratalab.algebras.HealthCheckAlgebra
-import xyz.stratalab.models.ServiceStatus
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.HealthCheckAlgebra
+import org.plasmalabs.models.ServiceStatus
+import org.plasmalabs.typeclasses.implicits._
 
 object HealthChecker {
 

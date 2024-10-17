@@ -1,7 +1,7 @@
-package xyz.stratalab.crypto.signing
+package org.plasmalabs.crypto.signing
 
-import xyz.stratalab.crypto.models._
-import xyz.stratalab.crypto.signing.kes.SumComposition
+import org.plasmalabs.crypto.models._
+import org.plasmalabs.crypto.signing.kes.SumComposition
 
 /**
  * Credit to Aaron Schutza

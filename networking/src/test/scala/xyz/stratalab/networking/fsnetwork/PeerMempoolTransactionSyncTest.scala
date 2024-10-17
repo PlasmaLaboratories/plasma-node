@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.data.NonEmptyChain
 import cats.effect.{IO, Sync}
@@ -9,25 +9,25 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.consensus.algebras.LocalChainAlgebra
-import xyz.stratalab.consensus.models.SlotData
-import xyz.stratalab.ledger.algebras.MempoolAlgebra
-import xyz.stratalab.models.ModelGenerators.GenHelper
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.networking.blockchain.BlockchainPeerClient
-import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
-import xyz.stratalab.networking.fsnetwork.PeerMempoolTransactionSyncTest.F
-import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
-import xyz.stratalab.networking.fsnetwork.TestHelper.{BlockBodyOrTransactionErrorByName, arbitraryHost}
-import xyz.stratalab.sdk.generators.ModelGenerators.arbitraryIoTransaction
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
-import xyz.stratalab.sdk.validation.TransactionSyntaxError
-import xyz.stratalab.sdk.validation.TransactionSyntaxError.EmptyInputs
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.consensus.algebras.LocalChainAlgebra
+import org.plasmalabs.consensus.models.SlotData
+import org.plasmalabs.ledger.algebras.MempoolAlgebra
+import org.plasmalabs.models.ModelGenerators.GenHelper
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.networking.blockchain.BlockchainPeerClient
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
+import org.plasmalabs.networking.fsnetwork.PeerMempoolTransactionSyncTest.F
+import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
+import org.plasmalabs.networking.fsnetwork.TestHelper.{BlockBodyOrTransactionErrorByName, arbitraryHost}
+import org.plasmalabs.sdk.generators.ModelGenerators.arbitraryIoTransaction
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax.ioTransactionAsTransactionSyntaxOps
+import org.plasmalabs.sdk.validation.TransactionSyntaxError
+import org.plasmalabs.sdk.validation.TransactionSyntaxError.EmptyInputs
+import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
 
 import java.util.concurrent.atomic.AtomicBoolean
 import scala.concurrent.duration._

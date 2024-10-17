@@ -1,9 +1,9 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import com.google.protobuf.ByteString
 import munit.FunSuite
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.networking.fsnetwork._
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.networking.fsnetwork._
 
 class PeerFilterTest extends FunSuite {
 

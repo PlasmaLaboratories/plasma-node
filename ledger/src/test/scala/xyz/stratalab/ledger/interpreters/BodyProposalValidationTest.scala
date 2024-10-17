@@ -1,4 +1,4 @@
-package xyz.stratalab.ledger.interpreters
+package org.plasmalabs.ledger.interpreters
 
 import cats.data.ValidatedNec
 import cats.effect.IO
@@ -7,26 +7,26 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.ClockAlgebra
-import xyz.stratalab.algebras.testInterpreters.TestStore
-import xyz.stratalab.codecs.bytes.tetra.ModelGenerators.arbitraryTxsAndBlock
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.eventtree.EventSourcedState
-import xyz.stratalab.ledger.interpreters.ProposalEventSourceState.ProposalData
-import xyz.stratalab.ledger.models._
-import xyz.stratalab.models.ModelGenerators._
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.models.protocol.RatioCodec.ratioToProtoRatio
-import xyz.stratalab.models.protocol.{ConfigConverter, ConfigGenesis}
-import xyz.stratalab.models.utility.Ratio
-import xyz.stratalab.models.{Epoch, ProposalConfig, ProposalId, Slot, Timestamp, emptyVersion, proposalDelta}
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.sdk.generators.ModelGenerators._
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.box.Value
-import xyz.stratalab.sdk.models.box.Value.ConfigProposal
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
+import org.plasmalabs.algebras.ClockAlgebra
+import org.plasmalabs.algebras.testInterpreters.TestStore
+import org.plasmalabs.codecs.bytes.tetra.ModelGenerators.arbitraryTxsAndBlock
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.eventtree.EventSourcedState
+import org.plasmalabs.ledger.interpreters.ProposalEventSourceState.ProposalData
+import org.plasmalabs.ledger.models._
+import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.protocol.RatioCodec.ratioToProtoRatio
+import org.plasmalabs.models.protocol.{ConfigConverter, ConfigGenesis}
+import org.plasmalabs.models.utility.Ratio
+import org.plasmalabs.models.{Epoch, ProposalConfig, ProposalId, Slot, Timestamp, emptyVersion, proposalDelta}
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.box.Value
+import org.plasmalabs.sdk.models.box.Value.ConfigProposal
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax._
 
 import scala.collection.immutable.NumericRange
 import scala.collection.mutable
@@ -94,9 +94,9 @@ class BodyProposalValidationTest extends CatsEffectSuite with ScalaCheckEffectSu
   }
 
   def txWithProposal(pseudoProposalId: Int): IoTransaction = {
-    val valueValueProposal: xyz.stratalab.sdk.models.box.Value.Value =
+    val valueValueProposal: org.plasmalabs.sdk.models.box.Value.Value =
       Value.Value.ConfigProposal(getProposalByPseudoId(pseudoProposalId))
-    val value: xyz.stratalab.sdk.models.box.Value = new xyz.stratalab.sdk.models.box.Value(value = valueValueProposal)
+    val value: org.plasmalabs.sdk.models.box.Value = new org.plasmalabs.sdk.models.box.Value(value = valueValueProposal)
     val unspentOutputWithProposal = arbitraryUnspentTransactionOutput.arbitrary.first.copy(value = value)
     val transaction = arbitraryIoTransaction.arbitrary.first
     transaction.copy(outputs = transaction.outputs :+ unspentOutputWithProposal)

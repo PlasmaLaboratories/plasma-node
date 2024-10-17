@@ -1,7 +1,7 @@
-package xyz.stratalab.codecs.bytes.tetra
+package org.plasmalabs.codecs.bytes.tetra
 
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
-import xyz.stratalab.crypto.hash.Blake2b256
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
+import org.plasmalabs.crypto.hash.Blake2b256
 
 import scala.language.implicitConversions
 
@@ -12,7 +12,7 @@ trait ProtoIdentifiableOps {
 }
 
 class BlockHeaderIdOps(val header: BlockHeader) extends AnyVal {
-  import xyz.stratalab.models.utility._
+  import org.plasmalabs.models.utility._
 
   /**
    * The ID of this header.  If an ID was pre-computed and saved in the Header, it is restored.

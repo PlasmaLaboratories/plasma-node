@@ -1,18 +1,18 @@
-package xyz.stratalab.blockchain
+package org.plasmalabs.blockchain
 
 import cats.MonadThrow
 import cats.data.NonEmptySet
 import cats.implicits._
 import fs2.io.file.Path
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.models.{Epoch, ProposalId, VersionId}
-import xyz.stratalab.node.models._
-import xyz.stratalab.proto.node.EpochData
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.box.Value.ConfigProposal
-import xyz.stratalab.sdk.models.transaction.IoTransaction
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.{Epoch, ProposalId, VersionId}
+import org.plasmalabs.node.models._
+import org.plasmalabs.proto.node.EpochData
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.box.Value.ConfigProposal
+import org.plasmalabs.sdk.models.transaction.IoTransaction
 
 trait DataStores[F[_]] {
   def baseDirectory: Path

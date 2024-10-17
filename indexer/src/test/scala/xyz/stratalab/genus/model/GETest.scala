@@ -1,9 +1,9 @@
-package xyz.stratalab.indexer.model
+package org.plasmalabs.indexer.model
 
 import com.google.protobuf.ByteString
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.indexer.model.{GE, GEs}
-import xyz.stratalab.sdk.models.TransactionId
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.indexer.model.{GE, GEs}
+import org.plasmalabs.sdk.models.TransactionId
 
 import scala.collection.immutable.ListSet
 

@@ -1,8 +1,8 @@
-package xyz.stratalab.codecs.bytes.scodecs.valuetypes
+package org.plasmalabs.codecs.bytes.scodecs.valuetypes
 
 import scodec.bits.BitVector
 import scodec.{Attempt, Codec, DecodeResult, Err, SizeBound}
-import xyz.stratalab.codecs.bytes.scodecs.valuetypes.Constants.byteSize
+import org.plasmalabs.codecs.bytes.scodecs.valuetypes.Constants.byteSize
 
 class ByteArrayCodec(size: Int) extends Codec[Array[Byte]] {
 

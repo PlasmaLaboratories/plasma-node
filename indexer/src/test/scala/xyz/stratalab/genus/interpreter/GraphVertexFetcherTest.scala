@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer.interpreter
+package org.plasmalabs.indexer.interpreter
 
 import cats.data.EitherT
 import cats.implicits._
@@ -7,20 +7,20 @@ import com.tinkerpop.blueprints.Vertex
 import com.tinkerpop.blueprints.impls.orient.OrientVertex
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.indexer.DbFixtureUtil
-import xyz.stratalab.indexer.interpreter.GraphVertexFetcher
-import xyz.stratalab.indexer.model.GE
-import xyz.stratalab.indexer.orientDb.OrientThread
-import xyz.stratalab.indexer.orientDb.instances.VertexSchemaInstances.implicits._
-import xyz.stratalab.indexer.orientDb.instances.{SchemaBlockHeader, SchemaIoTransaction}
-import xyz.stratalab.indexer.services.{BlockStats, BlockchainSizeStats, Txo, TxoState, TxoStats}
-import xyz.stratalab.models.ModelGenerators.GenHelper
-import xyz.stratalab.models.generators.consensus.ModelGenerators
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGenerator}
-import xyz.stratalab.sdk.models.Event.{GroupPolicy, SeriesPolicy}
-import xyz.stratalab.sdk.syntax.{
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.indexer.DbFixtureUtil
+import org.plasmalabs.indexer.interpreter.GraphVertexFetcher
+import org.plasmalabs.indexer.model.GE
+import org.plasmalabs.indexer.orientDb.OrientThread
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.implicits._
+import org.plasmalabs.indexer.orientDb.instances.{SchemaBlockHeader, SchemaIoTransaction}
+import org.plasmalabs.indexer.services.{BlockStats, BlockchainSizeStats, Txo, TxoState, TxoStats}
+import org.plasmalabs.models.ModelGenerators.GenHelper
+import org.plasmalabs.models.generators.consensus.ModelGenerators
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.sdk.generators.{ModelGenerators => BramblGenerator}
+import org.plasmalabs.sdk.models.Event.{GroupPolicy, SeriesPolicy}
+import org.plasmalabs.sdk.syntax.{
   groupPolicyAsGroupPolicySyntaxOps,
   ioTransactionAsTransactionSyntaxOps,
   seriesPolicyAsSeriesPolicySyntaxOps

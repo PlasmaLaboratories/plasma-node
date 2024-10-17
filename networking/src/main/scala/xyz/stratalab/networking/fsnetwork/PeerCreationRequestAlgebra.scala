@@ -1,6 +1,6 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
-import xyz.stratalab.networking.p2p.DisconnectedPeer
+import org.plasmalabs.networking.p2p.DisconnectedPeer
 
 abstract class PeerCreationRequestAlgebra[F[_]] {
   def requestNewPeerCreation(disconnectedPeer: DisconnectedPeer): F[Unit]

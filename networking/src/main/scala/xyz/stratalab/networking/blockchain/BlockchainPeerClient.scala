@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.blockchain
+package org.plasmalabs.networking.blockchain
 
 import cats._
 import cats.data.OptionT
@@ -6,14 +6,14 @@ import cats.effect.kernel.Sync
 import cats.implicits._
 import fs2.Stream
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
-import xyz.stratalab.models.utility.Ratio
-import xyz.stratalab.networking.p2p.ConnectedPeer
-import xyz.stratalab.node.models._
-import xyz.stratalab.numerics.implicits._
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
+import org.plasmalabs.models.utility.Ratio
+import org.plasmalabs.networking.p2p.ConnectedPeer
+import org.plasmalabs.node.models._
+import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.typeclasses.implicits._
 
 /**
  * A client which can be used by a local node to retrieve blockchain data from a remote peer

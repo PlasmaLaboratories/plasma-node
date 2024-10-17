@@ -1,7 +1,7 @@
-package xyz.stratalab.consensus
+package org.plasmalabs.consensus
 
-import xyz.stratalab.consensus.models.{BlockHeader, ProtocolVersion}
-import xyz.stratalab.models._
+import org.plasmalabs.consensus.models.{BlockHeader, ProtocolVersion}
+import org.plasmalabs.models._
 
 package object interpreters {
 

@@ -1,12 +1,12 @@
-package xyz.stratalab.ledger.implicits
+package org.plasmalabs.ledger.implicits
 
 import cats.Show
 import cats.implicits._
-import xyz.stratalab.ledger.models._
-import xyz.stratalab.quivr.runtime.QuivrRuntimeError
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.validation.{TransactionAuthorizationError, TransactionSyntaxError}
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.ledger.models._
+import org.plasmalabs.quivr.runtime.QuivrRuntimeError
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.validation.{TransactionAuthorizationError, TransactionSyntaxError}
+import org.plasmalabs.typeclasses.implicits._
 
 trait LedgerShowInstances {
 

@@ -1,10 +1,10 @@
-package xyz.stratalab.algebras
+package org.plasmalabs.algebras
 
 import cats.effect.IO
 import cats.implicits._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.models.{Epoch, Slot}
+import org.plasmalabs.models.{Epoch, Slot}
 
 import ClockAlgebra.implicits._
 

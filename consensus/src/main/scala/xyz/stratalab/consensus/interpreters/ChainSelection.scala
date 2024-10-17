@@ -1,4 +1,4 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats._
 import cats.data._
@@ -6,14 +6,14 @@ import cats.effect._
 import cats.implicits._
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.Stats
-import xyz.stratalab.consensus.algebras.ChainSelectionAlgebra
-import xyz.stratalab.consensus.models.{BlockId, SlotData}
-import xyz.stratalab.consensus.rhoToRhoTestHash
-import xyz.stratalab.crypto.hash.Blake2b512
-import xyz.stratalab.models._
-import xyz.stratalab.models.utility._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.Stats
+import org.plasmalabs.consensus.algebras.ChainSelectionAlgebra
+import org.plasmalabs.consensus.models.{BlockId, SlotData}
+import org.plasmalabs.consensus.rhoToRhoTestHash
+import org.plasmalabs.crypto.hash.Blake2b512
+import org.plasmalabs.models._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.typeclasses.implicits._
 
 import scala.annotation.tailrec
 import scala.language.implicitConversions

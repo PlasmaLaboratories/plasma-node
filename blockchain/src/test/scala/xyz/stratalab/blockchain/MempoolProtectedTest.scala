@@ -1,4 +1,4 @@
-package xyz.stratalab.blockchain
+package org.plasmalabs.blockchain
 
 import cats.data.Validated
 import cats.effect.IO
@@ -8,22 +8,22 @@ import org.scalacheck.Arbitrary
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.Stats.Implicits._
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.config.ApplicationConfig.Node.MempoolProtection
-import xyz.stratalab.ledger.algebras._
-import xyz.stratalab.ledger.models.{IoTransactionEx, MempoolGraph, RewardQuantities, _}
-import xyz.stratalab.models.ModelGenerators._
-import xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryBlockId
-import xyz.stratalab.models.generators.consensus._
-import xyz.stratalab.networking.fsnetwork.TestHelper.arbitraryIoTransaction
-import xyz.stratalab.quivr.runtime.DynamicContext
-import xyz.stratalab.sdk.constants.NetworkConstants
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.models.{Datum, TransactionId, TransactionOutputAddress}
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.validation.TransactionAuthorizationError
-import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
+import org.plasmalabs.algebras.Stats.Implicits._
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.config.ApplicationConfig.Node.MempoolProtection
+import org.plasmalabs.ledger.algebras._
+import org.plasmalabs.ledger.models.{IoTransactionEx, MempoolGraph, RewardQuantities, _}
+import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.arbitraryBlockId
+import org.plasmalabs.models.generators.consensus._
+import org.plasmalabs.networking.fsnetwork.TestHelper.arbitraryIoTransaction
+import org.plasmalabs.quivr.runtime.DynamicContext
+import org.plasmalabs.sdk.constants.NetworkConstants
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.models.{Datum, TransactionId, TransactionOutputAddress}
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.validation.TransactionAuthorizationError
+import org.plasmalabs.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
 
 import scala.annotation.tailrec
 

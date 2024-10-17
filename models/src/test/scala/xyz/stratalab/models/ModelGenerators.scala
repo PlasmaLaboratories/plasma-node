@@ -1,14 +1,14 @@
-package xyz.stratalab.models
+package org.plasmalabs.models
 
 import cats.data.{NonEmptyChain, NonEmptyList}
 import com.google.protobuf.ByteString
 import org.scalacheck.rng.Seed
 import org.scalacheck.{Arbitrary, Gen}
-import xyz.stratalab.consensus.models.{ProtocolVersion, StakingAddress}
-import xyz.stratalab.models.generators.common.ModelGenerators.genSizedStrictByteString
-import xyz.stratalab.models.utility.HasLength.instances._
-import xyz.stratalab.models.utility.Lengths._
-import xyz.stratalab.models.utility._
+import org.plasmalabs.consensus.models.{ProtocolVersion, StakingAddress}
+import org.plasmalabs.models.generators.common.ModelGenerators.genSizedStrictByteString
+import org.plasmalabs.models.utility.HasLength.instances._
+import org.plasmalabs.models.utility.Lengths._
+import org.plasmalabs.models.utility._
 
 trait ModelGenerators {
 
@@ -49,28 +49,29 @@ trait ModelGenerators {
 
   def partialOperationalCertificateGen: Gen[UnsignedBlockHeader.PartialOperationalCertificate] =
     for {
-      parentVK <- xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryVerificationKeyKesProduct.arbitrary
+      parentVK <-
+        org.plasmalabs.models.generators.consensus.ModelGenerators.arbitraryVerificationKeyKesProduct.arbitrary
       parentSignature <-
-        xyz.stratalab.models.generators.consensus.ModelGenerators.signatureKesProductArbitrary.arbitrary
-      childVK <- xyz.stratalab.models.generators.consensus.ModelGenerators.verificationKeyEd25519Gen
+        org.plasmalabs.models.generators.consensus.ModelGenerators.signatureKesProductArbitrary.arbitrary
+      childVK <- org.plasmalabs.models.generators.consensus.ModelGenerators.verificationKeyEd25519Gen
     } yield UnsignedBlockHeader.PartialOperationalCertificate(parentVK, parentSignature, childVK)
 
   def unsignedHeaderGen(
-    parentHeaderIdGen: Gen[xyz.stratalab.consensus.models.BlockId] =
-      xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryBlockId.arbitrary,
+    parentHeaderIdGen: Gen[org.plasmalabs.consensus.models.BlockId] =
+      org.plasmalabs.models.generators.consensus.ModelGenerators.arbitraryBlockId.arbitrary,
     parentSlotGen:  Gen[Slot] = Gen.chooseNum(0L, 50L),
     txRootGen:      Gen[ByteString] = genSizedStrictByteString[Lengths.`32`.type]().map(_.data),
     bloomFilterGen: Gen[ByteString] = genSizedStrictByteString[Lengths.`256`.type]().map(_.data),
     timestampGen:   Gen[Timestamp] = Gen.chooseNum(0L, 50L),
     heightGen:      Gen[Long] = Gen.chooseNum(0L, 20L),
     slotGen:        Gen[Slot] = Gen.chooseNum(0L, 50L),
-    eligibilityCertificateGen: Gen[xyz.stratalab.consensus.models.EligibilityCertificate] =
-      xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryEligibilityCertificate.arbitrary,
+    eligibilityCertificateGen: Gen[org.plasmalabs.consensus.models.EligibilityCertificate] =
+      org.plasmalabs.models.generators.consensus.ModelGenerators.arbitraryEligibilityCertificate.arbitrary,
     partialOperationalCertificateGen: Gen[UnsignedBlockHeader.PartialOperationalCertificate] =
       partialOperationalCertificateGen,
     metadataGen: Gen[ByteString] = genSizedStrictByteString[Lengths.`32`.type]().map(_.data),
     addressGen: Gen[StakingAddress] =
-      xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryStakingAddress.arbitrary,
+      org.plasmalabs.models.generators.consensus.ModelGenerators.arbitraryStakingAddress.arbitrary,
     protocolVersionGen: Gen[ProtocolVersion] = protocolVersion
   ): Gen[UnsignedBlockHeader] =
     for {

@@ -1,3 +1,3 @@
-package xyz.stratalab.codecs.bytes.scodecs
+package org.plasmalabs.codecs.bytes.scodecs
 
 trait ScodecImplicits extends ScodecCodecs

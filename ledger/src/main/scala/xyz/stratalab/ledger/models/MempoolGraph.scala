@@ -1,12 +1,12 @@
-package xyz.stratalab.ledger.models
+package org.plasmalabs.ledger.models
 
 import cats.data.NonEmptySet
 import cats.implicits._
-import xyz.stratalab.ledger.algebras.TransactionRewardCalculatorAlgebra
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
+import org.plasmalabs.ledger.algebras.TransactionRewardCalculatorAlgebra
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.validation.algebras.TransactionCostCalculator
 
 /**
  * @param transactions a collection of all transactions in the mempool

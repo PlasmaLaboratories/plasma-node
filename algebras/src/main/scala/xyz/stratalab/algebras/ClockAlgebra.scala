@@ -1,8 +1,8 @@
-package xyz.stratalab.algebras
+package org.plasmalabs.algebras
 
 import cats.implicits._
 import cats.{Applicative, Functor, Monad}
-import xyz.stratalab.models.{Epoch, Slot, Timestamp}
+import org.plasmalabs.models.{Epoch, Slot, Timestamp}
 
 import scala.collection.immutable.NumericRange
 import scala.concurrent.duration.FiniteDuration

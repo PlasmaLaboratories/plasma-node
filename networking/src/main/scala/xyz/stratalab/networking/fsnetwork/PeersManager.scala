@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.data.{NonEmptyChain, OptionT}
 import cats.effect.implicits.effectResourceOps
@@ -8,31 +8,31 @@ import cats.{Parallel, Show}
 import com.github.benmanes.caffeine.cache.Cache
 import org.typelevel.log4cats.Logger
 import scodec.bits.ByteVector
-import xyz.stratalab.actor.{Actor, Fsm}
-import xyz.stratalab.algebras.{Stats, Store}
-import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.consensus.algebras.{BlockHeaderToBodyValidationAlgebra, ChainSelectionAlgebra, LocalChainAlgebra}
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
-import xyz.stratalab.crypto.signing.Ed25519VRF
-import xyz.stratalab.eventtree.ParentChildTree
-import xyz.stratalab.ledger.algebras.MempoolAlgebra
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.models.utility._
-import xyz.stratalab.networking._
-import xyz.stratalab.networking.blockchain.BlockchainPeerClient
-import xyz.stratalab.networking.fsnetwork.BlockChecker.BlockCheckerActor
-import xyz.stratalab.networking.fsnetwork.DnsResolverHTInstances._
-import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
-import xyz.stratalab.networking.fsnetwork.PeerActor.PeerActor
-import xyz.stratalab.networking.fsnetwork.PeersManager.Message._
-import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
-import xyz.stratalab.networking.fsnetwork.ReverseDnsResolverHTInstances._
-import xyz.stratalab.networking.p2p._
-import xyz.stratalab.node.models.{BlockBody, KnownHost}
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.actor.{Actor, Fsm}
+import org.plasmalabs.algebras.{Stats, Store}
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.consensus.algebras.{BlockHeaderToBodyValidationAlgebra, ChainSelectionAlgebra, LocalChainAlgebra}
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
+import org.plasmalabs.crypto.signing.Ed25519VRF
+import org.plasmalabs.eventtree.ParentChildTree
+import org.plasmalabs.ledger.algebras.MempoolAlgebra
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.networking._
+import org.plasmalabs.networking.blockchain.BlockchainPeerClient
+import org.plasmalabs.networking.fsnetwork.BlockChecker.BlockCheckerActor
+import org.plasmalabs.networking.fsnetwork.DnsResolverHTInstances._
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import org.plasmalabs.networking.fsnetwork.PeerActor.PeerActor
+import org.plasmalabs.networking.fsnetwork.PeersManager.Message._
+import org.plasmalabs.networking.fsnetwork.RequestsProxy.RequestsProxyActor
+import org.plasmalabs.networking.fsnetwork.ReverseDnsResolverHTInstances._
+import org.plasmalabs.networking.p2p._
+import org.plasmalabs.node.models.{BlockBody, KnownHost}
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
+import org.plasmalabs.typeclasses.implicits._
 
 /**
  * Actor for managing peers

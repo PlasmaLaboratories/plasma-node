@@ -1,4 +1,4 @@
-package xyz.stratalab.blockchain
+package org.plasmalabs.blockchain
 
 import cats.Parallel
 import cats.data.{EitherT, ReaderT}
@@ -6,23 +6,23 @@ import cats.effect.Sync
 import cats.implicits._
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.codecs.bytes.typeclasses.Transmittable
-import xyz.stratalab.config.ApplicationConfig
-import xyz.stratalab.consensus.algebras.BlockHeaderToBodyValidationAlgebra
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.crypto.hash.Blake2b256
-import xyz.stratalab.models._
-import xyz.stratalab.models.protocol.{ConfigConverter, ConfigGenesis}
-import xyz.stratalab.models.utility.HasLength.instances.byteStringLength
-import xyz.stratalab.models.utility._
-import xyz.stratalab.node.models._
-import xyz.stratalab.numerics.implicits._
-import xyz.stratalab.sdk.models._
-import xyz.stratalab.sdk.models.box.Value
-import xyz.stratalab.sdk.models.transaction._
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.typeclasses.Transmittable
+import org.plasmalabs.config.ApplicationConfig
+import org.plasmalabs.consensus.algebras.BlockHeaderToBodyValidationAlgebra
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.crypto.hash.Blake2b256
+import org.plasmalabs.models._
+import org.plasmalabs.models.protocol.{ConfigConverter, ConfigGenesis}
+import org.plasmalabs.models.utility.HasLength.instances.byteStringLength
+import org.plasmalabs.models.utility._
+import org.plasmalabs.node.models._
+import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.models.box.Value
+import org.plasmalabs.sdk.models.transaction._
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.typeclasses.implicits._
 
 /**
  * The beginning of everything.  ("everything" of course just means the first block of a blockchain)

@@ -1,13 +1,13 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.data.NonEmptyChain
 import cats.implicits._
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.ledger.implicits._
-import xyz.stratalab.models.TxRoot
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.validation.TransactionSyntaxError
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.ledger.implicits._
+import org.plasmalabs.models.TxRoot
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.validation.TransactionSyntaxError
+import org.plasmalabs.typeclasses.implicits._
 
 sealed abstract class BlockDownloadError extends Exception {
   def notCritical: Boolean

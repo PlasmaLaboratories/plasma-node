@@ -1,11 +1,11 @@
-package xyz.stratalab.healthcheck
+package org.plasmalabs.healthcheck
 
 import cats.effect._
 import fs2.Stream
 import fs2.concurrent.SignallingRef
 import grpc.health.v1.ServingStatus
-import xyz.stratalab.algebras._
-import xyz.stratalab.models.ServiceStatus
+import org.plasmalabs.algebras._
+import org.plasmalabs.models.ServiceStatus
 
 /**
  * HealthCheck

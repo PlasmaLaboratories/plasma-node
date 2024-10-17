@@ -1,9 +1,9 @@
-package xyz.stratalab.minting.algebras
+package org.plasmalabs.minting.algebras
 
-import xyz.stratalab.consensus.models.{BlockHeader, SlotId, StakingAddress}
-import xyz.stratalab.minting.models.VrfHit
-import xyz.stratalab.models._
-import xyz.stratalab.sdk.models.LockAddress
+import org.plasmalabs.consensus.models.{BlockHeader, SlotId, StakingAddress}
+import org.plasmalabs.minting.models.VrfHit
+import org.plasmalabs.models._
+import org.plasmalabs.sdk.models.LockAddress
 
 /**
  * Staking means participating in the blockchain network.  A staker uses their funds to provide elgibility certificates.

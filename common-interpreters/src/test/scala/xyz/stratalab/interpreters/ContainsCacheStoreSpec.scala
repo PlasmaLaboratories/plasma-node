@@ -1,4 +1,4 @@
-package xyz.stratalab.interpreters
+package org.plasmalabs.interpreters
 
 import cats.effect.{IO, Resource}
 import cats.implicits._
@@ -6,9 +6,9 @@ import fs2.io.file.{Files, Path}
 import munit.CatsEffectSuite
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.algebras.testInterpreters.NoOpLogger
-import xyz.stratalab.db.leveldb.{LevelDbStore, SpecKey, SpecValue}
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.algebras.testInterpreters.NoOpLogger
+import org.plasmalabs.db.leveldb.{LevelDbStore, SpecKey, SpecValue}
 
 class ContainsCacheStoreSpec extends CatsEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]

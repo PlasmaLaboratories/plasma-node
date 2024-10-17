@@ -1,4 +1,4 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats.effect.IO
 import cats.implicits._
@@ -6,9 +6,9 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.testInterpreters.TestStore
-import xyz.stratalab.models.{Epoch, _}
-import xyz.stratalab.sdk.generators.TransactionGenerator
+import org.plasmalabs.algebras.testInterpreters.TestStore
+import org.plasmalabs.models.{Epoch, _}
+import org.plasmalabs.sdk.generators.TransactionGenerator
 
 class VersionInfoSpec
     extends CatsEffectSuite

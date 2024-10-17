@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.multiplexer
+package org.plasmalabs.networking.multiplexer
 
 import cats.MonadThrow
 import cats.data.OptionT

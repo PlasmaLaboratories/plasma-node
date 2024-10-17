@@ -1,4 +1,4 @@
-package xyz.stratalab.minting.interpreters
+package org.plasmalabs.minting.interpreters
 
 import cats.data.OptionT
 import cats.effect._
@@ -6,20 +6,20 @@ import cats.implicits._
 import com.google.protobuf.ByteString
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
-import xyz.stratalab.algebras.Stats
-import xyz.stratalab.catsutils._
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.codecs.bytes.typeclasses.implicits._
-import xyz.stratalab.consensus.algebras._
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.consensus.thresholdEvidence
-import xyz.stratalab.crypto.hash.Blake2b256
-import xyz.stratalab.crypto.signing.Ed25519
-import xyz.stratalab.minting.algebras._
-import xyz.stratalab.minting.models.VrfHit
-import xyz.stratalab.models._
-import xyz.stratalab.sdk.models.LockAddress
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.Stats
+import org.plasmalabs.catsutils._
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.typeclasses.implicits._
+import org.plasmalabs.consensus.algebras._
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.consensus.thresholdEvidence
+import org.plasmalabs.crypto.hash.Blake2b256
+import org.plasmalabs.crypto.signing.Ed25519
+import org.plasmalabs.minting.algebras._
+import org.plasmalabs.minting.models.VrfHit
+import org.plasmalabs.models._
+import org.plasmalabs.sdk.models.LockAddress
+import org.plasmalabs.typeclasses.implicits._
 
 object Staking {
 

@@ -1,11 +1,11 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats.effect.Async
 import cats.implicits._
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.algebras._
-import xyz.stratalab.consensus.algebras.VersionInfoAlgebra
-import xyz.stratalab.models._
+import org.plasmalabs.algebras._
+import org.plasmalabs.consensus.algebras.VersionInfoAlgebra
+import org.plasmalabs.models._
 
 import scala.collection.mutable
 

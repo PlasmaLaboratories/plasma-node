@@ -1,4 +1,4 @@
-package xyz.stratalab.models.protocol
+package org.plasmalabs.models.protocol
 
 case class ConfigGenesis(
   label:                      String,

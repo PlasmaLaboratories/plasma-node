@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer
+package org.plasmalabs.indexer
 
 import cats.effect.{IO, Resource, SyncIO}
 import cats.implicits._
@@ -7,8 +7,8 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraphFactoryV2
 import munit.{CatsEffectSuite, FunSuite, TestOptions}
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.indexer.orientDb.instances.VertexSchemaInstances.instances._
-import xyz.stratalab.indexer.orientDb.{OrientDBMetadataFactory, OrientThread}
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances._
+import org.plasmalabs.indexer.orientDb.{OrientDBMetadataFactory, OrientThread}
 
 trait DbFixtureUtil { self: FunSuite with CatsEffectSuite =>
 

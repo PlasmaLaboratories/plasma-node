@@ -1,9 +1,9 @@
-package xyz.stratalab
+package org.plasmalabs
 
 import cats.ApplicativeThrow
 import cats.implicits.catsSyntaxApplicativeError
 import io.grpc.{Status, StatusException}
-import xyz.stratalab.indexer.model.{GE, GEs}
+import org.plasmalabs.indexer.model.{GE, GEs}
 
 package object indexer {
 

@@ -1,16 +1,16 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats.effect._
 import cats.implicits._
 import scalacache.caffeine.CaffeineCache
-import xyz.stratalab.consensus.algebras.LeaderElectionValidationAlgebra
-import xyz.stratalab.consensus.models.VrfConfig
-import xyz.stratalab.consensus.rhoToRhoTestHash
-import xyz.stratalab.crypto.hash.Blake2b512
-import xyz.stratalab.models._
-import xyz.stratalab.models.utility.Ratio
-import xyz.stratalab.numerics.algebras.{Exp, Log1p}
-import xyz.stratalab.numerics.implicits._
+import org.plasmalabs.consensus.algebras.LeaderElectionValidationAlgebra
+import org.plasmalabs.consensus.models.VrfConfig
+import org.plasmalabs.consensus.rhoToRhoTestHash
+import org.plasmalabs.crypto.hash.Blake2b512
+import org.plasmalabs.models._
+import org.plasmalabs.models.utility.Ratio
+import org.plasmalabs.numerics.algebras.{Exp, Log1p}
+import org.plasmalabs.numerics.implicits._
 
 /**
  * Credit to Aaron Schutza

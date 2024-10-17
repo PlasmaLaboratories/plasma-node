@@ -1,7 +1,7 @@
-package xyz.stratalab.consensus.algebras
+package org.plasmalabs.consensus.algebras
 
 import cats.data.{NonEmptyChain, Validated}
-import xyz.stratalab.consensus.models.{BlockId, SlotData}
+import org.plasmalabs.consensus.models.{BlockId, SlotData}
 
 /**
  * Operations involving this node's locally-adopted canonical chain

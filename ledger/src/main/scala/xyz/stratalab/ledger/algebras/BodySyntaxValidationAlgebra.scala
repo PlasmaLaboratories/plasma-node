@@ -1,7 +1,7 @@
-package xyz.stratalab.ledger.algebras
+package org.plasmalabs.ledger.algebras
 
-import xyz.stratalab.algebras.ContextlessValidationAlgebra
-import xyz.stratalab.ledger.models.BodySyntaxError
-import xyz.stratalab.node.models.BlockBody
+import org.plasmalabs.algebras.ContextlessValidationAlgebra
+import org.plasmalabs.ledger.models.BodySyntaxError
+import org.plasmalabs.node.models.BlockBody
 
 trait BodySyntaxValidationAlgebra[F[_]] extends ContextlessValidationAlgebra[F, BodySyntaxError, BlockBody]

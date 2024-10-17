@@ -1,4 +1,4 @@
-package xyz.stratalab.node
+package org.plasmalabs.node
 
 import cats.data.{Kleisli, ReaderT}
 import cats.effect.{Async, Resource}

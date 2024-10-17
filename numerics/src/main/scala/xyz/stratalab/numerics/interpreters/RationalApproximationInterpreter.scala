@@ -1,10 +1,10 @@
-package xyz.stratalab.numerics.interpreters
+package org.plasmalabs.numerics.interpreters
 
 import cats.Monad
 import cats.implicits._
-import xyz.stratalab.models.utility.Ratio
-import xyz.stratalab.numerics.algebras.RationalApproximation
-import xyz.stratalab.numerics.implicits._
+import org.plasmalabs.models.utility.Ratio
+import org.plasmalabs.numerics.algebras.RationalApproximation
+import org.plasmalabs.numerics.implicits._
 
 object RationalApproximationInterpreter {
 

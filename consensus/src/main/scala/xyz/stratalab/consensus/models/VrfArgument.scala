@@ -1,8 +1,8 @@
-package xyz.stratalab.consensus.models
+package org.plasmalabs.consensus.models
 
 import com.google.protobuf.ByteString
-import xyz.stratalab.codecs.bytes.typeclasses.Signable
-import xyz.stratalab.models._
+import org.plasmalabs.codecs.bytes.typeclasses.Signable
+import org.plasmalabs.models._
 
 case class VrfArgument(eta: Eta, slot: Slot)
 

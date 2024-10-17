@@ -1,4 +1,4 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats.data._
 import cats.effect.Resource
@@ -9,20 +9,20 @@ import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
 import scalacache.Entry
 import scalacache.caffeine.CaffeineCache
-import xyz.stratalab.algebras.ClockAlgebra.implicits.clockAsClockOps
-import xyz.stratalab.algebras.{ClockAlgebra, Store}
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.codecs.bytes.typeclasses.implicits._
-import xyz.stratalab.consensus.algebras._
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData, SlotId, _}
-import xyz.stratalab.consensus.{thresholdEvidence, _}
-import xyz.stratalab.crypto.hash.Blake2b256
-import xyz.stratalab.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
-import xyz.stratalab.models._
-import xyz.stratalab.models.utility.HasLength.instances._
-import xyz.stratalab.models.utility.Lengths._
-import xyz.stratalab.models.utility._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.ClockAlgebra.implicits.clockAsClockOps
+import org.plasmalabs.algebras.{ClockAlgebra, Store}
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.typeclasses.implicits._
+import org.plasmalabs.consensus.algebras._
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData, SlotId, _}
+import org.plasmalabs.consensus.{thresholdEvidence, _}
+import org.plasmalabs.crypto.hash.Blake2b256
+import org.plasmalabs.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
+import org.plasmalabs.models._
+import org.plasmalabs.models.utility.HasLength.instances._
+import org.plasmalabs.models.utility.Lengths._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.typeclasses.implicits._
 
 /**
  * Interpreters for the ConsensusValidationAlgebra

@@ -1,15 +1,15 @@
-package xyz.stratalab.codecs.bytes.tetra
+package org.plasmalabs.codecs.bytes.tetra
 
 import cats.data.NonEmptySet
 import cats.implicits._
 import com.google.protobuf.ByteString
 import scalapb.{GeneratedMessage, GeneratedMessageCompanion}
 import scodec.Codec
-import xyz.stratalab.codecs.bytes.scodecs._
-import xyz.stratalab.codecs.bytes.typeclasses.Persistable
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.crypto.models.SecretKeyKesProduct
-import xyz.stratalab.models.{Epoch, ProposalId}
+import org.plasmalabs.codecs.bytes.scodecs._
+import org.plasmalabs.codecs.bytes.typeclasses.Persistable
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.crypto.models.SecretKeyKesProduct
+import org.plasmalabs.models.{Epoch, ProposalId}
 
 import scala.collection.immutable.SortedSet
 import scala.util.Try

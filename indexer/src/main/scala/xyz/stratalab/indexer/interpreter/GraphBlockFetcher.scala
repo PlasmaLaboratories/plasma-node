@@ -1,17 +1,17 @@
-package xyz.stratalab.indexer.interpreter
+package org.plasmalabs.indexer.interpreter
 
 import cats.data.EitherT
 import cats.effect.Resource
 import cats.effect.kernel.Async
 import cats.implicits._
 import com.tinkerpop.blueprints.Vertex
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
-import xyz.stratalab.indexer.algebras.{BlockFetcherAlgebra, VertexFetcherAlgebra}
-import xyz.stratalab.indexer.model.GE
-import xyz.stratalab.indexer.orientDb.OrientThread
-import xyz.stratalab.indexer.orientDb.instances.VertexSchemaInstances.instances._
-import xyz.stratalab.indexer.services.BlockData
-import xyz.stratalab.node.models.{BlockBody, FullBlockBody}
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
+import org.plasmalabs.indexer.algebras.{BlockFetcherAlgebra, VertexFetcherAlgebra}
+import org.plasmalabs.indexer.model.GE
+import org.plasmalabs.indexer.orientDb.OrientThread
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances._
+import org.plasmalabs.indexer.services.BlockData
+import org.plasmalabs.node.models.{BlockBody, FullBlockBody}
 
 object GraphBlockFetcher {
 

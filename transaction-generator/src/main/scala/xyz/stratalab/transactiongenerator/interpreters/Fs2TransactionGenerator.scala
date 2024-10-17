@@ -1,4 +1,4 @@
-package xyz.stratalab.transactiongenerator.interpreters
+package org.plasmalabs.transactiongenerator.interpreters
 
 import cats.data.OptionT
 import cats.effect._
@@ -10,17 +10,17 @@ import fs2._
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import quivr.models.SmallData
-import xyz.stratalab.quivr.api.Prover
-import xyz.stratalab.sdk.common.ContainsSignable._
-import xyz.stratalab.sdk.common.ContainsSignable.instances._
-import xyz.stratalab.sdk.models.box._
-import xyz.stratalab.sdk.models.transaction._
-import xyz.stratalab.sdk.models.{Datum, Event, TransactionOutputAddress}
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
-import xyz.stratalab.transactiongenerator.algebras.TransactionGenerator
-import xyz.stratalab.transactiongenerator.models.Wallet
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.quivr.api.Prover
+import org.plasmalabs.sdk.common.ContainsSignable._
+import org.plasmalabs.sdk.common.ContainsSignable.instances._
+import org.plasmalabs.sdk.models.box._
+import org.plasmalabs.sdk.models.transaction._
+import org.plasmalabs.sdk.models.{Datum, Event, TransactionOutputAddress}
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.validation.algebras.TransactionCostCalculator
+import org.plasmalabs.transactiongenerator.algebras.TransactionGenerator
+import org.plasmalabs.transactiongenerator.models.Wallet
+import org.plasmalabs.typeclasses.implicits._
 
 object Fs2TransactionGenerator {
 

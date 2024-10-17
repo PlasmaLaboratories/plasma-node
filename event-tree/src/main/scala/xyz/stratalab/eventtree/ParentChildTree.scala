@@ -1,4 +1,4 @@
-package xyz.stratalab.eventtree
+package org.plasmalabs.eventtree
 
 import cats._
 import cats.data.{NonEmptyChain, OptionT}

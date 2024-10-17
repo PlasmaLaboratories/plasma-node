@@ -1,7 +1,7 @@
-package xyz.stratalab.indexer.algebras
+package org.plasmalabs.indexer.algebras
 
-import xyz.stratalab.indexer.model.GE
-import xyz.stratalab.indexer.services.BlockData
+import org.plasmalabs.indexer.model.GE
+import org.plasmalabs.indexer.services.BlockData
 
 /**
  * Inserter of blocks to the chain in the data store.

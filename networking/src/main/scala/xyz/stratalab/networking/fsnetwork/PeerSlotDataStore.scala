@@ -1,12 +1,12 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.effect.Sync
 import cats.implicits._
 import com.github.benmanes.caffeine.cache.Caffeine
 import scalacache.Entry
 import scalacache.caffeine.CaffeineCache
-import xyz.stratalab.algebras.{Store, StoreReader}
-import xyz.stratalab.consensus.models.{BlockId, SlotData}
+import org.plasmalabs.algebras.{Store, StoreReader}
+import org.plasmalabs.consensus.models.{BlockId, SlotData}
 
 case class PeerSlotDataStoreConfig(cacheSize: Long)
 

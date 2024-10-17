@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer.orientDb.schema
+package org.plasmalabs.indexer.orientDb.schema
 
 /**
  * Describe a type of edge. Currently does not allow for data to be associated with edges, but this may change.

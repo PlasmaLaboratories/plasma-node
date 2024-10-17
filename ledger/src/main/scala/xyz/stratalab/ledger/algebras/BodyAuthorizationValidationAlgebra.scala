@@ -1,11 +1,11 @@
-package xyz.stratalab.ledger.algebras
+package org.plasmalabs.ledger.algebras
 
-import xyz.stratalab.algebras.ContextualValidationAlgebra
-import xyz.stratalab.ledger.models.BodyAuthorizationError
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.quivr.runtime.DynamicContext
-import xyz.stratalab.sdk.models.Datum
-import xyz.stratalab.sdk.models.transaction.IoTransaction
+import org.plasmalabs.algebras.ContextualValidationAlgebra
+import org.plasmalabs.ledger.models.BodyAuthorizationError
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.quivr.runtime.DynamicContext
+import org.plasmalabs.sdk.models.Datum
+import org.plasmalabs.sdk.models.transaction.IoTransaction
 
 trait BodyAuthorizationValidationAlgebra[F[_]]
     extends ContextualValidationAlgebra[

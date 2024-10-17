@@ -1,11 +1,11 @@
-package xyz.stratalab.indexer.orientDb.instances
+package org.plasmalabs.indexer.orientDb.instances
 
 import com.orientechnologies.orient.core.metadata.schema.OType
-import xyz.stratalab.indexer.orientDb.schema.OTyped.Instances._
-import xyz.stratalab.indexer.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
-import xyz.stratalab.sdk.common.ContainsImmutable.instances.ioTransactionImmutable
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
+import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances._
+import org.plasmalabs.indexer.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
+import org.plasmalabs.sdk.common.ContainsImmutable.instances.ioTransactionImmutable
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax._
 
 object SchemaIoTransaction {
 

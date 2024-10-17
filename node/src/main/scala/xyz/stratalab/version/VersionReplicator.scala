@@ -1,4 +1,4 @@
-package xyz.stratalab.version
+package org.plasmalabs.version
 
 import cats.data.OptionT
 import cats.effect.implicits.genSpawnOps
@@ -9,8 +9,8 @@ import fs2.io.net.Network
 import io.circe.parser._
 import org.http4s.ember.client.EmberClientBuilder
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.algebras.SoftwareVersionAlgebra
-import xyz.stratalab.blockchain.algebras.NodeMetadataAlgebra
+import org.plasmalabs.algebras.SoftwareVersionAlgebra
+import org.plasmalabs.blockchain.algebras.NodeMetadataAlgebra
 
 import scala.concurrent.duration._
 

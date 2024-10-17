@@ -1,4 +1,4 @@
-package xyz.stratalab.actor
+package org.plasmalabs.actor
 
 import cats.Applicative
 import cats.effect._
@@ -8,7 +8,7 @@ import cats.syntax.all._
 import fs2.Stream
 import fs2.concurrent.SignallingRef
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.actor.Actor.ActorId
+import org.plasmalabs.actor.Actor.ActorId
 
 import scala.collection.immutable.ListMap
 import scala.concurrent.duration.{DurationInt, FiniteDuration}

@@ -1,12 +1,12 @@
-package xyz.stratalab
+package org.plasmalabs
 
 import com.google.protobuf.ByteString
-import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.consensus.models.{BlockHeader, SlotData, SlotId}
-import xyz.stratalab.crypto.hash.{Blake2b256, Blake2b512}
-import xyz.stratalab.crypto.signing.Ed25519VRF
-import xyz.stratalab.models.utility._
-import xyz.stratalab.models.{Bytes, UnsignedBlockHeader}
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.consensus.models.{BlockHeader, SlotData, SlotId}
+import org.plasmalabs.crypto.hash.{Blake2b256, Blake2b512}
+import org.plasmalabs.crypto.signing.Ed25519VRF
+import org.plasmalabs.models.utility._
+import org.plasmalabs.models.{Bytes, UnsignedBlockHeader}
 
 package object consensus {
 

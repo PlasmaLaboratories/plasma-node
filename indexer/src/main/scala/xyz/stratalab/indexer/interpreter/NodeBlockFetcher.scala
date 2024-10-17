@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer.interpreter
+package org.plasmalabs.indexer.interpreter
 
 import cats.data.{EitherT, OptionT}
 import cats.effect._
@@ -6,13 +6,13 @@ import cats.effect.implicits._
 import cats.implicits._
 import fs2.Stream
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.algebras.NodeRpc
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.indexer.algebras.NodeBlockFetcherAlgebra
-import xyz.stratalab.indexer.model.{GE, GEs}
-import xyz.stratalab.indexer.services.BlockData
-import xyz.stratalab.node.models.FullBlockBody
-import xyz.stratalab.sdk.models.TransactionId
+import org.plasmalabs.algebras.NodeRpc
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.indexer.algebras.NodeBlockFetcherAlgebra
+import org.plasmalabs.indexer.model.{GE, GEs}
+import org.plasmalabs.indexer.services.BlockData
+import org.plasmalabs.node.models.FullBlockBody
+import org.plasmalabs.sdk.models.TransactionId
 
 import scala.collection.immutable.ListSet
 

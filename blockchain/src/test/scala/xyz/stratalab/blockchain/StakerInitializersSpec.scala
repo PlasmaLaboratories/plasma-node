@@ -1,15 +1,15 @@
-package xyz.stratalab.blockchain
+package org.plasmalabs.blockchain
 
 import cats.effect.IO
 import cats.effect.kernel.Async
 import cats.implicits._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.blockchain.PrivateTestnet.DefaultTotalStake
-import xyz.stratalab.models.utility.Ratio
-import xyz.stratalab.numerics.implicits._
-import xyz.stratalab.sdk.models.box.Value
-import xyz.stratalab.sdk.syntax._
+import org.plasmalabs.blockchain.PrivateTestnet.DefaultTotalStake
+import org.plasmalabs.models.utility.Ratio
+import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.sdk.models.box.Value
+import org.plasmalabs.sdk.syntax._
 
 class StakerInitializersSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

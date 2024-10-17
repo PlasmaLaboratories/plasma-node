@@ -1,11 +1,11 @@
-package xyz.stratalab.byzantine.util
+package org.plasmalabs.byzantine.util
 
 import cats.effect._
 import cats.effect.implicits._
 import cats.implicits._
-import xyz.stratalab.algebras.{NodeRpc, IndexerRpc}
-import xyz.stratalab.indexer.IndexerGrpc
-import xyz.stratalab.grpc.NodeGrpc
+import org.plasmalabs.algebras.{NodeRpc, IndexerRpc}
+import org.plasmalabs.indexer.IndexerGrpc
+import org.plasmalabs.grpc.NodeGrpc
 import com.spotify.docker.client.DockerClient
 import com.spotify.docker.client.messages.HostConfig
 import fs2._

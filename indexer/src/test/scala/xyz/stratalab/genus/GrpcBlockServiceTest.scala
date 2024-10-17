@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer
+package org.plasmalabs.indexer
 
 import cats.effect.IO
 import cats.implicits._
@@ -6,14 +6,14 @@ import io.grpc.{Metadata, StatusException}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.indexer.algebras.BlockFetcherAlgebra
-import xyz.stratalab.indexer.model.{GE, GEs}
-import xyz.stratalab.indexer.services._
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.models.generators.node.ModelGenerators._
-import xyz.stratalab.node.models._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.indexer.algebras.BlockFetcherAlgebra
+import org.plasmalabs.indexer.model.{GE, GEs}
+import org.plasmalabs.indexer.services._
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.generators.node.ModelGenerators._
+import org.plasmalabs.node.models._
+import org.plasmalabs.typeclasses.implicits._
 
 class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]

@@ -1,6 +1,6 @@
-package xyz.stratalab.crypto.utils
+package org.plasmalabs.crypto.utils
 
-import xyz.stratalab.crypto.models._
+import org.plasmalabs.crypto.models._
 
 object KesTestHelper {
 

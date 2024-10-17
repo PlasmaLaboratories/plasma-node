@@ -1,6 +1,6 @@
-package xyz.stratalab.consensus.models
+package org.plasmalabs.consensus.models
 
-import xyz.stratalab.models.TxRoot
+import org.plasmalabs.models.TxRoot
 
 sealed abstract class BlockHeaderToBodyValidationFailure
 

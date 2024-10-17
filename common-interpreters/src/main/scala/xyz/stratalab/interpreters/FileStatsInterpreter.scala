@@ -1,10 +1,10 @@
-package xyz.stratalab.interpreters
+package org.plasmalabs.interpreters
 
 import cats.Applicative
 import cats.effect.implicits._
 import cats.effect.kernel.{Resource, Sync}
 import io.circe.Json
-import xyz.stratalab.algebras.Stats
+import org.plasmalabs.algebras.Stats
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths, StandardOpenOption}

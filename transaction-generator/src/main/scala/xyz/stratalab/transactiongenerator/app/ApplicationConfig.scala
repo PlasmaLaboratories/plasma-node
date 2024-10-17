@@ -1,4 +1,4 @@
-package xyz.stratalab.transactiongenerator.app
+package org.plasmalabs.transactiongenerator.app
 
 import cats.Show
 import com.typesafe.config.Config

@@ -1,4 +1,4 @@
-package xyz.stratalab.node
+package org.plasmalabs.node
 
 import cats.effect.kernel.Async
 import cats.effect.std.Queue
@@ -7,16 +7,16 @@ import cats.implicits._
 import fs2.io.file.{Files, Path}
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.blockchain.{DataStores, PrunedDataStores}
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.config.ApplicationConfig
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.models.utility._
-import xyz.stratalab.node.models._
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.blockchain.{DataStores, PrunedDataStores}
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.config.ApplicationConfig
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.node.models._
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.typeclasses.implicits._
 
 import DataStoresInit.DataStoreNames._
 

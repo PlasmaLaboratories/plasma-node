@@ -1,12 +1,12 @@
-package xyz.stratalab.numerics
+package org.plasmalabs.numerics
 
 import quivr.models.Int128
-import xyz.stratalab.models.utility.Ratio
+import org.plasmalabs.models.utility.Ratio
 
 import scala.language.implicitConversions
 
 trait NumberOps {
-  import xyz.stratalab.sdk.syntax._
+  import org.plasmalabs.sdk.syntax._
 
   implicit def intAsInt128(int: Int): Int128 =
     BigInt(int)

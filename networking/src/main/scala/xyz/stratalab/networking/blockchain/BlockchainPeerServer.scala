@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.blockchain
+package org.plasmalabs.networking.blockchain
 
 import cats.data.Chain
 import cats.effect.{Async, Resource}
@@ -7,16 +7,16 @@ import fs2.Stream
 import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.blockchain.{BlockchainCore, _}
-import xyz.stratalab.catsutils._
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
-import xyz.stratalab.networking.fsnetwork.RemotePeer
-import xyz.stratalab.networking.p2p.PeerConnectionChanges.RemotePeerApplicationLevel
-import xyz.stratalab.networking.p2p.{ConnectedPeer, PeerConnectionChange}
-import xyz.stratalab.node.models._
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.blockchain.{BlockchainCore, _}
+import org.plasmalabs.catsutils._
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
+import org.plasmalabs.networking.fsnetwork.RemotePeer
+import org.plasmalabs.networking.p2p.PeerConnectionChanges.RemotePeerApplicationLevel
+import org.plasmalabs.networking.p2p.{ConnectedPeer, PeerConnectionChange}
+import org.plasmalabs.node.models._
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.typeclasses.implicits._
 
 object BlockchainPeerServer {
 

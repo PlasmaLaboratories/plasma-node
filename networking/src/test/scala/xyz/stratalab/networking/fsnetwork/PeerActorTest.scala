@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.data.NonEmptyChain
 import cats.effect.kernel.{Async, Sync}
@@ -9,32 +9,32 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.consensus.algebras.{BlockHeaderToBodyValidationAlgebra, ChainSelectionAlgebra, LocalChainAlgebra}
-import xyz.stratalab.consensus.models.{BlockId, SlotData}
-import xyz.stratalab.crypto.signing.Ed25519VRF
-import xyz.stratalab.eventtree.ParentChildTree
-import xyz.stratalab.ledger.algebras.MempoolAlgebra
-import xyz.stratalab.models.ModelGenerators.GenHelper
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.networking.KnownHostOps
-import xyz.stratalab.networking.blockchain.BlockchainPeerClient
-import xyz.stratalab.networking.fsnetwork.NetworkQualityError.{IncorrectPongMessage, NoPongMessage}
-import xyz.stratalab.networking.fsnetwork.PeerActorTest.F
-import xyz.stratalab.networking.fsnetwork.PeerBlockBodyFetcher.PeerBlockBodyFetcherActor
-import xyz.stratalab.networking.fsnetwork.PeerBlockHeaderFetcher.PeerBlockHeaderFetcherActor
-import xyz.stratalab.networking.fsnetwork.PeerMempoolTransactionSync.PeerMempoolTransactionSyncActor
-import xyz.stratalab.networking.fsnetwork.PeersManager.Message.PingPongMessagePing
-import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
-import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
-import xyz.stratalab.networking.fsnetwork.TestHelper.{arbitraryHost, arbitraryKnownHost}
-import xyz.stratalab.node.models._
-import xyz.stratalab.sdk.generators.TransactionGenerator
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.consensus.algebras.{BlockHeaderToBodyValidationAlgebra, ChainSelectionAlgebra, LocalChainAlgebra}
+import org.plasmalabs.consensus.models.{BlockId, SlotData}
+import org.plasmalabs.crypto.signing.Ed25519VRF
+import org.plasmalabs.eventtree.ParentChildTree
+import org.plasmalabs.ledger.algebras.MempoolAlgebra
+import org.plasmalabs.models.ModelGenerators.GenHelper
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.networking.KnownHostOps
+import org.plasmalabs.networking.blockchain.BlockchainPeerClient
+import org.plasmalabs.networking.fsnetwork.NetworkQualityError.{IncorrectPongMessage, NoPongMessage}
+import org.plasmalabs.networking.fsnetwork.PeerActorTest.F
+import org.plasmalabs.networking.fsnetwork.PeerBlockBodyFetcher.PeerBlockBodyFetcherActor
+import org.plasmalabs.networking.fsnetwork.PeerBlockHeaderFetcher.PeerBlockHeaderFetcherActor
+import org.plasmalabs.networking.fsnetwork.PeerMempoolTransactionSync.PeerMempoolTransactionSyncActor
+import org.plasmalabs.networking.fsnetwork.PeersManager.Message.PingPongMessagePing
+import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
+import org.plasmalabs.networking.fsnetwork.RequestsProxy.RequestsProxyActor
+import org.plasmalabs.networking.fsnetwork.TestHelper.{arbitraryHost, arbitraryKnownHost}
+import org.plasmalabs.node.models._
+import org.plasmalabs.sdk.generators.TransactionGenerator
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
 
 import scala.concurrent.duration.{FiniteDuration, MILLISECONDS}
 

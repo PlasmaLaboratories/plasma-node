@@ -1,6 +1,6 @@
-package xyz.stratalab.transactiongenerator.algebras
+package org.plasmalabs.transactiongenerator.algebras
 
-import xyz.stratalab.transactiongenerator.models.Wallet
+import org.plasmalabs.transactiongenerator.models.Wallet
 
 trait WalletInitializer[F[_]] {
 

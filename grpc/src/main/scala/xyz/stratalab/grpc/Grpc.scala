@@ -1,4 +1,4 @@
-package xyz.stratalab.grpc
+package org.plasmalabs.grpc
 
 import cats.effect.kernel.{Async, Resource}
 import fs2.grpc.syntax.all._

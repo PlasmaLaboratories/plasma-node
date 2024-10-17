@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.data.NonEmptyChain
 import cats.effect.IO
@@ -10,14 +10,14 @@ import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.SelfAwareStructuredLogger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.consensus.models.{BlockId, SlotData}
-import xyz.stratalab.models.ModelGenerators.GenHelper
-import xyz.stratalab.models.generators.consensus.ModelGenerators
-import xyz.stratalab.networking.fsnetwork.BlockCheckerTest.F
-import xyz.stratalab.networking.fsnetwork.NonEmptyChainFOps
-import xyz.stratalab.networking.fsnetwork.TestHelper.CallHandler3Ops
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.consensus.models.{BlockId, SlotData}
+import org.plasmalabs.models.ModelGenerators.GenHelper
+import org.plasmalabs.models.generators.consensus.ModelGenerators
+import org.plasmalabs.networking.fsnetwork.BlockCheckerTest.F
+import org.plasmalabs.networking.fsnetwork.NonEmptyChainFOps
+import org.plasmalabs.networking.fsnetwork.TestHelper.CallHandler3Ops
+import org.plasmalabs.typeclasses.implicits._
 
 object PackageObjectTest {
   type F[A] = IO[A]

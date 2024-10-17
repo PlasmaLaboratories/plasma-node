@@ -1,16 +1,16 @@
-package xyz.stratalab.ledger.interpreters
+package org.plasmalabs.ledger.interpreters
 
 import cats.effect.IO
 import cats.implicits._
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import quivr.models.Int128
-import xyz.stratalab.ledger.models.AssetId
-import xyz.stratalab.models.ModelGenerators.GenHelper
-import xyz.stratalab.sdk.generators.ModelGenerators._
-import xyz.stratalab.sdk.models.box.{Attestation, FungibilityType, QuantityDescriptorType, Value}
-import xyz.stratalab.sdk.models.transaction._
-import xyz.stratalab.sdk.syntax._
+import org.plasmalabs.ledger.models.AssetId
+import org.plasmalabs.models.ModelGenerators.GenHelper
+import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.sdk.models.box.{Attestation, FungibilityType, QuantityDescriptorType, Value}
+import org.plasmalabs.sdk.models.transaction._
+import org.plasmalabs.sdk.syntax._
 
 class TransactionRewardCalculatorSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
 

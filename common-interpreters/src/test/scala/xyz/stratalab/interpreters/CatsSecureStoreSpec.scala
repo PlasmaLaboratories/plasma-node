@@ -1,11 +1,11 @@
-package xyz.stratalab.interpreters
+package org.plasmalabs.interpreters
 
 import cats.effect.{IO, Sync}
 import cats.implicits._
 import com.google.protobuf.ByteString
 import fs2.io.{file => fs2file}
 import munit.CatsEffectSuite
-import xyz.stratalab.codecs.bytes.typeclasses.Persistable
+import org.plasmalabs.codecs.bytes.typeclasses.Persistable
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths}

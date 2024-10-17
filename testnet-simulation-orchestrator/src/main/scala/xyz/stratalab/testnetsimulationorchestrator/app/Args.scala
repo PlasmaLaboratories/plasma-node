@@ -1,8 +1,8 @@
-package xyz.stratalab.testnetsimulationorchestrator.app
+package org.plasmalabs.testnetsimulationorchestrator.app
 
 import cats.Show
 import mainargs._
-import xyz.stratalab.common.application.{ContainsDebugFlag, ContainsUserConfigs}
+import org.plasmalabs.common.application.{ContainsDebugFlag, ContainsUserConfigs}
 
 @main
 case class Args(startup: Args.Startup)

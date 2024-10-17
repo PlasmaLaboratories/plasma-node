@@ -1,11 +1,11 @@
-package xyz.stratalab.interpreters
+package org.plasmalabs.interpreters
 
 import cats.effect.kernel.Sync
 import cats.implicits._
 import com.github.benmanes.caffeine.cache.Caffeine
 import scalacache.Entry
 import scalacache.caffeine.CaffeineCache
-import xyz.stratalab.algebras.Store
+import org.plasmalabs.algebras.Store
 
 import scala.concurrent.duration.FiniteDuration
 

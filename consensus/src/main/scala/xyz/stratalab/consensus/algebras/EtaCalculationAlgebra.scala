@@ -1,7 +1,7 @@
-package xyz.stratalab.consensus.algebras
+package org.plasmalabs.consensus.algebras
 
-import xyz.stratalab.consensus.models.SlotId
-import xyz.stratalab.models.{Eta, Slot}
+import org.plasmalabs.consensus.models.SlotId
+import org.plasmalabs.models.{Eta, Slot}
 
 trait EtaCalculationAlgebra[F[_]] {
 

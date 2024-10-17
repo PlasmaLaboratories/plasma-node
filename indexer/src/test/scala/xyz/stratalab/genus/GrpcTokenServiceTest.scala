@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer
+package org.plasmalabs.indexer
 
 import cats.effect.IO
 import cats.implicits._
@@ -6,12 +6,12 @@ import io.grpc.{Metadata, StatusException}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.indexer.algebras.TokenFetcherAlgebra
-import xyz.stratalab.indexer.model.{GE, GEs}
-import xyz.stratalab.indexer.services._
-import xyz.stratalab.sdk.generators.ModelGenerators._
-import xyz.stratalab.sdk.models.Event.{GroupPolicy, SeriesPolicy}
-import xyz.stratalab.sdk.models.{GroupId, SeriesId, TransactionOutputAddress}
+import org.plasmalabs.indexer.algebras.TokenFetcherAlgebra
+import org.plasmalabs.indexer.model.{GE, GEs}
+import org.plasmalabs.indexer.services._
+import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.sdk.models.Event.{GroupPolicy, SeriesPolicy}
+import org.plasmalabs.sdk.models.{GroupId, SeriesId, TransactionOutputAddress}
 
 class GrpcTokenServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]

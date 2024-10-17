@@ -1,4 +1,4 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats.effect.{Async, IO}
 import cats.implicits._
@@ -6,33 +6,33 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.ClockAlgebra.implicits._
-import xyz.stratalab.algebras.testInterpreters.TestStore
-import xyz.stratalab.algebras.{ClockAlgebra, Store}
-import xyz.stratalab.codecs.bytes.tetra.ModelGenerators._
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.consensus._
-import xyz.stratalab.consensus.algebras.VersionInfoAlgebra
-import xyz.stratalab.consensus.interpreters.VotingEventSourceState
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId, _}
-import xyz.stratalab.crypto.signing.Ed25519VRF
-import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
-import xyz.stratalab.ledger.interpreters.ProposalEventSourceState
-import xyz.stratalab.ledger.interpreters.ProposalEventSourceState._
-import xyz.stratalab.models.ModelGenerators._
-import xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryHeader
-import xyz.stratalab.models.protocol.{ConfigConverter, ConfigGenesis}
-import xyz.stratalab.models.utility.Ratio
-import xyz.stratalab.models.{ProposalId, Slot, Timestamp, VersionId, _}
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.numerics.implicits._
-import xyz.stratalab.proto.node.EpochData
-import xyz.stratalab.sdk.generators.TransactionGenerator
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.box.Value
-import xyz.stratalab.sdk.models.box.Value.ConfigProposal
-import xyz.stratalab.sdk.models.transaction._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.ClockAlgebra.implicits._
+import org.plasmalabs.algebras.testInterpreters.TestStore
+import org.plasmalabs.algebras.{ClockAlgebra, Store}
+import org.plasmalabs.codecs.bytes.tetra.ModelGenerators._
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.consensus._
+import org.plasmalabs.consensus.algebras.VersionInfoAlgebra
+import org.plasmalabs.consensus.interpreters.VotingEventSourceState
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId, _}
+import org.plasmalabs.crypto.signing.Ed25519VRF
+import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
+import org.plasmalabs.ledger.interpreters.ProposalEventSourceState
+import org.plasmalabs.ledger.interpreters.ProposalEventSourceState._
+import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.arbitraryHeader
+import org.plasmalabs.models.protocol.{ConfigConverter, ConfigGenesis}
+import org.plasmalabs.models.utility.Ratio
+import org.plasmalabs.models.{ProposalId, Slot, Timestamp, VersionId, _}
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.proto.node.EpochData
+import org.plasmalabs.sdk.generators.TransactionGenerator
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.box.Value
+import org.plasmalabs.sdk.models.box.Value.ConfigProposal
+import org.plasmalabs.sdk.models.transaction._
+import org.plasmalabs.typeclasses.implicits._
 
 import scala.collection.immutable.NumericRange
 import scala.collection.mutable
@@ -168,8 +168,8 @@ class VotingEventSourceStateSpec
   }
 
   private def addProposalToBlock(blockId: BlockId, proposal: ConfigProposal, storages: BlocksStorages): Unit = {
-    val valueValueProposal: xyz.stratalab.sdk.models.box.Value.Value = Value.Value.ConfigProposal(proposal)
-    val value: xyz.stratalab.sdk.models.box.Value = new xyz.stratalab.sdk.models.box.Value(value = valueValueProposal)
+    val valueValueProposal: org.plasmalabs.sdk.models.box.Value.Value = Value.Value.ConfigProposal(proposal)
+    val value: org.plasmalabs.sdk.models.box.Value = new org.plasmalabs.sdk.models.box.Value(value = valueValueProposal)
     val unspentOutputWithProposal = arbitraryUnspentTransactionOutput.arbitrary.first.copy(value = value)
     val transaction = arbitraryIoTransaction.arbitrary.first
     val transactionWithProposal = transaction.copy(outputs = transaction.outputs :+ unspentOutputWithProposal)

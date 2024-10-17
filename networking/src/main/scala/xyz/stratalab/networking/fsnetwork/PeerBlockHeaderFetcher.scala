@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.MonadThrow
 import cats.data.{NonEmptyChain, OptionT}
@@ -7,25 +7,25 @@ import cats.effect.{Resource, Spawn}
 import cats.implicits._
 import fs2.Stream
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.actor.{Actor, Fsm}
-import xyz.stratalab.algebras.{ClockAlgebra, Store, StoreWriter}
-import xyz.stratalab.catsutils.faAsFAClockOps
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.consensus._
-import xyz.stratalab.consensus.algebras.{ChainSelectionAlgebra, LocalChainAlgebra}
-import xyz.stratalab.consensus.models.{BlockId, SlotData}
-import xyz.stratalab.crypto.signing.Ed25519VRF
-import xyz.stratalab.eventtree.ParentChildTree
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.networking.blockchain.BlockchainPeerClient
-import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError
-import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError._
-import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
-import xyz.stratalab.networking.fsnetwork.PeerBlockHeaderFetcher.CompareResult._
-import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
-import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.actor.{Actor, Fsm}
+import org.plasmalabs.algebras.{ClockAlgebra, Store, StoreWriter}
+import org.plasmalabs.catsutils.faAsFAClockOps
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.consensus._
+import org.plasmalabs.consensus.algebras.{ChainSelectionAlgebra, LocalChainAlgebra}
+import org.plasmalabs.consensus.models.{BlockId, SlotData}
+import org.plasmalabs.crypto.signing.Ed25519VRF
+import org.plasmalabs.eventtree.ParentChildTree
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.networking.blockchain.BlockchainPeerClient
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError._
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import org.plasmalabs.networking.fsnetwork.PeerBlockHeaderFetcher.CompareResult._
+import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
+import org.plasmalabs.networking.fsnetwork.RequestsProxy.RequestsProxyActor
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.typeclasses.implicits._
 
 object PeerBlockHeaderFetcher {
   sealed trait Message

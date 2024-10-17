@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer.interpreter
+package org.plasmalabs.indexer.interpreter
 
 import cats.effect.IO
 import cats.implicits._
@@ -6,13 +6,13 @@ import com.tinkerpop.blueprints.Vertex
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.indexer.algebras.VertexFetcherAlgebra
-import xyz.stratalab.indexer.interpreter.GraphTokenFetcher
-import xyz.stratalab.indexer.model.{GE, GEs}
-import xyz.stratalab.indexer.orientDb.instances.{SchemaGroupPolicy, SchemaSeriesPolicy}
-import xyz.stratalab.sdk.generators.ModelGenerators._
-import xyz.stratalab.sdk.models.Event.{GroupPolicy, SeriesPolicy}
-import xyz.stratalab.sdk.models.{GroupId, SeriesId, TransactionOutputAddress}
+import org.plasmalabs.indexer.algebras.VertexFetcherAlgebra
+import org.plasmalabs.indexer.interpreter.GraphTokenFetcher
+import org.plasmalabs.indexer.model.{GE, GEs}
+import org.plasmalabs.indexer.orientDb.instances.{SchemaGroupPolicy, SchemaSeriesPolicy}
+import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.sdk.models.Event.{GroupPolicy, SeriesPolicy}
+import org.plasmalabs.sdk.models.{GroupId, SeriesId, TransactionOutputAddress}
 
 class GraphTokenFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

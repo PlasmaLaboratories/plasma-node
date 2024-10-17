@@ -1,4 +1,4 @@
-package xyz.stratalab.testnetsimulationorchestrator.interpreters
+package org.plasmalabs.testnetsimulationorchestrator.interpreters
 
 import cats.effect.std.Dispatcher
 import cats.effect.{Async, Deferred, Resource, Sync}
@@ -9,7 +9,7 @@ import io.kubernetes.client.openapi.{ApiCallback, ApiException}
 import io.kubernetes.client.util.Config
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.testnetsimulationorchestrator.algebras.SimulationController
+import org.plasmalabs.testnetsimulationorchestrator.algebras.SimulationController
 
 import java.util
 

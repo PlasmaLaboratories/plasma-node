@@ -1,4 +1,4 @@
-package xyz.stratalab.blockchain.interpreters
+package org.plasmalabs.blockchain.interpreters
 
 import cats.data.OptionT
 import cats.effect.{IO, Sync}
@@ -7,27 +7,27 @@ import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import quivr.models.Int128
-import xyz.stratalab.algebras.Stats.Implicits._
-import xyz.stratalab.algebras.testInterpreters.TestStore
-import xyz.stratalab.codecs.bytes.tetra.TetraScodecCodecs
-import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.consensus.interpreters.{ConsensusDataEventSourcedState, EpochBoundariesEventSourcedState}
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
-import xyz.stratalab.interpreters.SchedulerClock
-import xyz.stratalab.ledger.algebras.TransactionRewardCalculatorAlgebra
-import xyz.stratalab.ledger.models.RewardQuantities
-import xyz.stratalab.models._
-import xyz.stratalab.models.utility._
-import xyz.stratalab.node.models.{BlockBody, FullBlock, FullBlockBody}
-import xyz.stratalab.numerics.implicits._
-import xyz.stratalab.proto.node.EpochData
-import xyz.stratalab.sdk.common.ContainsImmutable
-import xyz.stratalab.sdk.models.box.{Attestation, Value}
-import xyz.stratalab.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
-import xyz.stratalab.sdk.models.{Datum, LockAddress, LockId, TransactionId, TransactionOutputAddress}
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.Stats.Implicits._
+import org.plasmalabs.algebras.testInterpreters.TestStore
+import org.plasmalabs.codecs.bytes.tetra.TetraScodecCodecs
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.consensus.interpreters.{ConsensusDataEventSourcedState, EpochBoundariesEventSourcedState}
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
+import org.plasmalabs.interpreters.SchedulerClock
+import org.plasmalabs.ledger.algebras.TransactionRewardCalculatorAlgebra
+import org.plasmalabs.ledger.models.RewardQuantities
+import org.plasmalabs.models._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.node.models.{BlockBody, FullBlock, FullBlockBody}
+import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.proto.node.EpochData
+import org.plasmalabs.sdk.common.ContainsImmutable
+import org.plasmalabs.sdk.models.box.{Attestation, Value}
+import org.plasmalabs.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
+import org.plasmalabs.sdk.models.{Datum, LockAddress, LockId, TransactionId, TransactionOutputAddress}
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.typeclasses.implicits._
 
 import java.time.Instant
 import scala.concurrent.duration._

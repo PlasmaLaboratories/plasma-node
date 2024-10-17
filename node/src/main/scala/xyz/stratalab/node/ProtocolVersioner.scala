@@ -1,10 +1,10 @@
-package xyz.stratalab.node
+package org.plasmalabs.node
 
 import cats.syntax.all._
 import cats.{Eq, Order}
-import xyz.stratalab.config.ApplicationConfig.Node
-import xyz.stratalab.consensus.models.ProtocolVersion
-import xyz.stratalab.models.Slot
+import org.plasmalabs.config.ApplicationConfig.Node
+import org.plasmalabs.consensus.models.ProtocolVersion
+import org.plasmalabs.models.Slot
 
 import scala.collection.SortedSet
 import scala.util.Try

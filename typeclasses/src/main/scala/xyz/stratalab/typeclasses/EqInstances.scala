@@ -1,14 +1,14 @@
-package xyz.stratalab.typeclasses
+package org.plasmalabs.typeclasses
 
 import cats.Eq
 import cats.implicits._
 import com.google.protobuf.ByteString
 import grpc.health.v1.ServingStatus
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.crypto.generation.mnemonic.Entropy
-import xyz.stratalab.models._
-import xyz.stratalab.models.utility.Sized
-import xyz.stratalab.sdk.models.TransactionId
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.crypto.generation.mnemonic.Entropy
+import org.plasmalabs.models._
+import org.plasmalabs.models.utility.Sized
+import org.plasmalabs.sdk.models.TransactionId
 
 trait EqInstances {
 

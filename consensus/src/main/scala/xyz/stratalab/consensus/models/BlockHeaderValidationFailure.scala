@@ -1,8 +1,8 @@
-package xyz.stratalab.consensus.models
+package org.plasmalabs.consensus.models
 
-import xyz.stratalab.consensus.models.{EligibilityCertificate, OperationalCertificate, StakingAddress}
-import xyz.stratalab.crypto.models.SignatureKesProduct
-import xyz.stratalab.{models => legacyModels}
+import org.plasmalabs.consensus.models.{EligibilityCertificate, OperationalCertificate, StakingAddress}
+import org.plasmalabs.crypto.models.SignatureKesProduct
+import org.plasmalabs.{models => legacyModels}
 
 import legacyModels.Bytes
 import legacyModels.Eta

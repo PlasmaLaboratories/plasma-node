@@ -1,8 +1,8 @@
-package xyz.stratalab.algebras
+package org.plasmalabs.algebras
 
 import cats.MonadThrow
 import cats.implicits._
-import xyz.stratalab.models._
+import org.plasmalabs.models._
 
 object StoreOps {
 

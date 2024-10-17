@@ -1,11 +1,11 @@
-package xyz.stratalab.interpreters
+package org.plasmalabs.interpreters
 
 import cats.Applicative
 import cats.effect.kernel.Async
 import cats.effect.{Resource, Sync}
 import cats.implicits._
-import xyz.stratalab.algebras.ClockAlgebra
-import xyz.stratalab.models.{Epoch, Slot, Timestamp}
+import org.plasmalabs.algebras.ClockAlgebra
+import org.plasmalabs.models.{Epoch, Slot, Timestamp}
 
 import java.time.Instant
 import scala.collection.immutable.NumericRange

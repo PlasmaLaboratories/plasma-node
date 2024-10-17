@@ -1,9 +1,9 @@
-package xyz.stratalab.models.protocol
+package org.plasmalabs.models.protocol
 
 import munit.FunSuite
-import xyz.stratalab.models.protocol.RatioCodec._
-import xyz.stratalab.models.utility.Ratio
-import xyz.stratalab.sdk.models.box.Value.ConfigProposal
+import org.plasmalabs.models.protocol.RatioCodec._
+import org.plasmalabs.models.utility.Ratio
+import org.plasmalabs.sdk.models.box.Value.ConfigProposal
 
 case class SimpleTest1(stringPar: String, intPar: Int, longPar: Long)
 case class SimpleTest2(stringPar: String, intPar: Int, longPar: Long, stringList: List[String], listInt: List[Int])

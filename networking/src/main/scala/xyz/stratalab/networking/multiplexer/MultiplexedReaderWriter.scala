@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.multiplexer
+package org.plasmalabs.networking.multiplexer
 
 import cats.Monad
 import cats.data.OptionT
@@ -10,8 +10,8 @@ import com.google.common.primitives.Ints
 import com.google.protobuf.ByteString
 import fs2._
 import fs2.io.net.Socket
-import xyz.stratalab.models.Bytes
-import xyz.stratalab.networking._
+import org.plasmalabs.models.Bytes
+import org.plasmalabs.networking._
 
 import scala.concurrent.duration._
 

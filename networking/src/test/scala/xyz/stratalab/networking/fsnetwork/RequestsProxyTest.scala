@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.Applicative
 import cats.data.NonEmptyChain
@@ -12,23 +12,23 @@ import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.SelfAwareStructuredLogger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import scalacache.Entry
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData, SlotId}
-import xyz.stratalab.models.ModelGenerators.GenHelper
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.models.generators.node.ModelGenerators
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.networking.fsnetwork.BlockChecker.BlockCheckerActor
-import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError.BodyNotFoundInPeer
-import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError.HeaderNotFoundInPeer
-import xyz.stratalab.networking.fsnetwork.BlockDownloadError.{BlockBodyOrTransactionError, BlockHeaderDownloadError}
-import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
-import xyz.stratalab.networking.fsnetwork.RequestsProxyTest.RequestStatus.{InProgress, NewRequest, ReceivedOk}
-import xyz.stratalab.networking.fsnetwork.RequestsProxyTest.ResponseStatus.{DownloadError, DownloadedOk}
-import xyz.stratalab.networking.fsnetwork.RequestsProxyTest.{F, RequestStatus, ResponseStatus}
-import xyz.stratalab.networking.fsnetwork.TestHelper.arbitraryHost
-import xyz.stratalab.node.models.{Block, BlockBody}
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData, SlotId}
+import org.plasmalabs.models.ModelGenerators.GenHelper
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.generators.node.ModelGenerators
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.networking.fsnetwork.BlockChecker.BlockCheckerActor
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError.BodyNotFoundInPeer
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError.HeaderNotFoundInPeer
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.{BlockBodyOrTransactionError, BlockHeaderDownloadError}
+import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
+import org.plasmalabs.networking.fsnetwork.RequestsProxyTest.RequestStatus.{InProgress, NewRequest, ReceivedOk}
+import org.plasmalabs.networking.fsnetwork.RequestsProxyTest.ResponseStatus.{DownloadError, DownloadedOk}
+import org.plasmalabs.networking.fsnetwork.RequestsProxyTest.{F, RequestStatus, ResponseStatus}
+import org.plasmalabs.networking.fsnetwork.TestHelper.arbitraryHost
+import org.plasmalabs.node.models.{Block, BlockBody}
 
 import scala.collection.immutable.ListMap
 import scala.concurrent.duration.DurationInt

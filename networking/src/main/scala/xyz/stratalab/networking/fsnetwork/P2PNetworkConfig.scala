@@ -1,6 +1,6 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
-import xyz.stratalab.config.ApplicationConfig.Node.NetworkProperties
+import org.plasmalabs.config.ApplicationConfig.Node.NetworkProperties
 
 import scala.concurrent.duration.{FiniteDuration, MILLISECONDS}
 

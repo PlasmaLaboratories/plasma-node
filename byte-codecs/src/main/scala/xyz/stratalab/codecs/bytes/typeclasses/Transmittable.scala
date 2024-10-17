@@ -1,4 +1,4 @@
-package xyz.stratalab.codecs.bytes.typeclasses
+package org.plasmalabs.codecs.bytes.typeclasses
 
 import cats.implicits._
 import com.google.protobuf.ByteString

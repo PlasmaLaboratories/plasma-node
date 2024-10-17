@@ -1,18 +1,18 @@
-package xyz.stratalab.ledger.interpreters
+package org.plasmalabs.ledger.interpreters
 
 import cats.data.{NonEmptySet, OptionT}
 import cats.effect.Async
 import cats.implicits._
 import cats.{Applicative, MonadThrow}
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
-import xyz.stratalab.ledger.algebras.BoxStateAlgebra
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.models.{TransactionId, TransactionOutputAddress}
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
+import org.plasmalabs.ledger.algebras.BoxStateAlgebra
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.models.{TransactionId, TransactionOutputAddress}
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.typeclasses.implicits._
 
 import scala.collection.immutable.SortedSet
 

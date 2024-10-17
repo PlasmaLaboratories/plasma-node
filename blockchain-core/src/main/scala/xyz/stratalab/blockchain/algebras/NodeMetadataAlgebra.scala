@@ -1,8 +1,8 @@
-package xyz.stratalab.blockchain.algebras
+package org.plasmalabs.blockchain.algebras
 
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.models.Bytes
-import xyz.stratalab.sdk.models.TransactionId
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.models.Bytes
+import org.plasmalabs.sdk.models.TransactionId
 
 trait NodeMetadataAlgebra[F[_]] {
 

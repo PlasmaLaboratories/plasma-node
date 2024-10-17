@@ -1,10 +1,10 @@
-package xyz.stratalab.byzantine
+package org.plasmalabs.byzantine
 
 import cats.effect.Async
 import cats.effect.implicits._
 import cats.implicits._
-import xyz.stratalab.interpreters.NodeRpcOps._
-import xyz.stratalab.byzantine.util._
+import org.plasmalabs.interpreters.NodeRpcOps._
+import org.plasmalabs.byzantine.util._
 import com.spotify.docker.client.DockerClient
 
 import java.time.Instant

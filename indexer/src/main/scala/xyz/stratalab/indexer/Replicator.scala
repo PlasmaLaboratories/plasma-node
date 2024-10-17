@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer
+package org.plasmalabs.indexer
 
 import cats.data._
 import cats.effect.Async
@@ -7,11 +7,11 @@ import cats.effect.kernel.{Outcome, Resource}
 import cats.implicits._
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.{Stats, SynchronizationTraversalStep, SynchronizationTraversalSteps}
-import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.indexer.services.BlockData
-import xyz.stratalab.interpreters.NodeRpcOps._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.{Stats, SynchronizationTraversalStep, SynchronizationTraversalSteps}
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.indexer.services.BlockData
+import org.plasmalabs.interpreters.NodeRpcOps._
+import org.plasmalabs.typeclasses.implicits._
 
 object Replicator {
 

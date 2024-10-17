@@ -1,3 +1,3 @@
-package xyz.stratalab.crypto.models
+package org.plasmalabs.crypto.models
 
 case class SecretKeyKesSum(tree: KesBinaryTree, offset: Long)

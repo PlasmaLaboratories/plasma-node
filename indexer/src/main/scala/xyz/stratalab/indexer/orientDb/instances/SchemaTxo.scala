@@ -1,13 +1,13 @@
-package xyz.stratalab.indexer.orientDb.instances
+package org.plasmalabs.indexer.orientDb.instances
 
 import com.orientechnologies.orient.core.metadata.schema.OType
 import com.tinkerpop.blueprints.Vertex
-import xyz.stratalab.indexer.orientDb.schema.OTyped.Instances._
-import xyz.stratalab.indexer.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
-import xyz.stratalab.indexer.services.{Txo, TxoState}
-import xyz.stratalab.sdk.models.transaction.UnspentTransactionOutput
-import xyz.stratalab.sdk.models.{TransactionInputAddress, TransactionOutputAddress}
-import xyz.stratalab.sdk.syntax._
+import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances._
+import org.plasmalabs.indexer.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
+import org.plasmalabs.indexer.services.{Txo, TxoState}
+import org.plasmalabs.sdk.models.transaction.UnspentTransactionOutput
+import org.plasmalabs.sdk.models.{TransactionInputAddress, TransactionOutputAddress}
+import org.plasmalabs.sdk.syntax._
 
 import VertexSchemaInstances.instances._
 

@@ -1,10 +1,10 @@
-package xyz.stratalab.networking
+package org.plasmalabs.networking
 
 import com.google.protobuf.ByteString
 import org.scalacheck.{Arbitrary, Gen}
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.networking.blockchain.NetworkProtocolVersions
-import xyz.stratalab.networking.p2p._
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.networking.blockchain.NetworkProtocolVersions
+import org.plasmalabs.networking.p2p._
 
 trait NetworkGen {
 

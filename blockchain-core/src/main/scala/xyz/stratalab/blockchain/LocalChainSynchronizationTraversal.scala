@@ -1,10 +1,10 @@
-package xyz.stratalab.blockchain
+package org.plasmalabs.blockchain
 
 import cats.effect.Async
 import fs2.{Chunk, Pipe, Pull, Stream}
-import xyz.stratalab.algebras.{SynchronizationTraversal, SynchronizationTraversalStep, SynchronizationTraversalSteps}
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.eventtree.ParentChildTree
+import org.plasmalabs.algebras.{SynchronizationTraversal, SynchronizationTraversalStep, SynchronizationTraversalSteps}
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.eventtree.ParentChildTree
 
 /**
  * Transform a stream of local block adoptions into a stream of head traversal steps. The input stream

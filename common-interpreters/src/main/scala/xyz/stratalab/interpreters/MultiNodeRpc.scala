@@ -1,17 +1,17 @@
-package xyz.stratalab.interpreters
+package org.plasmalabs.interpreters
 
 import cats.Foldable
 import cats.effect.Async
 import cats.effect.std.{Random, SecureRandom}
 import cats.implicits._
 import fs2.Stream
-import xyz.stratalab.algebras.{NodeRpc, SynchronizationTraversalStep}
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
-import xyz.stratalab.models.Epoch
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.proto.node.{EpochData, NodeConfig}
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
+import org.plasmalabs.algebras.{NodeRpc, SynchronizationTraversalStep}
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
+import org.plasmalabs.models.Epoch
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.proto.node.{EpochData, NodeConfig}
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
 
 object MultiNodeRpc {
 

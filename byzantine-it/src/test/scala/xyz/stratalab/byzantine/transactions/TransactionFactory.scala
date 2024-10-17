@@ -1,19 +1,19 @@
-package xyz.stratalab.byzantine.transactions
+package org.plasmalabs.byzantine.transactions
 
 import cats.effect.Async
 import cats.implicits._
-import xyz.stratalab.blockchain.StakerInitializers
-import xyz.stratalab.sdk.builders.locks.PropositionTemplate
-import xyz.stratalab.sdk.builders.locks.PropositionTemplate.PropositionType
-import xyz.stratalab.sdk.common.ContainsSignable.ContainsSignableTOps
-import xyz.stratalab.sdk.common.ContainsSignable.instances.ioTransactionSignable
-import xyz.stratalab.sdk.models.box.{Attestation, Box, Lock, Value}
-import xyz.stratalab.sdk.models.transaction.{IoTransaction, Schedule, SpentTransactionOutput, UnspentTransactionOutput}
-import xyz.stratalab.sdk.models._
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.syntax.pbKeyPairToCryptoKeyPair
-import xyz.stratalab.crypto.signing.ExtendedEd25519
-import xyz.stratalab.quivr.api.Prover
+import org.plasmalabs.blockchain.StakerInitializers
+import org.plasmalabs.sdk.builders.locks.PropositionTemplate
+import org.plasmalabs.sdk.builders.locks.PropositionTemplate.PropositionType
+import org.plasmalabs.sdk.common.ContainsSignable.ContainsSignableTOps
+import org.plasmalabs.sdk.common.ContainsSignable.instances.ioTransactionSignable
+import org.plasmalabs.sdk.models.box.{Attestation, Box, Lock, Value}
+import org.plasmalabs.sdk.models.transaction.{IoTransaction, Schedule, SpentTransactionOutput, UnspentTransactionOutput}
+import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.pbKeyPairToCryptoKeyPair
+import org.plasmalabs.crypto.signing.ExtendedEd25519
+import org.plasmalabs.quivr.api.Prover
 import com.google.protobuf.ByteString
 import quivr.models._
 

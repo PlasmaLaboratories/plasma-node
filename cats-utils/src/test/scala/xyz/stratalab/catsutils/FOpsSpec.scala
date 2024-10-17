@@ -1,4 +1,4 @@
-package xyz.stratalab.catsutils
+package org.plasmalabs.catsutils
 
 import cats.effect._
 import cats.effect.std.Queue

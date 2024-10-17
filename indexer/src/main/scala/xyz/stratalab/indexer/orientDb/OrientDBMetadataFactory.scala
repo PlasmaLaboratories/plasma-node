@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer.orientDb
+package org.plasmalabs.indexer.orientDb
 
 import cats.effect.{Async, Resource, Sync}
 import cats.implicits._
@@ -6,9 +6,9 @@ import com.orientechnologies.orient.core.db.ODatabaseDocumentInternal
 import com.orientechnologies.orient.core.metadata.schema.{OClass, OType}
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.indexer.orientDb.instances.VertexSchemaInstances.instances._
-import xyz.stratalab.indexer.orientDb.schema.EdgeSchemaInstances._
-import xyz.stratalab.indexer.orientDb.schema.{EdgeSchema, VertexSchema}
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances._
+import org.plasmalabs.indexer.orientDb.schema.EdgeSchemaInstances._
+import org.plasmalabs.indexer.orientDb.schema.{EdgeSchema, VertexSchema}
 
 /**
  * Metadata Factory which has control over the following actions

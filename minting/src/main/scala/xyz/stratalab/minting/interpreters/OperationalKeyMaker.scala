@@ -1,4 +1,4 @@
-package xyz.stratalab.minting.interpreters
+package org.plasmalabs.minting.interpreters
 
 import cats.Traverse
 import cats.data._
@@ -9,19 +9,19 @@ import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.ClockAlgebra.implicits._
-import xyz.stratalab.algebras._
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.consensus.algebras.{ConsensusValidationStateAlgebra, LeaderElectionValidationAlgebra}
-import xyz.stratalab.consensus.models.{VrfConfig, _}
-import xyz.stratalab.crypto.generation.mnemonic.Entropy
-import xyz.stratalab.crypto.models.SecretKeyKesProduct
-import xyz.stratalab.crypto.signing._
-import xyz.stratalab.minting.algebras._
-import xyz.stratalab.minting.models.OperationalKeyOut
-import xyz.stratalab.models._
-import xyz.stratalab.models.utility._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.ClockAlgebra.implicits._
+import org.plasmalabs.algebras._
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.consensus.algebras.{ConsensusValidationStateAlgebra, LeaderElectionValidationAlgebra}
+import org.plasmalabs.consensus.models.{VrfConfig, _}
+import org.plasmalabs.crypto.generation.mnemonic.Entropy
+import org.plasmalabs.crypto.models.SecretKeyKesProduct
+import org.plasmalabs.crypto.signing._
+import org.plasmalabs.minting.algebras._
+import org.plasmalabs.minting.models.OperationalKeyOut
+import org.plasmalabs.models._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.typeclasses.implicits._
 
 import java.util.UUID
 

@@ -1,4 +1,4 @@
-package xyz.stratalab.node.cli
+package org.plasmalabs.node.cli
 
 import cats.effect.Async
 import cats.effect.std.Console

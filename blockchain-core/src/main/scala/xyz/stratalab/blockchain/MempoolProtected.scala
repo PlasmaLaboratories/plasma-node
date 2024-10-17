@@ -1,4 +1,4 @@
-package xyz.stratalab.blockchain
+package org.plasmalabs.blockchain
 
 import cats.data.EitherT
 import cats.effect.Resource
@@ -8,19 +8,19 @@ import cats.effect.std.Semaphore
 import cats.implicits._
 import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.algebras.Stats
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.config.ApplicationConfig.Node.MempoolProtection
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
-import xyz.stratalab.ledger.algebras._
-import xyz.stratalab.ledger.implicits._
-import xyz.stratalab.ledger.interpreters.QuivrContext
-import xyz.stratalab.ledger.models._
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.models.{TransactionId, TransactionOutputAddress}
-import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
-import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.Stats
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.config.ApplicationConfig.Node.MempoolProtection
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
+import org.plasmalabs.ledger.algebras._
+import org.plasmalabs.ledger.implicits._
+import org.plasmalabs.ledger.interpreters.QuivrContext
+import org.plasmalabs.ledger.models._
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.models.{TransactionId, TransactionOutputAddress}
+import org.plasmalabs.sdk.syntax.ioTransactionAsTransactionSyntaxOps
+import org.plasmalabs.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
+import org.plasmalabs.typeclasses.implicits._
 
 object MempoolProtected {
 

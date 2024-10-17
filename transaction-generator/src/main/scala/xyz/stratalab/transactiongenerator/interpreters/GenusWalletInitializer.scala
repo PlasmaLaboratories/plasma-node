@@ -1,12 +1,12 @@
-package xyz.stratalab.transactiongenerator.interpreters
+package org.plasmalabs.transactiongenerator.interpreters
 
 import cats.effect._
 import cats.implicits._
 import io.grpc.Metadata
-import xyz.stratalab.indexer.services.{QueryByLockAddressRequest, TransactionServiceFs2Grpc, TxoState}
-import xyz.stratalab.sdk.models.box.Box
-import xyz.stratalab.transactiongenerator.algebras.WalletInitializer
-import xyz.stratalab.transactiongenerator.models.Wallet
+import org.plasmalabs.indexer.services.{QueryByLockAddressRequest, TransactionServiceFs2Grpc, TxoState}
+import org.plasmalabs.sdk.models.box.Box
+import org.plasmalabs.transactiongenerator.algebras.WalletInitializer
+import org.plasmalabs.transactiongenerator.models.Wallet
 
 object IndexerWalletInitializer {
 

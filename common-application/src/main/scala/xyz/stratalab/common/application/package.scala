@@ -1,4 +1,4 @@
-package xyz.stratalab.common
+package org.plasmalabs.common
 
 package object application {
   implicit val unitContainsDebugFlag: ContainsDebugFlag[Unit] = _ => false

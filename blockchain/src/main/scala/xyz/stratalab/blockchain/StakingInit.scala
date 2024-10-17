@@ -1,4 +1,4 @@
-package xyz.stratalab.blockchain
+package org.plasmalabs.blockchain
 
 import cats._
 import cats.data.OptionT
@@ -10,21 +10,21 @@ import fs2.Chunk
 import fs2.io.file.{Files, Path}
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.ClockAlgebra.implicits._
-import xyz.stratalab.algebras.{ClockAlgebra, Stats}
-import xyz.stratalab.blockchain.algebras.NodeMetadataAlgebra
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.config.ApplicationConfig
-import xyz.stratalab.consensus.algebras._
-import xyz.stratalab.consensus.models.{VrfConfig, _}
-import xyz.stratalab.interpreters.CatsSecureStore
-import xyz.stratalab.minting.algebras.StakingAlgebra
-import xyz.stratalab.minting.interpreters._
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.models.{LockAddress, TransactionId}
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.ClockAlgebra.implicits._
+import org.plasmalabs.algebras.{ClockAlgebra, Stats}
+import org.plasmalabs.blockchain.algebras.NodeMetadataAlgebra
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.config.ApplicationConfig
+import org.plasmalabs.consensus.algebras._
+import org.plasmalabs.consensus.models.{VrfConfig, _}
+import org.plasmalabs.interpreters.CatsSecureStore
+import org.plasmalabs.minting.algebras.StakingAlgebra
+import org.plasmalabs.minting.interpreters._
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.models.{LockAddress, TransactionId}
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.typeclasses.implicits._
 
 object StakingInit {
 

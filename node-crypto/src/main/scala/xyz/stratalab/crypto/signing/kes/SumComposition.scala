@@ -1,6 +1,6 @@
-package xyz.stratalab.crypto.signing.kes
+package org.plasmalabs.crypto.signing.kes
 
-import xyz.stratalab.crypto.models.KesBinaryTree
+import org.plasmalabs.crypto.models.KesBinaryTree
 
 import java.security.SecureRandom
 import scala.annotation.tailrec

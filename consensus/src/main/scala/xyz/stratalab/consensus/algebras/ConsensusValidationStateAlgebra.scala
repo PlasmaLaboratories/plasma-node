@@ -1,12 +1,12 @@
-package xyz.stratalab.consensus.algebras
+package org.plasmalabs.consensus.algebras
 
 import cats.Monad
 import cats.data.OptionT
 import cats.implicits._
-import xyz.stratalab.consensus.models.{ActiveStaker, BlockId, StakingAddress}
-import xyz.stratalab.models._
-import xyz.stratalab.models.utility.Ratio
-import xyz.stratalab.sdk.syntax._
+import org.plasmalabs.consensus.models.{ActiveStaker, BlockId, StakingAddress}
+import org.plasmalabs.models._
+import org.plasmalabs.models.utility.Ratio
+import org.plasmalabs.sdk.syntax._
 
 trait ConsensusValidationStateAlgebra[F[_]] {
 

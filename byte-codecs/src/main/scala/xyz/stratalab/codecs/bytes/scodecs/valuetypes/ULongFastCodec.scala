@@ -1,9 +1,9 @@
-package xyz.stratalab.codecs.bytes.scodecs.valuetypes
+package org.plasmalabs.codecs.bytes.scodecs.valuetypes
 
 import scodec.bits.BitVector
 import scodec.{Attempt, Codec, DecodeResult, SizeBound}
-import xyz.stratalab.codecs.bytes.scodecs.valuetypes.Types.ULong
-import xyz.stratalab.codecs.bytes.scodecs.valuetypes.varint64fast.{Varint64FastDecode, Varint64FastEncode}
+import org.plasmalabs.codecs.bytes.scodecs.valuetypes.Types.ULong
+import org.plasmalabs.codecs.bytes.scodecs.valuetypes.varint64fast.{Varint64FastDecode, Varint64FastEncode}
 
 import scala.util.Try
 

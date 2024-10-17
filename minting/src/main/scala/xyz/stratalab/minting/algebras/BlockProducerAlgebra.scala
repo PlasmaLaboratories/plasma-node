@@ -1,7 +1,7 @@
-package xyz.stratalab.minting.algebras
+package org.plasmalabs.minting.algebras
 
 import fs2.Stream
-import xyz.stratalab.node.models.FullBlock
+import org.plasmalabs.node.models.FullBlock
 
 /**
  * Perpetually mints new blocks

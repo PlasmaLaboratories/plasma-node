@@ -1,38 +1,38 @@
-package xyz.stratalab.byzantine
+package org.plasmalabs.byzantine
 
 import cats.data.OptionT
 import cats.effect.IO
 import cats.effect.implicits._
 import cats.effect.kernel.Sync
 import cats.implicits._
-import xyz.stratalab.algebras.{NodeRpc, SynchronizationTraversalSteps}
-import xyz.stratalab.blockchain._
-import xyz.stratalab.sdk.common.ContainsSignable.ContainsSignableTOps
-import xyz.stratalab.sdk.common.ContainsSignable.instances._
-import xyz.stratalab.sdk.models.box.{Attestation, Value}
-import xyz.stratalab.sdk.models._
-import xyz.stratalab.sdk.models.transaction._
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.byzantine.util._
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.codecs.bytes.typeclasses.Persistable
-import xyz.stratalab.consensus.models.{BlockId, StakingAddress}
-import xyz.stratalab.crypto.generation.mnemonic.Entropy
-import xyz.stratalab.crypto.models.SecretKeyKesProduct
-import xyz.stratalab.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
+import org.plasmalabs.algebras.{NodeRpc, SynchronizationTraversalSteps}
+import org.plasmalabs.blockchain._
+import org.plasmalabs.sdk.common.ContainsSignable.ContainsSignableTOps
+import org.plasmalabs.sdk.common.ContainsSignable.instances._
+import org.plasmalabs.sdk.models.box.{Attestation, Value}
+import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.models.transaction._
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.byzantine.util._
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.typeclasses.Persistable
+import org.plasmalabs.consensus.models.{BlockId, StakingAddress}
+import org.plasmalabs.crypto.generation.mnemonic.Entropy
+import org.plasmalabs.crypto.models.SecretKeyKesProduct
+import org.plasmalabs.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
 import com.spotify.docker.client.DockerClient
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.interpreters.NodeRpcOps._
+import org.plasmalabs.interpreters.NodeRpcOps._
 import com.google.protobuf.ByteString
 import fs2.Chunk
 import fs2.io.file.{Files, Path, PosixPermission, PosixPermissions}
-import xyz.stratalab.quivr.api.Prover
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.quivr.api.Prover
+import org.plasmalabs.typeclasses.implicits._
 
 import java.security.SecureRandom
 import java.time.Instant
 import scala.concurrent.duration._
-import xyz.stratalab.sdk.constants.NetworkConstants
+import org.plasmalabs.sdk.constants.NetworkConstants
 
 class MultiNodeTest extends IntegrationSuite {
   import MultiNodeTest._

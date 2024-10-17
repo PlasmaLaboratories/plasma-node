@@ -1,28 +1,28 @@
-package xyz.stratalab.node
+package org.plasmalabs.node
 
 import cats.effect._
 import cats.effect.implicits._
 import cats.effect.kernel.{Async, Resource}
 import cats.effect.std.SecureRandom
 import cats.implicits._
-import xyz.stratalab.algebras.{NodeRpc, SynchronizationTraversalSteps}
-import xyz.stratalab.blockchain.{BigBang, PrivateTestnet, StakerInitializers, StakingInit}
-import xyz.stratalab.sdk.models._
-import xyz.stratalab.sdk.models.box.Value
-import xyz.stratalab.sdk.models.transaction.{IoTransaction, UnspentTransactionOutput}
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.config.ApplicationConfig
-import xyz.stratalab.consensus.models.{BlockId, ProtocolVersion}
-import xyz.stratalab.indexer.services._
-import xyz.stratalab.grpc.makeChannel
-import xyz.stratalab.interpreters.NodeRpcOps.clientAsNodeRpcApi
-import xyz.stratalab.models.utility._
-import xyz.stratalab.node.models.{BlockBody, FullBlock}
-import xyz.stratalab.node.services.NetworkControlRpcFs2Grpc
-import xyz.stratalab.transactiongenerator.interpreters.IndexerWalletInitializer
-import xyz.stratalab.transactiongenerator.models._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.{NodeRpc, SynchronizationTraversalSteps}
+import org.plasmalabs.blockchain.{BigBang, PrivateTestnet, StakerInitializers, StakingInit}
+import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.models.box.Value
+import org.plasmalabs.sdk.models.transaction.{IoTransaction, UnspentTransactionOutput}
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.config.ApplicationConfig
+import org.plasmalabs.consensus.models.{BlockId, ProtocolVersion}
+import org.plasmalabs.indexer.services._
+import org.plasmalabs.grpc.makeChannel
+import org.plasmalabs.interpreters.NodeRpcOps.clientAsNodeRpcApi
+import org.plasmalabs.models.utility._
+import org.plasmalabs.node.models.{BlockBody, FullBlock}
+import org.plasmalabs.node.services.NetworkControlRpcFs2Grpc
+import org.plasmalabs.transactiongenerator.interpreters.IndexerWalletInitializer
+import org.plasmalabs.transactiongenerator.models._
+import org.plasmalabs.typeclasses.implicits._
 import com.comcast.ip4s.Port
 import fs2.io.file.{Files, Path}
 import fs2.{io => _, _}
@@ -33,8 +33,8 @@ import org.http4s.dsl.io._
 import org.http4s.ember.server._
 import org.http4s.server.Router
 import quivr.models.Int128
-import xyz.stratalab.models.p2p.HostId
-import xyz.stratalab.node.services._
+import org.plasmalabs.models.p2p.HostId
+import org.plasmalabs.node.services._
 
 import java.nio.charset.StandardCharsets
 import scala.concurrent.duration._
@@ -111,7 +111,9 @@ object Util {
     Files.forAsync[F].createDirectories(dir / StakingInit.KesDirectoryName) *>
     saveFile(
       s"${StakingInit.KesDirectoryName}/0",
-      xyz.stratalab.codecs.bytes.tetra.instances.persistableKesProductSecretKey.persistedBytes(staker.kesSK).toByteArray
+      org.plasmalabs.codecs.bytes.tetra.instances.persistableKesProductSecretKey
+        .persistedBytes(staker.kesSK)
+        .toByteArray
     ) *>
     saveFile(StakingInit.RegistrationTxName, staker.registrationTransaction(quantity).toByteArray)
   }

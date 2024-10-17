@@ -1,25 +1,25 @@
-package xyz.stratalab.byzantine
+package org.plasmalabs.byzantine
 
 import cats.data.OptionT
 import cats.effect.Async
 import cats.implicits._
-import xyz.stratalab.algebras.NodeRpc
-import xyz.stratalab.blockchain.PrivateTestnet
-import xyz.stratalab.sdk.builders.locks.PropositionTemplate
-import xyz.stratalab.sdk.models._
-import xyz.stratalab.sdk.models.box._
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.byzantine.transactions.{Locks, TransactionFactory, Wallet}
-import xyz.stratalab.byzantine.util._
-import xyz.stratalab.interpreters.NodeRpcOps._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.NodeRpc
+import org.plasmalabs.blockchain.PrivateTestnet
+import org.plasmalabs.sdk.builders.locks.PropositionTemplate
+import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.models.box._
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.byzantine.transactions.{Locks, TransactionFactory, Wallet}
+import org.plasmalabs.byzantine.util._
+import org.plasmalabs.interpreters.NodeRpcOps._
+import org.plasmalabs.typeclasses.implicits._
 import com.spotify.docker.client.DockerClient
 import fs2.Stream
 import munit.{FailSuiteException, Location}
 import org.typelevel.log4cats.Logger
 import scala.concurrent.duration.{Duration, DurationInt}
-import xyz.stratalab.sdk.constants.NetworkConstants
+import org.plasmalabs.sdk.constants.NetworkConstants
 
 class TransactionTest extends IntegrationSuite {
 

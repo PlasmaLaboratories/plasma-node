@@ -1,10 +1,10 @@
-package xyz.stratalab.ledger.interpreters
+package org.plasmalabs.ledger.interpreters
 
 import cats.effect._
-import xyz.stratalab.ledger.algebras.TransactionRewardCalculatorAlgebra
-import xyz.stratalab.ledger.models.{AssetId, RewardQuantities}
-import xyz.stratalab.sdk.models.box.Value
-import xyz.stratalab.sdk.models.transaction.IoTransaction
+import org.plasmalabs.ledger.algebras.TransactionRewardCalculatorAlgebra
+import org.plasmalabs.ledger.models.{AssetId, RewardQuantities}
+import org.plasmalabs.sdk.models.box.Value
+import org.plasmalabs.sdk.models.transaction.IoTransaction
 
 /**
  * Implements a TransactionRewardCalculator which groups fungible token types and subtracts their output quantities

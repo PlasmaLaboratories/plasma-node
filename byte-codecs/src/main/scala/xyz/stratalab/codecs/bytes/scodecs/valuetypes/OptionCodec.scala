@@ -1,9 +1,9 @@
-package xyz.stratalab.codecs.bytes.scodecs.valuetypes
+package org.plasmalabs.codecs.bytes.scodecs.valuetypes
 
 import cats.implicits._
 import scodec.bits.BitVector
 import scodec.{Attempt, Codec, DecodeResult, Decoder, Encoder, Err, SizeBound}
-import xyz.stratalab.codecs.bytes.scodecs.valuetypes.Constants.byteSize
+import org.plasmalabs.codecs.bytes.scodecs.valuetypes.Constants.byteSize
 
 class OptionCodec[T: Codec] extends Codec[Option[T]] {
 

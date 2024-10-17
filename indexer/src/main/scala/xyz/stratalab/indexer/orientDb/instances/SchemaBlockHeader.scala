@@ -1,12 +1,12 @@
-package xyz.stratalab.indexer.orientDb.instances
+package org.plasmalabs.indexer.orientDb.instances
 
 import com.google.protobuf.ByteString
-import xyz.stratalab.codecs.bytes.tetra.TetraScodecCodecs
-import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.indexer.orientDb.schema.OIndexable.Instances
-import xyz.stratalab.indexer.orientDb.schema.OTyped.Instances._
-import xyz.stratalab.indexer.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
+import org.plasmalabs.codecs.bytes.tetra.TetraScodecCodecs
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.indexer.orientDb.schema.OIndexable.Instances
+import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances._
+import org.plasmalabs.indexer.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
 
 object SchemaBlockHeader {
   val SchemaName = "BlockHeader"

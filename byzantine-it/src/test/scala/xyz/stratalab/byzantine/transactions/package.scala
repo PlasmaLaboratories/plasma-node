@@ -1,7 +1,7 @@
-package xyz.stratalab.byzantine
+package org.plasmalabs.byzantine
 
-import xyz.stratalab.sdk.models.{LockAddress, TransactionOutputAddress}
-import xyz.stratalab.sdk.models.box.{Box, Lock}
+import org.plasmalabs.sdk.models.{LockAddress, TransactionOutputAddress}
+import org.plasmalabs.sdk.models.box.{Box, Lock}
 
 /**
  * Package transactions try to group methods and variables used on byzantine-it.TransactionTest

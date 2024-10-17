@@ -1,4 +1,4 @@
-package xyz.stratalab.networkdelayer
+package org.plasmalabs.networkdelayer
 
 import cats.data.OptionT
 import cats.effect.implicits._
@@ -11,7 +11,7 @@ import fs2._
 import fs2.io.net.{Network, Socket}
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.common.application.IOBaseApp
+import org.plasmalabs.common.application.IOBaseApp
 
 import scala.concurrent.duration._
 

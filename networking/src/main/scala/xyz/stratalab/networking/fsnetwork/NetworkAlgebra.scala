@@ -1,30 +1,30 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.Parallel
 import cats.effect.{Async, Resource}
 import com.github.benmanes.caffeine.cache.Caffeine
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.algebras.{ClockAlgebra, Stats, Store}
-import xyz.stratalab.blockchain.Validators
-import xyz.stratalab.consensus.algebras._
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
-import xyz.stratalab.crypto.signing.Ed25519VRF
-import xyz.stratalab.eventtree.ParentChildTree
-import xyz.stratalab.ledger.algebras._
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.networking.blockchain.BlockchainPeerClient
-import xyz.stratalab.networking.fsnetwork.BlockChecker.BlockCheckerActor
-import xyz.stratalab.networking.fsnetwork.Notifier.NotifierActor
-import xyz.stratalab.networking.fsnetwork.PeerActor.PeerActor
-import xyz.stratalab.networking.fsnetwork.PeerBlockBodyFetcher.PeerBlockBodyFetcherActor
-import xyz.stratalab.networking.fsnetwork.PeerBlockHeaderFetcher.PeerBlockHeaderFetcherActor
-import xyz.stratalab.networking.fsnetwork.PeerMempoolTransactionSync.PeerMempoolTransactionSyncActor
-import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
-import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
+import org.plasmalabs.algebras.{ClockAlgebra, Stats, Store}
+import org.plasmalabs.blockchain.Validators
+import org.plasmalabs.consensus.algebras._
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
+import org.plasmalabs.crypto.signing.Ed25519VRF
+import org.plasmalabs.eventtree.ParentChildTree
+import org.plasmalabs.ledger.algebras._
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.networking.blockchain.BlockchainPeerClient
+import org.plasmalabs.networking.fsnetwork.BlockChecker.BlockCheckerActor
+import org.plasmalabs.networking.fsnetwork.Notifier.NotifierActor
+import org.plasmalabs.networking.fsnetwork.PeerActor.PeerActor
+import org.plasmalabs.networking.fsnetwork.PeerBlockBodyFetcher.PeerBlockBodyFetcherActor
+import org.plasmalabs.networking.fsnetwork.PeerBlockHeaderFetcher.PeerBlockHeaderFetcherActor
+import org.plasmalabs.networking.fsnetwork.PeerMempoolTransactionSync.PeerMempoolTransactionSyncActor
+import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
+import org.plasmalabs.networking.fsnetwork.RequestsProxy.RequestsProxyActor
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
 
 // scalastyle:off parameter.number
 trait NetworkAlgebra[F[_]] {

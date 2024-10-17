@@ -1,17 +1,17 @@
-package xyz.stratalab.indexer.orientDb.instances
+package org.plasmalabs.indexer.orientDb.instances
 
 import cats.implicits._
 import com.orientechnologies.orient.core.metadata.schema.OType
 import munit.{CatsEffectFunFixtures, CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.indexer.DbFixtureUtil
-import xyz.stratalab.indexer.orientDb.OrientThread
-import xyz.stratalab.indexer.orientDb.instances.SchemaBlockHeader
-import xyz.stratalab.indexer.orientDb.instances.SchemaBlockHeader.{Field, SchemaName}
-import xyz.stratalab.indexer.orientDb.instances.VertexSchemaInstances.instances.blockHeaderSchema
-import xyz.stratalab.models.ModelGenerators.GenHelper
-import xyz.stratalab.models.generators.consensus.ModelGenerators
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.indexer.DbFixtureUtil
+import org.plasmalabs.indexer.orientDb.OrientThread
+import org.plasmalabs.indexer.orientDb.instances.SchemaBlockHeader
+import org.plasmalabs.indexer.orientDb.instances.SchemaBlockHeader.{Field, SchemaName}
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances.blockHeaderSchema
+import org.plasmalabs.models.ModelGenerators.GenHelper
+import org.plasmalabs.models.generators.consensus.ModelGenerators
 
 import scala.jdk.CollectionConverters._
 

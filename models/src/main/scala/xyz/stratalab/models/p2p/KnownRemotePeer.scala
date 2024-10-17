@@ -1,4 +1,4 @@
-package xyz.stratalab.models.p2p
+package org.plasmalabs.models.p2p
 
 case class KnownRemotePeer(
   peerId:              HostId,

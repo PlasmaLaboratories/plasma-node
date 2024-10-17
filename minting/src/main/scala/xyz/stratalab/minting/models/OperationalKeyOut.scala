@@ -1,8 +1,8 @@
-package xyz.stratalab.minting.models
+package org.plasmalabs.minting.models
 
 import com.google.protobuf.ByteString
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.models.Slot
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.models.Slot
 
 case class OperationalKeyOut(
   slot:            Slot,

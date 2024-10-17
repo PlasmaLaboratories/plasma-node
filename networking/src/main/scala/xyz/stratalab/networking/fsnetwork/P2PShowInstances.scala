@@ -1,17 +1,17 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.Show
 import cats.implicits.showInterpolator
-import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.config.ApplicationConfig.Node.NetworkProperties
-import xyz.stratalab.consensus.models.{BlockHeaderToBodyValidationFailure, BlockHeaderValidationFailure}
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.models.utility.byteStringToByteVector
-import xyz.stratalab.networking.fsnetwork.NetworkQualityError._
-import xyz.stratalab.networking.fsnetwork.PeersManager.Message.PingPongMessagePing
-import xyz.stratalab.networking.p2p.ConnectedPeer
-import xyz.stratalab.node.models._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.config.ApplicationConfig.Node.NetworkProperties
+import org.plasmalabs.consensus.models.{BlockHeaderToBodyValidationFailure, BlockHeaderValidationFailure}
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.utility.byteStringToByteVector
+import org.plasmalabs.networking.fsnetwork.NetworkQualityError._
+import org.plasmalabs.networking.fsnetwork.PeersManager.Message.PingPongMessagePing
+import org.plasmalabs.networking.p2p.ConnectedPeer
+import org.plasmalabs.node.models._
+import org.plasmalabs.typeclasses.implicits._
 
 import java.time._
 

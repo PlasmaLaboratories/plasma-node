@@ -1,9 +1,9 @@
-package xyz.stratalab.ledger.algebras
+package org.plasmalabs.ledger.algebras
 
 import fs2.concurrent.Topic
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.ledger.models.MempoolGraph
-import xyz.stratalab.sdk.models.TransactionId
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.ledger.models.MempoolGraph
+import org.plasmalabs.sdk.models.TransactionId
 
 trait MempoolAlgebra[F[_]] {
 

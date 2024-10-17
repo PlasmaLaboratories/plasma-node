@@ -1,13 +1,13 @@
-package xyz.stratalab.codecs.bytes.scodecs.valuetypes
+package org.plasmalabs.codecs.bytes.scodecs.valuetypes
 
 import cats.implicits._
 import com.google.protobuf.ByteString
 import scodec.bits.BitVector
 import scodec.interop.cats._
 import scodec.{Attempt, Codec, DecodeResult, Err, SizeBound}
-import xyz.stratalab.codecs.bytes.ZigZagEncoder._
-import xyz.stratalab.codecs.bytes.scodecs.valuetypes.Constants._
-import xyz.stratalab.codecs.bytes.scodecs.valuetypes.Types._
+import org.plasmalabs.codecs.bytes.ZigZagEncoder._
+import org.plasmalabs.codecs.bytes.scodecs.valuetypes.Constants._
+import org.plasmalabs.codecs.bytes.scodecs.valuetypes.Types._
 
 trait ValuetypesCodecs {
 

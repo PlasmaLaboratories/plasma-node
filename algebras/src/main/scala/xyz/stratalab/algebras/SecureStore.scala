@@ -1,7 +1,7 @@
-package xyz.stratalab.algebras
+package org.plasmalabs.algebras
 
 import cats.data.Chain
-import xyz.stratalab.codecs.bytes.typeclasses.Persistable
+import org.plasmalabs.codecs.bytes.typeclasses.Persistable
 
 /**
  * Represents the operations of a "secure" data store.  "Secure" means that reading a value will immediately erase its

@@ -1,6 +1,6 @@
-package xyz.stratalab.transactiongenerator.algebras
+package org.plasmalabs.transactiongenerator.algebras
 
-import xyz.stratalab.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.models.transaction.IoTransaction
 
 /**
  * Responsible for the creation of (test/artificial) Transactions.  The Transactions should be valid,

@@ -1,11 +1,11 @@
-package xyz.stratalab.models.generators.consensus
+package org.plasmalabs.models.generators.consensus
 
 import cats.data.{Chain, NonEmptyChain}
 import com.google.protobuf.ByteString
 import org.scalacheck.{Arbitrary, Gen}
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.models.generators.common.ModelGenerators._
-import xyz.stratalab.models.utility._
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.models.generators.common.ModelGenerators._
+import org.plasmalabs.models.utility._
 
 import scala.annotation.tailrec
 

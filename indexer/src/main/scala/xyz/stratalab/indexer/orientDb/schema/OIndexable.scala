@@ -1,13 +1,13 @@
-package xyz.stratalab.indexer.orientDb.schema
+package org.plasmalabs.indexer.orientDb.schema
 
 import com.orientechnologies.orient.core.metadata.schema.OClass
 import com.orientechnologies.orient.core.metadata.schema.OClass.INDEX_TYPE
-import xyz.stratalab.consensus.models.BlockHeader
-import xyz.stratalab.indexer.services.Txo
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.sdk.models.Event.{GroupPolicy, SeriesPolicy}
-import xyz.stratalab.sdk.models.LockAddress
-import xyz.stratalab.sdk.models.transaction.IoTransaction
+import org.plasmalabs.consensus.models.BlockHeader
+import org.plasmalabs.indexer.services.Txo
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.sdk.models.Event.{GroupPolicy, SeriesPolicy}
+import org.plasmalabs.sdk.models.LockAddress
+import org.plasmalabs.sdk.models.transaction.IoTransaction
 
 trait OIndexable[T] {
   def indexType: OClass.INDEX_TYPE

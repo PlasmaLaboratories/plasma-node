@@ -1,6 +1,6 @@
-package xyz.stratalab.algebras
+package org.plasmalabs.algebras
 
-import xyz.stratalab.indexer.services.BlockResponse
+import org.plasmalabs.indexer.services.BlockResponse
 
 /**
  * Indexer Rpc

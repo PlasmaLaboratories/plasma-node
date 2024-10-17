@@ -1,12 +1,12 @@
-package xyz.stratalab.indexer
+package org.plasmalabs.indexer
 
 import cats.data.EitherT
 import cats.effect.kernel.Async
 import cats.implicits._
-import xyz.stratalab.indexer.services._
-import xyz.stratalab.indexer.algebras.TransactionFetcherAlgebra
-import xyz.stratalab.indexer.model.GEs
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.indexer.services._
+import org.plasmalabs.indexer.algebras.TransactionFetcherAlgebra
+import org.plasmalabs.indexer.model.GEs
+import org.plasmalabs.typeclasses.implicits._
 
 import io.grpc.Metadata // scalafix:ok
 import fs2._ // scalafix:ok

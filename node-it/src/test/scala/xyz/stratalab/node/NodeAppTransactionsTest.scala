@@ -1,29 +1,29 @@
-package xyz.stratalab.node
+package org.plasmalabs.node
 
 import cats.effect._
 import cats.effect.implicits._
 import cats.effect.std.{Random, SecureRandom}
 import cats.implicits._
-import xyz.stratalab.algebras.NodeRpc
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.indexer.services._
-import xyz.stratalab.grpc.NodeGrpc
-import xyz.stratalab.interpreters.NodeRpcOps.clientAsNodeRpcApi
-import xyz.stratalab.node.Util._
-import xyz.stratalab.transactiongenerator.interpreters.Fs2TransactionGenerator
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.NodeRpc
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.indexer.services._
+import org.plasmalabs.grpc.NodeGrpc
+import org.plasmalabs.interpreters.NodeRpcOps.clientAsNodeRpcApi
+import org.plasmalabs.node.Util._
+import org.plasmalabs.transactiongenerator.interpreters.Fs2TransactionGenerator
+import org.plasmalabs.typeclasses.implicits._
 import fs2.io.file.{Files, Path}
 import fs2.{io => _, _}
 import munit._
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.tetra.instances._
 import cats.data.Chain
-import xyz.stratalab.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
-import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
-import xyz.stratalab.ledger.models._
+import org.plasmalabs.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
+import org.plasmalabs.sdk.validation.algebras.TransactionCostCalculator
+import org.plasmalabs.ledger.models._
 
 import scala.concurrent.duration._
 
@@ -154,7 +154,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               rpcClients = List(rpcClientA, rpcClientB)
               implicit0(logger: Logger[F]) <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
-              indexerChannelA              <- xyz.stratalab.grpc.makeChannel[F]("127.0.0.2", rpcPortA, tls = false)
+              indexerChannelA              <- org.plasmalabs.grpc.makeChannel[F]("127.0.0.2", rpcPortA, tls = false)
               indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
               indexerBlockServiceA         <- BlockServiceFs2Grpc.stubResource[F](indexerChannelA)
               _                            <- awaitIndexerReady(indexerBlockServiceA).timeout(45.seconds).toResource
@@ -242,7 +242,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               rpcClients = List(rpcClientA, rpcClientB)
               implicit0(logger: Logger[F]) <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
-              indexerChannelA              <- xyz.stratalab.grpc.makeChannel[F]("127.0.0.4", rpcPortA, tls = false)
+              indexerChannelA              <- org.plasmalabs.grpc.makeChannel[F]("127.0.0.4", rpcPortA, tls = false)
               indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
               indexerBlockServiceA         <- BlockServiceFs2Grpc.stubResource[F](indexerChannelA)
               _                            <- awaitIndexerReady(indexerBlockServiceA).timeout(45.seconds).toResource
@@ -356,7 +356,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               rpcClients = List(rpcClientA, rpcClientB)
               implicit0(logger: Logger[F]) <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
-              indexerChannelA              <- xyz.stratalab.grpc.makeChannel[F]("127.0.0.6", rpcPortA, tls = false)
+              indexerChannelA              <- org.plasmalabs.grpc.makeChannel[F]("127.0.0.6", rpcPortA, tls = false)
               indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
               indexerBlockServiceA         <- BlockServiceFs2Grpc.stubResource[F](indexerChannelA)
               _                            <- awaitIndexerReady(indexerBlockServiceA).timeout(45.seconds).toResource

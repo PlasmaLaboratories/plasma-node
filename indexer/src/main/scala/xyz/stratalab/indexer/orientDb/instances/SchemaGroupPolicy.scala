@@ -1,11 +1,11 @@
-package xyz.stratalab.indexer.orientDb.instances
+package org.plasmalabs.indexer.orientDb.instances
 
 import com.google.protobuf.ByteString
-import xyz.stratalab.indexer.orientDb.schema.OTyped.Instances._
-import xyz.stratalab.indexer.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
-import xyz.stratalab.sdk.models.Event.GroupPolicy
-import xyz.stratalab.sdk.models.{SeriesId, TransactionOutputAddress}
-import xyz.stratalab.sdk.syntax.groupPolicyAsGroupPolicySyntaxOps
+import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances._
+import org.plasmalabs.indexer.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
+import org.plasmalabs.sdk.models.Event.GroupPolicy
+import org.plasmalabs.sdk.models.{SeriesId, TransactionOutputAddress}
+import org.plasmalabs.sdk.syntax.groupPolicyAsGroupPolicySyntaxOps
 
 object SchemaGroupPolicy {
 

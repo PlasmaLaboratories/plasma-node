@@ -1,16 +1,16 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats.MonadThrow
 import cats.effect.Async
 import cats.implicits._
-import xyz.stratalab.algebras._
-import xyz.stratalab.consensus.models.{ActiveStaker, BlockId, StakingAddress}
-import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.box.Value
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras._
+import org.plasmalabs.consensus.models.{ActiveStaker, BlockId, StakingAddress}
+import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.box.Value
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.typeclasses.implicits._
 
 /**
  * An EventSourcedState which operates on a `ConsensusData`.

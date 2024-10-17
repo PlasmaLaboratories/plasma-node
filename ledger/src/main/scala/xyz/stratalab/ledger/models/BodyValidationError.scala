@@ -1,10 +1,10 @@
-package xyz.stratalab.ledger.models
+package org.plasmalabs.ledger.models
 
 import cats.data.{NonEmptyChain, NonEmptySet}
-import xyz.stratalab.models.ProposalId
-import xyz.stratalab.sdk.models.TransactionOutputAddress
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.validation.{TransactionAuthorizationError, TransactionSyntaxError}
+import org.plasmalabs.models.ProposalId
+import org.plasmalabs.sdk.models.TransactionOutputAddress
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.validation.{TransactionAuthorizationError, TransactionSyntaxError}
 
 sealed abstract class BodyValidationError
 

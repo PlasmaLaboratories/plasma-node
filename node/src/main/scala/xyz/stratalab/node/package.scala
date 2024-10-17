@@ -1,11 +1,11 @@
-package xyz.stratalab
+package org.plasmalabs
 
 import cats.MonadThrow
 import cats.implicits.toShow
-import xyz.stratalab.blockchain.CurrentEventIdGetterSetters.Indices
-import xyz.stratalab.blockchain.DataStores
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.typeclasses.implicits.showBlockId
+import org.plasmalabs.blockchain.CurrentEventIdGetterSetters.Indices
+import org.plasmalabs.blockchain.DataStores
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.typeclasses.implicits.showBlockId
 
 package object node {
 

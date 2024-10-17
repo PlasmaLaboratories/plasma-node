@@ -1,18 +1,18 @@
-package xyz.stratalab.indexer.orientDb.instances
+package org.plasmalabs.indexer.orientDb.instances
 
 import cats.implicits._
 import com.orientechnologies.orient.core.metadata.schema.OType
 import munit.{CatsEffectFunFixtures, CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.indexer.DbFixtureUtil
-import xyz.stratalab.indexer.orientDb.OrientThread
-import xyz.stratalab.indexer.orientDb.instances.SchemaLockAddress
-import xyz.stratalab.indexer.orientDb.instances.SchemaLockAddress.Field
-import xyz.stratalab.indexer.orientDb.instances.VertexSchemaInstances.instances.lockAddressSchema
-import xyz.stratalab.models.ModelGenerators.GenHelper
-import xyz.stratalab.sdk.codecs.AddressCodecs
-import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGens}
-import xyz.stratalab.sdk.models.LockAddress
+import org.plasmalabs.indexer.DbFixtureUtil
+import org.plasmalabs.indexer.orientDb.OrientThread
+import org.plasmalabs.indexer.orientDb.instances.SchemaLockAddress
+import org.plasmalabs.indexer.orientDb.instances.SchemaLockAddress.Field
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances.lockAddressSchema
+import org.plasmalabs.models.ModelGenerators.GenHelper
+import org.plasmalabs.sdk.codecs.AddressCodecs
+import org.plasmalabs.sdk.generators.{ModelGenerators => BramblGens}
+import org.plasmalabs.sdk.models.LockAddress
 
 import scala.jdk.CollectionConverters._
 

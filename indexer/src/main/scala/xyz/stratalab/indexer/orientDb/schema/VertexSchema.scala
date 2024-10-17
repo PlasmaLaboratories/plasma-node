@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer.orientDb.schema
+package org.plasmalabs.indexer.orientDb.schema
 
 import com.tinkerpop.blueprints.Vertex
 import com.tinkerpop.blueprints.impls.orient.OrientVertex

@@ -1,6 +1,6 @@
-package xyz.stratalab.models.utility
+package org.plasmalabs.models.utility
 
-import xyz.stratalab.models.p2p.{HostId, RemoteAddress}
+import org.plasmalabs.models.p2p.{HostId, RemoteAddress}
 
 sealed trait NetworkCommands
 

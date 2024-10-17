@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.blockchain
+package org.plasmalabs.networking.blockchain
 
 import cats.data.NonEmptyChain
 import cats.effect.{IO, Resource}
@@ -10,26 +10,26 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.Gen
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.blockchain.{BlockchainCore, DataStores}
-import xyz.stratalab.consensus.Consensus
-import xyz.stratalab.consensus.algebras.LocalChainAlgebra
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.ledger.Ledger
-import xyz.stratalab.ledger.algebras.{MempoolAlgebra, TransactionRewardCalculatorAlgebra}
-import xyz.stratalab.ledger.models.{MempoolGraph, RewardQuantities}
-import xyz.stratalab.models.ModelGenerators._
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.models.generators.node.ModelGenerators._
-import xyz.stratalab.networking.NetworkGen._
-import xyz.stratalab.networking.fsnetwork.RemotePeer
-import xyz.stratalab.networking.fsnetwork.TestHelper._
-import xyz.stratalab.networking.p2p.PeerConnectionChanges.RemotePeerApplicationLevel
-import xyz.stratalab.networking.p2p.{ConnectedPeer, PeerConnectionChange}
-import xyz.stratalab.node.models.{BlockBody, CurrentKnownHostsReq, CurrentKnownHostsRes, KnownHost}
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.blockchain.{BlockchainCore, DataStores}
+import org.plasmalabs.consensus.Consensus
+import org.plasmalabs.consensus.algebras.LocalChainAlgebra
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.ledger.Ledger
+import org.plasmalabs.ledger.algebras.{MempoolAlgebra, TransactionRewardCalculatorAlgebra}
+import org.plasmalabs.ledger.models.{MempoolGraph, RewardQuantities}
+import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.generators.node.ModelGenerators._
+import org.plasmalabs.networking.NetworkGen._
+import org.plasmalabs.networking.fsnetwork.RemotePeer
+import org.plasmalabs.networking.fsnetwork.TestHelper._
+import org.plasmalabs.networking.p2p.PeerConnectionChanges.RemotePeerApplicationLevel
+import org.plasmalabs.networking.p2p.{ConnectedPeer, PeerConnectionChange}
+import org.plasmalabs.node.models.{BlockBody, CurrentKnownHostsReq, CurrentKnownHostsRes, KnownHost}
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.validation.algebras.TransactionCostCalculator
 
 import scala.concurrent.duration._
 

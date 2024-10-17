@@ -1,4 +1,4 @@
-package xyz.stratalab.algebras
+package org.plasmalabs.algebras
 
 /**
  * SoftwareVersionAlgebra

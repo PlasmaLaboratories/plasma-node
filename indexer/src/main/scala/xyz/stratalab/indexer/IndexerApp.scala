@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer
+package org.plasmalabs.indexer
 
 import cats.Show
 import cats.effect.IO
@@ -10,11 +10,11 @@ import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import pureconfig.ConfigSource
 import pureconfig.generic.auto._
-import xyz.stratalab.algebras.Stats
-import xyz.stratalab.common.application.{ContainsDebugFlag, ContainsUserConfigs, IOBaseApp, YamlConfig}
-import xyz.stratalab.grpc.{Grpc, HealthCheckGrpc}
-import xyz.stratalab.interpreters.KamonStatsRef
-import xyz.stratalab.node.services.NodeRpcFs2Grpc
+import org.plasmalabs.algebras.Stats
+import org.plasmalabs.common.application.{ContainsDebugFlag, ContainsUserConfigs, IOBaseApp, YamlConfig}
+import org.plasmalabs.grpc.{Grpc, HealthCheckGrpc}
+import org.plasmalabs.interpreters.KamonStatsRef
+import org.plasmalabs.node.services.NodeRpcFs2Grpc
 
 object IndexerApp
     extends IOBaseApp[IndexerArgs, IndexerApplicationConfig](

@@ -1,4 +1,4 @@
-package xyz.stratalab.typeclasses
+package org.plasmalabs.typeclasses
 
 import io.circe.Json
 

@@ -1,7 +1,7 @@
-package xyz.stratalab.consensus.algebras
+package org.plasmalabs.consensus.algebras
 
-import xyz.stratalab.consensus.models.BlockHeaderToBodyValidationFailure
-import xyz.stratalab.node.models.Block
+import org.plasmalabs.consensus.models.BlockHeaderToBodyValidationFailure
+import org.plasmalabs.node.models.Block
 
 trait BlockHeaderToBodyValidationAlgebra[F[_]] {
   def validate(block: Block): F[Either[BlockHeaderToBodyValidationFailure, Block]]

@@ -1,21 +1,21 @@
-package xyz.stratalab.ledger.interpreters
+package org.plasmalabs.ledger.interpreters
 
 import cats.data.EitherT
 import cats.effect._
 import cats.effect.implicits._
 import cats.implicits._
 import fs2.concurrent.Topic
-import xyz.stratalab.algebras.{ClockAlgebra, Stats}
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
-import xyz.stratalab.ledger.algebras.{MempoolAlgebra, TransactionRewardCalculatorAlgebra}
-import xyz.stratalab.ledger.models.MempoolGraph
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
-import xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.{ClockAlgebra, Stats}
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
+import org.plasmalabs.ledger.algebras.{MempoolAlgebra, TransactionRewardCalculatorAlgebra}
+import org.plasmalabs.ledger.models.MempoolGraph
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax.ioTransactionAsTransactionSyntaxOps
+import org.plasmalabs.sdk.validation.algebras.TransactionCostCalculator
+import org.plasmalabs.typeclasses.implicits._
 
 object Mempool {
 

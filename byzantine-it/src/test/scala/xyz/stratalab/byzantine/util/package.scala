@@ -1,6 +1,6 @@
-package xyz.stratalab.byzantine
+package org.plasmalabs.byzantine
 
-import xyz.stratalab.algebras.IndexerRpc
+import org.plasmalabs.algebras.IndexerRpc
 import com.spotify.docker.client.DockerClient
 import scala.language.implicitConversions
 

@@ -1,18 +1,18 @@
-package xyz.stratalab.ledger.interpreters
+package org.plasmalabs.ledger.interpreters
 
 import cats.data.{EitherT, NonEmptySet, ValidatedNec}
 import cats.effect.Sync
 import cats.implicits._
 import cats.{Foldable, Order, Parallel}
 import com.google.protobuf.ByteString
-import xyz.stratalab.algebras.Stats
-import xyz.stratalab.ledger.algebras._
-import xyz.stratalab.ledger.models._
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.models.{TransactionId, TransactionOutputAddress}
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.Stats
+import org.plasmalabs.ledger.algebras._
+import org.plasmalabs.ledger.models._
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.models.{TransactionId, TransactionOutputAddress}
+import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
+import org.plasmalabs.typeclasses.implicits._
 
 import scala.collection.immutable.SortedSet
 

@@ -1,4 +1,4 @@
-package xyz.stratalab.grpc
+package org.plasmalabs.grpc
 
 import cats.data.{EitherT, OptionT}
 import cats.effect.Async
@@ -7,19 +7,19 @@ import cats.{Monad, Show}
 import fs2.Stream
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
-import xyz.stratalab.algebras._
-import xyz.stratalab.blockchain.{BlockchainCore, LocalChainSynchronizationTraversal}
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
-import xyz.stratalab.ledger.algebras.MempoolAlgebra
-import xyz.stratalab.models.Epoch
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.proto.node.{EpochData, NodeConfig}
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.validation.TransactionSyntaxError
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras._
+import org.plasmalabs.blockchain.{BlockchainCore, LocalChainSynchronizationTraversal}
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
+import org.plasmalabs.ledger.algebras.MempoolAlgebra
+import org.plasmalabs.models.Epoch
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.proto.node.{EpochData, NodeConfig}
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.validation.TransactionSyntaxError
+import org.plasmalabs.typeclasses.implicits._
 
 object RpcServer {
 

@@ -1,7 +1,7 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import inet.ipaddr.IPAddressString
-import xyz.stratalab.models.p2p.HostId
+import org.plasmalabs.models.p2p.HostId
 
 import scala.util.Try
 

@@ -1,13 +1,13 @@
-package xyz.stratalab.node
+package org.plasmalabs.node
 
 import cats.effect.{IO, Resource}
 import cats.implicits._
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.config.ApplicationConfig
-import xyz.stratalab.grpc.{HealthCheckGrpc, NodeGrpc}
-import xyz.stratalab.healthcheck.HealthCheck
-import xyz.stratalab.node.ApplicationConfigOps._
+import org.plasmalabs.config.ApplicationConfig
+import org.plasmalabs.grpc.{HealthCheckGrpc, NodeGrpc}
+import org.plasmalabs.healthcheck.HealthCheck
+import org.plasmalabs.node.ApplicationConfigOps._
 
 class IdleApp(appConfig: ApplicationConfig) {
 

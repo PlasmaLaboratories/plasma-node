@@ -1,17 +1,17 @@
-package xyz.stratalab.testnetsimulationorchestrator.interpreters
+package org.plasmalabs.testnetsimulationorchestrator.interpreters
 
 import cats.effect._
 import cats.implicits._
 import com.google.cloud.storage._
 import com.google.protobuf.ByteString
 import fs2._
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.models.utility._
-import xyz.stratalab.sdk.models.box.Value
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.testnetsimulationorchestrator.algebras.DataPublisher
-import xyz.stratalab.testnetsimulationorchestrator.models.{AdoptionDatum, BlockDatum, TransactionDatum}
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.sdk.models.box.Value
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.testnetsimulationorchestrator.algebras.DataPublisher
+import org.plasmalabs.testnetsimulationorchestrator.models.{AdoptionDatum, BlockDatum, TransactionDatum}
+import org.plasmalabs.typeclasses.implicits._
 
 import java.nio.charset.StandardCharsets
 

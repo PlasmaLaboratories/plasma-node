@@ -1,17 +1,17 @@
-package xyz.stratalab.indexer.orientDb.instances
+package org.plasmalabs.indexer.orientDb.instances
 
 import cats.implicits._
 import com.orientechnologies.orient.core.metadata.schema.OType
 import munit.{CatsEffectFunFixtures, CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.indexer.DbFixtureUtil
-import xyz.stratalab.indexer.orientDb.instances.SchemaTxo
-import xyz.stratalab.indexer.orientDb.instances.SchemaTxo.Field
-import xyz.stratalab.indexer.orientDb.instances.VertexSchemaInstances.instances.txoSchema
-import xyz.stratalab.indexer.orientDb.{OrientDBMetadataFactory, OrientThread}
-import xyz.stratalab.indexer.services.{Txo, TxoState}
-import xyz.stratalab.models.ModelGenerators.GenHelper
-import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGens}
+import org.plasmalabs.indexer.DbFixtureUtil
+import org.plasmalabs.indexer.orientDb.instances.SchemaTxo
+import org.plasmalabs.indexer.orientDb.instances.SchemaTxo.Field
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances.txoSchema
+import org.plasmalabs.indexer.orientDb.{OrientDBMetadataFactory, OrientThread}
+import org.plasmalabs.indexer.services.{Txo, TxoState}
+import org.plasmalabs.models.ModelGenerators.GenHelper
+import org.plasmalabs.sdk.generators.{ModelGenerators => BramblGens}
 
 import scala.jdk.CollectionConverters._
 

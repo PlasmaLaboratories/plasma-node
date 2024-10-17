@@ -1,17 +1,17 @@
-package xyz.stratalab.blockchain
+package org.plasmalabs.blockchain
 
 import cats.implicits._
 import com.google.protobuf.ByteString
 import quivr.models._
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.crypto.hash.Blake2b256
-import xyz.stratalab.crypto.models.SecretKeyKesProduct
-import xyz.stratalab.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
-import xyz.stratalab.models._
-import xyz.stratalab.models.utility._
-import xyz.stratalab.sdk.models._
-import xyz.stratalab.sdk.models.box._
-import xyz.stratalab.sdk.models.transaction.{IoTransaction, UnspentTransactionOutput}
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.crypto.hash.Blake2b256
+import org.plasmalabs.crypto.models.SecretKeyKesProduct
+import org.plasmalabs.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
+import org.plasmalabs.models._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.models.box._
+import org.plasmalabs.sdk.models.transaction.{IoTransaction, UnspentTransactionOutput}
 
 /**
  * Represents the data required to initialize a new staking.  This includes the necessary secret keys, plus their

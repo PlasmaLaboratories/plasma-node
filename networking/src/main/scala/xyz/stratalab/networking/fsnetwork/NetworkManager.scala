@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.Applicative
 import cats.data.NonEmptyChain
@@ -9,15 +9,15 @@ import cats.implicits._
 import com.google.protobuf.ByteString
 import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.blockchain.BlockchainCore
-import xyz.stratalab.config.ApplicationConfig.Node.NetworkProperties
-import xyz.stratalab.crypto.signing.Ed25519VRF
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.models.utility.NetworkCommands
-import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
-import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
-import xyz.stratalab.networking.p2p.{DisconnectedPeer, PeerConnectionChange, PeerConnectionChanges}
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.blockchain.BlockchainCore
+import org.plasmalabs.config.ApplicationConfig.Node.NetworkProperties
+import org.plasmalabs.crypto.signing.Ed25519VRF
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.utility.NetworkCommands
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
+import org.plasmalabs.networking.p2p.{DisconnectedPeer, PeerConnectionChange, PeerConnectionChanges}
 
 import scala.util.Random
 

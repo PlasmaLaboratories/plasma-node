@@ -1,7 +1,7 @@
-package xyz.stratalab.ledger.algebras
+package org.plasmalabs.ledger.algebras
 
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.sdk.models.TransactionOutputAddress
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.sdk.models.TransactionOutputAddress
 
 trait BoxStateAlgebra[F[_]] {
 

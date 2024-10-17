@@ -1,4 +1,4 @@
-package xyz.stratalab.catsutils
+package org.plasmalabs.catsutils
 
 import cats.data.EitherT
 import cats.effect.Async

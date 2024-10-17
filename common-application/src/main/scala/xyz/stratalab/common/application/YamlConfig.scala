@@ -1,4 +1,4 @@
-package xyz.stratalab.common.application
+package org.plasmalabs.common.application
 
 import com.typesafe.config.{Config, ConfigFactory}
 

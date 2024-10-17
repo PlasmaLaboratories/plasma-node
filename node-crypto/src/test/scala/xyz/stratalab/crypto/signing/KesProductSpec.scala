@@ -1,14 +1,14 @@
-package xyz.stratalab.crypto.signing
+package org.plasmalabs.crypto.signing
 
 import cats.effect.IO
 import cats.implicits._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.Gen
 import org.scalacheck.effect.PropF
-import xyz.stratalab.crypto.models._
-import xyz.stratalab.crypto.utils.Generators._
-import xyz.stratalab.crypto.utils.Hex.implicits._
-import xyz.stratalab.crypto.utils.KesTestHelper
+import org.plasmalabs.crypto.models._
+import org.plasmalabs.crypto.utils.Generators._
+import org.plasmalabs.crypto.utils.Hex.implicits._
+import org.plasmalabs.crypto.utils.KesTestHelper
 
 class KesProductSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
 

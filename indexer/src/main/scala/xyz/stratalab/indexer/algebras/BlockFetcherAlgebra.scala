@@ -1,9 +1,9 @@
-package xyz.stratalab.indexer.algebras
+package org.plasmalabs.indexer.algebras
 
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
-import xyz.stratalab.indexer.model.GE
-import xyz.stratalab.indexer.services.BlockData
-import xyz.stratalab.node.models.BlockBody
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
+import org.plasmalabs.indexer.model.GE
+import org.plasmalabs.indexer.services.BlockData
+import org.plasmalabs.node.models.BlockBody
 
 /**
  * Algebra which defines fetch operations of blocks against the stored Ledger.

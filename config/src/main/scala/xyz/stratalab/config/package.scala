@@ -1,4 +1,4 @@
-package xyz.stratalab
+package org.plasmalabs
 
 package object config {
 

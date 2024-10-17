@@ -1,4 +1,4 @@
-package xyz.stratalab.codecs.bytes.scodecs
+package org.plasmalabs.codecs.bytes.scodecs
 
 import java.nio.charset.{Charset, StandardCharsets}
 

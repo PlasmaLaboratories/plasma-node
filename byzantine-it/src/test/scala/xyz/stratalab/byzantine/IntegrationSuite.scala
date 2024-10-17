@@ -1,4 +1,4 @@
-package xyz.stratalab.byzantine
+package org.plasmalabs.byzantine
 
 import cats.effect.IO
 import munit.CatsEffectSuite

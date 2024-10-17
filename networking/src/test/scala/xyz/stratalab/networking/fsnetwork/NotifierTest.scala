@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.effect.kernel.Async
 import cats.effect.{IO, Sync}
@@ -7,9 +7,9 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.SelfAwareStructuredLogger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.config.ApplicationConfig.Node.NetworkProperties
-import xyz.stratalab.networking.fsnetwork.NotifierTest.{F, defaultP2PConfig}
-import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
+import org.plasmalabs.config.ApplicationConfig.Node.NetworkProperties
+import org.plasmalabs.networking.fsnetwork.NotifierTest.{F, defaultP2PConfig}
+import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
 
 import scala.concurrent.duration.{FiniteDuration, MILLISECONDS}
 

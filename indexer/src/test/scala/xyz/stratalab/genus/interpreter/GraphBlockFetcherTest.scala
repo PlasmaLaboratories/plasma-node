@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer.interpreter
+package org.plasmalabs.indexer.interpreter
 
 import cats.effect.IO
 import cats.implicits._
@@ -6,14 +6,14 @@ import com.tinkerpop.blueprints.Vertex
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.consensus.models.BlockHeader
-import xyz.stratalab.indexer.algebras.VertexFetcherAlgebra
-import xyz.stratalab.indexer.interpreter.GraphBlockFetcher
-import xyz.stratalab.indexer.model.{GE, GEs}
-import xyz.stratalab.indexer.orientDb.OrientThread
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.node.models.BlockBody
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.consensus.models.BlockHeader
+import org.plasmalabs.indexer.algebras.VertexFetcherAlgebra
+import org.plasmalabs.indexer.interpreter.GraphBlockFetcher
+import org.plasmalabs.indexer.model.{GE, GEs}
+import org.plasmalabs.indexer.orientDb.OrientThread
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.node.models.BlockBody
 
 class GraphBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

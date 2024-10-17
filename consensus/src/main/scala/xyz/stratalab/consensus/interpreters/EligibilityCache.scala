@@ -1,14 +1,14 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats.effect._
 import cats.effect.implicits._
 import cats.implicits._
 import com.google.protobuf.ByteString
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.consensus.algebras.EligibilityCacheAlgebra
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.models._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.consensus.algebras.EligibilityCacheAlgebra
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.models._
+import org.plasmalabs.typeclasses.implicits._
 
 import scala.collection.immutable.SortedMap
 

@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer.interpreter
+package org.plasmalabs.indexer.interpreter
 
 import cats.data.EitherT
 import cats.effect._
@@ -8,19 +8,19 @@ import com.tinkerpop.blueprints.Vertex
 import com.tinkerpop.blueprints.impls.orient.{OrientDynaElementIterable, OrientGraph}
 import fs2.Stream
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.indexer.algebras._
-import xyz.stratalab.indexer.model.{GE, GEs}
-import xyz.stratalab.indexer.orientDb.OrientThread
-import xyz.stratalab.indexer.orientDb.instances.VertexSchemaInstances.implicits._
-import xyz.stratalab.indexer.orientDb.instances._
-import xyz.stratalab.indexer.orientDb.schema.EdgeSchemaInstances._
-import xyz.stratalab.indexer.services.{BlockData, Txo, TxoState}
-import xyz.stratalab.models.utility._
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.sdk.models.TransactionOutputAddress
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.indexer.algebras._
+import org.plasmalabs.indexer.model.{GE, GEs}
+import org.plasmalabs.indexer.orientDb.OrientThread
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.implicits._
+import org.plasmalabs.indexer.orientDb.instances._
+import org.plasmalabs.indexer.orientDb.schema.EdgeSchemaInstances._
+import org.plasmalabs.indexer.services.{BlockData, Txo, TxoState}
+import org.plasmalabs.models.utility._
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.sdk.models.TransactionOutputAddress
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.typeclasses.implicits._
 
 import scala.jdk.CollectionConverters._
 import scala.util.Try

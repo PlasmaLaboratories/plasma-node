@@ -1,12 +1,12 @@
-package xyz.stratalab.crypto.signing
+package org.plasmalabs.crypto.signing
 
-import xyz.stratalab.crypto.models.{
+import org.plasmalabs.crypto.models.{
   SecretKeyKesProduct,
   SignatureKesProduct,
   SignatureKesSum,
   VerificationKeyKesProduct
 }
-import xyz.stratalab.crypto.signing.kes.ProductComposition
+import org.plasmalabs.crypto.signing.kes.ProductComposition
 
 /**
  * Credit to Aaron Schutza

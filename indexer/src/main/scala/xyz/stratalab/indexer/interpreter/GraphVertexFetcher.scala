@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer.interpreter
+package org.plasmalabs.indexer.interpreter
 
 import cats.effect.Resource
 import cats.implicits._
@@ -6,17 +6,17 @@ import com.orientechnologies.orient.core.sql.OCommandSQL
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery
 import com.tinkerpop.blueprints.Vertex
 import com.tinkerpop.blueprints.impls.orient.{OrientBaseGraph, OrientDynaElementIterable, OrientVertex}
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.indexer.algebras.VertexFetcherAlgebra
-import xyz.stratalab.indexer.model.{GE, GEs}
-import xyz.stratalab.indexer.orientDb.OrientThread
-import xyz.stratalab.indexer.orientDb.instances.SchemaIoTransaction.Field
-import xyz.stratalab.indexer.orientDb.instances.VertexSchemaInstances.instances._
-import xyz.stratalab.indexer.orientDb.instances._
-import xyz.stratalab.indexer.orientDb.schema.EdgeSchemaInstances
-import xyz.stratalab.indexer.services._
-import xyz.stratalab.sdk.models._
-import xyz.stratalab.sdk.syntax.transactionIdAsIdSyntaxOps
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.indexer.algebras.VertexFetcherAlgebra
+import org.plasmalabs.indexer.model.{GE, GEs}
+import org.plasmalabs.indexer.orientDb.OrientThread
+import org.plasmalabs.indexer.orientDb.instances.SchemaIoTransaction.Field
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances._
+import org.plasmalabs.indexer.orientDb.instances._
+import org.plasmalabs.indexer.orientDb.schema.EdgeSchemaInstances
+import org.plasmalabs.indexer.services._
+import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.syntax.transactionIdAsIdSyntaxOps
 
 import scala.jdk.CollectionConverters._
 import scala.util.Try

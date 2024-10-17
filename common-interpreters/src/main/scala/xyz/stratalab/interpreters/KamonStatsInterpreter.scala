@@ -1,4 +1,4 @@
-package xyz.stratalab.interpreters
+package org.plasmalabs.interpreters
 
 import cats.Applicative
 import cats.effect.implicits._
@@ -8,7 +8,7 @@ import io.circe.Json
 import kamon.Kamon
 import kamon.metric.Metric
 import kamon.tag.TagSet
-import xyz.stratalab.algebras.Stats
+import org.plasmalabs.algebras.Stats
 
 /**
  * A Kamon implementation of the Stats algebra.

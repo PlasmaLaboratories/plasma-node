@@ -1,6 +1,6 @@
-package xyz.stratalab.algebras
+package org.plasmalabs.algebras
 
-import xyz.stratalab.proto.node.NodeConfig
+import org.plasmalabs.proto.node.NodeConfig
 
 /**
  * Configuration Rpc

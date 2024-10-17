@@ -1,13 +1,13 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats.implicits._
 import cats.{Applicative, MonadThrow}
-import xyz.stratalab.algebras.ClockAlgebra.implicits._
-import xyz.stratalab.algebras._
-import xyz.stratalab.consensus.algebras.ConsensusValidationStateAlgebra
-import xyz.stratalab.consensus.models.{ActiveStaker, BlockId, StakingAddress}
-import xyz.stratalab.eventtree.EventSourcedState
-import xyz.stratalab.models._
+import org.plasmalabs.algebras.ClockAlgebra.implicits._
+import org.plasmalabs.algebras._
+import org.plasmalabs.consensus.algebras.ConsensusValidationStateAlgebra
+import org.plasmalabs.consensus.models.{ActiveStaker, BlockId, StakingAddress}
+import org.plasmalabs.eventtree.EventSourcedState
+import org.plasmalabs.models._
 
 object ConsensusValidationState {
 

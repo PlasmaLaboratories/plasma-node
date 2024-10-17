@@ -1,11 +1,11 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.data.NonEmptyChain
 import cats.implicits._
 import org.apache.commons.lang3.exception.ExceptionUtils
-import xyz.stratalab.consensus.models.{BlockHeaderValidationFailure, BlockId}
-import xyz.stratalab.ledger.models.BodyValidationError
-import xyz.stratalab.models.p2p._
+import org.plasmalabs.consensus.models.{BlockHeaderValidationFailure, BlockId}
+import org.plasmalabs.ledger.models.BodyValidationError
+import org.plasmalabs.models.p2p._
 
 sealed abstract class BlockApplyError extends Exception
 

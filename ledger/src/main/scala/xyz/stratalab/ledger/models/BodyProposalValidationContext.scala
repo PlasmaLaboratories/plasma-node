@@ -1,6 +1,6 @@
-package xyz.stratalab.ledger.models
+package org.plasmalabs.ledger.models
 
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.models.Slot
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.models.Slot
 
 case class BodyProposalValidationContext(id: BlockId, slot: Slot)

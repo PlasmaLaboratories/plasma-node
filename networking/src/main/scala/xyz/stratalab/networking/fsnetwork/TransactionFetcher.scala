@@ -1,20 +1,20 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.MonadThrow
 import cats.data.EitherT
 import cats.effect.Async
 import cats.implicits._
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.networking.blockchain.BlockchainPeerClient
-import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError._
-import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.networking.blockchain.BlockchainPeerClient
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError._
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax.ioTransactionAsTransactionSyntaxOps
+import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
+import org.plasmalabs.typeclasses.implicits._
 
 class TransactionFetcher[F[_]: Async: Logger](
   hostId:                      HostId,

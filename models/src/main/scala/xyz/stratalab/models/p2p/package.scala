@@ -1,4 +1,4 @@
-package xyz.stratalab.models
+package org.plasmalabs.models
 
 import cats.Show
 import cats.implicits._

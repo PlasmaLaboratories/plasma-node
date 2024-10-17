@@ -1,8 +1,8 @@
-package xyz.stratalab.byzantine.util
+package org.plasmalabs.byzantine.util
 
 import cats.effect._
 import cats.implicits._
-import xyz.stratalab.algebras.IndexerRpc
+import org.plasmalabs.algebras.IndexerRpc
 
 import fs2.Stream
 import org.typelevel.log4cats.Logger

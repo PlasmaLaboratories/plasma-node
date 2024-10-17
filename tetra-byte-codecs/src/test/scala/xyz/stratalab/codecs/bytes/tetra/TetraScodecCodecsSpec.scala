@@ -1,12 +1,12 @@
-package xyz.stratalab.codecs.bytes.tetra
+package org.plasmalabs.codecs.bytes.tetra
 
 import cats.{Eq, Show}
 import org.scalacheck.Gen
-import xyz.stratalab.codecs.bytes.CodecSpec
-import xyz.stratalab.consensus.models.{BlockId, EligibilityCertificate}
-import xyz.stratalab.crypto.models.KesBinaryTree
-import xyz.stratalab.models._
-import xyz.stratalab.models.utility.Ratio
+import org.plasmalabs.codecs.bytes.CodecSpec
+import org.plasmalabs.consensus.models.{BlockId, EligibilityCertificate}
+import org.plasmalabs.crypto.models.KesBinaryTree
+import org.plasmalabs.models._
+import org.plasmalabs.models.utility.Ratio
 
 class TetraScodecCodecsSpec extends CodecSpec {
 
@@ -30,77 +30,77 @@ class TetraScodecCodecsSpec extends CodecSpec {
   codecBehavior[KesBinaryTree](
     "KesBinaryTree",
     TetraScodecCodecs.nodeCryptoKesBinaryTreeCodec,
-    xyz.stratalab.crypto.utils.NodeCryptoGenerators.kesBinaryTreeGen
+    org.plasmalabs.crypto.utils.NodeCryptoGenerators.kesBinaryTreeGen
   )
 
-  codecBehavior[xyz.stratalab.crypto.models.SignatureKesSum](
-    "xyz.stratalab.crypto.models.SignatureKesSum",
+  codecBehavior[org.plasmalabs.crypto.models.SignatureKesSum](
+    "org.plasmalabs.crypto.models.SignatureKesSum",
     nodeCryptoSignatureKesSumCodec,
-    xyz.stratalab.crypto.utils.NodeCryptoGenerators.signatureKesSumArbitrary.arbitrary
+    org.plasmalabs.crypto.utils.NodeCryptoGenerators.signatureKesSumArbitrary.arbitrary
   )
 
-  codecBehavior[xyz.stratalab.crypto.models.SecretKeyKesSum](
-    "xyz.stratalab.crypto.models.SecretKeyKesSum",
+  codecBehavior[org.plasmalabs.crypto.models.SecretKeyKesSum](
+    "org.plasmalabs.crypto.models.SecretKeyKesSum",
     nodeCryptoSecretKeyKesSumCodec,
-    xyz.stratalab.crypto.utils.NodeCryptoGenerators.kesSumSKGen
+    org.plasmalabs.crypto.utils.NodeCryptoGenerators.kesSumSKGen
   )
 
-  codecBehavior[xyz.stratalab.crypto.models.SecretKeyKesProduct](
-    "xyz.stratalab.crypto.models.SecretKeyKesProduct",
+  codecBehavior[org.plasmalabs.crypto.models.SecretKeyKesProduct](
+    "org.plasmalabs.crypto.models.SecretKeyKesProduct",
     nodeCryptoSecretKeyKesProductCodec,
-    xyz.stratalab.crypto.utils.NodeCryptoGenerators.kesProductSKGen
+    org.plasmalabs.crypto.utils.NodeCryptoGenerators.kesProductSKGen
   )
 
   codecBehavior[BlockId](
-    "xyz.stratalab.consensus.models.BlockId",
+    "org.plasmalabs.consensus.models.BlockId",
     TetraScodecCodecs.blockIdCodec,
-    xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryBlockId.arbitrary
+    org.plasmalabs.models.generators.consensus.ModelGenerators.arbitraryBlockId.arbitrary
   )
 
   codecBehavior[EligibilityCertificate](
-    "xyz.stratalab.consensus.models.EligibilityCertificate",
+    "org.plasmalabs.consensus.models.EligibilityCertificate",
     TetraScodecCodecs.consensusEligibilityCertificateCodec,
-    xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryEligibilityCertificate.arbitrary
+    org.plasmalabs.models.generators.consensus.ModelGenerators.arbitraryEligibilityCertificate.arbitrary
   )
 
-  codecBehavior[xyz.stratalab.consensus.models.VerificationKeyKesProduct](
-    "xyz.stratalab.consensus.models.VerificationKeyKesProduct",
+  codecBehavior[org.plasmalabs.consensus.models.VerificationKeyKesProduct](
+    "org.plasmalabs.consensus.models.VerificationKeyKesProduct",
     TetraScodecCodecs.vkKesProductCodec,
-    xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryVerificationKeyKesProduct.arbitrary
+    org.plasmalabs.models.generators.consensus.ModelGenerators.arbitraryVerificationKeyKesProduct.arbitrary
   )
 
-  codecBehavior[xyz.stratalab.consensus.models.SignatureKesSum](
-    "xyz.stratalab.consensus.models.SignatureKesSum",
+  codecBehavior[org.plasmalabs.consensus.models.SignatureKesSum](
+    "org.plasmalabs.consensus.models.SignatureKesSum",
     TetraScodecCodecs.signatureKesSumCodec,
-    xyz.stratalab.models.generators.consensus.ModelGenerators.signatureKesSumArbitrary.arbitrary
+    org.plasmalabs.models.generators.consensus.ModelGenerators.signatureKesSumArbitrary.arbitrary
   )
 
-  codecBehavior[xyz.stratalab.consensus.models.SignatureKesProduct](
-    "xyz.stratalab.consensus.models.SignatureKesProduct",
+  codecBehavior[org.plasmalabs.consensus.models.SignatureKesProduct](
+    "org.plasmalabs.consensus.models.SignatureKesProduct",
     TetraScodecCodecs.signatureKesProductCodec,
-    xyz.stratalab.models.generators.consensus.ModelGenerators.signatureKesProductArbitrary.arbitrary
+    org.plasmalabs.models.generators.consensus.ModelGenerators.signatureKesProductArbitrary.arbitrary
   )
 
-  codecBehavior[xyz.stratalab.consensus.models.OperationalCertificate](
-    "xyz.stratalab.consensus.models.OperationalCertificate",
+  codecBehavior[org.plasmalabs.consensus.models.OperationalCertificate](
+    "org.plasmalabs.consensus.models.OperationalCertificate",
     TetraScodecCodecs.operationalCertificateCodec,
-    xyz.stratalab.models.generators.consensus.ModelGenerators.arbitraryOperationalCertificate.arbitrary
+    org.plasmalabs.models.generators.consensus.ModelGenerators.arbitraryOperationalCertificate.arbitrary
   )
 
-  codecBehavior[xyz.stratalab.models.UnsignedBlockHeader.PartialOperationalCertificate](
-    "xyz.stratalab.models.UnsignedBlockHeader.PartialOperationalCertificate",
+  codecBehavior[org.plasmalabs.models.UnsignedBlockHeader.PartialOperationalCertificate](
+    "org.plasmalabs.models.UnsignedBlockHeader.PartialOperationalCertificate",
     TetraScodecCodecs.partialOperationalCertificateCodec,
     ModelGenerators.partialOperationalCertificateGen
   )
 
-  codecBehavior[xyz.stratalab.consensus.models.BlockHeader](
-    "xyz.stratalab.consensus.models.BlockHeader",
+  codecBehavior[org.plasmalabs.consensus.models.BlockHeader](
+    "org.plasmalabs.consensus.models.BlockHeader",
     TetraScodecCodecs.consensusBlockHeaderCodec,
-    xyz.stratalab.models.generators.consensus.ModelGenerators.headerGen()
+    org.plasmalabs.models.generators.consensus.ModelGenerators.headerGen()
   )
 
-  codecBehavior[xyz.stratalab.models.UnsignedBlockHeader](
-    "xyz.stratalab.models.UnsignedBlockHeader",
+  codecBehavior[org.plasmalabs.models.UnsignedBlockHeader](
+    "org.plasmalabs.models.UnsignedBlockHeader",
     TetraScodecCodecs.unsignedBlockHeaderCodec,
     ModelGenerators.unsignedHeaderGen()
   )

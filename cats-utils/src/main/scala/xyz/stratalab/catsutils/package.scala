@@ -1,4 +1,4 @@
-package xyz.stratalab
+package org.plasmalabs
 
 import cats.arrow.FunctionK
 import cats.effect.IO

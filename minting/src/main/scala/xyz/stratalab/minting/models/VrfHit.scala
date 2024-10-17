@@ -1,7 +1,7 @@
-package xyz.stratalab.minting.models
+package org.plasmalabs.minting.models
 
-import xyz.stratalab.consensus.models.EligibilityCertificate
-import xyz.stratalab.models.Slot
-import xyz.stratalab.models.utility.Ratio
+import org.plasmalabs.consensus.models.EligibilityCertificate
+import org.plasmalabs.models.Slot
+import org.plasmalabs.models.utility.Ratio
 
 case class VrfHit(cert: EligibilityCertificate, slot: Slot, threshold: Ratio)

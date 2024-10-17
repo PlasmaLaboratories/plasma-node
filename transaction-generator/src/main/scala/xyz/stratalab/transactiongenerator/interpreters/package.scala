@@ -1,12 +1,12 @@
-package xyz.stratalab.transactiongenerator
+package org.plasmalabs.transactiongenerator
 
 import quivr.models._
-import xyz.stratalab.sdk.constants.NetworkConstants
-import xyz.stratalab.sdk.models._
-import xyz.stratalab.sdk.models.box._
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.transactiongenerator.models.Wallet
+import org.plasmalabs.sdk.constants.NetworkConstants
+import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.models.box._
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.transactiongenerator.models.Wallet
 
 package object interpreters {
 

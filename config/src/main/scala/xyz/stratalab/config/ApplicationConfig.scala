@@ -1,12 +1,12 @@
-package xyz.stratalab.config
+package org.plasmalabs.config
 
 import monocle.macros.Lenses
-import xyz.stratalab.consensus.models.{BlockId, StakingAddress}
-import xyz.stratalab.models.Slot
-import xyz.stratalab.models.utility.Ratio
-import xyz.stratalab.numerics.implicits._
-import xyz.stratalab.proto.node.NodeConfig
-import xyz.stratalab.sdk.models.LockAddress
+import org.plasmalabs.consensus.models.{BlockId, StakingAddress}
+import org.plasmalabs.models.Slot
+import org.plasmalabs.models.utility.Ratio
+import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.proto.node.NodeConfig
+import org.plasmalabs.sdk.models.LockAddress
 
 import scala.concurrent.duration._
 
@@ -114,7 +114,7 @@ object ApplicationConfig {
 
     case class MempoolProtection(
       enabled: Boolean = false,
-      // Use size in some abstract units which are used in xyz.stratalab.sdk.validation.algebras.TransactionCostCalculator
+      // Use size in some abstract units which are used in org.plasmalabs.sdk.validation.algebras.TransactionCostCalculator
       maxMempoolSize: Long = 1024 * 1024 * 20,
 
       // do not perform mempool checks

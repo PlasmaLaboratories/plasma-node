@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.blockchain
+package org.plasmalabs.networking.blockchain
 
 import cats.effect.IO
 import cats.effect.std.{Mutex, Queue}
@@ -6,14 +6,14 @@ import cats.implicits._
 import fs2.Stream
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.codecs.bytes.typeclasses.Transmittable
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
-import xyz.stratalab.models.Bytes
-import xyz.stratalab.models.ModelGenerators.GenHelper
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.networking.NetworkGen._
-import xyz.stratalab.networking.multiplexer.MultiplexedReaderWriter
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.typeclasses.Transmittable
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
+import org.plasmalabs.models.Bytes
+import org.plasmalabs.models.ModelGenerators.GenHelper
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.networking.NetworkGen._
+import org.plasmalabs.networking.multiplexer.MultiplexedReaderWriter
 
 import scala.concurrent.duration._
 

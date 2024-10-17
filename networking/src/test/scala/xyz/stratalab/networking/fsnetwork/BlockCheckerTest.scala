@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.data._
 import cats.effect.{IO, Resource}
@@ -10,33 +10,33 @@ import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.blockchain.{Validators, ValidatorsImpl}
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.config.ApplicationConfig.Node.NetworkProperties
-import xyz.stratalab.consensus._
-import xyz.stratalab.consensus.algebras._
-import xyz.stratalab.consensus.models.BlockHeaderValidationFailures.NonForwardSlot
-import xyz.stratalab.consensus.models.{BlockHeader, BlockHeaderValidationFailure, BlockId, _}
-import xyz.stratalab.crypto.signing.Ed25519VRF
-import xyz.stratalab.ledger.algebras._
-import xyz.stratalab.ledger.models.BodySemanticErrors.TransactionSemanticErrors
-import xyz.stratalab.ledger.models.TransactionSemanticErrors.InputDataMismatch
-import xyz.stratalab.ledger.models._
-import xyz.stratalab.models.ModelGenerators.GenHelper
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.models.generators.node.ModelGenerators
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.networking.fsnetwork.BlockCheckerTest.F
-import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
-import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
-import xyz.stratalab.networking.fsnetwork.TestHelper._
-import xyz.stratalab.node.models.{Block, BlockBody}
-import xyz.stratalab.quivr.runtime.DynamicContext
-import xyz.stratalab.sdk.models.Datum
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionSyntaxVerifier}
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.blockchain.{Validators, ValidatorsImpl}
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.config.ApplicationConfig.Node.NetworkProperties
+import org.plasmalabs.consensus._
+import org.plasmalabs.consensus.algebras._
+import org.plasmalabs.consensus.models.BlockHeaderValidationFailures.NonForwardSlot
+import org.plasmalabs.consensus.models.{BlockHeader, BlockHeaderValidationFailure, BlockId, _}
+import org.plasmalabs.crypto.signing.Ed25519VRF
+import org.plasmalabs.ledger.algebras._
+import org.plasmalabs.ledger.models.BodySemanticErrors.TransactionSemanticErrors
+import org.plasmalabs.ledger.models.TransactionSemanticErrors.InputDataMismatch
+import org.plasmalabs.ledger.models._
+import org.plasmalabs.models.ModelGenerators.GenHelper
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.generators.node.ModelGenerators
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.networking.fsnetwork.BlockCheckerTest.F
+import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
+import org.plasmalabs.networking.fsnetwork.RequestsProxy.RequestsProxyActor
+import org.plasmalabs.networking.fsnetwork.TestHelper._
+import org.plasmalabs.node.models.{Block, BlockBody}
+import org.plasmalabs.quivr.runtime.DynamicContext
+import org.plasmalabs.sdk.models.Datum
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionSyntaxVerifier}
+import org.plasmalabs.typeclasses.implicits._
 
 import scala.collection.mutable
 import scala.concurrent.duration._

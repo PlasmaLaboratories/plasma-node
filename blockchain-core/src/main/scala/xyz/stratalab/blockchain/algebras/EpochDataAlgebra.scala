@@ -1,7 +1,7 @@
-package xyz.stratalab.blockchain.algebras
+package org.plasmalabs.blockchain.algebras
 
-import xyz.stratalab.models.Epoch
-import xyz.stratalab.proto.node.EpochData
+import org.plasmalabs.models.Epoch
+import org.plasmalabs.proto.node.EpochData
 
 /**
  * Provides epoch-level statistics

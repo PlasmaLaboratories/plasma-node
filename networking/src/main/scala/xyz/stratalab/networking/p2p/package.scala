@@ -1,6 +1,6 @@
-package xyz.stratalab.networking
+package org.plasmalabs.networking
 
-import xyz.stratalab.models.Bytes
+import org.plasmalabs.models.Bytes
 
 package object p2p {
   type PeerId = Bytes

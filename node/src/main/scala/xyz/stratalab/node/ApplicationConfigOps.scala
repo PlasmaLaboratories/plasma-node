@@ -1,4 +1,4 @@
-package xyz.stratalab.node
+package org.plasmalabs.node
 
 import cats.Show
 import cats.implicits._
@@ -11,15 +11,15 @@ import pureconfig.configurable._
 import pureconfig.generic.ProductHint
 import pureconfig.generic.auto._
 import scodec.bits.ByteVector
-import xyz.stratalab.config.ApplicationConfig
-import xyz.stratalab.config.ApplicationConfig.Node
-import xyz.stratalab.config.ApplicationConfig.Node.KnownPeer
-import xyz.stratalab.consensus.models.{BlockId, StakingAddress}
-import xyz.stratalab.models._
-import xyz.stratalab.models.utility._
-import xyz.stratalab.sdk.codecs.AddressCodecs.decodeAddress
-import xyz.stratalab.sdk.models.LockAddress
-import xyz.stratalab.sdk.utils.Encoding
+import org.plasmalabs.config.ApplicationConfig
+import org.plasmalabs.config.ApplicationConfig.Node
+import org.plasmalabs.config.ApplicationConfig.Node.KnownPeer
+import org.plasmalabs.consensus.models.{BlockId, StakingAddress}
+import org.plasmalabs.models._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.sdk.codecs.AddressCodecs.decodeAddress
+import org.plasmalabs.sdk.models.LockAddress
+import org.plasmalabs.sdk.utils.Encoding
 
 import scala.util.Try
 

@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.MonadThrow
 import cats.data.{EitherT, NonEmptyChain, OptionT}
@@ -6,23 +6,23 @@ import cats.effect.{Async, Resource}
 import cats.implicits._
 import fs2.Stream
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.actor.{Actor, Fsm}
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.consensus.algebras.BlockHeaderToBodyValidationAlgebra
-import xyz.stratalab.consensus.models.BlockHeaderToBodyValidationFailure.IncorrectTxRoot
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.networking.blockchain.BlockchainPeerClient
-import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
-import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError._
-import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
-import xyz.stratalab.networking.fsnetwork.RequestsProxy.RequestsProxyActor
-import xyz.stratalab.node.models.{Block, BlockBody}
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.actor.{Actor, Fsm}
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.consensus.algebras.BlockHeaderToBodyValidationAlgebra
+import org.plasmalabs.consensus.models.BlockHeaderToBodyValidationFailure.IncorrectTxRoot
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.networking.blockchain.BlockchainPeerClient
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError._
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import org.plasmalabs.networking.fsnetwork.RequestsProxy.RequestsProxyActor
+import org.plasmalabs.node.models.{Block, BlockBody}
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
+import org.plasmalabs.typeclasses.implicits._
 
 object PeerBlockBodyFetcher {
   sealed trait Message

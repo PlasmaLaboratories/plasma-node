@@ -1,7 +1,7 @@
-package xyz.stratalab.ledger.algebras
+package org.plasmalabs.ledger.algebras
 
-import xyz.stratalab.ledger.models.RewardQuantities
-import xyz.stratalab.sdk.models.transaction.IoTransaction
+import org.plasmalabs.ledger.models.RewardQuantities
+import org.plasmalabs.sdk.models.transaction.IoTransaction
 
 trait TransactionRewardCalculatorAlgebra {
 

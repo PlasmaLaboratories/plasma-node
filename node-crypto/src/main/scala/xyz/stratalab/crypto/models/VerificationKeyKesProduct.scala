@@ -1,4 +1,4 @@
-package xyz.stratalab.crypto.models
+package org.plasmalabs.crypto.models
 
 case class VerificationKeyKesProduct(value: Array[Byte], step: Int) {
 

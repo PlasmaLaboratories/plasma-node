@@ -1,7 +1,7 @@
-package xyz.stratalab.codecs.bytes.tetra
+package org.plasmalabs.codecs.bytes.tetra
 
-import xyz.stratalab.codecs.bytes.typeclasses._
-import xyz.stratalab.models.UnsignedBlockHeader
+import org.plasmalabs.codecs.bytes.typeclasses._
+import org.plasmalabs.models.UnsignedBlockHeader
 
 trait TetraSignableCodecs {
 

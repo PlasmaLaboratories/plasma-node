@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.data.{NonEmptyChain, OptionT}
 import cats.effect.{Async, Resource}
@@ -7,17 +7,17 @@ import com.github.benmanes.caffeine.cache.{Cache, Caffeine}
 import org.typelevel.log4cats.Logger
 import scalacache.Entry
 import scalacache.caffeine.CaffeineCache
-import xyz.stratalab.actor.{Actor, Fsm}
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData, SlotId}
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.networking.fsnetwork.BlockChecker.BlockCheckerActor
-import xyz.stratalab.networking.fsnetwork.BlockDownloadError.{BlockBodyOrTransactionError, BlockHeaderDownloadError}
-import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
-import xyz.stratalab.networking.fsnetwork.RequestsProxy.Message._
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.actor.{Actor, Fsm}
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData, SlotId}
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.networking.fsnetwork.BlockChecker.BlockCheckerActor
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.{BlockBodyOrTransactionError, BlockHeaderDownloadError}
+import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
+import org.plasmalabs.networking.fsnetwork.RequestsProxy.Message._
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.typeclasses.implicits._
 
 import scala.annotation.nowarn
 

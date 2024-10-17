@@ -1,4 +1,4 @@
-package xyz.stratalab
+package org.plasmalabs
 
 import cats.Monad
 import cats.data.OptionT
@@ -6,9 +6,9 @@ import cats.implicits._
 import com.comcast.ip4s.{IpAddress, SocketAddress}
 import fs2.Chunk
 import fs2.io.net.Socket
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.networking.fsnetwork.RemotePeer
-import xyz.stratalab.node.models.KnownHost
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.networking.fsnetwork.RemotePeer
+import org.plasmalabs.node.models.KnownHost
 
 import java.net.InetAddress
 import java.nio.ByteBuffer

@@ -1,4 +1,4 @@
-package xyz.stratalab.crypto.signing
+package org.plasmalabs.crypto.signing
 
 trait KeyEvolvingSignatureScheme[SK, VK, SIG, H] {
 

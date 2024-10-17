@@ -1,4 +1,4 @@
-package xyz.stratalab.node
+package org.plasmalabs.node
 
 import ch.qos.logback.classic.joran.JoranConfigurator
 

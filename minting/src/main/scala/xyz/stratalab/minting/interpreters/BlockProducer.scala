@@ -1,4 +1,4 @@
-package xyz.stratalab.minting.interpreters
+package org.plasmalabs.minting.interpreters
 
 import cats.data.OptionT
 import cats.effect._
@@ -8,24 +8,24 @@ import fs2._
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
 import quivr.models.SmallData
-import xyz.stratalab.algebras.ClockAlgebra.implicits._
-import xyz.stratalab.algebras.{ClockAlgebra, Stats}
-import xyz.stratalab.catsutils._
-import xyz.stratalab.consensus.interpreters.{VotingEventSourceState, _}
-import xyz.stratalab.consensus.models.{BlockId, ProtocolVersion, SlotData, SlotId, StakingAddress}
-import xyz.stratalab.eventtree.EventSourcedState
-import xyz.stratalab.ledger.algebras.TransactionRewardCalculatorAlgebra
-import xyz.stratalab.minting.algebras.{BlockPackerAlgebra, BlockProducerAlgebra, StakingAlgebra}
-import xyz.stratalab.minting.models.VrfHit
-import xyz.stratalab.models._
-import xyz.stratalab.models.utility.HasLength.instances.byteStringLength
-import xyz.stratalab.models.utility.Sized
-import xyz.stratalab.node.models.{BlockBody, FullBlock, FullBlockBody}
-import xyz.stratalab.sdk.models._
-import xyz.stratalab.sdk.models.box._
-import xyz.stratalab.sdk.models.transaction._
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.ClockAlgebra.implicits._
+import org.plasmalabs.algebras.{ClockAlgebra, Stats}
+import org.plasmalabs.catsutils._
+import org.plasmalabs.consensus.interpreters.{VotingEventSourceState, _}
+import org.plasmalabs.consensus.models.{BlockId, ProtocolVersion, SlotData, SlotId, StakingAddress}
+import org.plasmalabs.eventtree.EventSourcedState
+import org.plasmalabs.ledger.algebras.TransactionRewardCalculatorAlgebra
+import org.plasmalabs.minting.algebras.{BlockPackerAlgebra, BlockProducerAlgebra, StakingAlgebra}
+import org.plasmalabs.minting.models.VrfHit
+import org.plasmalabs.models._
+import org.plasmalabs.models.utility.HasLength.instances.byteStringLength
+import org.plasmalabs.models.utility.Sized
+import org.plasmalabs.node.models.{BlockBody, FullBlock, FullBlockBody}
+import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.models.box._
+import org.plasmalabs.sdk.models.transaction._
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.typeclasses.implicits._
 
 import scala.concurrent.duration._
 

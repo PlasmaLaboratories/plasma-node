@@ -1,4 +1,4 @@
-package xyz.stratalab.grpc
+package org.plasmalabs.grpc
 
 import cats.MonadThrow
 import cats.effect.kernel.{Async, Resource}
@@ -8,14 +8,14 @@ import fs2.grpc.syntax.all._
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder
 import io.grpc.protobuf.services.ProtoReflectionService
 import io.grpc.{Metadata, Server, ServerServiceDefinition}
-import xyz.stratalab.algebras.{NodeRpc, _}
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.models.Epoch
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.node.services._
-import xyz.stratalab.proto.node.{EpochData, NodeConfig}
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
+import org.plasmalabs.algebras.{NodeRpc, _}
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.models.Epoch
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.node.services._
+import org.plasmalabs.proto.node.{EpochData, NodeConfig}
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
 
 import java.net.InetSocketAddress
 

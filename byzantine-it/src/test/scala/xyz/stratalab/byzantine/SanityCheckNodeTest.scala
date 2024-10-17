@@ -1,9 +1,9 @@
-package xyz.stratalab.byzantine
+package org.plasmalabs.byzantine
 
-import xyz.stratalab.byzantine.util._
+import org.plasmalabs.byzantine.util._
 import com.spotify.docker.client.DockerClient
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.interpreters.NodeRpcOps._
+import org.plasmalabs.interpreters.NodeRpcOps._
 import scala.concurrent.duration._
 
 class SanityCheckNodeTest extends IntegrationSuite {
@@ -13,16 +13,20 @@ class SanityCheckNodeTest extends IntegrationSuite {
       for {
         (dockerSupport, _dockerClient) <- DockerSupport.make[F]()
         implicit0(dockerClient: DockerClient) = _dockerClient
-        node1 <- dockerSupport.createNode("SingleNodeTest-node1", "SingleNodeTest", TestNodeConfig(indexerEnabled = true))
-        _     <- node1.startContainer[F].toResource
-        node1Client  <- node1.rpcClient[F](node1.config.rpcPort, tls = false)
+        node1 <- dockerSupport.createNode(
+          "SingleNodeTest-node1",
+          "SingleNodeTest",
+          TestNodeConfig(indexerEnabled = true)
+        )
+        _              <- node1.startContainer[F].toResource
+        node1Client    <- node1.rpcClient[F](node1.config.rpcPort, tls = false)
         indexer1Client <- node1.rpcIndexerClient[F](node1.config.rpcPort, tls = false)
-        _            <- node1Client.waitForRpcStartUp.toResource
-        _            <- indexer1Client.waitForRpcStartUp.toResource
-        _            <- Logger[F].info("Fetching genesis block Node Grpc Client").toResource
-        _            <- node1Client.blockIdAtHeight(1).map(_.nonEmpty).assert.toResource
-        _            <- Logger[F].info("Fetching genesis block Indexer Grpc Client").toResource
-        _            <- indexer1Client.blockIdAtHeight(1).map(_.block.header.height).assertEquals(1L).toResource
+        _              <- node1Client.waitForRpcStartUp.toResource
+        _              <- indexer1Client.waitForRpcStartUp.toResource
+        _              <- Logger[F].info("Fetching genesis block Node Grpc Client").toResource
+        _              <- node1Client.blockIdAtHeight(1).map(_.nonEmpty).assert.toResource
+        _              <- Logger[F].info("Fetching genesis block Indexer Grpc Client").toResource
+        _              <- indexer1Client.blockIdAtHeight(1).map(_.block.header.height).assertEquals(1L).toResource
         // Restart the container to verify that it is able to reload from disk
         _ <- node1.restartContainer[F].toResource
         _ <- node1Client.waitForRpcStartUp.toResource

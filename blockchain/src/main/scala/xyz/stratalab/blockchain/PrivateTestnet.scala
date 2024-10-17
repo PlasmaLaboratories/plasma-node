@@ -1,4 +1,4 @@
-package xyz.stratalab.blockchain
+package org.plasmalabs.blockchain
 
 import cats.effect.Async
 import cats.implicits._
@@ -7,21 +7,21 @@ import fs2.Chunk
 import fs2.io.file.{Files, Path}
 import org.typelevel.log4cats.Logger
 import quivr.models.{Int128, Proposition}
-import xyz.stratalab.blockchain.BigBang.Config
-import xyz.stratalab.codecs.bytes.tetra.instances.persistableKesProductSecretKey
-import xyz.stratalab.codecs.bytes.typeclasses.Persistable
-import xyz.stratalab.config.ApplicationConfig
-import xyz.stratalab.consensus.models.ProtocolVersion
-import xyz.stratalab.crypto.hash.Blake2b256
-import xyz.stratalab.crypto.models.SecretKeyKesProduct
-import xyz.stratalab.models._
-import xyz.stratalab.models.utility._
-import xyz.stratalab.numerics.implicits._
-import xyz.stratalab.sdk.constants.NetworkConstants
-import xyz.stratalab.sdk.models.box.{Challenge, Lock, Value}
-import xyz.stratalab.sdk.models.transaction.{IoTransaction, UnspentTransactionOutput}
-import xyz.stratalab.sdk.models.{Datum, LockAddress}
-import xyz.stratalab.sdk.syntax._
+import org.plasmalabs.blockchain.BigBang.Config
+import org.plasmalabs.codecs.bytes.tetra.instances.persistableKesProductSecretKey
+import org.plasmalabs.codecs.bytes.typeclasses.Persistable
+import org.plasmalabs.config.ApplicationConfig
+import org.plasmalabs.consensus.models.ProtocolVersion
+import org.plasmalabs.crypto.hash.Blake2b256
+import org.plasmalabs.crypto.models.SecretKeyKesProduct
+import org.plasmalabs.models._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.sdk.constants.NetworkConstants
+import org.plasmalabs.sdk.models.box.{Challenge, Lock, Value}
+import org.plasmalabs.sdk.models.transaction.{IoTransaction, UnspentTransactionOutput}
+import org.plasmalabs.sdk.models.{Datum, LockAddress}
+import org.plasmalabs.sdk.syntax._
 
 import scala.concurrent.duration._
 

@@ -1,4 +1,4 @@
-package xyz.stratalab.minting.interpreters
+package org.plasmalabs.minting.interpreters
 
 import cats.data.EitherT
 import cats.effect._
@@ -7,20 +7,20 @@ import cats.implicits._
 import fs2._
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
-import xyz.stratalab.algebras.ContextlessValidationAlgebra
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.ledger.algebras._
-import xyz.stratalab.ledger.implicits._
-import xyz.stratalab.ledger.interpreters.{QuivrContext, RegistrationAccumulator}
-import xyz.stratalab.ledger.models.{MempoolGraph, TransactionSemanticError}
-import xyz.stratalab.minting.algebras.BlockPackerAlgebra
-import xyz.stratalab.models._
-import xyz.stratalab.node.models.FullBlockBody
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.ContextlessValidationAlgebra
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.ledger.algebras._
+import org.plasmalabs.ledger.implicits._
+import org.plasmalabs.ledger.interpreters.{QuivrContext, RegistrationAccumulator}
+import org.plasmalabs.ledger.models.{MempoolGraph, TransactionSemanticError}
+import org.plasmalabs.minting.algebras.BlockPackerAlgebra
+import org.plasmalabs.models._
+import org.plasmalabs.node.models.FullBlockBody
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
+import org.plasmalabs.typeclasses.implicits._
 
 import scala.collection.immutable.ListSet
 import scala.concurrent.duration._

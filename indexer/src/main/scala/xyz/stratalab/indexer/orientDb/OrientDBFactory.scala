@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer.orientDb
+package org.plasmalabs.indexer.orientDb
 
 import cats.effect.implicits.effectResourceOps
 import cats.effect.{Async, Resource}

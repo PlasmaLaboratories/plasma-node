@@ -1,13 +1,13 @@
-package xyz.stratalab.interpreters
+package org.plasmalabs.interpreters
 
 import cats.effect.kernel.Async
 import cats.implicits._
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.typeclasses.implicits._
 
 object TxIdToBlockIdTree {
   type State[F[_]] = Store[F, TransactionId, BlockId]

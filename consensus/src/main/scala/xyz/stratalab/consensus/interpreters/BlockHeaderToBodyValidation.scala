@@ -1,14 +1,14 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats.effect.kernel.Sync
 import cats.implicits.{catsSyntaxApplicativeId, catsSyntaxEq}
-import xyz.stratalab.consensus.algebras.BlockHeaderToBodyValidationAlgebra
-import xyz.stratalab.consensus.models.BlockHeaderToBodyValidationFailure
-import xyz.stratalab.consensus.models.BlockHeaderToBodyValidationFailure.IncorrectTxRoot
-import xyz.stratalab.models.utility.HasLength.instances._
-import xyz.stratalab.models.utility._
-import xyz.stratalab.node.models.Block
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.consensus.algebras.BlockHeaderToBodyValidationAlgebra
+import org.plasmalabs.consensus.models.BlockHeaderToBodyValidationFailure
+import org.plasmalabs.consensus.models.BlockHeaderToBodyValidationFailure.IncorrectTxRoot
+import org.plasmalabs.models.utility.HasLength.instances._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.node.models.Block
+import org.plasmalabs.typeclasses.implicits._
 
 object BlockHeaderToBodyValidation {
 

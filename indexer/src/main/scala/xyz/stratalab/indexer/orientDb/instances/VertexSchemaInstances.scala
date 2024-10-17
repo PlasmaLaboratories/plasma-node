@@ -1,17 +1,17 @@
-package xyz.stratalab.indexer.orientDb.instances
+package org.plasmalabs.indexer.orientDb.instances
 
 import com.orientechnologies.orient.core.sql.OCommandSQL
 import com.tinkerpop.blueprints.impls.orient.{OrientDynaElementIterable, OrientGraph, OrientVertex}
 import com.tinkerpop.blueprints.{Direction, Vertex}
-import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.consensus.models.BlockHeader
-import xyz.stratalab.indexer.orientDb.schema.EdgeSchemaInstances._
-import xyz.stratalab.indexer.orientDb.schema.VertexSchema
-import xyz.stratalab.indexer.services.Txo
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.sdk.models.Event.{GroupPolicy, SeriesPolicy}
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.models.{GroupId, LockAddress, SeriesId, TransactionOutputAddress}
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.consensus.models.BlockHeader
+import org.plasmalabs.indexer.orientDb.schema.EdgeSchemaInstances._
+import org.plasmalabs.indexer.orientDb.schema.VertexSchema
+import org.plasmalabs.indexer.services.Txo
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.sdk.models.Event.{GroupPolicy, SeriesPolicy}
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.models.{GroupId, LockAddress, SeriesId, TransactionOutputAddress}
 
 import scala.jdk.CollectionConverters._
 import scala.language.implicitConversions

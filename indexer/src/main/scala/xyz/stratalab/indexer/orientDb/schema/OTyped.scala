@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer.orientDb.schema
+package org.plasmalabs.indexer.orientDb.schema
 
 import com.orientechnologies.orient.core.db.record.OIdentifiable
 import com.orientechnologies.orient.core.metadata.schema.OType

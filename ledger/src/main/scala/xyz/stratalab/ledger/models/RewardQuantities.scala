@@ -1,11 +1,11 @@
-package xyz.stratalab.ledger.models
+package org.plasmalabs.ledger.models
 
 import cats.implicits._
 import cats.{Monoid, Show}
-import xyz.stratalab.models.Bytes
-import xyz.stratalab.sdk.models.box.{FungibilityType, QuantityDescriptorType}
-import xyz.stratalab.sdk.models.{GroupId, SeriesId}
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.models.Bytes
+import org.plasmalabs.sdk.models.box.{FungibilityType, QuantityDescriptorType}
+import org.plasmalabs.sdk.models.{GroupId, SeriesId}
+import org.plasmalabs.typeclasses.implicits._
 
 case class RewardQuantities(
   lvl:    BigInt = BigInt(0),

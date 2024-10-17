@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.p2p
+package org.plasmalabs.networking.p2p
 
 import cats.data.OptionT
 import cats.effect.implicits._
@@ -11,11 +11,11 @@ import fs2.concurrent.Topic
 import fs2.io.net._
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.crypto.signing.Ed25519
-import xyz.stratalab.models.Bytes
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.networking.SocketAddressOps
-import xyz.stratalab.networking.blockchain.NetworkProtocolVersions
+import org.plasmalabs.crypto.signing.Ed25519
+import org.plasmalabs.models.Bytes
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.networking.SocketAddressOps
+import org.plasmalabs.networking.blockchain.NetworkProtocolVersions
 
 object FS2P2PServer {
 

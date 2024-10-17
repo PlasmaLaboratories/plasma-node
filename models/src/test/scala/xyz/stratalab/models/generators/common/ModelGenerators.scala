@@ -1,9 +1,9 @@
-package xyz.stratalab.models.generators.common
+package org.plasmalabs.models.generators.common
 
 import com.google.protobuf.ByteString
 import org.scalacheck.{Arbitrary, Gen}
-import xyz.stratalab.models.utility.HasLength.instances.byteStringLength
-import xyz.stratalab.models.utility.{Length, Sized}
+import org.plasmalabs.models.utility.HasLength.instances.byteStringLength
+import org.plasmalabs.models.utility.{Length, Sized}
 
 trait ModelGenerators {
 

@@ -1,12 +1,12 @@
-package xyz.stratalab.models.utility
+package org.plasmalabs.models.utility
 
 import cats.effect.IO
 import cats.implicits._
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.models.utility.HasLength.instances._
-import xyz.stratalab.models.utility.Lengths._
+import org.plasmalabs.models.utility.HasLength.instances._
+import org.plasmalabs.models.utility.Lengths._
 
 class SizedSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

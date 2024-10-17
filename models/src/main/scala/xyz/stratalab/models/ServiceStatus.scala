@@ -1,4 +1,4 @@
-package xyz.stratalab.models
+package org.plasmalabs.models
 
 import grpc.health.v1.ServingStatus
 

@@ -1,5 +1,5 @@
-package xyz.stratalab.consensus.models
+package org.plasmalabs.consensus.models
 
-import xyz.stratalab.models.utility.Ratio
+import org.plasmalabs.models.utility.Ratio
 
 case class VrfConfig(lddCutoff: Int, precision: Int, baselineDifficulty: Ratio, amplitude: Ratio)

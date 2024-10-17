@@ -1,7 +1,7 @@
-package xyz.stratalab.models
+package org.plasmalabs.models
 
 import com.google.protobuf.ByteString
-import xyz.stratalab.consensus.models._
+import org.plasmalabs.consensus.models._
 
 case class UnsignedBlockHeader(
   parentHeaderId:                BlockId,

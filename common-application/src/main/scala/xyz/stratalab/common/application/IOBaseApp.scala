@@ -1,4 +1,4 @@
-package xyz.stratalab.common.application
+package org.plasmalabs.common.application
 
 import cats.data.{Chain, EitherT, Nested, OptionT}
 import cats.effect._

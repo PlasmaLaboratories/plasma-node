@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.blockchain
+package org.plasmalabs.networking.blockchain
 
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString

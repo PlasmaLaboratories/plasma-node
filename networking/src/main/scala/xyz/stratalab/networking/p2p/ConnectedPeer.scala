@@ -1,9 +1,9 @@
-package xyz.stratalab.networking.p2p
+package org.plasmalabs.networking.p2p
 
 import cats.implicits._
-import xyz.stratalab.models.Bytes
-import xyz.stratalab.models.p2p.RemoteAddress
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.models.Bytes
+import org.plasmalabs.models.p2p.RemoteAddress
+import org.plasmalabs.typeclasses.implicits._
 
 case class ConnectedPeer(remoteAddress: RemoteAddress, p2pVK: Bytes, networkVersion: Bytes) {
   override def toString: String = show"ConnectedPeer(address=$remoteAddress, id=$p2pVK, version=$networkVersion)"

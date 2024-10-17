@@ -1,8 +1,8 @@
-package xyz.stratalab.ledger.algebras
+package org.plasmalabs.ledger.algebras
 
-import xyz.stratalab.algebras.ContextualValidationAlgebra
-import xyz.stratalab.ledger.models.{TransactionSemanticError, TransactionValidationContext}
-import xyz.stratalab.sdk.models.transaction.IoTransaction
+import org.plasmalabs.algebras.ContextualValidationAlgebra
+import org.plasmalabs.ledger.models.{TransactionSemanticError, TransactionValidationContext}
+import org.plasmalabs.sdk.models.transaction.IoTransaction
 
 trait TransactionSemanticValidationAlgebra[F[_]]
     extends ContextualValidationAlgebra[F, TransactionSemanticError, IoTransaction, TransactionValidationContext]

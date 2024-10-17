@@ -1,17 +1,17 @@
-package xyz.stratalab.blockchain
+package org.plasmalabs.blockchain
 
 import cats.implicits._
 import cats.{Functor, Parallel}
-import xyz.stratalab.blockchain.interpreters.EpochDataEventSourcedState
-import xyz.stratalab.consensus.interpreters.{
+import org.plasmalabs.blockchain.interpreters.EpochDataEventSourcedState
+import org.plasmalabs.consensus.interpreters.{
   ConsensusDataEventSourcedState,
   EpochBoundariesEventSourcedState,
   VotingEventSourceState
 }
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.eventtree.EventSourcedState
-import xyz.stratalab.interpreters.{BlockHeightTree, TxIdToBlockIdTree}
-import xyz.stratalab.ledger.interpreters.{BoxState, Mempool, ProposalEventSourceState, RegistrationAccumulator}
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.eventtree.EventSourcedState
+import org.plasmalabs.interpreters.{BlockHeightTree, TxIdToBlockIdTree}
+import org.plasmalabs.ledger.interpreters.{BoxState, Mempool, ProposalEventSourceState, RegistrationAccumulator}
 
 case class EventSourcedStates[F[_]](
   epochDataLocal:       EventSourcedState[F, EpochDataEventSourcedState.State[F], BlockId],

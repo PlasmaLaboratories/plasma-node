@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.effect.implicits._
 import cats.effect.kernel.Sync
@@ -8,21 +8,21 @@ import cats.{Monad, MonadThrow}
 import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.Stats
-import xyz.stratalab.blockchain.BlockchainCore
-import xyz.stratalab.config.ApplicationConfig.Node.NetworkProperties
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
-import xyz.stratalab.crypto.signing.Ed25519VRF
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.models.utility.NetworkCommands
-import xyz.stratalab.networking.blockchain.{BlockchainPeerClient, BlockchainPeerHandlerAlgebra}
-import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
-import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
-import xyz.stratalab.networking.p2p.{ConnectedPeer, DisconnectedPeer, PeerConnectionChange}
-import xyz.stratalab.node.models._
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.Stats
+import org.plasmalabs.blockchain.BlockchainCore
+import org.plasmalabs.config.ApplicationConfig.Node.NetworkProperties
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
+import org.plasmalabs.crypto.signing.Ed25519VRF
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.utility.NetworkCommands
+import org.plasmalabs.networking.blockchain.{BlockchainPeerClient, BlockchainPeerHandlerAlgebra}
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
+import org.plasmalabs.networking.p2p.{ConnectedPeer, DisconnectedPeer, PeerConnectionChange}
+import org.plasmalabs.node.models._
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.typeclasses.implicits._
 
 object ActorPeerHandlerBridgeAlgebra {
 

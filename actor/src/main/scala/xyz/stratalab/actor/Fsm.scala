@@ -1,4 +1,4 @@
-package xyz.stratalab.actor
+package org.plasmalabs.actor
 
 import cats.Applicative
 

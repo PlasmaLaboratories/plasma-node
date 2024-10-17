@@ -1,6 +1,6 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
-import xyz.stratalab.models.p2p._
+import org.plasmalabs.models.p2p._
 
 import scala.util.Random
 

@@ -1,4 +1,4 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats.effect.IO
 import cats.effect.implicits._
@@ -7,20 +7,20 @@ import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.Gen
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.algebras.ClockAlgebra
-import xyz.stratalab.algebras.Stats.Implicits._
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.codecs.bytes.typeclasses.implicits._
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData, SlotId, VrfArgument}
-import xyz.stratalab.consensus.{rhoToRhoNonceHash, _}
-import xyz.stratalab.crypto.hash.{Blake2b256, Blake2b512}
-import xyz.stratalab.crypto.signing.Ed25519VRF
-import xyz.stratalab.models.ModelGenerators._
-import xyz.stratalab.models._
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.models.utility.HasLength.instances.byteStringLength
-import xyz.stratalab.models.utility._
-import xyz.stratalab.sdk.utils.CatsUnsafeResource
+import org.plasmalabs.algebras.ClockAlgebra
+import org.plasmalabs.algebras.Stats.Implicits._
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.typeclasses.implicits._
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData, SlotId, VrfArgument}
+import org.plasmalabs.consensus.{rhoToRhoNonceHash, _}
+import org.plasmalabs.crypto.hash.{Blake2b256, Blake2b512}
+import org.plasmalabs.crypto.signing.Ed25519VRF
+import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.models._
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.utility.HasLength.instances.byteStringLength
+import org.plasmalabs.models.utility._
+import org.plasmalabs.sdk.utils.CatsUnsafeResource
 
 class EtaCalculationSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

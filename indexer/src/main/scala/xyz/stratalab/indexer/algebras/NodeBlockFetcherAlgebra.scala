@@ -1,8 +1,8 @@
-package xyz.stratalab.indexer.algebras
+package org.plasmalabs.indexer.algebras
 
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.indexer.model.GE
-import xyz.stratalab.indexer.services.BlockData
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.indexer.model.GE
+import org.plasmalabs.indexer.services.BlockData
 
 /**
  * Algebra which defines fetch operations of blocks against the chain in the Node.

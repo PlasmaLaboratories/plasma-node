@@ -1,12 +1,12 @@
-package xyz.stratalab.consensus
+package org.plasmalabs.consensus
 
 import cats.data.Chain
 import cats.implicits._
 import cats.{Defer, Monad}
-import xyz.stratalab.algebras.SecureStore
-import xyz.stratalab.codecs.bytes.typeclasses.Persistable
-import xyz.stratalab.codecs.bytes.typeclasses.implicits._
-import xyz.stratalab.models.Bytes
+import org.plasmalabs.algebras.SecureStore
+import org.plasmalabs.codecs.bytes.typeclasses.Persistable
+import org.plasmalabs.codecs.bytes.typeclasses.implicits._
+import org.plasmalabs.models.Bytes
 
 /**
  * A simple, in-memory, non-thread-safe implementation of a SecureStore

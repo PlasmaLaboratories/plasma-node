@@ -1,7 +1,7 @@
-package xyz.stratalab.numerics.interpreters
+package org.plasmalabs.numerics.interpreters
 
-import xyz.stratalab.models.utility.Ratio
-import xyz.stratalab.numerics.implicits._
+import org.plasmalabs.models.utility.Ratio
+import org.plasmalabs.numerics.implicits._
 
 trait LentzMethod {
 

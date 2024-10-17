@@ -1,14 +1,14 @@
-package xyz.stratalab.blockchain
+package org.plasmalabs.blockchain
 
 import cats.effect.IO
 import fs2.{Chunk, Stream}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
-import xyz.stratalab.algebras.SynchronizationTraversalSteps.{Applied, Unapplied}
-import xyz.stratalab.consensus.models.{BlockId, SlotData}
-import xyz.stratalab.eventtree.ParentChildTree
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.SynchronizationTraversalSteps.{Applied, Unapplied}
+import org.plasmalabs.consensus.models.{BlockId, SlotData}
+import org.plasmalabs.eventtree.ParentChildTree
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.typeclasses.implicits._
 
 class LocalChainSynchronizationTraversalSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
 

@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.p2p
+package org.plasmalabs.networking.p2p
 
 import cats.data.{EitherT, OptionT}
 import cats.effect.Async
@@ -6,7 +6,7 @@ import cats.implicits._
 import com.google.protobuf.ByteString
 import fs2.Chunk
 import fs2.io.net.Socket
-import xyz.stratalab.networking._
+import org.plasmalabs.networking._
 
 object PeerVersion {
 

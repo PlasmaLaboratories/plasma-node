@@ -1,10 +1,10 @@
-package xyz.stratalab.indexer.orientDb.instances
+package org.plasmalabs.indexer.orientDb.instances
 
 import com.orientechnologies.orient.core.metadata.schema.OType
-import xyz.stratalab.indexer.orientDb.schema.OIndexable.Instances
-import xyz.stratalab.indexer.orientDb.schema.OTyped.Instances._
-import xyz.stratalab.indexer.orientDb.schema.{GraphDataEncoder, VertexSchema}
-import xyz.stratalab.node.models.BlockBody
+import org.plasmalabs.indexer.orientDb.schema.OIndexable.Instances
+import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances._
+import org.plasmalabs.indexer.orientDb.schema.{GraphDataEncoder, VertexSchema}
+import org.plasmalabs.node.models.BlockBody
 
 object SchemaBlockBody {
 

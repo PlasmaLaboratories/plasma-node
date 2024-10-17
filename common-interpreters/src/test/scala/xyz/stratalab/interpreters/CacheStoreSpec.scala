@@ -1,10 +1,10 @@
-package xyz.stratalab.interpreters
+package org.plasmalabs.interpreters
 
 import cats.effect.IO
 import cats.implicits._
 import munit.CatsEffectSuite
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.algebras.Store
+import org.plasmalabs.algebras.Store
 
 class CacheStoreSpec extends CatsEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]

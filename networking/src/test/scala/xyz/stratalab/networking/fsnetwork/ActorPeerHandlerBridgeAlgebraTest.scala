@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.data.{NonEmptyChain, Validated, ValidatedNec}
 import cats.effect.kernel.Sync
@@ -11,37 +11,37 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.Stats.Implicits._
-import xyz.stratalab.algebras.testInterpreters.TestStore
-import xyz.stratalab.blockchain.{BlockchainCore, DataStores, Validators}
-import xyz.stratalab.config.ApplicationConfig.Node.NetworkProperties
-import xyz.stratalab.consensus.Consensus
-import xyz.stratalab.consensus.algebras._
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.crypto.signing.Ed25519VRF
-import xyz.stratalab.eventtree.ParentChildTree
-import xyz.stratalab.interpreters.SchedulerClock
-import xyz.stratalab.ledger.Ledger
-import xyz.stratalab.ledger.algebras._
-import xyz.stratalab.ledger.models._
-import xyz.stratalab.models.ModelGenerators.GenHelper
-import xyz.stratalab.models.generators.consensus.ModelGenerators.arbitrarySlotData
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.models.utility.NetworkCommands
-import xyz.stratalab.networking.blockchain.{BlockchainPeerClient, NetworkProtocolVersions}
-import xyz.stratalab.networking.fsnetwork.ActorPeerHandlerBridgeAlgebraTest._
-import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
-import xyz.stratalab.networking.fsnetwork.TestHelper.{BlockBodyOrTransactionErrorByName, arbitraryHost}
-import xyz.stratalab.networking.p2p.{ConnectedPeer, DisconnectedPeer, PeerConnectionChange}
-import xyz.stratalab.node.models._
-import xyz.stratalab.quivr.runtime.DynamicContext
-import xyz.stratalab.sdk.generators.ModelGenerators.arbitraryIoTransaction
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.models.{Datum, TransactionId}
-import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
-import xyz.stratalab.sdk.validation.TransactionSyntaxError
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.Stats.Implicits._
+import org.plasmalabs.algebras.testInterpreters.TestStore
+import org.plasmalabs.blockchain.{BlockchainCore, DataStores, Validators}
+import org.plasmalabs.config.ApplicationConfig.Node.NetworkProperties
+import org.plasmalabs.consensus.Consensus
+import org.plasmalabs.consensus.algebras._
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.crypto.signing.Ed25519VRF
+import org.plasmalabs.eventtree.ParentChildTree
+import org.plasmalabs.interpreters.SchedulerClock
+import org.plasmalabs.ledger.Ledger
+import org.plasmalabs.ledger.algebras._
+import org.plasmalabs.ledger.models._
+import org.plasmalabs.models.ModelGenerators.GenHelper
+import org.plasmalabs.models.generators.consensus.ModelGenerators.arbitrarySlotData
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.utility.NetworkCommands
+import org.plasmalabs.networking.blockchain.{BlockchainPeerClient, NetworkProtocolVersions}
+import org.plasmalabs.networking.fsnetwork.ActorPeerHandlerBridgeAlgebraTest._
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
+import org.plasmalabs.networking.fsnetwork.TestHelper.{BlockBodyOrTransactionErrorByName, arbitraryHost}
+import org.plasmalabs.networking.p2p.{ConnectedPeer, DisconnectedPeer, PeerConnectionChange}
+import org.plasmalabs.node.models._
+import org.plasmalabs.quivr.runtime.DynamicContext
+import org.plasmalabs.sdk.generators.ModelGenerators.arbitraryIoTransaction
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.models.{Datum, TransactionId}
+import org.plasmalabs.sdk.syntax.ioTransactionAsTransactionSyntaxOps
+import org.plasmalabs.sdk.validation.TransactionSyntaxError
+import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
+import org.plasmalabs.typeclasses.implicits._
 
 import java.time.Instant
 import java.util.concurrent.atomic.AtomicBoolean

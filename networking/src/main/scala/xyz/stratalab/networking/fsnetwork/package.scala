@@ -1,4 +1,4 @@
-package xyz.stratalab.networking
+package org.plasmalabs.networking
 
 import cats.data.{Chain, NonEmptyChain, OptionT}
 import cats.effect.Async
@@ -8,13 +8,13 @@ import com.github.benmanes.caffeine.cache.Cache
 import org.typelevel.log4cats.Logger
 import scodec.Codec
 import scodec.codecs.{cstring, double, int32, vlong}
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.codecs.bytes.scodecs.valuetypes._
-import xyz.stratalab.consensus.algebras.LocalChainAlgebra
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.networking.blockchain.BlockchainPeerClient
-import xyz.stratalab.node.models.BlockBody
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.codecs.bytes.scodecs.valuetypes._
+import org.plasmalabs.consensus.algebras.LocalChainAlgebra
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.networking.blockchain.BlockchainPeerClient
+import org.plasmalabs.node.models.BlockBody
 
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
 

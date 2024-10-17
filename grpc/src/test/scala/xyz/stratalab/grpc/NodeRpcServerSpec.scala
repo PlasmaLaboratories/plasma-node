@@ -1,4 +1,4 @@
-package xyz.stratalab.grpc
+package org.plasmalabs.grpc
 
 import cats.effect.IO
 import cats.implicits._
@@ -6,21 +6,21 @@ import fs2.Stream
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.algebras.{ClockAlgebra, ProtocolConfigurationAlgebra, Store}
-import xyz.stratalab.blockchain.algebras.EpochDataAlgebra
-import xyz.stratalab.blockchain.{BlockchainCore, DataStores, Validators}
-import xyz.stratalab.consensus.Consensus
-import xyz.stratalab.consensus.algebras.LocalChainAlgebra
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
-import xyz.stratalab.eventtree.ParentChildTree
-import xyz.stratalab.ledger.Ledger
-import xyz.stratalab.ledger.algebras.MempoolAlgebra
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.proto.node.{EpochData, NodeConfig}
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
+import org.plasmalabs.algebras.{ClockAlgebra, ProtocolConfigurationAlgebra, Store}
+import org.plasmalabs.blockchain.algebras.EpochDataAlgebra
+import org.plasmalabs.blockchain.{BlockchainCore, DataStores, Validators}
+import org.plasmalabs.consensus.Consensus
+import org.plasmalabs.consensus.algebras.LocalChainAlgebra
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
+import org.plasmalabs.eventtree.ParentChildTree
+import org.plasmalabs.ledger.Ledger
+import org.plasmalabs.ledger.algebras.MempoolAlgebra
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.proto.node.{EpochData, NodeConfig}
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
 
 class NodeRpcServerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 
@@ -118,7 +118,7 @@ class NodeRpcServerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with 
 
   test("Fetch Adoptions Stream Rpc Synchronization Traversal") {
     import cats.data.NonEmptyChain
-    import xyz.stratalab.algebras.SynchronizationTraversalSteps
+    import org.plasmalabs.algebras.SynchronizationTraversalSteps
 
     PropF.forAllF { (slotHead: SlotData, slotA: SlotData, slotB: SlotData) =>
       withMock {

@@ -1,8 +1,8 @@
-package xyz.stratalab.node.cli
+package org.plasmalabs.node.cli
 
 import cats.effect.{IO, Resource, Sync}
 import cats.implicits._
-import xyz.stratalab.config.ApplicationConfig
+import org.plasmalabs.config.ApplicationConfig
 
 class ConfiguredCliApp(appConfig: ApplicationConfig) {
   import cats.effect.std.Console

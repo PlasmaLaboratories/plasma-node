@@ -1,7 +1,7 @@
-package xyz.stratalab.consensus.algebras
+package org.plasmalabs.consensus.algebras
 
-import xyz.stratalab.models.Rho
-import xyz.stratalab.models.utility.Ratio
+import org.plasmalabs.models.Rho
+import org.plasmalabs.models.utility.Ratio
 
 /**
  * Assists with determining eligibility of a particular staker at some slot.

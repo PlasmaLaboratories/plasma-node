@@ -1,15 +1,15 @@
-package xyz.stratalab.node.cli
+package org.plasmalabs.node.cli
 
 import cats.effect.Async
 import cats.effect.std.Console
 import com.google.protobuf.duration.Duration
 import fs2.io.file.Path
 import quivr.models.Ratio
-import xyz.stratalab.models.protocol.{ConfigConverter, ConfigGenesis}
-import xyz.stratalab.node.cli.ProposalCommand.Messages
-import xyz.stratalab.sdk.models.box.Value
-import xyz.stratalab.sdk.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
-import xyz.stratalab.sdk.models.{Datum, Event, LockAddress}
+import org.plasmalabs.models.protocol.{ConfigConverter, ConfigGenesis}
+import org.plasmalabs.node.cli.ProposalCommand.Messages
+import org.plasmalabs.sdk.models.box.Value
+import org.plasmalabs.sdk.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
+import org.plasmalabs.sdk.models.{Datum, Event, LockAddress}
 
 object ProposalCommand {
 

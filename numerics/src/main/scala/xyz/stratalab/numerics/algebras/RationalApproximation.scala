@@ -1,6 +1,6 @@
-package xyz.stratalab.numerics.algebras
+package org.plasmalabs.numerics.algebras
 
-import xyz.stratalab.models.utility.Ratio
+import org.plasmalabs.models.utility.Ratio
 
 trait RationalApproximation[F[_]] {
   def rationalApproximation(x: Ratio): F[Ratio]

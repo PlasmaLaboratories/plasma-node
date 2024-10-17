@@ -1,4 +1,4 @@
-package xyz.stratalab.node.cli
+package org.plasmalabs.node.cli
 
 import cats._
 import cats.implicits._

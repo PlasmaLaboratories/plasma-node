@@ -1,7 +1,7 @@
-package xyz.stratalab.ledger.models
+package org.plasmalabs.ledger.models
 
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.models.Slot
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.models.Slot
 
 /**
  * The context to use when validating the semantics of a Transaction

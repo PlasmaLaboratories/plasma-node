@@ -1,12 +1,12 @@
-package xyz.stratalab.numerics.interpreters
+package org.plasmalabs.numerics.interpreters
 
 import cats.Monad
 import cats.effect.kernel.Sync
 import cats.implicits._
 import scalacache.caffeine.CaffeineCache
-import xyz.stratalab.models.utility._
-import xyz.stratalab.numerics.algebras.Log1p
-import xyz.stratalab.numerics.implicits._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.numerics.algebras.Log1p
+import org.plasmalabs.numerics.implicits._
 
 object Log1pInterpreter extends LentzMethod {
 

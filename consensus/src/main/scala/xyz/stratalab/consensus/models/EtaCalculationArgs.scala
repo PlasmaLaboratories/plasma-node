@@ -1,7 +1,7 @@
-package xyz.stratalab.consensus.models
+package org.plasmalabs.consensus.models
 
 import com.google.protobuf.ByteString
-import xyz.stratalab.models.{Bytes, Epoch, Eta, RhoNonceHash}
+import org.plasmalabs.models.{Bytes, Epoch, Eta, RhoNonceHash}
 
 case class EtaCalculationArgs(previousEta: Eta, epoch: Epoch, rhoNonceHashValues: Iterable[RhoNonceHash]) {
 

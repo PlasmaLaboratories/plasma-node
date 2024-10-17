@@ -1,22 +1,22 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats._
 import cats.effect.Async
 import cats.implicits._
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.algebras.ClockAlgebra.implicits._
-import xyz.stratalab.algebras.StoreOps._
-import xyz.stratalab.algebras._
-import xyz.stratalab.consensus.algebras.VersionInfoAlgebra
-import xyz.stratalab.consensus.interpreters.EpochBoundariesEventSourcedState.EpochBoundaries
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
-import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
-import xyz.stratalab.ledger.interpreters.ProposalEventSourceState
-import xyz.stratalab.ledger.interpreters.ProposalEventSourceState.{ProposalData, ProposalEventSourceStateType}
-import xyz.stratalab.models._
-import xyz.stratalab.proto.node.EpochData
-import xyz.stratalab.sdk.models.box.Value.ConfigProposal
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.ClockAlgebra.implicits._
+import org.plasmalabs.algebras.StoreOps._
+import org.plasmalabs.algebras._
+import org.plasmalabs.consensus.algebras.VersionInfoAlgebra
+import org.plasmalabs.consensus.interpreters.EpochBoundariesEventSourcedState.EpochBoundaries
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
+import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
+import org.plasmalabs.ledger.interpreters.ProposalEventSourceState
+import org.plasmalabs.ledger.interpreters.ProposalEventSourceState.{ProposalData, ProposalEventSourceStateType}
+import org.plasmalabs.models._
+import org.plasmalabs.proto.node.EpochData
+import org.plasmalabs.sdk.models.box.Value.ConfigProposal
+import org.plasmalabs.typeclasses.implicits._
 
 object VotingEventSourceState {
 

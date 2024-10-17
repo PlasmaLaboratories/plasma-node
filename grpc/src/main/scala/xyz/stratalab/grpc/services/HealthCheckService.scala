@@ -1,11 +1,11 @@
-package xyz.stratalab.grpc.services
+package org.plasmalabs.grpc.services
 
 import cats.effect.Async
 import fs2.Stream
 import grpc.health.v1.{HealthCheckRequest, HealthCheckResponse, HealthFs2Grpc}
 import io.grpc.Metadata
-import xyz.stratalab.algebras.HealthCheckAlgebra
-import xyz.stratalab.grpc.FApplicativeErrorAdapter
+import org.plasmalabs.algebras.HealthCheckAlgebra
+import org.plasmalabs.grpc.FApplicativeErrorAdapter
 
 class HealthCheckService[F[_]: Async](healthCheck: HealthCheckAlgebra[F, Stream[F, *]])
     extends HealthFs2Grpc[F, Metadata] {

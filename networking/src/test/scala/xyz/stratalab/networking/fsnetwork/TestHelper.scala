@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.data.NonEmptyChain
 import cats.implicits._
@@ -6,18 +6,18 @@ import com.google.protobuf.ByteString
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalamock.function.FunctionAdapter1
 import org.scalamock.handlers.{CallHandler1, CallHandler2, CallHandler3}
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
-import xyz.stratalab.models.ModelGenerators.GenHelper
-import xyz.stratalab.models.generators.consensus.ModelGenerators
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
-import xyz.stratalab.node.models.{BlockBody, KnownHost}
-import xyz.stratalab.sdk.generators.TransactionGenerator
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
+import org.plasmalabs.models.ModelGenerators.GenHelper
+import org.plasmalabs.models.generators.consensus.ModelGenerators
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
+import org.plasmalabs.node.models.{BlockBody, KnownHost}
+import org.plasmalabs.sdk.generators.TransactionGenerator
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.typeclasses.implicits._
 
 import scala.annotation.tailrec
 
@@ -137,7 +137,7 @@ object TestHelper extends TransactionGenerator {
         headers <- arbitraryLinkedBlockHeaderChain(Gen.oneOf(List[Long](size))).arbitrary
       } yield NonEmptyChain
         .fromSeq(headers.foldLeft(List.empty[(BlockId, SlotData, BlockHeader, BlockBody)]) { case (blocks, header) =>
-          val body = xyz.stratalab.models.generators.node.ModelGenerators.arbitraryNodeBody.arbitrary.first
+          val body = org.plasmalabs.models.generators.node.ModelGenerators.arbitraryNodeBody.arbitrary.first
           val headerWithTxRoot = header.copy(txRoot = body.merkleTreeRootHash.data)
           if (blocks.isEmpty) {
             List((headerWithTxRoot.id, headerToSlotData(headerWithTxRoot), headerWithTxRoot, body))

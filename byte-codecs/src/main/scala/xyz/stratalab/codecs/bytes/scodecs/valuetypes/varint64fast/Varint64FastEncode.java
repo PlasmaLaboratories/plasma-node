@@ -28,13 +28,13 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package xyz.stratalab.codecs.bytes.scodecs.valuetypes.varint64fast;
-
+package org.plasmalabs.codecs.bytes.scodecs.valuetypes.varint64fast;
 
 import java.util.Arrays;
 
 /**
- * This code is copied from https://github.com/protocolbuffers/protobuf/blob/master/java/core/src/main/java/com/google/protobuf/CodedOutputStream.java
+ * This code is copied from
+ * https://github.com/protocolbuffers/protobuf/blob/master/java/core/src/main/java/com/google/protobuf/CodedOutputStream.java
  *
  * It has been slightly modified for compatibility with Scodec.
  *
@@ -44,41 +44,43 @@ import java.util.Arrays;
  */
 public class Varint64FastEncode {
 
-    private final byte[] buffer;
-    private int position;
+	private final byte[] buffer;
+	private int position;
 
-    public Varint64FastEncode() {
-        int limit = 10;
-        buffer = new byte[limit];
-        position = 0;
-    }
+	public Varint64FastEncode() {
+		int limit = 10;
+		buffer = new byte[limit];
+		position = 0;
+	}
 
-    /**
-     * Writes a Var int 64 to the internal buffer.
-     * @param value the value to encode
-     * @throws Exception an exception that occurs while reading the value
-     */
-    public void writeVarint64(long value) throws Exception {
-        try {
-            while (true) {
-                if ((value & ~0x7FL) == 0) {
-                    buffer[position++] = (byte) value;
-                    return;
-                } else {
-                    buffer[position++] = (byte) (((int) value & 0x7F) | 0x80);
-                    value >>>= 7;
-                }
-            }
-        } catch (IndexOutOfBoundsException e) {
-            throw new Exception("buffer overflow exception: failed to write ULong value to buffer", e);
-        }
-    }
+	/**
+	 * Writes a Var int 64 to the internal buffer.
+	 * 
+	 * @param value the value to encode
+	 * @throws Exception an exception that occurs while reading the value
+	 */
+	public void writeVarint64(long value) throws Exception {
+		try {
+			while (true) {
+				if ((value & ~0x7FL) == 0) {
+					buffer[position++] = (byte) value;
+					return;
+				} else {
+					buffer[position++] = (byte) (((int) value & 0x7F) | 0x80);
+					value >>>= 7;
+				}
+			}
+		} catch (IndexOutOfBoundsException e) {
+			throw new Exception("buffer overflow exception: failed to write ULong value to buffer", e);
+		}
+	}
 
-    /**
-     * Gets the resulting bytes of encoding a value.
-     * @return a byte array representing an encoded var int 64
-     */
-    public byte[] getResult() {
-        return Arrays.copyOfRange(buffer, 0, position);
-    }
+	/**
+	 * Gets the resulting bytes of encoding a value.
+	 * 
+	 * @return a byte array representing an encoded var int 64
+	 */
+	public byte[] getResult() {
+		return Arrays.copyOfRange(buffer, 0, position);
+	}
 }

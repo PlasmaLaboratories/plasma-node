@@ -1,12 +1,12 @@
-package xyz.stratalab.ledger.interpreters
+package org.plasmalabs.ledger.interpreters
 
 import cats.effect.Sync
 import cats.implicits._
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.ledger.algebras.BoxStateAlgebra
-import xyz.stratalab.sdk.models.TransactionOutputAddress
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.ledger.algebras.BoxStateAlgebra
+import org.plasmalabs.sdk.models.TransactionOutputAddress
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax._
 
 object AugmentedBoxState {
 

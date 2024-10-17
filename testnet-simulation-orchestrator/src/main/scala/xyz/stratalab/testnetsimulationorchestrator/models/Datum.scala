@@ -1,9 +1,9 @@
-package xyz.stratalab.testnetsimulationorchestrator.models
+package org.plasmalabs.testnetsimulationorchestrator.models
 
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
-import xyz.stratalab.models.Timestamp
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.sdk.models.transaction.IoTransaction
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
+import org.plasmalabs.models.Timestamp
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.sdk.models.transaction.IoTransaction
 
 case class AdoptionDatum(blockId: BlockId, timestamp: Timestamp)
 case class BlockDatum(header: BlockHeader, body: BlockBody)

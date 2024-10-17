@@ -1,14 +1,14 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.effect.kernel.{Async, Fiber}
 import cats.effect.{Resource, Spawn}
 import cats.implicits._
 import fs2.Stream
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.actor.{Actor, Fsm}
-import xyz.stratalab.networking.fsnetwork.Notifier.Message.StartNotifications
-import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
-import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
+import org.plasmalabs.actor.{Actor, Fsm}
+import org.plasmalabs.networking.fsnetwork.Notifier.Message.StartNotifications
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
 
 object Notifier {
   sealed trait Message

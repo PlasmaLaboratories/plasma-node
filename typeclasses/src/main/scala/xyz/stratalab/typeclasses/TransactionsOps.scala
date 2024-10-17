@@ -1,7 +1,7 @@
-package xyz.stratalab.typeclasses
+package org.plasmalabs.typeclasses
 
-import xyz.stratalab.sdk.models.box.Value.ConfigProposal
-import xyz.stratalab.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.models.box.Value.ConfigProposal
+import org.plasmalabs.sdk.models.transaction.IoTransaction
 
 trait TransactionsOps {
 

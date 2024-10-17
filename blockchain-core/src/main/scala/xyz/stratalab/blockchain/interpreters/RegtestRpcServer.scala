@@ -1,10 +1,10 @@
-package xyz.stratalab.blockchain.interpreters
+package org.plasmalabs.blockchain.interpreters
 
 import cats.effect.{Async, Resource, Sync}
 import cats.implicits._
 import io.grpc.{Metadata, ServerServiceDefinition}
-import xyz.stratalab.models.{ProposalId, VersionId}
-import xyz.stratalab.node.services._
+import org.plasmalabs.models.{ProposalId, VersionId}
+import org.plasmalabs.node.services._
 
 /**
  * Serves the RPC(s) needed to operate the node in "regtest" mode

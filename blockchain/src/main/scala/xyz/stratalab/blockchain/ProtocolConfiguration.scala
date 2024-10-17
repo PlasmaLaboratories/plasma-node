@@ -1,9 +1,9 @@
-package xyz.stratalab.blockchain
+package org.plasmalabs.blockchain
 
 import cats.effect.{Async, Resource}
 import fs2.Stream
-import xyz.stratalab.algebras.ProtocolConfigurationAlgebra
-import xyz.stratalab.proto.node.NodeConfig
+import org.plasmalabs.algebras.ProtocolConfigurationAlgebra
+import org.plasmalabs.proto.node.NodeConfig
 
 /**
  * Emits a stream of node protocol configs.

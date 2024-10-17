@@ -1,19 +1,19 @@
-package xyz.stratalab.indexer.interpreter
+package org.plasmalabs.indexer.interpreter
 
 import cats.data.EitherT
 import cats.effect.Resource
 import cats.effect.kernel.Async
 import cats.implicits._
 import com.tinkerpop.blueprints.Vertex
-import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.indexer.algebras.{TransactionFetcherAlgebra, VertexFetcherAlgebra}
-import xyz.stratalab.indexer.model.GE
-import xyz.stratalab.indexer.orientDb.OrientThread
-import xyz.stratalab.indexer.orientDb.instances.VertexSchemaInstances.instances._
-import xyz.stratalab.indexer.orientDb.instances.{SchemaBlockHeader, VertexSchemaInstances}
-import xyz.stratalab.indexer.services._
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.models.{LockAddress, TransactionId}
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.indexer.algebras.{TransactionFetcherAlgebra, VertexFetcherAlgebra}
+import org.plasmalabs.indexer.model.GE
+import org.plasmalabs.indexer.orientDb.OrientThread
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances._
+import org.plasmalabs.indexer.orientDb.instances.{SchemaBlockHeader, VertexSchemaInstances}
+import org.plasmalabs.indexer.services._
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.models.{LockAddress, TransactionId}
 
 import scala.util.Try
 

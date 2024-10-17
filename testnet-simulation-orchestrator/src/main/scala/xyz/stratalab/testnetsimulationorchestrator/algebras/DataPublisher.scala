@@ -1,6 +1,6 @@
-package xyz.stratalab.testnetsimulationorchestrator.algebras
+package org.plasmalabs.testnetsimulationorchestrator.algebras
 
-import xyz.stratalab.testnetsimulationorchestrator.models._
+import org.plasmalabs.testnetsimulationorchestrator.models._
 
 /**
  * Exports result of the testnet to an external destination

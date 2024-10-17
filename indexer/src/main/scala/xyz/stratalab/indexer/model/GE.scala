@@ -1,9 +1,9 @@
-package xyz.stratalab.indexer.model
+package org.plasmalabs.indexer.model
 
 import cats.implicits._
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.typeclasses.implicits._
 
 import scala.collection.immutable.ListSet
 

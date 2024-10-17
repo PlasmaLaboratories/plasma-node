@@ -1,6 +1,6 @@
-package xyz.stratalab.crypto.signing.eddsa
+package org.plasmalabs.crypto.signing.eddsa
 
-import xyz.stratalab.crypto.signing.eddsa.EC
+import org.plasmalabs.crypto.signing.eddsa.EC
 
 import java.security.SecureRandom
 

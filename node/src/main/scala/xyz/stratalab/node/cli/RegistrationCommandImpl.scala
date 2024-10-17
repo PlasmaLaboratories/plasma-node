@@ -1,4 +1,4 @@
-package xyz.stratalab.node.cli
+package org.plasmalabs.node.cli
 
 import cats.MonadThrow
 import cats.data.EitherT
@@ -8,16 +8,16 @@ import cats.implicits._
 import com.google.protobuf.ByteString
 import fs2.io.file.Path
 import quivr.models.Int128
-import xyz.stratalab.blockchain.{StakerInitializers, StakingInit}
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.config.ApplicationConfig
-import xyz.stratalab.consensus.models.StakingAddress
-import xyz.stratalab.crypto.generation.EntropyToSeed
-import xyz.stratalab.crypto.generation.mnemonic.Entropy
-import xyz.stratalab.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
-import xyz.stratalab.sdk.models.transaction.Schedule
-import xyz.stratalab.sdk.models.{Datum, Event}
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.blockchain.{StakerInitializers, StakingInit}
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.config.ApplicationConfig
+import org.plasmalabs.consensus.models.StakingAddress
+import org.plasmalabs.crypto.generation.EntropyToSeed
+import org.plasmalabs.crypto.generation.mnemonic.Entropy
+import org.plasmalabs.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
+import org.plasmalabs.sdk.models.transaction.Schedule
+import org.plasmalabs.sdk.models.{Datum, Event}
+import org.plasmalabs.typeclasses.implicits._
 
 object RegistrationCommand {
 
@@ -73,7 +73,7 @@ class RegistrationCommandImpl[F[_]: Async](appConfig: ApplicationConfig)(implici
     (writeMessage[F]("Please enter your LockAddress.") >>
     readInput[F].semiflatMap(lockAddressStr =>
       EitherT
-        .fromEither[F](xyz.stratalab.sdk.codecs.AddressCodecs.decodeAddress(lockAddressStr))
+        .fromEither[F](org.plasmalabs.sdk.codecs.AddressCodecs.decodeAddress(lockAddressStr))
         .leftSemiflatTap(error => c.println(s"Invalid Lock Address. reason=$error input=$lockAddressStr"))
         .toOption
         .value

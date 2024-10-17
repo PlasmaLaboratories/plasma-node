@@ -1,13 +1,13 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats.effect.Async
 import cats.implicits._
-import xyz.stratalab.algebras.ClockAlgebra.implicits._
-import xyz.stratalab.algebras._
-import xyz.stratalab.consensus.models.{BlockId, SlotData}
-import xyz.stratalab.eventtree.{EventSourcedState, ParentChildTree}
-import xyz.stratalab.models._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.ClockAlgebra.implicits._
+import org.plasmalabs.algebras._
+import org.plasmalabs.consensus.models.{BlockId, SlotData}
+import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
+import org.plasmalabs.models._
+import org.plasmalabs.typeclasses.implicits._
 
 /**
  * An EventSourcedState which operates on an `EpochBoundaries`.

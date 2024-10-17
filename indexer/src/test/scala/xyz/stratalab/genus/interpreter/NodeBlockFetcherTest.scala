@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer.interpreter
+package org.plasmalabs.indexer.interpreter
 
 import cats.effect.IO
 import cats.implicits._
@@ -8,17 +8,17 @@ import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.NodeRpc
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
-import xyz.stratalab.indexer.interpreter.NodeBlockFetcher
-import xyz.stratalab.indexer.model.GEs._
-import xyz.stratalab.indexer.services.BlockData
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.node.models.{BlockBody, FullBlockBody}
-import xyz.stratalab.sdk.generators.ModelGenerators._
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
+import org.plasmalabs.algebras.NodeRpc
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
+import org.plasmalabs.indexer.interpreter.NodeBlockFetcher
+import org.plasmalabs.indexer.model.GEs._
+import org.plasmalabs.indexer.services.BlockData
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.node.models.{BlockBody, FullBlockBody}
+import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax._
 
 import scala.collection.immutable.ListSet
 

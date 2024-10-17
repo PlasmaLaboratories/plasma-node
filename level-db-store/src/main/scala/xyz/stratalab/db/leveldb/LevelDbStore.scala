@@ -1,4 +1,4 @@
-package xyz.stratalab.db.leveldb
+package org.plasmalabs.db.leveldb
 
 import cats.Applicative
 import cats.data.OptionT
@@ -9,9 +9,9 @@ import com.google.protobuf.ByteString
 import fs2.io.file._
 import org.iq80.leveldb.{Logger => _, _}
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.codecs.bytes.typeclasses.Persistable
-import xyz.stratalab.codecs.bytes.typeclasses.implicits._
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.codecs.bytes.typeclasses.Persistable
+import org.plasmalabs.codecs.bytes.typeclasses.implicits._
 
 import java.util.InputMismatchException
 import scala.collection.mutable

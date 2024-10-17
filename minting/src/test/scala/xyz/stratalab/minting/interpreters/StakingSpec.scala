@@ -1,4 +1,4 @@
-package xyz.stratalab.minting.interpreters
+package org.plasmalabs.minting.interpreters
 
 import cats.Monad
 import cats.effect.IO.asyncForIO
@@ -9,20 +9,20 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import scodec.bits._
-import xyz.stratalab.algebras.Stats.Implicits._
-import xyz.stratalab.consensus.algebras._
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.consensus.thresholdEvidence
-import xyz.stratalab.crypto.hash.Blake2b256
-import xyz.stratalab.minting.algebras.{OperationalKeyMakerAlgebra, VrfCalculatorAlgebra}
-import xyz.stratalab.minting.models.{OperationalKeyOut, VrfHit}
-import xyz.stratalab.models.ModelGenerators.GenHelper
-import xyz.stratalab.models._
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.models.utility.HasLength.instances._
-import xyz.stratalab.models.utility.Lengths._
-import xyz.stratalab.models.utility._
-import xyz.stratalab.sdk.models.{LockAddress, LockId}
+import org.plasmalabs.algebras.Stats.Implicits._
+import org.plasmalabs.consensus.algebras._
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.consensus.thresholdEvidence
+import org.plasmalabs.crypto.hash.Blake2b256
+import org.plasmalabs.minting.algebras.{OperationalKeyMakerAlgebra, VrfCalculatorAlgebra}
+import org.plasmalabs.minting.models.{OperationalKeyOut, VrfHit}
+import org.plasmalabs.models.ModelGenerators.GenHelper
+import org.plasmalabs.models._
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.utility.HasLength.instances._
+import org.plasmalabs.models.utility.Lengths._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.sdk.models.{LockAddress, LockId}
 
 class StakingSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]

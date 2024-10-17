@@ -1,4 +1,4 @@
-package xyz.stratalab.models.utility
+package org.plasmalabs.models.utility
 
 import scala.annotation.tailrec
 

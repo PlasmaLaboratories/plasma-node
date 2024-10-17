@@ -1,4 +1,4 @@
-package xyz.stratalab.node
+package org.plasmalabs.node
 
 import cats._
 import cats.data.NonEmptySet
@@ -9,30 +9,30 @@ import com.google.protobuf.ByteString
 import fs2.io.file.{Files, Path}
 import org.iq80.leveldb.DBFactory
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.blockchain._
-import xyz.stratalab.codecs.bytes.scodecs.valuetypes.ValuetypesCodecs.intCodec
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.codecs.bytes.typeclasses.Persistable
-import xyz.stratalab.config.ApplicationConfig
-import xyz.stratalab.consensus._
-import xyz.stratalab.consensus.interpreters.BlockHeaderToBodyValidation
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.crypto.signing.Ed25519VRF
-import xyz.stratalab.db.leveldb.LevelDbStore
-import xyz.stratalab.interpreters.CacheStore
-import xyz.stratalab.interpreters.ContainsCacheStore._
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.models.utility._
-import xyz.stratalab.models.{Epoch, ProposalId, VersionId}
-import xyz.stratalab.networking.fsnetwork._
-import xyz.stratalab.node.models._
-import xyz.stratalab.proto.node.EpochData
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.box.Value.ConfigProposal
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.blockchain._
+import org.plasmalabs.codecs.bytes.scodecs.valuetypes.ValuetypesCodecs.intCodec
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.typeclasses.Persistable
+import org.plasmalabs.config.ApplicationConfig
+import org.plasmalabs.consensus._
+import org.plasmalabs.consensus.interpreters.BlockHeaderToBodyValidation
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.crypto.signing.Ed25519VRF
+import org.plasmalabs.db.leveldb.LevelDbStore
+import org.plasmalabs.interpreters.CacheStore
+import org.plasmalabs.interpreters.ContainsCacheStore._
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.models.{Epoch, ProposalId, VersionId}
+import org.plasmalabs.networking.fsnetwork._
+import org.plasmalabs.node.models._
+import org.plasmalabs.proto.node.EpochData
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.box.Value.ConfigProposal
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.typeclasses.implicits._
 
 import DataStoresInit.DataStoreNames._
 

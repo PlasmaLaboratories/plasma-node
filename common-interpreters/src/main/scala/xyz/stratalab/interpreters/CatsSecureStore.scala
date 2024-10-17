@@ -1,13 +1,13 @@
-package xyz.stratalab.interpreters
+package org.plasmalabs.interpreters
 
 import cats.data.Chain
 import cats.effect.std.Semaphore
 import cats.effect.{Async, Resource, Sync}
 import cats.implicits._
 import com.google.protobuf.ByteString
-import xyz.stratalab.algebras.SecureStore
-import xyz.stratalab.codecs.bytes.typeclasses.Persistable
-import xyz.stratalab.codecs.bytes.typeclasses.implicits._
+import org.plasmalabs.algebras.SecureStore
+import org.plasmalabs.codecs.bytes.typeclasses.Persistable
+import org.plasmalabs.codecs.bytes.typeclasses.implicits._
 
 import java.nio.file.{Files, Path, Paths, StandardOpenOption}
 import scala.jdk.CollectionConverters._

@@ -1,19 +1,19 @@
-package xyz.stratalab.indexer.orientDb.instances
+package org.plasmalabs.indexer.orientDb.instances
 
 import cats.implicits._
 import com.orientechnologies.orient.core.metadata.schema.OType
 import munit.{CatsEffectFunFixtures, CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.indexer.DbFixtureUtil
-import xyz.stratalab.indexer.orientDb.OrientThread
-import xyz.stratalab.indexer.orientDb.instances.SchemaGroupPolicy.Field
-import xyz.stratalab.indexer.orientDb.instances.VertexSchemaInstances.instances.groupPolicySchema
-import xyz.stratalab.models.ModelGenerators.GenHelper
-import xyz.stratalab.sdk.constants.NetworkConstants
-import xyz.stratalab.sdk.generators.{ModelGenerators => BramblGenerator}
-import xyz.stratalab.sdk.models.Event.{GroupPolicy, SeriesPolicy}
-import xyz.stratalab.sdk.models.TransactionOutputAddress
-import xyz.stratalab.sdk.syntax.{groupPolicyAsGroupPolicySyntaxOps, seriesPolicyAsSeriesPolicySyntaxOps}
+import org.plasmalabs.indexer.DbFixtureUtil
+import org.plasmalabs.indexer.orientDb.OrientThread
+import org.plasmalabs.indexer.orientDb.instances.SchemaGroupPolicy.Field
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances.groupPolicySchema
+import org.plasmalabs.models.ModelGenerators.GenHelper
+import org.plasmalabs.sdk.constants.NetworkConstants
+import org.plasmalabs.sdk.generators.{ModelGenerators => BramblGenerator}
+import org.plasmalabs.sdk.models.Event.{GroupPolicy, SeriesPolicy}
+import org.plasmalabs.sdk.models.TransactionOutputAddress
+import org.plasmalabs.sdk.syntax.{groupPolicyAsGroupPolicySyntaxOps, seriesPolicyAsSeriesPolicySyntaxOps}
 
 import scala.jdk.CollectionConverters._
 

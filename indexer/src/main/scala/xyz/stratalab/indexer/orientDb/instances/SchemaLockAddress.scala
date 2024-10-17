@@ -1,9 +1,9 @@
-package xyz.stratalab.indexer.orientDb.instances
+package org.plasmalabs.indexer.orientDb.instances
 
-import xyz.stratalab.indexer.orientDb.schema.OTyped.Instances._
-import xyz.stratalab.indexer.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
-import xyz.stratalab.sdk.codecs.AddressCodecs
-import xyz.stratalab.sdk.models.{LockAddress, LockId}
+import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances._
+import org.plasmalabs.indexer.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
+import org.plasmalabs.sdk.codecs.AddressCodecs
+import org.plasmalabs.sdk.models.{LockAddress, LockId}
 
 object SchemaLockAddress {
 

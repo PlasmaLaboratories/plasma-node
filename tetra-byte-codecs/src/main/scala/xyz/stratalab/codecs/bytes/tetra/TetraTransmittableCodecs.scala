@@ -1,20 +1,20 @@
-package xyz.stratalab.codecs.bytes.tetra
+package org.plasmalabs.codecs.bytes.tetra
 
 import cats.implicits._
 import com.google.protobuf.ByteString
 import scalapb.{GeneratedMessage, GeneratedMessageCompanion}
 import scodec.Codec
 import scodec.codecs._
-import xyz.stratalab.codecs.bytes.typeclasses.Transmittable
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.models.utility.Ratio
+import org.plasmalabs.codecs.bytes.typeclasses.Transmittable
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.models.utility.Ratio
 
 import scala.util.Try
 
 trait TetraTransmittableCodecs {
 
   import TetraScodecCodecs._
-  import xyz.stratalab.codecs.bytes.scodecs._
+  import org.plasmalabs.codecs.bytes.scodecs._
 
   implicit def transmittableProtobufMessage[T <: GeneratedMessage: GeneratedMessageCompanion]: Transmittable[T] =
     new Transmittable[T] {

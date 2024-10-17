@@ -1,4 +1,4 @@
-package xyz.stratalab.minting.interpreters
+package org.plasmalabs.minting.interpreters
 
 import cats.effect.IO
 import cats.effect.IO.asyncForIO
@@ -6,12 +6,12 @@ import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import scodec.bits._
-import xyz.stratalab.crypto.signing.Ed25519VRF
-import xyz.stratalab.models._
-import xyz.stratalab.models.utility.HasLength.instances._
-import xyz.stratalab.models.utility.Lengths._
-import xyz.stratalab.models.utility._
-import xyz.stratalab.sdk.utils.CatsUnsafeResource
+import org.plasmalabs.crypto.signing.Ed25519VRF
+import org.plasmalabs.models._
+import org.plasmalabs.models.utility.HasLength.instances._
+import org.plasmalabs.models.utility.Lengths._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.sdk.utils.CatsUnsafeResource
 
 class VrfCalculatorSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]

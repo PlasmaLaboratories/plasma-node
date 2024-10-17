@@ -1,4 +1,4 @@
-package xyz.stratalab.node
+package org.plasmalabs.node
 
 import cats.data.EitherT
 import cats.effect.std.Console
@@ -8,10 +8,10 @@ import com.google.protobuf.ByteString
 import fs2.Chunk
 import fs2.io.file.{Files, Path}
 import quivr.models.{Int128, Ratio}
-import xyz.stratalab.consensus.models.{BlockId, StakingAddress}
-import xyz.stratalab.models.utility._
-import xyz.stratalab.sdk.models.LockAddress
-import xyz.stratalab.sdk.syntax._
+import org.plasmalabs.consensus.models.{BlockId, StakingAddress}
+import org.plasmalabs.models.utility._
+import org.plasmalabs.sdk.models.LockAddress
+import org.plasmalabs.sdk.syntax._
 
 import scala.concurrent.duration._
 import scala.util.Try
@@ -183,11 +183,11 @@ package object cli {
         .map(d => d: com.google.protobuf.duration.Duration)
 
   implicit private[cli] val parseLockAddress: UserInputParser[LockAddress] =
-    (s: String) => xyz.stratalab.sdk.codecs.AddressCodecs.decodeAddress(s).leftMap(_.toString)
+    (s: String) => org.plasmalabs.sdk.codecs.AddressCodecs.decodeAddress(s).leftMap(_.toString)
 
   implicit private[cli] val parseStakingAddress: UserInputParser[StakingAddress] =
     (s: String) =>
-      xyz.stratalab.sdk.utils.Encoding
+      org.plasmalabs.sdk.utils.Encoding
         .decodeFromBase58(s)
         .map(array => StakingAddress(ByteString.copyFrom(array)))
         .leftMap(_.toString)
@@ -195,7 +195,7 @@ package object cli {
   implicit private[cli] val parseBlockId: UserInputParser[BlockId] =
     (s: String) => {
       val withoutPrefix = if (s.startsWith("b_")) s.substring(2) else s
-      xyz.stratalab.sdk.utils.Encoding
+      org.plasmalabs.sdk.utils.Encoding
         .decodeFromBase58(withoutPrefix)
         .leftMap(_.toString)
         .ensure("Invalid Block ID")(_.length == 32)

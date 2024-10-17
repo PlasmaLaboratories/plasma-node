@@ -1,12 +1,12 @@
-package xyz.stratalab.byzantine.util
+package org.plasmalabs.byzantine.util
 
 import cats.Applicative
 import cats.effect._
 import cats.implicits._
 import cats.effect.implicits._
-import xyz.stratalab.buildinfo.node.BuildInfo
-import xyz.stratalab.consensus.models.StakingAddress
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.buildinfo.node.BuildInfo
+import org.plasmalabs.consensus.models.StakingAddress
+import org.plasmalabs.typeclasses.implicits._
 import com.spotify.docker.client.messages.ContainerConfig
 import com.spotify.docker.client.messages.HostConfig
 import com.spotify.docker.client.messages.NetworkConfig
@@ -178,7 +178,7 @@ case class TestNodeConfig(
   rpcPort:              Int = 9084,
   p2pPort:              Int = 9085,
   jmxRemotePort:        Int = 9083,
-  indexerEnabled:         Boolean = false,
+  indexerEnabled:       Boolean = false,
   stakingBindSourceDir: Option[String] = None,
   serverHost:           Option[String] = None,
   serverPort:           Option[Int] = None,
@@ -220,5 +220,5 @@ case class TestNodeConfig(
 }
 
 object TestNodeConfig {
-  val epochSlotLength: Long = 150 // See xyz.stratalab.node.ApplicationConfig.Node.Protocol
+  val epochSlotLength: Long = 150 // See org.plasmalabs.node.ApplicationConfig.Node.Protocol
 }

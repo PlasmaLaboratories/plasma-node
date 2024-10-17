@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer
+package org.plasmalabs.indexer
 
 import cats.effect.IO
 import cats.implicits._
@@ -6,15 +6,15 @@ import io.grpc.{Metadata, StatusException}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.indexer.algebras.TransactionFetcherAlgebra
-import xyz.stratalab.indexer.model.{GE, GEs}
-import xyz.stratalab.indexer.services._
-import xyz.stratalab.models.ModelGenerators.GenHelper
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.sdk.generators.ModelGenerators._
-import xyz.stratalab.sdk.models.transaction.UnspentTransactionOutput
-import xyz.stratalab.sdk.models.{LockAddress, TransactionId, TransactionOutputAddress}
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.indexer.algebras.TransactionFetcherAlgebra
+import org.plasmalabs.indexer.model.{GE, GEs}
+import org.plasmalabs.indexer.services._
+import org.plasmalabs.models.ModelGenerators.GenHelper
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.sdk.models.transaction.UnspentTransactionOutput
+import org.plasmalabs.sdk.models.{LockAddress, TransactionId, TransactionOutputAddress}
+import org.plasmalabs.typeclasses.implicits._
 
 class GrpcTransactionServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]

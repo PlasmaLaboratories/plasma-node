@@ -1,4 +1,4 @@
-package xyz.stratalab.minting.interpreters
+package org.plasmalabs.minting.interpreters
 
 import cats.effect._
 import cats.effect.implicits.effectResourceOps
@@ -7,13 +7,13 @@ import com.github.benmanes.caffeine.cache.Caffeine
 import com.google.protobuf.ByteString
 import scalacache.Entry
 import scalacache.caffeine.CaffeineCache
-import xyz.stratalab.codecs.bytes.typeclasses.implicits._
-import xyz.stratalab.consensus.models.VrfArgument
-import xyz.stratalab.crypto.signing.Ed25519VRF
-import xyz.stratalab.minting.algebras.VrfCalculatorAlgebra
-import xyz.stratalab.models._
-import xyz.stratalab.models.utility.HasLength.instances._
-import xyz.stratalab.models.utility._
+import org.plasmalabs.codecs.bytes.typeclasses.implicits._
+import org.plasmalabs.consensus.models.VrfArgument
+import org.plasmalabs.crypto.signing.Ed25519VRF
+import org.plasmalabs.minting.algebras.VrfCalculatorAlgebra
+import org.plasmalabs.models._
+import org.plasmalabs.models.utility.HasLength.instances._
+import org.plasmalabs.models.utility._
 
 object VrfCalculator {
 

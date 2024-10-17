@@ -1,4 +1,4 @@
-package xyz.stratalab.node
+package org.plasmalabs.node
 
 import cats.data.OptionT
 import cats.effect.implicits._
@@ -11,40 +11,40 @@ import fs2.io.file.Path
 import kamon.Kamon
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.Stats
-import xyz.stratalab.blockchain._
-import xyz.stratalab.blockchain.interpreters.{EpochDataEventSourcedState, EpochDataInterpreter, NodeMetadata}
-import xyz.stratalab.buildinfo.node.BuildInfo
-import xyz.stratalab.catsutils._
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.common.application.IOBaseApp
-import xyz.stratalab.config.ApplicationConfig
-import xyz.stratalab.config.ApplicationConfig.Node.KnownPeer
-import xyz.stratalab.consensus._
-import xyz.stratalab.consensus.interpreters.VotingEventSourceState.VotingData
-import xyz.stratalab.consensus.interpreters._
-import xyz.stratalab.consensus.models.{BlockId, VrfConfig}
-import xyz.stratalab.crypto.hash.Blake2b512
-import xyz.stratalab.crypto.signing.Ed25519
-import xyz.stratalab.eventtree.ParentChildTree
-import xyz.stratalab.grpc.HealthCheckGrpc
-import xyz.stratalab.healthcheck.HealthCheck
-import xyz.stratalab.indexer._
-import xyz.stratalab.interpreters._
-import xyz.stratalab.ledger.LedgerImpl
-import xyz.stratalab.ledger.interpreters.ProposalEventSourceState.ProposalData
-import xyz.stratalab.ledger.interpreters._
-import xyz.stratalab.models.ProposalConfig
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.models.utility.HasLength.instances.byteStringLength
-import xyz.stratalab.models.utility._
-import xyz.stratalab.networking.p2p.LocalPeer
-import xyz.stratalab.node.ApplicationConfigOps._
-import xyz.stratalab.node.cli.ConfiguredCliApp
-import xyz.stratalab.numerics.interpreters.{ExpInterpreter, Log1pInterpreter}
-import xyz.stratalab.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
-import xyz.stratalab.typeclasses.implicits._
-import xyz.stratalab.version.VersionReplicator
+import org.plasmalabs.algebras.Stats
+import org.plasmalabs.blockchain._
+import org.plasmalabs.blockchain.interpreters.{EpochDataEventSourcedState, EpochDataInterpreter, NodeMetadata}
+import org.plasmalabs.buildinfo.node.BuildInfo
+import org.plasmalabs.catsutils._
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.common.application.IOBaseApp
+import org.plasmalabs.config.ApplicationConfig
+import org.plasmalabs.config.ApplicationConfig.Node.KnownPeer
+import org.plasmalabs.consensus._
+import org.plasmalabs.consensus.interpreters.VotingEventSourceState.VotingData
+import org.plasmalabs.consensus.interpreters._
+import org.plasmalabs.consensus.models.{BlockId, VrfConfig}
+import org.plasmalabs.crypto.hash.Blake2b512
+import org.plasmalabs.crypto.signing.Ed25519
+import org.plasmalabs.eventtree.ParentChildTree
+import org.plasmalabs.grpc.HealthCheckGrpc
+import org.plasmalabs.healthcheck.HealthCheck
+import org.plasmalabs.indexer._
+import org.plasmalabs.interpreters._
+import org.plasmalabs.ledger.LedgerImpl
+import org.plasmalabs.ledger.interpreters.ProposalEventSourceState.ProposalData
+import org.plasmalabs.ledger.interpreters._
+import org.plasmalabs.models.ProposalConfig
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.utility.HasLength.instances.byteStringLength
+import org.plasmalabs.models.utility._
+import org.plasmalabs.networking.p2p.LocalPeer
+import org.plasmalabs.node.ApplicationConfigOps._
+import org.plasmalabs.node.cli.ConfiguredCliApp
+import org.plasmalabs.numerics.interpreters.{ExpInterpreter, Log1pInterpreter}
+import org.plasmalabs.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
+import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.version.VersionReplicator
 
 import java.time.Instant
 import scala.concurrent.duration._

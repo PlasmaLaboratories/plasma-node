@@ -1,8 +1,8 @@
-package xyz.stratalab.indexer.algebras
+package org.plasmalabs.indexer.algebras
 
-import xyz.stratalab.indexer.model.GE
-import xyz.stratalab.sdk.models.Event.{GroupPolicy, SeriesPolicy}
-import xyz.stratalab.sdk.models.{GroupId, SeriesId}
+import org.plasmalabs.indexer.model.GE
+import org.plasmalabs.sdk.models.Event.{GroupPolicy, SeriesPolicy}
+import org.plasmalabs.sdk.models.{GroupId, SeriesId}
 
 /**
  * Fetch Value information stored the data store.

@@ -1,7 +1,7 @@
-package xyz.stratalab.networking.p2p
+package org.plasmalabs.networking.p2p
 
 import fs2.concurrent.Topic
-import xyz.stratalab.models.p2p.RemoteAddress
+import org.plasmalabs.models.p2p.RemoteAddress
 
 /**
  * Captures the notion of serving peers in a decentralized network

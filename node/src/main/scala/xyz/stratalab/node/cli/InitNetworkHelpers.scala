@@ -1,4 +1,4 @@
-package xyz.stratalab.node.cli
+package org.plasmalabs.node.cli
 
 import cats.MonadThrow
 import cats.data._
@@ -9,17 +9,17 @@ import com.google.protobuf.ByteString
 import com.google.protobuf.duration.Duration
 import fs2.io.file.Path
 import quivr.models.{Int128, Ratio}
-import xyz.stratalab.blockchain._
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.models.protocol.{ConfigConverter, ConfigGenesis}
-import xyz.stratalab.node.models.{BlockBody, FullBlock}
-import xyz.stratalab.sdk.models.LockAddress
-import xyz.stratalab.sdk.models.box.Value
-import xyz.stratalab.sdk.models.box.Value.ConfigProposal
-import xyz.stratalab.sdk.models.transaction.UnspentTransactionOutput
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.blockchain._
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.models.protocol.{ConfigConverter, ConfigGenesis}
+import org.plasmalabs.node.models.{BlockBody, FullBlock}
+import org.plasmalabs.sdk.models.LockAddress
+import org.plasmalabs.sdk.models.box.Value
+import org.plasmalabs.sdk.models.box.Value.ConfigProposal
+import org.plasmalabs.sdk.models.transaction.UnspentTransactionOutput
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.typeclasses.implicits._
 
 import java.nio.charset.StandardCharsets
 import java.time.format.DateTimeFormatter
@@ -39,7 +39,7 @@ object InitNetworkHelpers {
           StageResultT.liftF(PrivateTestnet.HeightLockOneSpendingAddress.some.pure[F])
         case lockAddressStr =>
           EitherT
-            .fromEither[StageResultT[F, *]](xyz.stratalab.sdk.codecs.AddressCodecs.decodeAddress(lockAddressStr))
+            .fromEither[StageResultT[F, *]](org.plasmalabs.sdk.codecs.AddressCodecs.decodeAddress(lockAddressStr))
             .leftSemiflatTap(error => writeMessage(s"Invalid Lock Address. reason=$error input=$lockAddressStr"))
             .toOption
             .value

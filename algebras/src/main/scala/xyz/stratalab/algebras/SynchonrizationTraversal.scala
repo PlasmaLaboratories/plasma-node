@@ -1,6 +1,6 @@
-package xyz.stratalab.algebras
+package org.plasmalabs.algebras
 
-import xyz.stratalab.consensus.models.BlockId
+import org.plasmalabs.consensus.models.BlockId
 
 /**
  * Emits a stream of canonical head traversal steps. As blocks are adopted by the node, the steps taken to reach it from

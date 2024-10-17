@@ -1,7 +1,7 @@
-package xyz.stratalab
+package org.plasmalabs
 
 import com.google.protobuf.ByteString
-import xyz.stratalab.models.utility.{Lengths, Sized}
+import org.plasmalabs.models.utility.{Lengths, Sized}
 
 package object models {
 

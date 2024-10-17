@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer.interpreter
+package org.plasmalabs.indexer.interpreter
 
 import cats.effect.{IO, Resource}
 import cats.implicits._
@@ -10,13 +10,13 @@ import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.consensus.models.BlockHeader
-import xyz.stratalab.indexer.algebras.{BlockFetcherAlgebra, NodeBlockFetcherAlgebra}
-import xyz.stratalab.indexer.interpreter.GraphBlockUpdater
-import xyz.stratalab.indexer.model.{GE, GEs}
-import xyz.stratalab.indexer.orientDb.OrientThread
-import xyz.stratalab.indexer.services.BlockData
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.consensus.models.BlockHeader
+import org.plasmalabs.indexer.algebras.{BlockFetcherAlgebra, NodeBlockFetcherAlgebra}
+import org.plasmalabs.indexer.interpreter.GraphBlockUpdater
+import org.plasmalabs.indexer.model.{GE, GEs}
+import org.plasmalabs.indexer.orientDb.OrientThread
+import org.plasmalabs.indexer.services.BlockData
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
 
 import java.lang
 import scala.annotation.nowarn

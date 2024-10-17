@@ -1,15 +1,15 @@
-package xyz.stratalab.transactiongenerator.interpreters
+package org.plasmalabs.transactiongenerator.interpreters
 
 import cats.effect.IO
 import cats.effect.std.{Random, SecureRandom}
 import cats.implicits._
 import munit.CatsEffectSuite
 import quivr.models.SmallData
-import xyz.stratalab.numerics.implicits._
-import xyz.stratalab.sdk.models.box.Value
-import xyz.stratalab.sdk.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
-import xyz.stratalab.sdk.models.{Datum, Event}
-import xyz.stratalab.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
+import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.sdk.models.box.Value
+import org.plasmalabs.sdk.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
+import org.plasmalabs.sdk.models.{Datum, Event}
+import org.plasmalabs.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
 
 class Fs2TransactionGeneratorSpec extends CatsEffectSuite {
   type F[A] = IO[A]

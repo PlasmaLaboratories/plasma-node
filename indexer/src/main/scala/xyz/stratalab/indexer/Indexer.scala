@@ -1,14 +1,14 @@
-package xyz.stratalab.indexer
+package org.plasmalabs.indexer
 
 import cats.effect._
 import fs2.io.file.Files
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras._
-import xyz.stratalab.grpc.NodeGrpc
-import xyz.stratalab.indexer.algebras._
-import xyz.stratalab.indexer.interpreter._
-import xyz.stratalab.indexer.orientDb.{OrientDBFactory, OrientThread}
+import org.plasmalabs.algebras._
+import org.plasmalabs.grpc.NodeGrpc
+import org.plasmalabs.indexer.algebras._
+import org.plasmalabs.indexer.interpreter._
+import org.plasmalabs.indexer.orientDb.{OrientDBFactory, OrientThread}
 
 /**
  * Captures the interpreters needed to run Indexer

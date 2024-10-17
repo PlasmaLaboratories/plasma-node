@@ -1,4 +1,4 @@
-package xyz.stratalab.minting.interpreters
+package org.plasmalabs.minting.interpreters
 
 import cats.data.Chain
 import cats.effect.IO.asyncForIO
@@ -9,19 +9,19 @@ import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.algebras._
-import xyz.stratalab.codecs.bytes.typeclasses.Persistable
-import xyz.stratalab.consensus.algebras._
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.crypto.models.SecretKeyKesProduct
-import xyz.stratalab.crypto.signing._
-import xyz.stratalab.minting.algebras.{OperationalKeyMakerAlgebra, VrfCalculatorAlgebra}
-import xyz.stratalab.models.ModelGenerators._
-import xyz.stratalab.models._
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.models.utility.HasLength.instances.byteStringLength
-import xyz.stratalab.models.utility._
-import xyz.stratalab.sdk.utils.CatsUnsafeResource
+import org.plasmalabs.algebras._
+import org.plasmalabs.codecs.bytes.typeclasses.Persistable
+import org.plasmalabs.consensus.algebras._
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.crypto.models.SecretKeyKesProduct
+import org.plasmalabs.crypto.signing._
+import org.plasmalabs.minting.algebras.{OperationalKeyMakerAlgebra, VrfCalculatorAlgebra}
+import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.models._
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.utility.HasLength.instances.byteStringLength
+import org.plasmalabs.models.utility._
+import org.plasmalabs.sdk.utils.CatsUnsafeResource
 
 import java.util.concurrent.TimeUnit
 import scala.concurrent.duration._

@@ -1,4 +1,4 @@
-package xyz.stratalab.ledger.interpreters
+package org.plasmalabs.ledger.interpreters
 
 import cats.effect.IO
 import cats.implicits._
@@ -6,19 +6,19 @@ import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.algebras.Stats.Implicits._
-import xyz.stratalab.ledger.algebras.TransactionRewardCalculatorAlgebra
-import xyz.stratalab.ledger.models.{AssetId, BodySyntaxErrors, RewardQuantities}
-import xyz.stratalab.models.ModelGenerators._
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.sdk.constants.NetworkConstants
-import xyz.stratalab.sdk.generators.ModelGenerators._
-import xyz.stratalab.sdk.models.box.{FungibilityType, Lock, QuantityDescriptorType, Value}
-import xyz.stratalab.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
-import xyz.stratalab.sdk.models.{GroupId, LockAddress, SeriesId, TransactionId}
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.validation.TransactionSyntaxError
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
+import org.plasmalabs.algebras.Stats.Implicits._
+import org.plasmalabs.ledger.algebras.TransactionRewardCalculatorAlgebra
+import org.plasmalabs.ledger.models.{AssetId, BodySyntaxErrors, RewardQuantities}
+import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.sdk.constants.NetworkConstants
+import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.sdk.models.box.{FungibilityType, Lock, QuantityDescriptorType, Value}
+import org.plasmalabs.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
+import org.plasmalabs.sdk.models.{GroupId, LockAddress, SeriesId, TransactionId}
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.validation.TransactionSyntaxError
+import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
 
 class BodySyntaxValidationSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

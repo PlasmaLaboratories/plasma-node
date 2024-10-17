@@ -1,12 +1,12 @@
-package xyz.stratalab.indexer.orientDb.schema
+package org.plasmalabs.indexer.orientDb.schema
 
 import cats.implicits._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.indexer.DbFixtureUtil
-import xyz.stratalab.indexer.orientDb.schema.OTyped.Instances._
-import xyz.stratalab.indexer.orientDb.schema.{GraphDataEncoder, VertexSchema}
-import xyz.stratalab.indexer.orientDb.{OrientDBMetadataFactory, OrientThread}
+import org.plasmalabs.indexer.DbFixtureUtil
+import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances._
+import org.plasmalabs.indexer.orientDb.schema.{GraphDataEncoder, VertexSchema}
+import org.plasmalabs.indexer.orientDb.{OrientDBMetadataFactory, OrientThread}
 
 import scala.jdk.CollectionConverters._
 

@@ -1,10 +1,10 @@
-package xyz.stratalab.blockchain
+package org.plasmalabs.blockchain
 
 import cats.effect.{Async, Resource}
 import cats.implicits._
-import xyz.stratalab.crypto.hash.{Blake2b256, Blake2b512}
-import xyz.stratalab.crypto.signing._
-import xyz.stratalab.sdk.utils.CatsUnsafeResource
+import org.plasmalabs.crypto.hash.{Blake2b256, Blake2b512}
+import org.plasmalabs.crypto.signing._
+import org.plasmalabs.sdk.utils.CatsUnsafeResource
 
 case class CryptoResources[F[_]](
   blake2b256: Resource[F, Blake2b256],

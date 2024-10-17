@@ -1,4 +1,4 @@
-package xyz.stratalab.consensus.algebras
+package org.plasmalabs.consensus.algebras
 
 trait ChainSelectionAlgebra[F[_], A, B] {
 

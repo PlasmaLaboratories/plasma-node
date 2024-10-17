@@ -1,9 +1,9 @@
-package xyz.stratalab.indexer.algebras
+package org.plasmalabs.indexer.algebras
 
-import xyz.stratalab.indexer.model.GE
-import xyz.stratalab.indexer.services.{TransactionReceipt, Txo, TxoState}
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.models.{LockAddress, TransactionId}
+import org.plasmalabs.indexer.model.GE
+import org.plasmalabs.indexer.services.{TransactionReceipt, Txo, TxoState}
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.models.{LockAddress, TransactionId}
 
 /**
  * Algebra which defines fetch operations of transactions against the stored Ledger.

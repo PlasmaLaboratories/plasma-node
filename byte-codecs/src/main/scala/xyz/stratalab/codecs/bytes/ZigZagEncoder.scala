@@ -1,4 +1,4 @@
-package xyz.stratalab.codecs.bytes
+package org.plasmalabs.codecs.bytes
 
 object ZigZagEncoder {
 

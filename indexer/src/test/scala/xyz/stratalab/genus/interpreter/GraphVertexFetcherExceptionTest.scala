@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer.interpreter
+package org.plasmalabs.indexer.interpreter
 
 import cats.effect.{IO, Resource, Sync}
 import cats.implicits._
@@ -10,13 +10,13 @@ import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.consensus.models.BlockHeader
-import xyz.stratalab.indexer.model.{GE, GEs}
-import xyz.stratalab.indexer.orientDb.OrientThread
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.sdk.generators.ModelGenerators._
-import xyz.stratalab.sdk.models.{LockAddress, TransactionOutputAddress}
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.consensus.models.BlockHeader
+import org.plasmalabs.indexer.model.{GE, GEs}
+import org.plasmalabs.indexer.orientDb.OrientThread
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.sdk.models.{LockAddress, TransactionOutputAddress}
 
 class GraphVertexFetcherExceptionTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

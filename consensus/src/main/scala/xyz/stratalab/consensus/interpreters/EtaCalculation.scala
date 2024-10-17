@@ -1,4 +1,4 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats.data.NonEmptyChain
 import cats.effect._
@@ -10,16 +10,16 @@ import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import scalacache.Entry
 import scalacache.caffeine.CaffeineCache
-import xyz.stratalab.algebras.ClockAlgebra.implicits._
-import xyz.stratalab.algebras.{ClockAlgebra, Stats}
-import xyz.stratalab.consensus.algebras.EtaCalculationAlgebra
-import xyz.stratalab.consensus.models.{BlockId, EtaCalculationArgs, SlotData, SlotId}
-import xyz.stratalab.consensus.rhoToRhoNonceHash
-import xyz.stratalab.crypto.hash.{Blake2b256, Blake2b512}
-import xyz.stratalab.models._
-import xyz.stratalab.models.utility.HasLength.instances._
-import xyz.stratalab.models.utility.{Sized, _}
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.ClockAlgebra.implicits._
+import org.plasmalabs.algebras.{ClockAlgebra, Stats}
+import org.plasmalabs.consensus.algebras.EtaCalculationAlgebra
+import org.plasmalabs.consensus.models.{BlockId, EtaCalculationArgs, SlotData, SlotId}
+import org.plasmalabs.consensus.rhoToRhoNonceHash
+import org.plasmalabs.crypto.hash.{Blake2b256, Blake2b512}
+import org.plasmalabs.models._
+import org.plasmalabs.models.utility.HasLength.instances._
+import org.plasmalabs.models.utility.{Sized, _}
+import org.plasmalabs.typeclasses.implicits._
 
 object EtaCalculation {
 

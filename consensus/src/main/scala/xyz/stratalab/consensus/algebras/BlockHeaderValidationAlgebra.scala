@@ -1,6 +1,6 @@
-package xyz.stratalab.consensus.algebras
+package org.plasmalabs.consensus.algebras
 
-import xyz.stratalab.consensus.models.{BlockHeader, BlockHeaderValidationFailure, SlotData}
+import org.plasmalabs.consensus.models.{BlockHeader, BlockHeaderValidationFailure, SlotData}
 
 trait BlockHeaderValidationAlgebra[F[_]] {
 

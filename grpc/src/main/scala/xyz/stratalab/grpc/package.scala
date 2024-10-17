@@ -1,4 +1,4 @@
-package xyz.stratalab
+package org.plasmalabs
 
 import cats.ApplicativeThrow
 import cats.effect.{Resource, Sync}

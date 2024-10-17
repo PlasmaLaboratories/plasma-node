@@ -1,4 +1,4 @@
-package xyz.stratalab.interpreters
+package org.plasmalabs.interpreters
 
 import cats.data.OptionT
 import cats.effect._
@@ -6,9 +6,9 @@ import cats.implicits._
 import cats.{Applicative, MonadThrow}
 import fs2.Stream
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.algebras.{NodeRpc, SynchronizationTraversalSteps}
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
-import xyz.stratalab.node.models.{FullBlock, FullBlockBody}
+import org.plasmalabs.algebras.{NodeRpc, SynchronizationTraversalSteps}
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
+import org.plasmalabs.node.models.{FullBlock, FullBlockBody}
 
 import scala.concurrent.duration._
 import scala.language.implicitConversions

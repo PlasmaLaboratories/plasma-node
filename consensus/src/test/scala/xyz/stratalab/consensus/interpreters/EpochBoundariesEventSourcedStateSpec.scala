@@ -1,4 +1,4 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats.Applicative
 import cats.data.Chain
@@ -6,14 +6,14 @@ import cats.effect.IO
 import cats.implicits._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.algebras.ClockAlgebra
-import xyz.stratalab.algebras.testInterpreters.TestStore
-import xyz.stratalab.consensus.models.{BlockId, SlotData}
-import xyz.stratalab.eventtree.ParentChildTree
-import xyz.stratalab.models.ModelGenerators._
-import xyz.stratalab.models._
-import xyz.stratalab.models.generators.consensus.ModelGenerators.arbitrarySlotData
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.ClockAlgebra
+import org.plasmalabs.algebras.testInterpreters.TestStore
+import org.plasmalabs.consensus.models.{BlockId, SlotData}
+import org.plasmalabs.eventtree.ParentChildTree
+import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.models._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.arbitrarySlotData
+import org.plasmalabs.typeclasses.implicits._
 
 class EpochBoundariesEventSourcedStateSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

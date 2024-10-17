@@ -1,23 +1,23 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats.Applicative
 import cats.effect.IO
 import cats.implicits._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.algebras.testInterpreters.TestStore
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.eventtree.ParentChildTree
-import xyz.stratalab.models.ModelGenerators._
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.numerics.implicits._
-import xyz.stratalab.sdk.constants.NetworkConstants
-import xyz.stratalab.sdk.models._
-import xyz.stratalab.sdk.models.box._
-import xyz.stratalab.sdk.models.transaction._
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.testInterpreters.TestStore
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.eventtree.ParentChildTree
+import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.sdk.constants.NetworkConstants
+import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.models.box._
+import org.plasmalabs.sdk.models.transaction._
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.typeclasses.implicits._
 
 class ConsensusDataEventSourcedStateSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

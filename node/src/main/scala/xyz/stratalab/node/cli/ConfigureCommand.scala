@@ -1,4 +1,4 @@
-package xyz.stratalab.node.cli
+package org.plasmalabs.node.cli
 
 import cats.ApplicativeThrow
 import cats.data.OptionT
@@ -8,11 +8,11 @@ import cats.implicits._
 import fs2.io.file.{Files, Path}
 import io.circe._
 import io.circe.syntax._
-import xyz.stratalab.config.ApplicationConfig
-import xyz.stratalab.consensus.models.{BlockId, StakingAddress}
-import xyz.stratalab.node.AbstractNodeApp
-import xyz.stratalab.sdk.models.LockAddress
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.config.ApplicationConfig
+import org.plasmalabs.consensus.models.{BlockId, StakingAddress}
+import org.plasmalabs.node.AbstractNodeApp
+import org.plasmalabs.sdk.models.LockAddress
+import org.plasmalabs.typeclasses.implicits._
 
 import java.nio.charset.StandardCharsets
 
@@ -248,11 +248,11 @@ private[cli] case class ConfigureCommandInput(
               .obj(
                 "directory" -> stakingDir.asJson,
                 "reward-address" -> stakingRewardAddress
-                  .map(xyz.stratalab.sdk.codecs.AddressCodecs.encodeAddress)
+                  .map(org.plasmalabs.sdk.codecs.AddressCodecs.encodeAddress)
                   .asJson,
                 "staking-address" -> stakingAddress
                   .map(_.value.toByteArray)
-                  .map(xyz.stratalab.sdk.utils.Encoding.encodeToBase58)
+                  .map(org.plasmalabs.sdk.utils.Encoding.encodeToBase58)
                   .asJson
               )
               .dropNullValues,

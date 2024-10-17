@@ -1,6 +1,6 @@
-package xyz.stratalab.minting.algebras
+package org.plasmalabs.minting.algebras
 
-import xyz.stratalab.models._
+import org.plasmalabs.models._
 
 trait VrfCalculatorAlgebra[F[_]] {
 

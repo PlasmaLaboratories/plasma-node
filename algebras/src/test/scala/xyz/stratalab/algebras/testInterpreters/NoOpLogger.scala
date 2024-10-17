@@ -1,4 +1,4 @@
-package xyz.stratalab.algebras.testInterpreters
+package org.plasmalabs.algebras.testInterpreters
 
 import cats.Applicative
 import org.typelevel.log4cats.Logger

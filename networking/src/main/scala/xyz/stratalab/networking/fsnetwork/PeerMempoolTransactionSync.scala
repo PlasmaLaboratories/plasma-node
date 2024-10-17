@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.data.OptionT
 import cats.effect.kernel.Fiber
@@ -6,20 +6,20 @@ import cats.effect.{Async, Ref, Resource, Spawn}
 import cats.implicits._
 import fs2.Stream
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.actor.{Actor, Fsm}
-import xyz.stratalab.algebras.Store
-import xyz.stratalab.consensus.algebras.LocalChainAlgebra
-import xyz.stratalab.ledger.algebras.MempoolAlgebra
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.networking.blockchain.BlockchainPeerClient
-import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
-import xyz.stratalab.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError.UnknownError
-import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
-import xyz.stratalab.networking.fsnetwork.PeersManager.PeersManagerActor
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.validation.algebras.TransactionSyntaxVerifier
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.actor.{Actor, Fsm}
+import org.plasmalabs.algebras.Store
+import org.plasmalabs.consensus.algebras.LocalChainAlgebra
+import org.plasmalabs.ledger.algebras.MempoolAlgebra
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.networking.blockchain.BlockchainPeerClient
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError.UnknownError
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
+import org.plasmalabs.typeclasses.implicits._
 
 object PeerMempoolTransactionSync {
   sealed trait Message

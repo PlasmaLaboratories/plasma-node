@@ -1,20 +1,20 @@
-package xyz.stratalab.node.cli
+package org.plasmalabs.node.cli
 
 import cats.effect.std.{Console, SecureRandom}
 import cats.effect.{Async, Sync}
 import cats.implicits._
 import fs2.io.file.{Files, Path}
 import quivr.models.{Int128, SmallData}
-import xyz.stratalab.blockchain.{BigBang, PrivateTestnet, StakerInitializers, StakingInit}
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.config.ApplicationConfig
-import xyz.stratalab.crypto.hash.Blake2b256
-import xyz.stratalab.node.ProtocolVersioner
-import xyz.stratalab.node.models.FullBlock
-import xyz.stratalab.sdk.models.box.Value
-import xyz.stratalab.sdk.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
-import xyz.stratalab.sdk.models.{Datum, Event}
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.blockchain.{BigBang, PrivateTestnet, StakerInitializers, StakingInit}
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.config.ApplicationConfig
+import org.plasmalabs.crypto.hash.Blake2b256
+import org.plasmalabs.node.ProtocolVersioner
+import org.plasmalabs.node.models.FullBlock
+import org.plasmalabs.sdk.models.box.Value
+import org.plasmalabs.sdk.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
+import org.plasmalabs.sdk.models.{Datum, Event}
+import org.plasmalabs.typeclasses.implicits._
 
 import java.nio.charset.StandardCharsets
 

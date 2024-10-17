@@ -1,8 +1,8 @@
-package xyz.stratalab.ledger.algebras
+package org.plasmalabs.ledger.algebras
 
-import xyz.stratalab.algebras.ContextualValidationAlgebra
-import xyz.stratalab.ledger.models._
-import xyz.stratalab.node.models.BlockBody
+import org.plasmalabs.algebras.ContextualValidationAlgebra
+import org.plasmalabs.ledger.models._
+import org.plasmalabs.node.models.BlockBody
 
 trait BodyProposalValidationAlgebra[F[_]]
     extends ContextualValidationAlgebra[F, BodyValidationError, BlockBody, BodyProposalValidationContext]

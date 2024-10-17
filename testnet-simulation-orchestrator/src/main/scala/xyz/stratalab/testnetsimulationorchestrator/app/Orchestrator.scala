@@ -1,4 +1,4 @@
-package xyz.stratalab.testnetsimulationorchestrator.app
+package org.plasmalabs.testnetsimulationorchestrator.app
 
 import cats.Applicative
 import cats.data.OptionT
@@ -10,22 +10,22 @@ import fs2._
 import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.{NodeRpc, SynchronizationTraversalSteps}
-import xyz.stratalab.common.application.IOBaseApp
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId}
-import xyz.stratalab.grpc.NodeGrpc
-import xyz.stratalab.indexer.services.TransactionServiceFs2Grpc
-import xyz.stratalab.interpreters.MultiNodeRpc
-import xyz.stratalab.models.utility._
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
-import xyz.stratalab.testnetsimulationorchestrator.algebras.DataPublisher
-import xyz.stratalab.testnetsimulationorchestrator.interpreters.{GcpCsvDataPublisher, K8sSimulationController}
-import xyz.stratalab.testnetsimulationorchestrator.models.{AdoptionDatum, BlockDatum, TransactionDatum}
-import xyz.stratalab.transactiongenerator.interpreters.{Fs2TransactionGenerator, IndexerWalletInitializer}
-import xyz.stratalab.transactiongenerator.models.Wallet
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.{NodeRpc, SynchronizationTraversalSteps}
+import org.plasmalabs.common.application.IOBaseApp
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
+import org.plasmalabs.grpc.NodeGrpc
+import org.plasmalabs.indexer.services.TransactionServiceFs2Grpc
+import org.plasmalabs.interpreters.MultiNodeRpc
+import org.plasmalabs.models.utility._
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
+import org.plasmalabs.testnetsimulationorchestrator.algebras.DataPublisher
+import org.plasmalabs.testnetsimulationorchestrator.interpreters.{GcpCsvDataPublisher, K8sSimulationController}
+import org.plasmalabs.testnetsimulationorchestrator.models.{AdoptionDatum, BlockDatum, TransactionDatum}
+import org.plasmalabs.transactiongenerator.interpreters.{Fs2TransactionGenerator, IndexerWalletInitializer}
+import org.plasmalabs.transactiongenerator.models.Wallet
+import org.plasmalabs.typeclasses.implicits._
 
 import scala.concurrent.duration._
 
@@ -74,7 +74,7 @@ object Orchestrator
             .tupleLeft(n.name)
         )
         .map(_.toMap)
-      indexerClient <- xyz.stratalab.grpc
+      indexerClient <- org.plasmalabs.grpc
         .makeChannel[F](nodeConfigs.head.host, nodeConfigs.head.port, tls = false)
         .flatMap(TransactionServiceFs2Grpc.stubResource[F])
       walletInitializer <- IndexerWalletInitializer.make(indexerClient)

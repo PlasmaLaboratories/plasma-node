@@ -1,23 +1,23 @@
-package xyz.stratalab.ledger.interpreters
+package org.plasmalabs.ledger.interpreters
 
 import cats.effect.IO
 import cats.implicits._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.consensus.models.{BlockId, StakingAddress}
-import xyz.stratalab.ledger.algebras.{RegistrationAccumulatorAlgebra, TransactionSemanticValidationAlgebra}
-import xyz.stratalab.ledger.models._
-import xyz.stratalab.models.ModelGenerators._
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.numerics.implicits._
-import xyz.stratalab.sdk.constants.NetworkConstants
-import xyz.stratalab.sdk.generators.ModelGenerators._
-import xyz.stratalab.sdk.models.box.{Lock, Value}
-import xyz.stratalab.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
-import xyz.stratalab.sdk.models.{Datum, LockAddress, TransactionId}
-import xyz.stratalab.sdk.syntax._
+import org.plasmalabs.consensus.models.{BlockId, StakingAddress}
+import org.plasmalabs.ledger.algebras.{RegistrationAccumulatorAlgebra, TransactionSemanticValidationAlgebra}
+import org.plasmalabs.ledger.models._
+import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.sdk.constants.NetworkConstants
+import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.sdk.models.box.{Lock, Value}
+import org.plasmalabs.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
+import org.plasmalabs.sdk.models.{Datum, LockAddress, TransactionId}
+import org.plasmalabs.sdk.syntax._
 
 class BodySemanticValidationSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

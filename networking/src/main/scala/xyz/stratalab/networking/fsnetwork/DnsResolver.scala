@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.Monad
 import cats.data.OptionT
@@ -6,7 +6,7 @@ import cats.effect.Sync
 import cats.implicits._
 import com.comcast.ip4s.{Dns, Hostname}
 import com.github.benmanes.caffeine.cache.{Cache, Caffeine}
-import xyz.stratalab.models.p2p._
+import org.plasmalabs.models.p2p._
 
 import java.time.Duration
 

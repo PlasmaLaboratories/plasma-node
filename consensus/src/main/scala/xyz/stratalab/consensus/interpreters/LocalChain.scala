@@ -1,4 +1,4 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats.data.{EitherT, NonEmptyChain, Validated}
 import cats.effect.implicits._
@@ -8,11 +8,11 @@ import cats.implicits._
 import fs2.concurrent.Topic
 import org.typelevel.log4cats._
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras.Stats
-import xyz.stratalab.consensus.algebras._
-import xyz.stratalab.consensus.models._
-import xyz.stratalab.eventtree.EventSourcedState
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras.Stats
+import org.plasmalabs.consensus.algebras._
+import org.plasmalabs.consensus.models._
+import org.plasmalabs.eventtree.EventSourcedState
+import org.plasmalabs.typeclasses.implicits._
 
 object LocalChain {
 

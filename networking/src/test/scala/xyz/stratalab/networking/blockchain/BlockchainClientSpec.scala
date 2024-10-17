@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.blockchain
+package org.plasmalabs.networking.blockchain
 
 import cats.effect.IO
 import cats.implicits._
@@ -9,12 +9,12 @@ import org.scalacheck.Gen
 import org.scalacheck.effect.PropF
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
-import xyz.stratalab.crypto.hash.Blake2b256
-import xyz.stratalab.networking.p2p.ConnectedPeer
-import xyz.stratalab.node.models._
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
+import org.plasmalabs.crypto.hash.Blake2b256
+import org.plasmalabs.networking.p2p.ConnectedPeer
+import org.plasmalabs.node.models._
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
 
 import java.nio.charset.StandardCharsets
 

@@ -107,12 +107,12 @@ object Dependencies {
     "org.http4s" %% "http4s-ember-server" % http4sVersion
   )
 
-  val bramblScCrypto = "xyz.stratalab" %% "crypto"     % strataSdkVersion
-  val bramblScSdk = "xyz.stratalab"    %% "strata-sdk" % strataSdkVersion
-  val quivr4s = "xyz.stratalab"        %% "quivr4s"    % strataSdkVersion
+  val bramblScCrypto = "org.plasmalabs" %% "crypto"     % strataSdkVersion
+  val bramblScSdk = "org.plasmalabs"    %% "strata-sdk" % strataSdkVersion
+  val quivr4s = "org.plasmalabs"        %% "quivr4s"    % strataSdkVersion
 
   val protobufSpecs: Seq[ModuleID] = Seq(
-    "xyz.stratalab" %% "protobuf-fs2" % protobufSpecsVersion
+    "org.plasmalabs" %% "protobuf-fs2" % protobufSpecsVersion
   )
 
   val ipaddress = "com.github.seancfoley" % "ipaddress" % "5.5.0"

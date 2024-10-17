@@ -1,6 +1,6 @@
-package xyz.stratalab.consensus.algebras
+package org.plasmalabs.consensus.algebras
 
-import xyz.stratalab.models._
+import org.plasmalabs.models._
 
 trait VersionInfoAlgebra[F[_]] {
   def addVersionStartEpoch(epoch:    Epoch, version: VersionId): F[Unit]

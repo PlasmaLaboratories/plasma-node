@@ -1,3 +1,3 @@
-package xyz.stratalab.ledger
+package org.plasmalabs.ledger
 
 package object implicits extends LedgerShowInstances {}

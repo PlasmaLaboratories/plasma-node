@@ -1,13 +1,13 @@
-package xyz.stratalab.ledger.interpreters
+package org.plasmalabs.ledger.interpreters
 
 import cats.data.{EitherT, NonEmptyChain, OptionT, Validated, ValidatedNec}
 import cats.effect.Async
 import cats.implicits._
-import xyz.stratalab.ledger.algebras._
-import xyz.stratalab.ledger.models._
-import xyz.stratalab.node.models.BlockBody
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
+import org.plasmalabs.ledger.algebras._
+import org.plasmalabs.ledger.models._
+import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
 
 object BodySemanticValidation {
 

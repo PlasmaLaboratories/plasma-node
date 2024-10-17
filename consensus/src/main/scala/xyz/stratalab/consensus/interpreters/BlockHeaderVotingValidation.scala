@@ -1,16 +1,16 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats.data._
 import cats.effect.kernel.Async
 import cats.implicits._
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.algebras.ClockAlgebra.implicits._
-import xyz.stratalab.algebras._
-import xyz.stratalab.consensus.algebras._
-import xyz.stratalab.consensus.interpreters.VotingEventSourceState.VotingData
-import xyz.stratalab.consensus.models.BlockHeaderValidationFailures.{IncorrectVotedProposalId, IncorrectVotedVersionId}
-import xyz.stratalab.consensus.models.{BlockHeader, BlockHeaderValidationFailure, BlockId}
-import xyz.stratalab.eventtree.EventSourcedState
+import org.plasmalabs.algebras.ClockAlgebra.implicits._
+import org.plasmalabs.algebras._
+import org.plasmalabs.consensus.algebras._
+import org.plasmalabs.consensus.interpreters.VotingEventSourceState.VotingData
+import org.plasmalabs.consensus.models.BlockHeaderValidationFailures.{IncorrectVotedProposalId, IncorrectVotedVersionId}
+import org.plasmalabs.consensus.models.{BlockHeader, BlockHeaderValidationFailure, BlockId}
+import org.plasmalabs.eventtree.EventSourcedState
 
 object BlockHeaderVotingValidation {
 

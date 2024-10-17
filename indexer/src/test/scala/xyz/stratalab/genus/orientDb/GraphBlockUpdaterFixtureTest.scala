@@ -1,21 +1,21 @@
-package xyz.stratalab.indexer.orientDb
+package org.plasmalabs.indexer.orientDb
 
 import cats.implicits._
 import fs2.Stream
 import munit.{CatsEffectFunFixtures, CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.consensus.models.BlockHeader
-import xyz.stratalab.indexer.DbFixtureUtil
-import xyz.stratalab.indexer.algebras.{BlockFetcherAlgebra, NodeBlockFetcherAlgebra}
-import xyz.stratalab.indexer.interpreter.GraphBlockUpdater
-import xyz.stratalab.indexer.orientDb.instances.VertexSchemaInstances.implicits._
-import xyz.stratalab.indexer.orientDb.schema.EdgeSchemaInstances._
-import xyz.stratalab.indexer.orientDb.{OrientDBMetadataFactory, OrientThread}
-import xyz.stratalab.indexer.services.BlockData
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.models.generators.node.ModelGenerators._
-import xyz.stratalab.node.models.FullBlockBody
+import org.plasmalabs.consensus.models.BlockHeader
+import org.plasmalabs.indexer.DbFixtureUtil
+import org.plasmalabs.indexer.algebras.{BlockFetcherAlgebra, NodeBlockFetcherAlgebra}
+import org.plasmalabs.indexer.interpreter.GraphBlockUpdater
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.implicits._
+import org.plasmalabs.indexer.orientDb.schema.EdgeSchemaInstances._
+import org.plasmalabs.indexer.orientDb.{OrientDBMetadataFactory, OrientThread}
+import org.plasmalabs.indexer.services.BlockData
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.generators.node.ModelGenerators._
+import org.plasmalabs.node.models.FullBlockBody
 
 import java.util.concurrent.TimeUnit
 import scala.concurrent.duration.{Duration, FiniteDuration}

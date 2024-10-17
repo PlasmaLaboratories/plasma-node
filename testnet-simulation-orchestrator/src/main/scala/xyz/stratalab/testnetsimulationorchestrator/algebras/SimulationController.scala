@@ -1,4 +1,4 @@
-package xyz.stratalab.testnetsimulationorchestrator.algebras
+package org.plasmalabs.testnetsimulationorchestrator.algebras
 
 trait SimulationController[F[_]] {
 

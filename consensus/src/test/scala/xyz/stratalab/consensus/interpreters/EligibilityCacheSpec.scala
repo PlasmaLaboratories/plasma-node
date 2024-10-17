@@ -1,14 +1,14 @@
-package xyz.stratalab.consensus.interpreters
+package org.plasmalabs.consensus.interpreters
 
 import cats.effect.IO
 import cats.implicits._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.consensus.algebras.EligibilityCacheAlgebra
-import xyz.stratalab.models.ModelGenerators._
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.models.utility.Lengths
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.consensus.algebras.EligibilityCacheAlgebra
+import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.utility.Lengths
 
 class EligibilityCacheSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]

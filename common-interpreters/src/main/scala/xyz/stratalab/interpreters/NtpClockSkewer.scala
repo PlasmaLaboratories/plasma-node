@@ -1,4 +1,4 @@
-package xyz.stratalab.interpreters
+package org.plasmalabs.interpreters
 
 import cats.effect._
 import cats.effect.implicits._

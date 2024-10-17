@@ -1,4 +1,4 @@
-package xyz.stratalab.node
+package org.plasmalabs.node
 
 import cats.Show
 import cats.implicits._
@@ -6,9 +6,9 @@ import com.google.protobuf.ByteString
 import mainargs._
 import monocle.macros.{GenLens, Lenses}
 import monocle.syntax.all._
-import xyz.stratalab.common.application.{ContainsDebugFlag, ContainsUserConfigs}
-import xyz.stratalab.consensus.models.StakingAddress
-import xyz.stratalab.sdk.models.LockAddress
+import org.plasmalabs.common.application.{ContainsDebugFlag, ContainsUserConfigs}
+import org.plasmalabs.consensus.models.StakingAddress
+import org.plasmalabs.sdk.models.LockAddress
 
 // $COVERAGE-OFF$
 
@@ -162,7 +162,7 @@ object Args {
     override def read(strs: Seq[String]): Either[String, LockAddress] =
       strs.headOption
         .toRight("No value")
-        .flatMap(xyz.stratalab.sdk.codecs.AddressCodecs.decodeAddress(_).leftMap(_.toString))
+        .flatMap(org.plasmalabs.sdk.codecs.AddressCodecs.decodeAddress(_).leftMap(_.toString))
   }
 
   implicit object ParserStakingAddress extends TokensReader.Simple[StakingAddress] {
@@ -171,7 +171,7 @@ object Args {
     override def read(strs: Seq[String]): Either[String, StakingAddress] =
       strs.headOption
         .toRight("No value")
-        .flatMap(xyz.stratalab.sdk.utils.Encoding.decodeFromBase58(_).leftMap(_.toString))
+        .flatMap(org.plasmalabs.sdk.utils.Encoding.decodeFromBase58(_).leftMap(_.toString))
         .map(array => StakingAddress(ByteString.copyFrom(array)))
   }
 

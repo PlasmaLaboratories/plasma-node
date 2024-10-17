@@ -1,13 +1,13 @@
-package xyz.stratalab.byzantine.transactions
+package org.plasmalabs.byzantine.transactions
 
-import xyz.stratalab.sdk.constants.NetworkConstants
-import xyz.stratalab.sdk.models.Indices
-import xyz.stratalab.sdk.models.box.{Challenge, Lock}
-import xyz.stratalab.sdk.syntax.lockAsLockSyntaxOps
-import xyz.stratalab.sdk.syntax.{cryptoToPbKeyPair, pbKeyPairToCryptoKeyPair}
-import xyz.stratalab.crypto.generation.Bip32Indexes
-import xyz.stratalab.crypto.hash.Blake2b256
-import xyz.stratalab.crypto.signing.ExtendedEd25519
+import org.plasmalabs.sdk.constants.NetworkConstants
+import org.plasmalabs.sdk.models.Indices
+import org.plasmalabs.sdk.models.box.{Challenge, Lock}
+import org.plasmalabs.sdk.syntax.lockAsLockSyntaxOps
+import org.plasmalabs.sdk.syntax.{cryptoToPbKeyPair, pbKeyPairToCryptoKeyPair}
+import org.plasmalabs.crypto.generation.Bip32Indexes
+import org.plasmalabs.crypto.hash.Blake2b256
+import org.plasmalabs.crypto.signing.ExtendedEd25519
 import com.google.protobuf.ByteString
 import quivr.models.{Digest, KeyPair, Preimage, Proposition}
 import quivr.models.Proposition.{DigitalSignature, TickRange}

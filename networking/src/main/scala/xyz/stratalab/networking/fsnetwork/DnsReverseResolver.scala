@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.data.OptionT
 import cats.effect.Sync
@@ -8,7 +8,7 @@ import com.comcast.ip4s.{Dns, IpAddress}
 import com.github.benmanes.caffeine.cache.Caffeine
 import scalacache.Entry
 import scalacache.caffeine.CaffeineCache
-import xyz.stratalab.models.p2p._
+import org.plasmalabs.models.p2p._
 
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
 

@@ -1,7 +1,7 @@
-package xyz.stratalab.consensus.algebras
+package org.plasmalabs.consensus.algebras
 
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.models.{Bytes, Slot}
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.models.{Bytes, Slot}
 
 /**
  * A cache of recently used VRF eligibilities

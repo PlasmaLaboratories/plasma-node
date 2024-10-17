@@ -1,14 +1,14 @@
-package xyz.stratalab.networking.fsnetwork
+package org.plasmalabs.networking.fsnetwork
 
 import cats.Applicative
 import cats.data.Chain
 import cats.effect.Async
 import cats.implicits._
 import org.typelevel.log4cats.Logger
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
-import xyz.stratalab.networking.fsnetwork.PeerActor.PeerActor
-import xyz.stratalab.networking.fsnetwork.PeersHandler.allowedTransition
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import org.plasmalabs.networking.fsnetwork.PeerActor.PeerActor
+import org.plasmalabs.networking.fsnetwork.PeersHandler.allowedTransition
 
 object PeersHandler {
 

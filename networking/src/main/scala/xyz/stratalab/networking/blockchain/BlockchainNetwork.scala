@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.blockchain
+package org.plasmalabs.networking.blockchain
 
 import cats.effect._
 import cats.effect.implicits._
@@ -8,10 +8,10 @@ import fs2._
 import fs2.concurrent.Topic
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.crypto.signing.Ed25519
-import xyz.stratalab.networking.multiplexer.MultiplexedReaderWriter
-import xyz.stratalab.networking.p2p._
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.crypto.signing.Ed25519
+import org.plasmalabs.networking.multiplexer.MultiplexedReaderWriter
+import org.plasmalabs.networking.p2p._
+import org.plasmalabs.typeclasses.implicits._
 
 import scala.concurrent.duration._
 

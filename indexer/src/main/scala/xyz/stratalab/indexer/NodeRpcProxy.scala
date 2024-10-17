@@ -1,11 +1,11 @@
-package xyz.stratalab.indexer
+package org.plasmalabs.indexer
 
 import cats.effect.Async
 import cats.effect.kernel.Resource
 import cats.implicits._
 import io.grpc.Metadata
-import xyz.stratalab.grpc.makeChannel
-import xyz.stratalab.node.services._
+import org.plasmalabs.grpc.makeChannel
+import org.plasmalabs.node.services._
 
 class NodeRpcProxy[F[_], Ctx](client: NodeRpcFs2Grpc[F, Ctx]) extends NodeRpcFs2Grpc[F, Ctx] {
 

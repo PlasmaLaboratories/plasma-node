@@ -1,13 +1,13 @@
-package xyz.stratalab.indexer.interpreter
+package org.plasmalabs.indexer.interpreter
 
 import cats.data.EitherT
 import cats.effect.Resource
 import cats.effect.kernel.Async
-import xyz.stratalab.indexer.algebras.{TokenFetcherAlgebra, VertexFetcherAlgebra}
-import xyz.stratalab.indexer.model.GE
-import xyz.stratalab.indexer.orientDb.instances.VertexSchemaInstances.instances._
-import xyz.stratalab.sdk.models.Event.GroupPolicy
-import xyz.stratalab.sdk.models.{Event, GroupId, SeriesId}
+import org.plasmalabs.indexer.algebras.{TokenFetcherAlgebra, VertexFetcherAlgebra}
+import org.plasmalabs.indexer.model.GE
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances._
+import org.plasmalabs.sdk.models.Event.GroupPolicy
+import org.plasmalabs.sdk.models.{Event, GroupId, SeriesId}
 
 object GraphTokenFetcher {
 

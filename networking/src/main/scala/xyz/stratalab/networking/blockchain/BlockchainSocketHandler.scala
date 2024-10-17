@@ -1,4 +1,4 @@
-package xyz.stratalab.networking.blockchain
+package org.plasmalabs.networking.blockchain
 
 import cats.data.OptionT
 import cats.effect.implicits._
@@ -6,16 +6,16 @@ import cats.effect.std.{Mutex, Queue}
 import cats.effect.{Async, Deferred, Resource}
 import cats.implicits._
 import fs2._
-import xyz.stratalab.codecs.bytes.tetra.TetraScodecCodecs._
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.codecs.bytes.typeclasses.Transmittable
-import xyz.stratalab.consensus.models.{BlockHeader, BlockId, SlotData}
-import xyz.stratalab.models.Bytes
-import xyz.stratalab.networking.multiplexer.{MultiplexedBuffer, MultiplexedReaderWriter}
-import xyz.stratalab.networking.p2p.ConnectedPeer
-import xyz.stratalab.node.models._
-import xyz.stratalab.sdk.models.TransactionId
-import xyz.stratalab.sdk.models.transaction.IoTransaction
+import org.plasmalabs.codecs.bytes.tetra.TetraScodecCodecs._
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.typeclasses.Transmittable
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
+import org.plasmalabs.models.Bytes
+import org.plasmalabs.networking.multiplexer.{MultiplexedBuffer, MultiplexedReaderWriter}
+import org.plasmalabs.networking.p2p.ConnectedPeer
+import org.plasmalabs.node.models._
+import org.plasmalabs.sdk.models.TransactionId
+import org.plasmalabs.sdk.models.transaction.IoTransaction
 
 import scala.concurrent.duration.FiniteDuration
 import scala.language.implicitConversions

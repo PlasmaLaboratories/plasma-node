@@ -1,4 +1,4 @@
-package xyz.stratalab.testnetsimulationorchestrator.app
+package org.plasmalabs.testnetsimulationorchestrator.app
 
 import cats.Show
 import com.typesafe.config.Config

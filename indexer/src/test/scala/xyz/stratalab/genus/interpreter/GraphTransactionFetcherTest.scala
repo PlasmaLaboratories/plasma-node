@@ -1,4 +1,4 @@
-package xyz.stratalab.indexer.interpreter
+package org.plasmalabs.indexer.interpreter
 
 import cats.data.EitherT
 import cats.effect.IO
@@ -7,19 +7,19 @@ import com.tinkerpop.blueprints.Vertex
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
-import xyz.stratalab.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import xyz.stratalab.consensus.models.BlockHeader
-import xyz.stratalab.indexer.algebras.VertexFetcherAlgebra
-import xyz.stratalab.indexer.interpreter.GraphTransactionFetcher
-import xyz.stratalab.indexer.model.{GE, GEs}
-import xyz.stratalab.indexer.orientDb.OrientThread
-import xyz.stratalab.indexer.orientDb.instances.{SchemaBlockHeader, SchemaIoTransaction, SchemaTxo}
-import xyz.stratalab.indexer.services._
-import xyz.stratalab.models.generators.consensus.ModelGenerators._
-import xyz.stratalab.sdk.generators.ModelGenerators._
-import xyz.stratalab.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
-import xyz.stratalab.sdk.models.{LockAddress, TransactionId, TransactionInputAddress, TransactionOutputAddress}
-import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.consensus.models.BlockHeader
+import org.plasmalabs.indexer.algebras.VertexFetcherAlgebra
+import org.plasmalabs.indexer.interpreter.GraphTransactionFetcher
+import org.plasmalabs.indexer.model.{GE, GEs}
+import org.plasmalabs.indexer.orientDb.OrientThread
+import org.plasmalabs.indexer.orientDb.instances.{SchemaBlockHeader, SchemaIoTransaction, SchemaTxo}
+import org.plasmalabs.indexer.services._
+import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
+import org.plasmalabs.sdk.models.{LockAddress, TransactionId, TransactionInputAddress, TransactionOutputAddress}
+import org.plasmalabs.sdk.syntax.ioTransactionAsTransactionSyntaxOps
 
 class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

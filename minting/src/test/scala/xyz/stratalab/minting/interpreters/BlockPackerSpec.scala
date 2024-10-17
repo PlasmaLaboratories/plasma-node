@@ -1,4 +1,4 @@
-package xyz.stratalab.minting.interpreters
+package org.plasmalabs.minting.interpreters
 
 import cats.effect.{IO, Resource}
 import cats.implicits._
@@ -6,21 +6,26 @@ import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalamock.munit.AsyncMockFactory
 import quivr.models.Int128
-import xyz.stratalab.algebras.ContextlessValidationAlgebra
-import xyz.stratalab.consensus.models.BlockId
-import xyz.stratalab.ledger.algebras._
-import xyz.stratalab.ledger.models.{MempoolGraph, RewardQuantities, TransactionSemanticError, TransactionSemanticErrors}
-import xyz.stratalab.models.ModelGenerators._
-import xyz.stratalab.models.Slot
-import xyz.stratalab.models.generators.consensus.ModelGenerators
-import xyz.stratalab.quivr.runtime.DynamicContext
-import xyz.stratalab.sdk.generators.ModelGenerators._
-import xyz.stratalab.sdk.models._
-import xyz.stratalab.sdk.models.box.{Attestation, Value}
-import xyz.stratalab.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
-import xyz.stratalab.sdk.syntax._
-import xyz.stratalab.sdk.validation.TransactionAuthorizationError
-import xyz.stratalab.sdk.validation.algebras._
+import org.plasmalabs.algebras.ContextlessValidationAlgebra
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.ledger.algebras._
+import org.plasmalabs.ledger.models.{
+  MempoolGraph,
+  RewardQuantities,
+  TransactionSemanticError,
+  TransactionSemanticErrors
+}
+import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.models.Slot
+import org.plasmalabs.models.generators.consensus.ModelGenerators
+import org.plasmalabs.quivr.runtime.DynamicContext
+import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.models.box.{Attestation, Value}
+import org.plasmalabs.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.validation.TransactionAuthorizationError
+import org.plasmalabs.sdk.validation.algebras._
 
 import java.util.concurrent.TimeoutException
 import scala.concurrent.duration._

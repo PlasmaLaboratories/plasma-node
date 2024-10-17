@@ -1,4 +1,4 @@
-package xyz.stratalab.crypto.signing
+package org.plasmalabs.crypto.signing
 
 import cats.effect.IO
 import cats.implicits._
@@ -7,9 +7,9 @@ import io.circe.{Decoder, HCursor}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import scodec.bits.ByteVector
-import xyz.stratalab.crypto.generation.mnemonic.Entropy
-import xyz.stratalab.crypto.utils.EntropySupport._
-import xyz.stratalab.crypto.utils._
+import org.plasmalabs.crypto.generation.mnemonic.Entropy
+import org.plasmalabs.crypto.utils.EntropySupport._
+import org.plasmalabs.crypto.utils._
 
 import java.nio.charset.StandardCharsets
 

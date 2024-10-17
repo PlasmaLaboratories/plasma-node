@@ -1,4 +1,4 @@
-package xyz.stratalab.blockchain
+package org.plasmalabs.blockchain
 
 import cats.data._
 import cats.effect._
@@ -11,31 +11,31 @@ import fs2.{io => _, _}
 import io.grpc.ServerServiceDefinition
 import org.typelevel.log4cats._
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import xyz.stratalab.algebras._
-import xyz.stratalab.blockchain.interpreters.{NetworkControlRpcServer, RegtestRpcServer}
-import xyz.stratalab.catsutils._
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.config.ApplicationConfig.Node.{KnownPeer, NetworkProperties}
-import xyz.stratalab.consensus._
-import xyz.stratalab.grpc._
-import xyz.stratalab.ledger.implicits._
-import xyz.stratalab.ledger.interpreters.{QuivrContext, TransactionSemanticValidation}
-import xyz.stratalab.ledger.models.StaticBodyValidationContext
-import xyz.stratalab.minting.algebras.StakingAlgebra
-import xyz.stratalab.minting.interpreters._
-import xyz.stratalab.models.p2p._
-import xyz.stratalab.models.utility.NetworkCommands
-import xyz.stratalab.models.{ProposalId, VersionId}
-import xyz.stratalab.networking.blockchain._
-import xyz.stratalab.networking.fsnetwork.DnsResolverInstances.DefaultDnsResolver
-import xyz.stratalab.networking.fsnetwork.P2PShowInstances._
-import xyz.stratalab.networking.fsnetwork.ReverseDnsResolverInstances.{DefaultReverseDnsResolver, NoOpReverseResolver}
-import xyz.stratalab.networking.fsnetwork._
-import xyz.stratalab.networking.p2p._
-import xyz.stratalab.node.models.{Block, BlockBody, FullBlock, KnownHost}
-import xyz.stratalab.sdk.models.transaction.IoTransaction
-import xyz.stratalab.sdk.syntax.ioTransactionAsTransactionSyntaxOps
-import xyz.stratalab.typeclasses.implicits._
+import org.plasmalabs.algebras._
+import org.plasmalabs.blockchain.interpreters.{NetworkControlRpcServer, RegtestRpcServer}
+import org.plasmalabs.catsutils._
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.config.ApplicationConfig.Node.{KnownPeer, NetworkProperties}
+import org.plasmalabs.consensus._
+import org.plasmalabs.grpc._
+import org.plasmalabs.ledger.implicits._
+import org.plasmalabs.ledger.interpreters.{QuivrContext, TransactionSemanticValidation}
+import org.plasmalabs.ledger.models.StaticBodyValidationContext
+import org.plasmalabs.minting.algebras.StakingAlgebra
+import org.plasmalabs.minting.interpreters._
+import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.utility.NetworkCommands
+import org.plasmalabs.models.{ProposalId, VersionId}
+import org.plasmalabs.networking.blockchain._
+import org.plasmalabs.networking.fsnetwork.DnsResolverInstances.DefaultDnsResolver
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import org.plasmalabs.networking.fsnetwork.ReverseDnsResolverInstances.{DefaultReverseDnsResolver, NoOpReverseResolver}
+import org.plasmalabs.networking.fsnetwork._
+import org.plasmalabs.networking.p2p._
+import org.plasmalabs.node.models.{Block, BlockBody, FullBlock, KnownHost}
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax.ioTransactionAsTransactionSyntaxOps
+import org.plasmalabs.typeclasses.implicits._
 
 import scala.jdk.CollectionConverters._
 
