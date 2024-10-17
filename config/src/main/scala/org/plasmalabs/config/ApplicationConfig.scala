@@ -26,6 +26,7 @@ object ApplicationConfig {
     staking:             Node.Staking,
     p2p:                 Node.P2P,
     rpc:                 Node.RPC,
+    ethereumJsonRpc:     Node.EthereumJsonRpc,
     mempool:             Node.Mempool,
     bigBang:             Node.BigBang,
     maxSupportedVersion: Int = 1,
@@ -108,6 +109,9 @@ object ApplicationConfig {
 
     @Lenses
     case class RPC(bindHost: String, bindPort: Int, networkControl: Boolean = false)
+
+    @Lenses
+    case class EthereumJsonRpc(bindHost: String, bindPort: Int)
 
     @Lenses
     case class Mempool(defaultExpirationSlots: Long, protection: MempoolProtection = MempoolProtection())
