@@ -12,7 +12,7 @@ object Dependencies {
   val ioGrpcVersion = "1.64.0"
   val http4sVersion = "0.23.26"
   val protobufSpecsVersion = "0.1.0+2-12fdb246-SNAPSHOT"
-  val strataScVersion = "0.0.0-247-469e78be-20241008-2121"
+  val strataScVersion = "0.0.0+254-61ea621e-SNAPSHOT"
 
   val catsSlf4j =
     "org.typelevel" %% "log4cats-slf4j" % "2.7.0"
@@ -94,13 +94,13 @@ object Dependencies {
     "dev.optics" %% "monocle-macro" % "3.3.0"
   )
 
-  val fs2Core = "co.fs2"                   %% "fs2-core"             % fs2Version
-  val fs2IO = "co.fs2"                     %% "fs2-io"               % fs2Version
-  val fs2ReactiveStreams = "co.fs2"        %% "fs2-reactive-streams" % fs2Version
-  val pureConfig = "com.github.pureconfig" %% "pureconfig-core"      % "0.17.7"
+  val fs2Core = "co.fs2"                          %% "fs2-core"                  % fs2Version
+  val fs2IO = "co.fs2"                            %% "fs2-io"                    % fs2Version
+  val fs2ReactiveStreams = "co.fs2"               %% "fs2-reactive-streams"      % fs2Version
+  val pureConfig = "com.github.pureconfig"        %% "pureconfig-core"           % "0.17.7"
   val pureConfigGeneric = "com.github.pureconfig" %% "pureconfig-generic-scala3" % "0.17.7"
-  val circeYaml = "io.circe"               %% "circe-yaml"           % "1.15.0"
-  val kubernetes = "io.kubernetes"          % "client-java"          % "20.0.1"
+  val circeYaml = "io.circe"                      %% "circe-yaml"                % "1.15.0"
+  val kubernetes = "io.kubernetes"                 % "client-java"               % "20.0.1"
 
   val http4s = Seq(
     "org.http4s" %% "http4s-ember-client" % http4sVersion,
@@ -111,9 +111,9 @@ object Dependencies {
     "org.http4s" %% "http4s-ember-server" % http4sVersion
   )
 
-//  val strataScCrypto = "xyz.stratalab" %% "crypto"     % strataScVersion
-//  val strataScSdk = "xyz.stratalab"    %% "strata-sdk" % strataScVersion
-//  val strataQuivr4s = "xyz.stratalab"  %% "quivr4s"    % strataScVersion
+  val strataScCrypto = "xyz.stratalab" %% "crypto"     % strataScVersion
+  val strataScSdk = "xyz.stratalab"    %% "strata-sdk" % strataScVersion
+  val strataQuivr4s = "xyz.stratalab"  %% "quivr4s"    % strataScVersion
 
   val protobufSpecs: Seq[ModuleID] = Seq(
     "xyz.stratalab" %% "protobuf-fs2" % protobufSpecsVersion
@@ -131,7 +131,7 @@ object Dependencies {
 
   val grpcServices = "io.grpc" % "grpc-services" % ioGrpcVersion
 
-  val jacksonScala = "com.fasterxml.jackson.module"   %% "jackson-module-scala"             % "2.18.0"
+  val jacksonScala = "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.18.0"
 //  val jacksonScalaReflection = "com.github.pjfanning" %% "jackson-scala3-reflection-extensions" % "2.16.0"
 
   val node: Seq[ModuleID] =
@@ -196,7 +196,7 @@ object Dependencies {
     externalCrypto ++
     cats ++
     mUnitTest ++
-//    Seq(strataScCrypto, strataScCrypto.classifier("tests") % Test) ++
+    Seq(strataScCrypto, strataScCrypto.classifier("tests") % Test) ++
     circe.map(_ % Test)
 
   lazy val eventTree: Seq[ModuleID] =
@@ -207,9 +207,9 @@ object Dependencies {
 
   lazy val models: Seq[ModuleID] =
     cats ++ scodec ++ protobufSpecs ++
-    Seq(jacksonScala)//, jacksonScalaReflection)
-//  Seq(bramblScSdk, bramblScSdk.classifier("tests") % Test) ++
-//  Seq(quivr4s, quivr4s.classifier("tests") % Test) ++
+    Seq(jacksonScala) ++
+    Seq(strataScSdk, strataScSdk.classifier("tests") % Test) ++
+    Seq(strataQuivr4s, strataQuivr4s.classifier("tests") % Test)
 
   lazy val consensus: Seq[ModuleID] =
     Dependencies.mUnitTest ++ externalCrypto ++ catsEffect ++ logging ++ scalacache
@@ -224,8 +224,8 @@ object Dependencies {
     Dependencies.mUnitTest ++ Dependencies.catsEffect ++ Seq(Dependencies.fs2Core)
 
   lazy val ledger: Seq[ModuleID] =
-    Dependencies.mUnitTest ++ Dependencies.catsEffect ++ Dependencies.protobufSpecs ++ scalacache // ++
-//    Seq(Dependencies.strataScSdk, Dependencies.strataScSdk.classifier("tests") % Test)
+    Dependencies.mUnitTest ++ Dependencies.catsEffect ++ Dependencies.protobufSpecs ++ scalacache ++
+    Seq(Dependencies.strataScSdk, Dependencies.strataScSdk.classifier("tests") % Test)
 
   lazy val blockchain: Seq[ModuleID] =
     Dependencies.mUnitTest ++ Dependencies.catsEffect ++ logging ++ Seq(fs2Core)

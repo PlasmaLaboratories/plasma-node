@@ -46,7 +46,7 @@ lazy val commonSettings = Seq(
     "jitpack" at "https://jitpack.io"
   ),
   testFrameworks += TestFrameworks.MUnit,
-  dependencyOverrides ++= Dependencies.protobufSpecs // ++ Seq(Dependencies.strataQuivr4s),
+  dependencyOverrides ++= Dependencies.protobufSpecs ++ Seq(Dependencies.strataQuivr4s)
 )
 
 lazy val dockerSettings = Seq(
@@ -81,7 +81,7 @@ lazy val nodeDockerSettings =
           DockerAlias(Some("ghcr.io"), Some("plasmalaboratories"), "strata-node", Some("dev"))
         )
       else Seq()
-      )
+    )
   )
 
 lazy val indexerDockerSettings =
@@ -96,7 +96,7 @@ lazy val indexerDockerSettings =
           DockerAlias(Some("ghcr.io"), Some("plasmalaboratories"), "strata-indexer", Some("dev"))
         )
       else Seq()
-      )
+    )
   )
 
 lazy val networkDelayerDockerSettings =
@@ -144,7 +144,7 @@ lazy val commonScalacOptions = Seq(
   "-Ykind-projector:underscores",
   "-source:3.4-migration",
   "-Wunused:imports",
-  "-Yunused:all",
+  "-Yunused:all"
 )
 
 javaOptions ++= Seq(
@@ -365,7 +365,7 @@ lazy val tetraByteCodecs = project
     name := "tetra-byte-codecs",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.codecs.bytes.tetra" ,
+    buildInfoPackage := "xyz.stratalab.buildinfo.codecs.bytes.tetra",
     libraryDependencies ++= Dependencies.munitScalamock ++ Dependencies.protobufSpecs,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -395,7 +395,7 @@ lazy val algebras = project
     name := "algebras",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.algebras" ,
+    buildInfoPackage := "xyz.stratalab.buildinfo.algebras",
     libraryDependencies ++= Dependencies.algebras,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -458,7 +458,7 @@ lazy val consensus = project
     typeclasses,
     nodeCrypto,
     tetraByteCodecs % "compile->compile;test->test",
-    algebras % "compile->compile;test->test",
+    algebras        % "compile->compile;test->test",
     numerics,
     eventTree,
     commonInterpreters % "compile->test",
@@ -501,7 +501,7 @@ lazy val networking = project
     buildInfoPackage := "xyz.stratalab.buildinfo.networking",
     libraryDependencies ++= Dependencies.networking,
     excludeDependencies += Dependencies.scodec213ExlusionRule
-)
+  )
   .dependsOn(
     models % "compile->compile;test->test",
     config,
@@ -577,7 +577,7 @@ lazy val blockchainCore = project
     commonSettings,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.blockchaincore" ,
+    buildInfoPackage := "xyz.stratalab.buildinfo.blockchaincore",
     libraryDependencies ++= Dependencies.blockchain,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -603,7 +603,7 @@ lazy val blockchain = project
     commonSettings,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.blockchain" ,
+    buildInfoPackage := "xyz.stratalab.buildinfo.blockchain",
     libraryDependencies ++= Dependencies.blockchain,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -630,7 +630,7 @@ lazy val grpc = project
     name := "grpc",
     commonSettings,
     libraryDependencies ++= Dependencies.grpc,
-      excludeDependencies += Dependencies.scodec213ExlusionRule
+    excludeDependencies += Dependencies.scodec213ExlusionRule
   )
   .dependsOn(
     models % "compile->compile;test->test",
@@ -726,7 +726,7 @@ lazy val nodeIt = project
   )
   .dependsOn(
     node,
-    models % "test->compile",
+    models               % "test->compile",
     transactionGenerator % "test->compile"
   )
 
