@@ -52,7 +52,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val dockerSettings = Seq(
-  dockerBaseImage := "eclipse-temurin:11-jre",
+  dockerBaseImage := "eclipse-temurin:21-jre",
   dockerUpdateLatest := sys.env.get("DOCKER_PUBLISH_LATEST_TAG").fold(false)(_.toBoolean),
   dockerLabels ++= Map(
     "plasma-node.version" -> version.value
