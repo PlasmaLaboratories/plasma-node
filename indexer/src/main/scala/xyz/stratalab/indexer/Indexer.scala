@@ -10,6 +10,8 @@ import xyz.stratalab.indexer.algebras._
 import xyz.stratalab.indexer.interpreter._
 import xyz.stratalab.indexer.orientDb.{OrientDBFactory, OrientThread}
 
+import scala.concurrent.duration.Duration
+
 /**
  * Captures the interpreters needed to run Indexer
  */
@@ -20,7 +22,8 @@ case class Indexer[F[_], S[_]](
   blockFetcher:       BlockFetcherAlgebra[F],
   blockUpdater:       BlockUpdaterAlgebra[F],
   transactionFetcher: TransactionFetcherAlgebra[F],
-  valueFetcher:       TokenFetcherAlgebra[F]
+  valueFetcher:       TokenFetcherAlgebra[F],
+  replicatorStatus:   GraphReplicationStatusAlgebra[F]
 )
 
 object Indexer {
@@ -31,7 +34,8 @@ object Indexer {
     nodeRpcTls:       Boolean,
     dataDir:          String,
     dbPassword:       String,
-    fetchConcurrency: Int = 64
+    fetchConcurrency: Int = 64,
+    ttlCacheCheck:    Duration
   ): Resource[F, Indexer[F, fs2.Stream[F, *]]] =
     for {
       implicit0(logger: Logger[F]) <- Resource.pure(Slf4jLogger.getLoggerFromName[F]("Indexer"))
@@ -46,21 +50,23 @@ object Indexer {
         .eval(Async[F].delay(orientdb.getNoTx))
         .evalTap(db => orientThread.delay(db.makeActive()))
 
-      rpcInterpreter   <- NodeGrpc.Client.make[F](nodeRpcHost, nodeRpcPort, tls = nodeRpcTls)
-      nodeBlockFetcher <- NodeBlockFetcher.make(rpcInterpreter, fetchConcurrency)
+      nodeRpcClient    <- NodeGrpc.Client.make[F](nodeRpcHost, nodeRpcPort, tls = nodeRpcTls)
+      nodeBlockFetcher <- NodeBlockFetcher.make(nodeRpcClient, fetchConcurrency)
 
       vertexFetcher      <- GraphVertexFetcher.make[F](dbNoTx)
       blockFetcher       <- GraphBlockFetcher.make(vertexFetcher)
       graphBlockUpdater  <- GraphBlockUpdater.make[F](dbTx, blockFetcher, nodeBlockFetcher)
       transactionFetcher <- GraphTransactionFetcher.make(vertexFetcher)
       valueFetcher       <- GraphTokenFetcher.make(vertexFetcher)
+      replicatorStatus   <- GraphReplicationStatus.make[F](vertexFetcher, nodeBlockFetcher, ttlCacheCheck)
     } yield Indexer(
-      rpcInterpreter,
+      nodeRpcClient,
       nodeBlockFetcher,
       vertexFetcher,
       blockFetcher,
       graphBlockUpdater,
       transactionFetcher,
-      valueFetcher
+      valueFetcher,
+      replicatorStatus
     )
 }

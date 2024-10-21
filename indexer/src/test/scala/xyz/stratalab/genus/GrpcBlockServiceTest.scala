@@ -7,7 +7,7 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import xyz.stratalab.consensus.models._
-import xyz.stratalab.indexer.algebras.BlockFetcherAlgebra
+import xyz.stratalab.indexer.algebras.{BlockFetcherAlgebra, GraphReplicationStatusAlgebra}
 import xyz.stratalab.indexer.model.{GE, GEs}
 import xyz.stratalab.indexer.services._
 import xyz.stratalab.models.generators.consensus.ModelGenerators._
@@ -22,14 +22,14 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
     PropF.forAllF { (blockId: BlockId, blockHeader: BlockHeader, blockBody: FullBlockBody) =>
       withMock {
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
-        val underTest = new GrpcBlockService[F](blockFetcher)
+        val replicatorStatus = mock[GraphReplicationStatusAlgebra[F]]
+        val underTest = new GrpcBlockService[F](blockFetcher, replicatorStatus)
 
         val blockData = BlockData(blockHeader, blockBody)
 
-        (blockFetcher.fetchBlock _)
-          .expects(blockId)
-          .once()
-          .returning(blockData.some.asRight[GE].pure[F])
+        (() => replicatorStatus.canonicalHeadSynced).expects().once().returning(true.asRight[GE].pure[F])
+
+        (blockFetcher.fetchBlock _).expects(blockId).once().returning(blockData.some.asRight[GE].pure[F])
 
         for {
           res <- underTest.getBlockById(GetBlockByIdRequest(blockId), new Metadata())
@@ -47,12 +47,15 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
     PropF.forAllF { (blockId: BlockId) =>
       withMock {
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
-        val underTest = new GrpcBlockService[F](blockFetcher)
+        val replicatorStatus = mock[GraphReplicationStatusAlgebra[F]]
+        val underTest = new GrpcBlockService[F](blockFetcher, replicatorStatus)
 
         (blockFetcher.fetchBlock _)
           .expects(blockId)
           .once()
           .returning(Option.empty[BlockData].asRight[GE].pure[F])
+
+        (() => replicatorStatus.canonicalHeadSynced).expects().once().returning(true.asRight[GE].pure[F])
 
         for {
           _ <- interceptMessageIO[StatusException](s"NOT_FOUND: BlockId:${blockId.show}")(
@@ -68,12 +71,15 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
     PropF.forAllF { (blockId: BlockId) =>
       withMock {
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
-        val underTest = new GrpcBlockService[F](blockFetcher)
+        val replicatorStatus = mock[GraphReplicationStatusAlgebra[F]]
+        val underTest = new GrpcBlockService[F](blockFetcher, replicatorStatus)
 
         (blockFetcher.fetchBlock _)
           .expects(blockId)
           .once()
           .returning((GEs.Internal(new IllegalStateException("Boom!")): GE).asLeft[Option[BlockData]].pure[F])
+
+        (() => replicatorStatus.canonicalHeadSynced).expects().once().returning(true.asRight[GE].pure[F])
 
         for {
           _ <- interceptMessageIO[StatusException]("INTERNAL: Boom!")(
@@ -89,7 +95,8 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
     PropF.forAllF { (height: Long, blockHeader: BlockHeader, blockBody: FullBlockBody) =>
       withMock {
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
-        val underTest = new GrpcBlockService[F](blockFetcher)
+        val replicatorStatus = mock[GraphReplicationStatusAlgebra[F]]
+        val underTest = new GrpcBlockService[F](blockFetcher, replicatorStatus)
 
         val blockData = BlockData(blockHeader, blockBody)
 
@@ -97,6 +104,8 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
           .expects(height)
           .once()
           .returning(blockData.some.asRight[GE].pure[F])
+
+        (() => replicatorStatus.canonicalHeadSynced).expects().once().returning(true.asRight[GE].pure[F])
 
         for {
           res <- underTest.getBlockByHeight(GetBlockByHeightRequest(ChainDistance(height)), new Metadata())
@@ -110,12 +119,15 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
     PropF.forAllF { (height: Long) =>
       withMock {
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
-        val underTest = new GrpcBlockService[F](blockFetcher)
+        val replicatorStatus = mock[GraphReplicationStatusAlgebra[F]]
+        val underTest = new GrpcBlockService[F](blockFetcher, replicatorStatus)
 
         (blockFetcher.fetchBlockByHeight _)
           .expects(height)
           .once()
           .returning(Option.empty[BlockData].asRight[GE].pure[F])
+
+        (() => replicatorStatus.canonicalHeadSynced).expects().once().returning(true.asRight[GE].pure[F])
 
         for {
           _ <- interceptMessageIO[StatusException](s"NOT_FOUND: Height:${height.show}")(
@@ -131,12 +143,15 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
     PropF.forAllF { (height: Long) =>
       withMock {
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
-        val underTest = new GrpcBlockService[F](blockFetcher)
+        val replicatorStatus = mock[GraphReplicationStatusAlgebra[F]]
+        val underTest = new GrpcBlockService[F](blockFetcher, replicatorStatus)
 
         (blockFetcher.fetchBlockByHeight _)
           .expects(height)
           .once()
           .returning((GEs.UnImplemented: GE).asLeft[Option[BlockData]].pure[F])
+
+        (() => replicatorStatus.canonicalHeadSynced).expects().once().returning(true.asRight[GE].pure[F])
 
         for {
           _ <- interceptMessageIO[StatusException]("INTERNAL: An implementation is missing")(
@@ -152,7 +167,8 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
     PropF.forAllF { (depth: Long, blockHeader: BlockHeader, blockBody: FullBlockBody) =>
       withMock {
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
-        val underTest = new GrpcBlockService[F](blockFetcher)
+        val replicatorStatus = mock[GraphReplicationStatusAlgebra[F]]
+        val underTest = new GrpcBlockService[F](blockFetcher, replicatorStatus)
 
         val blockData = BlockData(blockHeader, blockBody)
 
@@ -160,6 +176,8 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
           .expects(depth)
           .once()
           .returning(blockData.some.asRight[GE].pure[F])
+
+        (() => replicatorStatus.canonicalHeadSynced).expects().once().returning(true.asRight[GE].pure[F])
 
         for {
           res <- underTest.getBlockByDepth(GetBlockByDepthRequest(ChainDistance(depth)), new Metadata())
@@ -175,12 +193,15 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
     PropF.forAllF { (depth: Long) =>
       withMock {
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
-        val underTest = new GrpcBlockService[F](blockFetcher)
+        val replicatorStatus = mock[GraphReplicationStatusAlgebra[F]]
+        val underTest = new GrpcBlockService[F](blockFetcher, replicatorStatus)
 
         (blockFetcher.fetchBlockByDepth _)
           .expects(depth)
           .once()
           .returning(Option.empty[BlockData].asRight[GE].pure[F])
+
+        (() => replicatorStatus.canonicalHeadSynced).expects().once().returning(true.asRight[GE].pure[F])
 
         for {
           _ <- interceptMessageIO[StatusException](s"NOT_FOUND: Depth:${depth.show}")(
@@ -196,12 +217,15 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
     PropF.forAllF { (depth: Long) =>
       withMock {
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
-        val underTest = new GrpcBlockService[F](blockFetcher)
+        val replicatorStatus = mock[GraphReplicationStatusAlgebra[F]]
+        val underTest = new GrpcBlockService[F](blockFetcher, replicatorStatus)
 
         (blockFetcher.fetchBlockByDepth _)
           .expects(depth)
           .once()
           .returning((GEs.InternalMessage("Boom!"): GE).asLeft[Option[BlockData]].pure[F])
+
+        (() => replicatorStatus.canonicalHeadSynced).expects().once().returning(true.asRight[GE].pure[F])
 
         for {
           _ <- interceptMessageIO[StatusException]("INTERNAL: Boom!")(

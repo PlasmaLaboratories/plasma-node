@@ -21,7 +21,7 @@ import EitherT._
 object NodeBlockFetcher {
 
   def make[F[_]: Async: Logger](
-    toplRpc:          NodeRpc[F, Stream[F, *]],
+    nodeRpc:          NodeRpc[F, Stream[F, *]],
     fetchConcurrency: Int
   ): Resource[F, NodeBlockFetcherAlgebra[F, Stream[F, *]]] =
     Resource.pure {
@@ -52,7 +52,7 @@ object NodeBlockFetcher {
           }
 
         override def fetch(height: Long): F[Either[GE, Option[BlockData]]] =
-          toplRpc
+          nodeRpc
             .blockIdAtHeight(height)
             .flatMap {
               case Some(blockId) =>
@@ -63,21 +63,21 @@ object NodeBlockFetcher {
 
         override def fetch(blockId: BlockId): F[Either[GE, BlockData]] =
           (
-            OptionT(toplRpc.fetchBlockHeader(blockId)).toRight(GEs.HeaderNotFound(blockId): GE),
-            OptionT(toplRpc.fetchBlockBody(blockId))
+            OptionT(nodeRpc.fetchBlockHeader(blockId)).toRight(GEs.HeaderNotFound(blockId): GE),
+            OptionT(nodeRpc.fetchBlockBody(blockId))
               .toRight(GEs.BodyNotFound(blockId): GE)
               .flatMap(body =>
                 (
                   fs2.Stream
                     .iterable[EitherT[F, GE, *], TransactionId](body.transactionIds)
                     .parEvalMap(fetchConcurrency)(id =>
-                      OptionT(toplRpc.fetchTransaction(id))
+                      OptionT(nodeRpc.fetchTransaction(id))
                         .toRight(GEs.TransactionsNotFound(ListSet(id)): GE)
                     )
                     .compile
                     .toList,
                   body.rewardTransactionId.traverse(id =>
-                    OptionT(toplRpc.fetchTransaction(id))
+                    OptionT(nodeRpc.fetchTransaction(id))
                       .toRight(GEs.TransactionsNotFound(ListSet(id)): GE)
                   )
                 ).parMapN((transactions, reward) => FullBlockBody(transactions, reward))(
@@ -88,8 +88,8 @@ object NodeBlockFetcher {
 
         def fetchHeight(): F[Option[Long]] =
           (for {
-            headBlockId <- OptionT(toplRpc.blockIdAtDepth(depth = 0))
-            blockHeader <- OptionT(toplRpc.fetchBlockHeader(headBlockId))
+            headBlockId <- OptionT(nodeRpc.blockIdAtDepth(depth = 0))
+            blockHeader <- OptionT(nodeRpc.fetchBlockHeader(headBlockId))
           } yield blockHeader.height).value
 
       }

@@ -9,6 +9,7 @@ import io.grpc.{Metadata, ServerServiceDefinition}
 import xyz.stratalab.algebras.IndexerRpc
 import xyz.stratalab.indexer.algebras.{
   BlockFetcherAlgebra,
+  GraphReplicationStatusAlgebra,
   TokenFetcherAlgebra,
   TransactionFetcherAlgebra,
   VertexFetcherAlgebra
@@ -62,10 +63,11 @@ object IndexerGrpc {
       blockFetcher:       BlockFetcherAlgebra[F],
       transactionFetcher: TransactionFetcherAlgebra[F],
       vertexFetcher:      VertexFetcherAlgebra[F],
-      valueFetcher:       TokenFetcherAlgebra[F]
+      valueFetcher:       TokenFetcherAlgebra[F],
+      replicatorStatus:   GraphReplicationStatusAlgebra[F]
     ): Resource[F, List[ServerServiceDefinition]] =
       List(
-        BlockServiceFs2Grpc.bindServiceResource(new GrpcBlockService(blockFetcher)),
+        BlockServiceFs2Grpc.bindServiceResource(new GrpcBlockService(blockFetcher, replicatorStatus)),
         TransactionServiceFs2Grpc.bindServiceResource(new GrpcTransactionService(transactionFetcher)),
         NetworkMetricsServiceFs2Grpc.bindServiceResource(new GrpcNetworkMetricsService(vertexFetcher)),
         TokenServiceFs2Grpc.bindServiceResource(new GrpcTokenService(valueFetcher))
