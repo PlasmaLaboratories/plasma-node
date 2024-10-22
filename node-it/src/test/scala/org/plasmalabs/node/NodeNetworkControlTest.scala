@@ -26,10 +26,12 @@ class NodeNetworkControlTest extends CatsEffectSuite {
   val nodeAIp = "127.0.0.2"
   val nodeAP2PPort = 9150
   val nodeARpcPort = 9151
+  val nodeAEthRpcPort = 8545
 
   val nodeBIp = "localhost"
   val nodeBP2PPort = 9152
   val nodeBRpcPort = 9153
+  val nodeBEthRpcPort = 8546
 
   test("Two block-producing nodes that maintain consensus") {
     def configNodeA(dataDir: Path, stakingDir: Path, genesisBlockId: BlockId, genesisSourcePath: String): String =
@@ -45,6 +47,8 @@ class NodeNetworkControlTest extends CatsEffectSuite {
          |  rpc:
          |    bind-port: $nodeARpcPort
          |    network-control: true
+         |  ethereum-json-rpc:
+         |    bind-port: $nodeAEthRpcPort
          |  big-bang:
          |    type: public
          |    genesis-id: ${genesisBlockId.show}
@@ -70,6 +74,8 @@ class NodeNetworkControlTest extends CatsEffectSuite {
          |  rpc:
          |    bind-port: $nodeBRpcPort
          |    network-control: true
+         |  ethereum-json-rpc:
+         |    bind-port: $nodeBEthRpcPort
          |  big-bang:
          |    type: public
          |    genesis-id: ${genesisBlockId.show}

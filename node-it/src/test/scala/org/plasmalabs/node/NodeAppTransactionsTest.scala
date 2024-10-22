@@ -1,5 +1,6 @@
 package org.plasmalabs.node
 
+import cats.data.Chain
 import cats.effect._
 import cats.effect.implicits._
 import cats.effect.std.{Random, SecureRandom}
@@ -47,6 +48,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
     genesisBlockId:              BlockId,
     genesisSourcePath:           String,
     rpcPort:                     Int,
+    ethRpcPort:                  Int,
     useMempoolForSemanticIfLess: Double = 100
   ): String =
     s"""
@@ -60,6 +62,8 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
        |    public-port: 9150
        |  rpc:
        |    bind-port: $rpcPort
+       |  ethereum-json-rpc:
+       |    bind-port: $ethRpcPort
        |  big-bang:
        |    type: public
        |    genesis-id: ${genesisBlockId.show}
@@ -80,6 +84,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
     genesisBlockId:              BlockId,
     genesisSourcePath:           String,
     rpcPort:                     Int,
+    ethRpcPort:                  Int,
     NodeAIp:                     String,
     useMempoolForSemanticIfLess: Double = 100
   ): String =
@@ -95,6 +100,8 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
        |    known-peers: $NodeAIp:9150
        |  rpc:
        |    bind-port: $rpcPort
+       |  ethereum-json-rpc:
+       |    bind-port: $ethRpcPort
        |  big-bang:
        |    type: public
        |    genesis-id: ${genesisBlockId.show}
@@ -109,11 +116,14 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
        |  enable: false
        |""".stripMargin
 
+  val rpcPortA: Int = 1951
+  val rpcPortB: Int = 1953
+  val ethRpcPortA = 2951
+  val ethRpcPortB = 2953
+
   test("Enabled memory pool protection, accept and broadcast transaction chain, tx in mempool is considered") {
 
     val height: Int = 3
-    val rpcPortA: Int = 1951
-    val rpcPortB: Int = 1953
 
     val resource =
       for {
@@ -128,7 +138,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
             .evalTap(saveStaker(_)(testnetConfig.stakers(0)._1, testnetConfig.stakers(0)._2))
         ).tupled
           .map { case (dataDir, stakingDir) =>
-            configNodeA(dataDir, stakingDir, testnetConfig.genesis.header.id, genesisSourcePath, rpcPortA)
+            configNodeA(dataDir, stakingDir, testnetConfig.genesis.header.id, genesisSourcePath, rpcPortA, ethRpcPortA)
           }
           .flatMap(saveLocalConfig(_, "nodeA"))
           .map(_.toString)
@@ -140,7 +150,15 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
             .evalTap(saveStaker(_)(testnetConfig.stakers(1)._1, testnetConfig.stakers(1)._2))
         ).tupled
           .map { case (dataDir, stakingDir) =>
-            configNodeB(dataDir, stakingDir, testnetConfig.genesis.header.id, genesisSourcePath, rpcPortB, "127.0.0.2")
+            configNodeB(
+              dataDir,
+              stakingDir,
+              testnetConfig.genesis.header.id,
+              genesisSourcePath,
+              rpcPortB,
+              ethRpcPortB,
+              "127.0.0.2"
+            )
           }
           .flatMap(serveConfig(_, "nodeB.yaml"))
         // Run the nodes in separate fibers, but use the fibers' outcomes as an error signal to
@@ -198,8 +216,6 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
   test("Enabled memory pool protection, send tx chain to different nodes, thus only head tx will be accepted") {
 
     val height: Int = 3
-    val rpcPortA: Int = 1961
-    val rpcPortB: Int = 1963
 
     val resource =
       for {
@@ -214,7 +230,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
             .evalTap(saveStaker(_)(testnetConfig.stakers(0)._1, testnetConfig.stakers(0)._2))
         ).tupled
           .map { case (dataDir, stakingDir) =>
-            configNodeA(dataDir, stakingDir, testnetConfig.genesis.header.id, genesisSourcePath, rpcPortA)
+            configNodeA(dataDir, stakingDir, testnetConfig.genesis.header.id, genesisSourcePath, rpcPortA, ethRpcPortA)
           }
           .flatMap(saveLocalConfig(_, "nodeA"))
           .map(_.toString)
@@ -226,7 +242,15 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
             .evalTap(saveStaker(_)(testnetConfig.stakers(1)._1, testnetConfig.stakers(1)._2))
         ).tupled
           .map { case (dataDir, stakingDir) =>
-            configNodeB(dataDir, stakingDir, testnetConfig.genesis.header.id, genesisSourcePath, rpcPortB, "127.0.0.4")
+            configNodeB(
+              dataDir,
+              stakingDir,
+              testnetConfig.genesis.header.id,
+              genesisSourcePath,
+              rpcPortB,
+              ethRpcPortB,
+              "127.0.0.4"
+            )
           }
           .flatMap(serveConfig(_, "nodeB.yaml"))
         // Run the nodes in separate fibers, but use the fibers' outcomes as an error signal to
@@ -292,8 +316,6 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
 
   test("Enabled memory pool protection consider only first N transaction for semantic check") {
     val height: Int = 3
-    val rpcPortA: Int = 1971
-    val rpcPortB: Int = 1973
 
     val useMempoolForSemanticIfLess: Double = 10
     val useMempoolForSemanticIfLessSize = maxMempoolSize * (useMempoolForSemanticIfLess / 100)
@@ -317,6 +339,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               testnetConfig.genesis.header.id,
               genesisSourcePath,
               rpcPortA,
+              ethRpcPortA,
               useMempoolForSemanticIfLess
             )
           }
@@ -336,6 +359,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               testnetConfig.genesis.header.id,
               genesisSourcePath,
               rpcPortB,
+              ethRpcPortB,
               "127.0.0.6",
               useMempoolForSemanticIfLess
             )
