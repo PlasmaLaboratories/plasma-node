@@ -19,7 +19,6 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import scala.concurrent.duration._
 
-
 class NodeNetworkControlTest extends CatsEffectSuite {
 
   override val munitIOTimeout: Duration = 3.minutes
@@ -123,10 +122,8 @@ class NodeNetworkControlTest extends CatsEffectSuite {
               rpcClients = List(rpcClientA, rpcClientB)
               implicit0(logger: Logger[F]) <- Slf4jLogger.fromName[F]("NodeNetworkControlTest").toResource
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
-              indexerChannelA                <- xyz.stratalab.grpc.makeChannel[F](nodeAIp, nodeARpcPort, tls = false)
-              indexerTxServiceA              <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
-              indexerBlockServiceA           <- BlockServiceFs2Grpc.stubResource[F](indexerChannelA)
-              _                            <- awaitIndexerReady(indexerBlockServiceA).timeout(45.seconds).toResource
+              indexerChannelA              <- xyz.stratalab.grpc.makeChannel[F](nodeAIp, nodeARpcPort, tls = false)
+              indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
               wallet                       <- makeWallet(indexerTxServiceA)
               _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
 
@@ -134,29 +131,24 @@ class NodeNetworkControlTest extends CatsEffectSuite {
               firstHeight = 3
               _ <- rpcClients.parTraverse(fetchUntilHeight(_, firstHeight)).toResource
               idsAtTargetHeight <- rpcClients
-                .traverse(client =>
-                  OptionT(client.blockIdAtHeight(firstHeight)).getOrRaise(new IllegalStateException)
-                )
+                .traverse(client => OptionT(client.blockIdAtHeight(firstHeight)).getOrRaise(new IllegalStateException))
                 .toResource
               _ <- IO(idsAtTargetHeight.toSet.size == 1).assert.toResource
-              //forget nodes
-              hostA                        <- networkControlA.getHostId().toResource
-              hostB                        <- networkControlB.getHostId().toResource
-              _ <- networkControlA.forgetPeer(hostB).toResource
-              _ <- networkControlB.forgetPeer(hostA).toResource
-
+              // forget nodes
+              hostA <- networkControlA.getHostId().toResource
+              hostB <- networkControlB.getHostId().toResource
+              _     <- networkControlA.forgetPeer(hostB).toResource
+              _     <- networkControlB.forgetPeer(hostA).toResource
 
               // check there is no consensus
               secondHeight = firstHeight + 4
               _ <- rpcClients.parTraverse(fetchUntilHeight(_, secondHeight)).toResource
               idsAtTargetHeight2 <- rpcClients
-                .traverse(client =>
-                  OptionT(client.blockIdAtHeight(secondHeight)).getOrRaise(new IllegalStateException)
-                )
+                .traverse(client => OptionT(client.blockIdAtHeight(secondHeight)).getOrRaise(new IllegalStateException))
                 .toResource
               _ <- IO(idsAtTargetHeight2.toSet.size == 2).assert.toResource
 
-              //remind nodes
+              // remind nodes
               _ <- networkControlB.addPeer(nodeAIp, nodeAP2PPort, hostA.some).toResource
               _ <- networkControlA.addPeer(nodeBIp, nodeBP2PPort, hostA.some).toResource
 
@@ -164,9 +156,7 @@ class NodeNetworkControlTest extends CatsEffectSuite {
               thirdHeight = secondHeight + 2
               _ <- rpcClients.parTraverse(fetchUntilHeight(_, thirdHeight)).toResource
               idsAtTargetHeight3 <- rpcClients
-                .traverse(client =>
-                  OptionT(client.blockIdAtHeight(thirdHeight)).getOrRaise(new IllegalStateException)
-                )
+                .traverse(client => OptionT(client.blockIdAtHeight(thirdHeight)).getOrRaise(new IllegalStateException))
                 .toResource
               _ <- IO(idsAtTargetHeight3.toSet.size == 1).assert.toResource
             } yield ())

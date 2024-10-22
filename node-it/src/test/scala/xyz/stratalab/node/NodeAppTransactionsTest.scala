@@ -156,8 +156,6 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
               indexerChannelA              <- xyz.stratalab.grpc.makeChannel[F]("127.0.0.2", rpcPortA, tls = false)
               indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
-              indexerBlockServiceA         <- BlockServiceFs2Grpc.stubResource[F](indexerChannelA)
-              _                            <- awaitIndexerReady(indexerBlockServiceA).timeout(45.seconds).toResource
               wallet                       <- makeWallet(indexerTxServiceA)
               _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
               implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F].toResource
@@ -244,8 +242,6 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
               indexerChannelA              <- xyz.stratalab.grpc.makeChannel[F]("127.0.0.4", rpcPortA, tls = false)
               indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
-              indexerBlockServiceA         <- BlockServiceFs2Grpc.stubResource[F](indexerChannelA)
-              _                            <- awaitIndexerReady(indexerBlockServiceA).timeout(45.seconds).toResource
               implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F].toResource
 
               _ <- rpcClients.parTraverse(fetchUntilHeight(_, height)).toResource
@@ -358,10 +354,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
               indexerChannelA              <- xyz.stratalab.grpc.makeChannel[F]("127.0.0.6", rpcPortA, tls = false)
               indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
-              indexerBlockServiceA         <- BlockServiceFs2Grpc.stubResource[F](indexerChannelA)
-              _                            <- awaitIndexerReady(indexerBlockServiceA).timeout(45.seconds).toResource
-
-              _ <- rpcClients.parTraverse(fetchUntilHeight(_, height)).toResource
+              _                            <- rpcClients.parTraverse(fetchUntilHeight(_, height)).toResource
 
               wallet                       <- makeWallet(indexerTxServiceA)
               _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
