@@ -178,6 +178,7 @@ object JsonRpcResponse {
  * Ethereum JSON-RPC has many manyn more methods than what is listed here, but most either can't or don't need to be supported.
  */
 trait EthereumRpcMethods[F[_]] {
+
   /**
    * Chain Height
    */
@@ -196,7 +197,7 @@ trait EthereumRpcMethods[F[_]] {
   /**
    * The balances of some address
    */
-  def getBalance(address:   String, block:                Option[String]): F[String]
+  def getBalance(address: String, block: Option[String]): F[String]
 
   /**
    * Retrieve block by height
