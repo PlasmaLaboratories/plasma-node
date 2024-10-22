@@ -100,7 +100,8 @@ object Dependencies {
 
   val http4s = Seq(
     "org.http4s" %% "http4s-ember-client" % http4sVersion,
-    "org.http4s" %% "http4s-dsl"          % http4sVersion
+    "org.http4s" %% "http4s-dsl"          % http4sVersion,
+    "org.http4s" %% "http4s-circe"        % http4sVersion
   )
 
   val http4sServer = http4s ++ Seq(
@@ -247,7 +248,7 @@ object Dependencies {
     Seq(
       "io.grpc" % "grpc-netty-shaded" % ioGrpcVersion,
       grpcServices
-    )
+    ) ++ http4sServer
 
   lazy val levelDbStore: Seq[ModuleID] =
     levelDb ++

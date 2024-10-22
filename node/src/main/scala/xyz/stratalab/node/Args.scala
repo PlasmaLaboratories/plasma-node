@@ -69,6 +69,14 @@ object Args {
     )
     rpcBindPort: Option[Int] = None,
     @arg(
+      doc = "The hostname to bind to for the Ethereum JSON-RPC layer (i.e. localhost or 0.0.0.0)"
+    )
+    ethereumJsonRpcBindHost: Option[String] = None,
+    @arg(
+      doc = "The port to bind to for the Ethereum JSON-RPC layer (i.e. 8545)"
+    )
+    ethereumJsonRpcBindPort: Option[Int] = None,
+    @arg(
       doc = "The hostname to bind to for the P2P layer (i.e. localhost or 0.0.0.0)"
     )
     p2pBindHost: Option[String] = None,

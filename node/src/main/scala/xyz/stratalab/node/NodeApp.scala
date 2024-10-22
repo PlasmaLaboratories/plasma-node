@@ -27,7 +27,7 @@ import xyz.stratalab.consensus.models.{BlockId, VrfConfig}
 import xyz.stratalab.crypto.hash.Blake2b512
 import xyz.stratalab.crypto.signing.Ed25519
 import xyz.stratalab.eventtree.ParentChildTree
-import xyz.stratalab.grpc.HealthCheckGrpc
+import xyz.stratalab.grpc._
 import xyz.stratalab.healthcheck.HealthCheck
 import xyz.stratalab.indexer._
 import xyz.stratalab.interpreters._
@@ -39,7 +39,6 @@ import xyz.stratalab.models.p2p._
 import xyz.stratalab.models.utility.HasLength.instances.byteStringLength
 import xyz.stratalab.models.utility._
 import xyz.stratalab.networking.p2p.LocalPeer
-import xyz.stratalab.node.ApplicationConfigOps._
 import xyz.stratalab.node.cli.ConfiguredCliApp
 import xyz.stratalab.numerics.interpreters.{ExpInterpreter, Log1pInterpreter}
 import xyz.stratalab.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
@@ -48,6 +47,8 @@ import xyz.stratalab.version.VersionReplicator
 
 import java.time.Instant
 import scala.concurrent.duration._
+
+import ApplicationConfigOps._
 
 object NodeApp extends AbstractNodeApp
 
@@ -728,6 +729,10 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         validatorsP2P,
         epochData,
         protocolConfig
+      )
+
+      _ <- EthereumJsonRpc.serve(appConfig.node.ethereumJsonRpc.bindHost, appConfig.node.ethereumJsonRpc.bindPort)(
+        new EthereumJsonRpcImpl(localBlockchain)
       )
 
       // Finally, run the program
