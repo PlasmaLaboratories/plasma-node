@@ -7,7 +7,7 @@ val scala3 = "3.4.1"
 
 inThisBuild(
   List(
-    organization := "xyz.stratalab",
+    organization := "org.plasmalabs",
     scalaVersion := scala3,
     versionScheme := Some("early-semver"),
     dynverSeparator := "-",
@@ -46,14 +46,14 @@ lazy val commonSettings = Seq(
     "jitpack" at "https://jitpack.io"
   ),
   testFrameworks += TestFrameworks.MUnit,
-  dependencyOverrides ++= Dependencies.protobufSpecs ++ Seq(Dependencies.strataQuivr4s)
+  dependencyOverrides ++= Dependencies.protobufSpecs ++ Seq(Dependencies.quivr4s)
 )
 
 lazy val dockerSettings = Seq(
-  dockerBaseImage := "eclipse-temurin:11-jre",
+  dockerBaseImage := "eclipse-temurin:21-jre",
   dockerUpdateLatest := sys.env.get("DOCKER_PUBLISH_LATEST_TAG").fold(false)(_.toBoolean),
   dockerLabels ++= Map(
-    "strata-node.version" -> version.value
+    "plasma-node.version" -> version.value
   ),
   dockerAliases := dockerAliases.value.flatMap { alias =>
     Seq(
@@ -66,7 +66,7 @@ lazy val dockerSettings = Seq(
 lazy val nodeDockerSettings =
   dockerSettings ++ Seq(
     dockerExposedPorts := Seq(9084, 9085),
-    Docker / packageName := "strata-node",
+    Docker / packageName := "plasma-node",
     dockerExposedVolumes += "/node",
     dockerExposedVolumes += "/node-staking",
     dockerEnvVars ++= Map(
@@ -77,8 +77,8 @@ lazy val nodeDockerSettings =
     dockerAliases ++= (
       if (sys.env.get("DOCKER_PUBLISH_DEV_TAG").fold(false)(_.toBoolean))
         Seq(
-          DockerAlias(Some("docker.io"), Some("stratalab"), "strata-node", Some("dev")),
-          DockerAlias(Some("ghcr.io"), Some("plasmalaboratories"), "strata-node", Some("dev"))
+          DockerAlias(Some("docker.io"), Some("stratalab"), "plasma-node", Some("dev")),
+          DockerAlias(Some("ghcr.io"), Some("plasmalaboratories"), "plasma-node", Some("dev"))
         )
       else Seq()
     )
@@ -87,13 +87,13 @@ lazy val nodeDockerSettings =
 lazy val indexerDockerSettings =
   dockerSettings ++ Seq(
     dockerExposedPorts := Seq(9084),
-    Docker / packageName := "strata-indexer",
+    Docker / packageName := "plasma-indexer",
     dockerExposedVolumes += "/indexer",
     dockerAliases ++= (
       if (sys.env.get("DOCKER_PUBLISH_DEV_TAG").fold(false)(_.toBoolean))
         Seq(
-          DockerAlias(Some("docker.io"), Some("stratalab"), "strata-indexer", Some("dev")),
-          DockerAlias(Some("ghcr.io"), Some("plasmalaboratories"), "strata-indexer", Some("dev"))
+          DockerAlias(Some("docker.io"), Some("stratalab"), "plasma-indexer", Some("dev")),
+          DockerAlias(Some("ghcr.io"), Some("plasmalaboratories"), "plasma-indexer", Some("dev"))
         )
       else Seq()
     )
@@ -112,7 +112,7 @@ lazy val testnetSimulationOrchestratorDockerSettings =
 def assemblySettings(main: String) = Seq(
   assembly / mainClass := Some(main),
   assembly / test := {},
-  assemblyJarName := s"strata-node-${version.value}.jar",
+  assemblyJarName := s"plasma-node-${version.value}.jar",
   assembly / assemblyMergeStrategy ~= { old: (String => MergeStrategy) =>
     {
       case ps if ps.endsWith(".SF")  => MergeStrategy.discard
@@ -169,10 +169,10 @@ def versionFmt(out: sbtdynver.GitDescribeOutput): String = {
 
 def fallbackVersion(d: java.util.Date): String = s"HEAD-${sbtdynver.DynVer timestamp d}"
 
-lazy val strataNode = project
+lazy val plasmaNode = project
   .in(file("."))
   .settings(
-    moduleName := "strataNode",
+    moduleName := "plasmaNode",
     commonSettings,
     publish / skip := true,
     crossScalaVersions := Nil
@@ -209,16 +209,16 @@ lazy val strataNode = project
 lazy val node = project
   .in(file("node"))
   .settings(
-    name := "strata-node",
+    name := "plasma-node",
     commonSettings,
-    assemblySettings("xyz.stratalab.node.NodeApp"),
-    assemblyJarName := s"strata-node-${version.value}.jar",
+    assemblySettings("org.plasmalabs.node.NodeApp"),
+    assemblyJarName := s"plasma-node-${version.value}.jar",
     nodeDockerSettings,
     crossScalaVersions := Seq(scala3),
-    Compile / mainClass := Some("xyz.stratalab.node.NodeApp"),
+    Compile / mainClass := Some("org.plasmalabs.node.NodeApp"),
     publish / skip := true,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.node",
+    buildInfoPackage := "org.plasmalabs.buildinfo.node",
     libraryDependencies ++= Dependencies.node,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -260,14 +260,14 @@ lazy val networkDelayer = project
     name := "network-delayer",
     commonSettings,
     coverageEnabled := false,
-    assemblySettings("xyz.stratalab.networkdelayer.NetworkDelayer"),
+    assemblySettings("org.plasmalabs.networkdelayer.NetworkDelayer"),
     assemblyJarName := s"network-delayer-${version.value}.jar",
     networkDelayerDockerSettings,
     crossScalaVersions := Seq(scala3),
-    Compile / mainClass := Some("xyz.stratalab.networkdelayer.NetworkDelayer"),
+    Compile / mainClass := Some("org.plasmalabs.networkdelayer.NetworkDelayer"),
     publish / skip := true,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.networkdelayer",
+    buildInfoPackage := "org.plasmalabs.buildinfo.networkdelayer",
     libraryDependencies ++= Dependencies.networkDelayer,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -280,14 +280,14 @@ lazy val testnetSimulationOrchestrator = project
     name := "testnet-simulation-orchestrator",
     commonSettings,
     coverageEnabled := false,
-    assemblySettings("xyz.stratalab.testnetsimulationorchestrator.app.Orchestrator"),
+    assemblySettings("org.plasmalabs.testnetsimulationorchestrator.app.Orchestrator"),
     assemblyJarName := s"testnet-simulation-orchestrator-${version.value}.jar",
     testnetSimulationOrchestratorDockerSettings,
     crossScalaVersions := Seq(scala3),
-    Compile / mainClass := Some("xyz.stratalab.testnetsimulationorchestrator.app.Orchestrator"),
+    Compile / mainClass := Some("org.plasmalabs.testnetsimulationorchestrator.app.Orchestrator"),
     publish / skip := true,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.testnetsimulationorchestator",
+    buildInfoPackage := "org.plasmalabs.buildinfo.testnetsimulationorchestator",
     libraryDependencies ++= Dependencies.testnetSimulationOrchestator,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -312,7 +312,7 @@ lazy val models = project
     name := "models",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.models",
+    buildInfoPackage := "org.plasmalabs.buildinfo.models",
     libraryDependencies ++= Dependencies.models ++ Dependencies.mUnitTest,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -325,7 +325,7 @@ lazy val numerics = project
     name := "numerics",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.numerics",
+    buildInfoPackage := "org.plasmalabs.buildinfo.numerics",
     libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.scalacache,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -339,7 +339,7 @@ lazy val eventTree = project
     commonSettings,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.eventtree",
+    buildInfoPackage := "org.plasmalabs.buildinfo.eventtree",
     libraryDependencies ++= Dependencies.eventTree,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -352,7 +352,7 @@ lazy val byteCodecs = project
     name := "byte-codecs",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.codecs.bytes",
+    buildInfoPackage := "org.plasmalabs.buildinfo.codecs.bytes",
     libraryDependencies ++= Dependencies.byteCodecs ++ Dependencies.protobufSpecs,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -365,7 +365,7 @@ lazy val tetraByteCodecs = project
     name := "tetra-byte-codecs",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.codecs.bytes.tetra",
+    buildInfoPackage := "org.plasmalabs.buildinfo.codecs.bytes.tetra",
     libraryDependencies ++= Dependencies.munitScalamock ++ Dependencies.protobufSpecs,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -382,7 +382,7 @@ lazy val typeclasses: Project = project
     name := "typeclasses",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.typeclasses",
+    buildInfoPackage := "org.plasmalabs.buildinfo.typeclasses",
     libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.logging ++ Dependencies.circe,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -395,7 +395,7 @@ lazy val algebras = project
     name := "algebras",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.algebras",
+    buildInfoPackage := "org.plasmalabs.buildinfo.algebras",
     libraryDependencies ++= Dependencies.algebras,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -408,7 +408,7 @@ lazy val actor = project
     name := "actor",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.actor",
+    buildInfoPackage := "org.plasmalabs.buildinfo.actor",
     libraryDependencies ++= Dependencies.actor,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -424,7 +424,7 @@ lazy val commonInterpreters = project
     commonSettings,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.commoninterpreters",
+    buildInfoPackage := "org.plasmalabs.buildinfo.commoninterpreters",
     libraryDependencies ++= Dependencies.commonInterpreters,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -448,7 +448,7 @@ lazy val consensus = project
     commonSettings,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.consensus",
+    buildInfoPackage := "org.plasmalabs.buildinfo.consensus",
     libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.consensus,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -473,7 +473,7 @@ lazy val minting = project
     commonSettings,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.minting",
+    buildInfoPackage := "org.plasmalabs.buildinfo.minting",
     libraryDependencies ++= Dependencies.minting,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -498,7 +498,7 @@ lazy val networking = project
     commonSettings,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.networking",
+    buildInfoPackage := "org.plasmalabs.buildinfo.networking",
     libraryDependencies ++= Dependencies.networking,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -529,7 +529,7 @@ lazy val transactionGenerator = project
     coverageEnabled := false,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.transactiongenerator",
+    buildInfoPackage := "org.plasmalabs.buildinfo.transactiongenerator",
     libraryDependencies ++= Dependencies.transactionGenerator,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -555,7 +555,7 @@ lazy val ledger = project
     commonSettings,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.ledger",
+    buildInfoPackage := "org.plasmalabs.buildinfo.ledger",
     libraryDependencies ++= Dependencies.ledger,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -577,7 +577,7 @@ lazy val blockchainCore = project
     commonSettings,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.blockchaincore",
+    buildInfoPackage := "org.plasmalabs.buildinfo.blockchaincore",
     libraryDependencies ++= Dependencies.blockchain,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -603,7 +603,7 @@ lazy val blockchain = project
     commonSettings,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.blockchain",
+    buildInfoPackage := "org.plasmalabs.buildinfo.blockchain",
     libraryDependencies ++= Dependencies.blockchain,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -664,7 +664,7 @@ lazy val nodeCrypto = project
     name := "node-crypto",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.nodecrypto",
+    buildInfoPackage := "org.plasmalabs.buildinfo.nodecrypto",
     libraryDependencies ++= Dependencies.crypto,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -676,7 +676,7 @@ lazy val catsUtils = project
     name := "cats-utils",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.catsUtils",
+    buildInfoPackage := "org.plasmalabs.buildinfo.catsUtils",
     libraryDependencies ++= Dependencies.catsUtils,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -689,7 +689,7 @@ lazy val indexer = project
     publish / skip := true,
     crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "xyz.stratalab.buildinfo.indexer",
+    buildInfoPackage := "org.plasmalabs.buildinfo.indexer",
     libraryDependencies ++= Dependencies.indexer,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
