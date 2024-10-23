@@ -10,7 +10,7 @@ on:
         type: string
       java-versions:
         description: 'List of Java versions to target.'
-        default: "['11']"
+        default: "['21']"
         required: false
         type: string
       preserve-cache-between-runs:
@@ -77,7 +77,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Strata Node Jar (${{ matrix.java }})
-          path: node/target/scala-2.13/strata-node-*.jar
+          path: node/target/scala-2.13/plasma-node-*.jar
           if-no-files-found: error
       
       - name: Cleanup before cache

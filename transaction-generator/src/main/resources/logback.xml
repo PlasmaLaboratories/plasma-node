@@ -10,7 +10,7 @@
         <appender-ref ref="STDOUT" />
     </appender>
 
-    <logger name="xyz.stratalab" level="INFO" />
+    <logger name="org.plasmalabs" level="INFO" />
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
