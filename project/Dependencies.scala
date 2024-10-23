@@ -11,8 +11,8 @@ object Dependencies {
   val orientDbVersion = "3.2.29"
   val ioGrpcVersion = "1.64.0"
   val http4sVersion = "0.23.26"
-  val protobufSpecsVersion = "0.1.0+2-12fdb246-SNAPSHOT"
-  val strataSdkVersion = "0.0.0+252-20864ede-SNAPSHOT"
+  val protobufSpecsVersion = "0.1.1"
+  val plasmaSdkVersion = "0.1.0"
 
   val catsSlf4j =
     "org.typelevel" %% "log4cats-slf4j" % "2.7.0"
@@ -107,12 +107,12 @@ object Dependencies {
     "org.http4s" %% "http4s-ember-server" % http4sVersion
   )
 
-  val bramblScCrypto = "xyz.stratalab" %% "crypto"     % strataSdkVersion
-  val bramblScSdk = "xyz.stratalab"    %% "strata-sdk" % strataSdkVersion
-  val quivr4s = "xyz.stratalab"        %% "quivr4s"    % strataSdkVersion
+  val plasmaScCrypto = "org.plasmalabs" %% "crypto"     % plasmaSdkVersion
+  val plasmaScSdk = "org.plasmalabs"    %% "plasma-sdk" % plasmaSdkVersion
+  val quivr4s = "org.plasmalabs"        %% "quivr4s"    % plasmaSdkVersion
 
   val protobufSpecs: Seq[ModuleID] = Seq(
-    "xyz.stratalab" %% "protobuf-fs2" % protobufSpecsVersion
+    "org.plasmalabs" %% "protobuf-fs2" % protobufSpecsVersion
   )
 
   val ipaddress = "com.github.seancfoley" % "ipaddress" % "5.5.0"
@@ -189,7 +189,7 @@ object Dependencies {
     externalCrypto ++
     cats ++
     mUnitTest ++
-    Seq(bramblScCrypto, bramblScCrypto.classifier("tests") % Test) ++
+    Seq(plasmaScCrypto, plasmaScCrypto.classifier("tests") % Test) ++
     circe.map(_ % Test)
 
   lazy val eventTree: Seq[ModuleID] =
@@ -200,7 +200,7 @@ object Dependencies {
 
   lazy val models: Seq[ModuleID] =
     cats ++ scodec ++ protobufSpecs ++
-    Seq(bramblScSdk, bramblScSdk.classifier("tests") % Test) ++
+    Seq(plasmaScSdk, plasmaScSdk.classifier("tests") % Test) ++
     Seq(quivr4s, quivr4s.classifier("tests") % Test) ++
     Seq(jacksonScala, jacksonScalaReflection)
 
@@ -218,7 +218,7 @@ object Dependencies {
 
   lazy val ledger: Seq[ModuleID] =
     Dependencies.mUnitTest ++ Dependencies.catsEffect ++ Dependencies.protobufSpecs ++ scalacache ++
-    Seq(Dependencies.bramblScSdk, Dependencies.bramblScSdk.classifier("tests") % Test)
+    Seq(Dependencies.plasmaScSdk, Dependencies.plasmaScSdk.classifier("tests") % Test)
 
   lazy val blockchain: Seq[ModuleID] =
     Dependencies.mUnitTest ++ Dependencies.catsEffect ++ logging ++ Seq(fs2Core)
