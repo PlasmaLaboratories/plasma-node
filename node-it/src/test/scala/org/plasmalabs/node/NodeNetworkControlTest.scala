@@ -124,8 +124,6 @@ class NodeNetworkControlTest extends CatsEffectSuite {
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
               indexerChannelA              <- org.plasmalabs.grpc.makeChannel[F](nodeAIp, nodeARpcPort, tls = false)
               indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
-              indexerBlockServiceA         <- BlockServiceFs2Grpc.stubResource[F](indexerChannelA)
-              _                            <- awaitIndexerReady(indexerBlockServiceA).timeout(45.seconds).toResource
               wallet                       <- makeWallet(indexerTxServiceA)
               _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
 

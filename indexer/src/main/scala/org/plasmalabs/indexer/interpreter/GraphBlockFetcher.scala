@@ -76,8 +76,8 @@ object GraphBlockFetcher {
         override def fetchBlockByHeight(height: Long): F[Either[GE, Option[BlockData]]] =
           fetchBlockFromVertex(() => vertexFetcher.fetchHeaderByHeight(height))
 
-        override def fetchBlockByDepth(height: Long): F[Either[GE, Option[BlockData]]] =
-          fetchBlockFromVertex(() => vertexFetcher.fetchHeaderByDepth(height))
+        override def fetchBlockByDepth(depth: Long): F[Either[GE, Option[BlockData]]] =
+          fetchBlockFromVertex(() => vertexFetcher.fetchHeaderByDepth(depth))
 
       }
     }

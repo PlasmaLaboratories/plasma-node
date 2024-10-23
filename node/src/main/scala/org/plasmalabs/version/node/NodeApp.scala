@@ -419,7 +419,8 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
               Some(appConfig.indexer.orientDbDirectory)
                 .filterNot(_.isEmpty)
                 .getOrElse(dataStores.baseDirectory./("orient-db").toString),
-              appConfig.indexer.orientDbPassword
+              appConfig.indexer.orientDbPassword,
+              ttlCacheCheck = appConfig.indexer.ttlCacheCheck
             )
         )
         .value
@@ -428,7 +429,8 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           indexer.blockFetcher,
           indexer.transactionFetcher,
           indexer.vertexFetcher,
-          indexer.valueFetcher
+          indexer.valueFetcher,
+          indexer.replicatorStatus
         )
       )
       healthCheck    <- HealthCheck.make[F]()

@@ -16,6 +16,8 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 import pureconfig.ConfigSource
 import pureconfig.generic.auto._
 
+import scala.concurrent.duration.Duration
+
 object IndexerApp
     extends IOBaseApp[IndexerArgs, IndexerApplicationConfig](
       createArgs = a => IO.delay(IndexerArgs.parserArgs.constructOrThrow(a)),
@@ -40,14 +42,16 @@ object IndexerApp
             appConfig.nodeRpcPort,
             appConfig.nodeRpcTls,
             appConfig.dataDir,
-            appConfig.orientDbPassword
+            appConfig.orientDbPassword,
+            ttlCacheCheck = appConfig.ttlCacheCheck
           )
       indexerServices <-
         IndexerGrpc.Server.services(
           indexer.blockFetcher,
           indexer.transactionFetcher,
           indexer.vertexFetcher,
-          indexer.valueFetcher
+          indexer.valueFetcher,
+          indexer.replicatorStatus
         )
       healthCheck <- IndexerHealthCheck.make[IO]().map(_.healthChecker).flatMap(HealthCheckGrpc.Server.services[IO])
       _ <- Grpc.Server.serve[IO](appConfig.rpcBindHost, appConfig.rpcBindPort)(
@@ -136,7 +140,8 @@ case class IndexerApplicationConfig(
   dataDir:          String,
   orientDbPassword: String,
   enableReplicator: Boolean = false,
-  enableMetrics:    Boolean = false
+  enableMetrics:    Boolean = false,
+  ttlCacheCheck:    Duration
 )
 
 object IndexerApplicationConfig {
@@ -169,6 +174,7 @@ object IndexerApplicationConfig {
       show" nodeRpcPort=${config.nodeRpcPort}" +
       show" dataDir=${config.dataDir}" +
       show" enableReplicator=${config.enableReplicator}" +
+      show" ttlCacheCheck=${config.ttlCacheCheck}" +
       // NOTE: Do not show orientDbPassword
       show")"
 }

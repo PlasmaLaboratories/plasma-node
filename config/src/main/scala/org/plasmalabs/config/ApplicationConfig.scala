@@ -254,7 +254,8 @@ object ApplicationConfig {
   case class Indexer(
     enable:            Boolean,
     orientDbDirectory: String,
-    orientDbPassword:  String
+    orientDbPassword:  String,
+    ttlCacheCheck:     Duration
   )
 
   @Lenses
