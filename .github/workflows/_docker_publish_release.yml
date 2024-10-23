@@ -2,10 +2,25 @@ name: Publish Docker Image (Release)
 
 on:
   workflow_call:
+    inputs:
+      target-os:
+        description: 'List of operating systems to build on.'
+        default: "['ubuntu-latest']"
+        required: false
+        type: string
+      java-versions:
+        description: 'List of Java versions to target.'
+        default: "['21']"
+        required: false
+        type: string
 
 jobs:
   docker_release:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: ${{fromJson(inputs.target-os)}}
+        java: ${{fromJson(inputs.java-versions)}}
+    runs-on: ${{ matrix.os }}
     permissions:
       contents: read
       packages: write
@@ -15,6 +30,12 @@ jobs:
         with:
           fetch-depth: 0
           submodules: true
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
