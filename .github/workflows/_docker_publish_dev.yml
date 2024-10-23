@@ -2,11 +2,26 @@ name: Publish Docker Images (Dev)
 
 on:
   workflow_call:
+    inputs:
+      target-os:
+        description: 'List of operating systems to build on.'
+        default: "['ubuntu-latest']"
+        required: false
+        type: string
+      java-versions:
+        description: 'List of Java versions to target.'
+        default: "['21']"
+        required: false
+        type: string
 
 jobs:
   publish_docker_images:
     name: Publish Docker Images
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: ${{fromJson(inputs.target-os)}}
+        java: ${{fromJson(inputs.java-versions)}}
+    runs-on: ${{ matrix.os }}
     permissions:
       id-token: write
       contents: read
@@ -17,6 +32,12 @@ jobs:
         with:
           fetch-depth: 0
           submodules: true
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
 
       # First publish the node to Dockerhub and GHCR (dev image).
       - name: Log in to Docker Hub
