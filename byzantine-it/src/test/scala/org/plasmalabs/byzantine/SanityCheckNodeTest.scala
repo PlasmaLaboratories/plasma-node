@@ -12,7 +12,7 @@ class SanityCheckNodeTest extends IntegrationSuite {
     val resource =
       for {
         (dockerSupport, _dockerClient) <- DockerSupport.make[F]()
-        implicit0(dockerClient: DockerClient) = _dockerClient
+        given DockerClient = _dockerClient
         node1 <- dockerSupport.createNode(
           "SingleNodeTest-node1",
           "SingleNodeTest",

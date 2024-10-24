@@ -67,5 +67,5 @@ case class P2PNetworkConfig(networkProperties: NetworkProperties, slotDuration: 
       MILLISECONDS
     )
 
-  val aggressiveP2PRequestInterval: FiniteDuration = remotePeerNoveltyInSlots * slotDuration
+  val aggressiveP2PRequestInterval: FiniteDuration = slotDuration * remotePeerNoveltyInSlots
 }

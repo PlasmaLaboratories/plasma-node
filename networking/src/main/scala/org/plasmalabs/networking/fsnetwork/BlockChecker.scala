@@ -325,7 +325,7 @@ object BlockChecker {
       _ <-
         if (appliedHeaders.nonEmpty) {
           requestNextHeaders(newState) >>
-          requestMissedBodies(newState, hostId, unknownBodies)
+          requestMissedBodies(newState, hostId, unknownBodies).void
         } else { ().pure[F] }
 
     } yield (newState, newState)

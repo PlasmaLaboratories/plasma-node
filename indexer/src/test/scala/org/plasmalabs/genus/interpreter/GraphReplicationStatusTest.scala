@@ -28,9 +28,9 @@ class GraphReplicationStatusTest extends CatsEffectSuite with ScalaCheckEffectSu
     withMock {
 
       val res = for {
-        implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-        graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
-        nodeBlockFetcherAlgebra                  <- mock[NodeBlockFetcherAlgebra[F, S]].pure[F].toResource
+        given OrientThread[F]   <- OrientThread.create[F]
+        graphVertexFetcher      <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+        nodeBlockFetcherAlgebra <- mock[NodeBlockFetcherAlgebra[F, S]].pure[F].toResource
         expectedTh = new IllegalStateException("boom!")
         _ = (() => graphVertexFetcher.fetchCanonicalHead())
           .expects()
@@ -56,9 +56,9 @@ class GraphReplicationStatusTest extends CatsEffectSuite with ScalaCheckEffectSu
   test("On canonicalHeadSynced if an empty iterator is returned, None BlockHeader should be returned") {
     withMock {
       val res = for {
-        implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-        graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
-        nodeBlockFetcherAlgebra                  <- mock[NodeBlockFetcherAlgebra[F, S]].pure[F].toResource
+        given OrientThread[F]   <- OrientThread.create[F]
+        graphVertexFetcher      <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+        nodeBlockFetcherAlgebra <- mock[NodeBlockFetcherAlgebra[F, S]].pure[F].toResource
         _ = (() => graphVertexFetcher.fetchCanonicalHead())
           .expects()
           .returning(Option.empty[Vertex].asRight[GE].pure[F])
@@ -83,10 +83,10 @@ class GraphReplicationStatusTest extends CatsEffectSuite with ScalaCheckEffectSu
       ) =>
         withMock {
           val res = for {
-            implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-            graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
-            nodeBlockFetcherAlgebra                  <- mock[NodeBlockFetcherAlgebra[F, S]].pure[F].toResource
-            blockHeaderVertex                        <- mock[Vertex].pure[F].toResource
+            given OrientThread[F]   <- OrientThread.create[F]
+            graphVertexFetcher      <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+            nodeBlockFetcherAlgebra <- mock[NodeBlockFetcherAlgebra[F, S]].pure[F].toResource
+            blockHeaderVertex       <- mock[Vertex].pure[F].toResource
 
             // vertex properties mocks
             _ = (blockHeaderVertex
@@ -203,10 +203,10 @@ class GraphReplicationStatusTest extends CatsEffectSuite with ScalaCheckEffectSu
       ) =>
         withMock {
           val res = for {
-            implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-            graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
-            nodeBlockFetcherAlgebra                  <- mock[NodeBlockFetcherAlgebra[F, S]].pure[F].toResource
-            blockHeaderVertex                        <- mock[Vertex].pure[F].toResource
+            given OrientThread[F]   <- OrientThread.create[F]
+            graphVertexFetcher      <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+            nodeBlockFetcherAlgebra <- mock[NodeBlockFetcherAlgebra[F, S]].pure[F].toResource
+            blockHeaderVertex       <- mock[Vertex].pure[F].toResource
 
             // vertex properties mocks
             _ = (blockHeaderVertex

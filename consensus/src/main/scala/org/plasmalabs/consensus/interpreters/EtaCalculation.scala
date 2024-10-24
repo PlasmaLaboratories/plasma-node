@@ -37,7 +37,7 @@ object EtaCalculation {
     blake2b512Resource: Resource[F, Blake2b512]
   ): F[EtaCalculationAlgebra[F]] =
     for {
-      implicit0(cache: CaffeineCache[F, Bytes, Eta]) <- Sync[F].delay(
+      given CaffeineCache[F, Bytes, Eta] <- Sync[F].delay(
         CaffeineCache(caffeineCacheBuilder.build[Bytes, Entry[Eta]]())
       )
       slotsPerEpoch <- clock.slotsPerEpoch
@@ -159,7 +159,7 @@ object EtaCalculation {
     ): F[Eta] =
       Sync[F]
         .delay(EtaCalculationArgs(previousEta, epoch, rhoNonceHashValues.toIterable).digestMessages)
-        .flatMap(bytes => blake2b256Resource.use(b2b => Sync[F].delay(b2b.hash(bytes.map(v => v: Array[Byte]): _*))))
+        .flatMap(bytes => blake2b256Resource.use(b2b => Sync[F].delay(b2b.hash(bytes.map(v => v: Array[Byte])*))))
         .map(v => v: ByteString)
         .map(Sized.strictUnsafe(_): Eta)
 

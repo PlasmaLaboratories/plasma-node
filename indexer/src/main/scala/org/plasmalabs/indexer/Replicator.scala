@@ -22,8 +22,8 @@ object Replicator {
 
   def stream[F[_]: Async: Stats](indexer: Indexer[F, fs2.Stream[F, *]]): fs2.Stream[F, Unit] =
     for {
-      implicit0(logger: Logger[F]) <- fs2.Stream.eval(Slf4jLogger.fromName("Indexer.Replicator"))
-      _                            <- fs2.Stream.eval(indexer.nodeRpcClient.waitForRpcStartUp)
+      given Logger[F] <- fs2.Stream.eval(Slf4jLogger.fromName("Indexer.Replicator"))
+      _               <- fs2.Stream.eval(indexer.nodeRpcClient.waitForRpcStartUp)
       nodeLatestHeight <- fs2.Stream.eval(
         OptionT(indexer.nodeBlockFetcher.fetchHeight()).getOrRaise(new IllegalStateException("Unknown node height"))
       )
@@ -60,8 +60,8 @@ object Replicator {
                   Stats[F].recordGauge(
                     "strata_node_indexer_replications",
                     "Indexer replications",
-                    Map("block_id" -> blockData.header.id.show),
-                    blockData.header.height
+                    Map("block_id" -> stringToJson(blockData.header.id.show)),
+                    longToJson(blockData.header.height)
                   )
                 )
               )

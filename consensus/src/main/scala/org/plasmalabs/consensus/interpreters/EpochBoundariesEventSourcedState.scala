@@ -45,7 +45,7 @@ object EpochBoundariesEventSourcedState {
         parentEpoch <- clock.epochOf(slotData.parentSlotId.slot)
         _ <-
           if (epoch === parentEpoch) state.put(epoch, slotData.parentSlotId.blockId)
-          else state.remove(epoch).as(state)
+          else state.remove(epoch)
       } yield state
 
     EventSourcedState.OfTree.make(

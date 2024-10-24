@@ -24,7 +24,7 @@ class SchemaSeriesPolicyTest
     with CatsEffectFunFixtures
     with DbFixtureUtil {
 
-  orientDbFixture.test("SeriesPolicy Schema Metadata") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixture.test("SeriesPolicy Schema Metadata") { case (odbFactory, oThread: OrientThread[F]) =>
     val res = for {
       dbNoTx             <- oThread.delay(odbFactory.getNoTx).toResource
       databaseDocumentTx <- oThread.delay(dbNoTx.getRawGraph).toResource
@@ -92,7 +92,7 @@ class SchemaSeriesPolicyTest
 
   }
 
-  orientDbFixture.test("Series Policy Schema Add vertex") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixture.test("Series Policy Schema Add vertex") { case (odbFactory, oThread: OrientThread[F]) =>
     val res = for {
 
       dbTx          <- oThread.delay(odbFactory.getTx).toResource
@@ -151,7 +151,7 @@ class SchemaSeriesPolicyTest
             seriesPolicySchema.properties.filter(_.name == Field.EphemeralMetadataScheme).head.name
           )
           .toSeq
-          == seriesPolicy.ephemeralMetadataScheme.map(_.toByteArray).getOrElse(Array.empty).toSeq
+          == seriesPolicy.ephemeralMetadataScheme.map(_.toByteArray).getOrElse(Array.empty[Byte]).toSeq
       )
 
       _ = assert(
@@ -160,7 +160,7 @@ class SchemaSeriesPolicyTest
             seriesPolicySchema.properties.filter(_.name == Field.PermanentMetadataScheme).head.name
           )
           .toSeq
-          == seriesPolicy.permanentMetadataScheme.map(_.toByteArray).getOrElse(Array.empty).toSeq
+          == seriesPolicy.permanentMetadataScheme.map(_.toByteArray).getOrElse(Array.empty[Byte]).toSeq
       )
 
     } yield ()

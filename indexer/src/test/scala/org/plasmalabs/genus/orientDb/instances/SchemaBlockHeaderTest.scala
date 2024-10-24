@@ -6,7 +6,6 @@ import munit.{CatsEffectFunFixtures, CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import org.plasmalabs.indexer.DbFixtureUtil
 import org.plasmalabs.indexer.orientDb.OrientThread
-import org.plasmalabs.indexer.orientDb.instances.SchemaBlockHeader
 import org.plasmalabs.indexer.orientDb.instances.SchemaBlockHeader.{Field, SchemaName}
 import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances.blockHeaderSchema
 import org.plasmalabs.models.ModelGenerators.GenHelper
@@ -22,7 +21,7 @@ class SchemaBlockHeaderTest
     with CatsEffectFunFixtures
     with DbFixtureUtil {
 
-  orientDbFixture.test("Block Header Schema Metadata") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixture.test("Block Header Schema Metadata") { case (odbFactory, oThread: OrientThread[F]) =>
     val res = for {
       databaseDocumentTx <- oThread.delay(odbFactory.getNoTx.getRawGraph).toResource
 
@@ -161,7 +160,7 @@ class SchemaBlockHeaderTest
 
   }
 
-  orientDbFixture.test("Block Header Schema Add vertex") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixture.test("Block Header Schema Add vertex") { case (odbFactory, oThread: OrientThread[F]) =>
     val res = for {
 
       dbTx <- oThread.delay(odbFactory.getTx).toResource

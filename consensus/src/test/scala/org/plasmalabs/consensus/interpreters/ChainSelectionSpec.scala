@@ -29,7 +29,7 @@ class ChainSelectionSpec extends CatsEffectSuite with ScalaCheckEffectSuite with
   override def munitFixtures = List(blake2b512Resource)
 
   private def makeFetcher(sdMap: Map[BlockId, SlotData]): BlockId => F[SlotData] = {
-    val fetcher = { id: BlockId => sdMap(id).pure[F] }
+    val fetcher = { (id: BlockId) => sdMap(id).pure[F] }
     fetcher
   }
 

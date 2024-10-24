@@ -465,8 +465,8 @@ object PeersManager {
       Stats[F].recordGauge(
         "strata_node_header_download_time",
         "Header download time from other peer in millisecconds",
-        Map("from_host" -> show"${hostId.id}"),
-        delay
+        Map("from_host" -> stringToJson(show"${hostId.id}")),
+        longToJson(delay)
       )
     ) >>
     Logger[F].info(show"Received header download from host $hostId with delay $delay ms") >>
@@ -483,8 +483,8 @@ object PeersManager {
       Stats[F].recordGauge(
         "strata_node_block_download_time",
         "Block download time from other peer in millisecconds",
-        Map("from_host" -> show"${hostId.id}"),
-        delay
+        Map("from_host" -> stringToJson(show"${hostId.id}")),
+        longToJson(delay)
       )
     ) >>
     Logger[F].debug(show"Received block download from host $hostId with max delay $delay ms") >>
@@ -651,31 +651,31 @@ object PeersManager {
       Stats[F].recordGauge(
         "strata_node_hot_peers_count",
         "Number of peers in hot state for given node.",
-        hotPeerAttributes,
-        hotPeers.size
+        stringMapToJsonMap(hotPeerAttributes),
+        longToJson(hotPeers.size)
       )
     ) >>
     Async[F].defer(
       Stats[F].recordGauge(
         "strata_node_warm_peers_count",
         "Number of peers in warm state for given node.",
-        Map("host_id" -> (show"${state.thisHostId}")),
-        warmPeers.size
+        Map("host_id" -> stringToJson(show"${state.thisHostId}")),
+        longToJson(warmPeers.size)
       )
     ) >>
     Async[F].defer(
       Stats[F].recordGauge(
         "strata_node_cold_peers_count",
         "Number of peers in cold state for given node.",
-        Map("host_id" -> (show"${state.thisHostId}")),
-        coldPeers.size
+        Map("host_id" -> stringToJson(show"${state.thisHostId}")),
+        longToJson(coldPeers.size)
       )
     ) >>
     Async[F].defer(
       Stats[F].incrementCounter(
         "strata_node_peer_id",
         "Counter with the sole purpose of adding the host attribute to track the peer id.",
-        Map("host_id" -> (show"${state.thisHostId}"))
+        Map("host_id" -> stringToJson(show"${state.thisHostId}"))
       )
     ) >>
     state.peersHandler.forPeersWithActor(_.sendNoWait(PeerActor.Message.PrintCommonAncestor)).sequence >>

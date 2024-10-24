@@ -11,7 +11,6 @@ import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances
   blockHeaderSchema,
   ioTransactionSchema
 }
-import org.plasmalabs.indexer.orientDb.instances.{SchemaBlockHeader, SchemaIoTransaction}
 import org.plasmalabs.models.ModelGenerators.GenHelper
 import org.plasmalabs.models.generators.consensus.ModelGenerators
 import org.plasmalabs.sdk.generators.{ModelGenerators => BramblGenerator}
@@ -26,7 +25,7 @@ class SchemaIoTransactionTest
     with AsyncMockFactory
     with DbFixtureUtil {
 
-  orientDbFixture.test("IoTransaction Schema Metadata") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixture.test("IoTransaction Schema Metadata") { case (odbFactory, oThread: OrientThread[F]) =>
     val res = for {
       dbNoTx             <- oThread.delay(odbFactory.getNoTx).toResource
       databaseDocumentTx <- oThread.delay(dbNoTx.getRawGraph).toResource
@@ -75,7 +74,7 @@ class SchemaIoTransactionTest
   }
 
   orientDbFixture.test("Transaction and Block Header Schema Add vertex") {
-    case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+    case (odbFactory, oThread: OrientThread[F]) =>
       val res = for {
 
         dbTx        <- oThread.delay(odbFactory.getTx).toResource

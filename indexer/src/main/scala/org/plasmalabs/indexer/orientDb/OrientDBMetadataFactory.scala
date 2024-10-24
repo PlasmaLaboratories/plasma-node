@@ -66,7 +66,7 @@ object OrientDBMetadataFactory {
       )
     } yield ()
 
-  def createVertex[F[_]: Sync: Logger](db: ODatabaseDocumentInternal, schema: VertexSchema[_]): F[OClass] =
+  def createVertex[F[_]: Sync: Logger](db: ODatabaseDocumentInternal, schema: VertexSchema[?]): F[OClass] =
     // Even though the thread should already be active from the call up above, unit tests
     // may directly invoke this method without first initializing
     Sync[F].delay(db.activateOnCurrentThread()) >>
@@ -76,7 +76,7 @@ object OrientDBMetadataFactory {
       .flatTap(oClass => createLinks(db, schema, oClass))
       .flatTap(oClass => createIndices(schema, oClass))
 
-  private def createProps[F[_]: Sync: Logger](vs: VertexSchema[_], oClass: OClass): F[Unit] =
+  private def createProps[F[_]: Sync: Logger](vs: VertexSchema[?], oClass: OClass): F[Unit] =
     Sync[F]
       .catchNonFatal(
         vs.properties
@@ -92,21 +92,21 @@ object OrientDBMetadataFactory {
       .onError { case e => Logger[F].error(e)(s"Failed to create properties on ${vs.name}") }
       .void
 
-  private def createIndices[F[_]: Sync: Logger](vs: VertexSchema[_], oClass: OClass): F[Unit] =
+  private def createIndices[F[_]: Sync: Logger](vs: VertexSchema[?], oClass: OClass): F[Unit] =
     Sync[F]
       .catchNonFatal {
         import scala.jdk.CollectionConverters._
         val currentIndices = oClass.getIndexes.asScala.map(_.getName)
         vs.indices
           .filterNot(i => currentIndices.contains(i.name))
-          .foreach(i => oClass.createIndex(i.name, i.indexType, i.propertyNames: _*))
+          .foreach(i => oClass.createIndex(i.name, i.indexType, i.propertyNames*))
       }
       .onError { case e => Logger[F].error(e)(s"Failed to create indices on ${vs.name}") }
       .void
 
   private def createLinks[F[_]: Sync: Logger](
     db:     ODatabaseDocumentInternal,
-    vs:     VertexSchema[_],
+    vs:     VertexSchema[?],
     oClass: OClass
   ): F[Unit] =
     Sync[F]

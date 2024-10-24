@@ -10,7 +10,6 @@ import org.plasmalabs.codecs.bytes.tetra.ModelGenerators._
 import org.plasmalabs.codecs.bytes.tetra.instances._
 import org.plasmalabs.consensus._
 import org.plasmalabs.consensus.algebras.VersionInfoAlgebra
-import org.plasmalabs.consensus.interpreters.VotingEventSourceState
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId, _}
 import org.plasmalabs.crypto.signing.Ed25519VRF
 import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}

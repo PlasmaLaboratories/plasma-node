@@ -2,7 +2,6 @@ package org.plasmalabs.crypto.signing.kes
 
 import org.plasmalabs.crypto.models.KesBinaryTree
 import org.plasmalabs.crypto.models.KesBinaryTree.{Empty, MerkleNode, SigningLeaf}
-import org.plasmalabs.crypto.signing.kes.KesEd25519Blake2b256
 
 import java.security.SecureRandom
 

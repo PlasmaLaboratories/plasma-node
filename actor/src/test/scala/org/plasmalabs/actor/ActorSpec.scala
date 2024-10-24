@@ -32,7 +32,7 @@ class ActorSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMoc
     PropF.forAllF { (inputs: Seq[Int]) =>
       for {
         actor: Actor[F, Ping, Pong] <- getActor
-        _ <- IO.parTraverseN((inputs.size / 2) + 1)(inputs) { v: Int => actor.sendNoWait(Ping(v)) }
+        _ <- IO.parTraverseN((inputs.size / 2) + 1)(inputs)((v: Int) => actor.sendNoWait(Ping(v)))
         _ <- actor.send(Ping(0)).map { case Pong(sum) => assertEquals(sum, inputs.map(_.toLong).sum) }
       } yield ()
     }
@@ -57,7 +57,7 @@ class ActorSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMoc
         state.resourceCounter.get.map(c => (state, Pong(c)))
       }
 
-    PropF.forAllF { seed: Int =>
+    PropF.forAllF { (seed: Int) =>
       val count: Long = Math.abs(seed % 10)
       for {
         ref <- Ref.of[F, Long](1)
@@ -70,7 +70,7 @@ class ActorSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMoc
           )
           .use { actor =>
             for {
-              _ <- fs2.Stream.range(0, count).evalMap(_ => actor.send(Ping())).compile.drain
+              _ <- fs2.Stream.range(0L, count).evalMap(_ => actor.send(Ping())).compile.drain
               _ <- ref.get.map(assertEquals(_, count + 1))
             } yield ()
           }
@@ -105,7 +105,7 @@ class ActorSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMoc
       endCounter                                      <- Ref.of[F, Long](0L)
       (actor: Actor[F, Ping, Pong], shutdownFunction) <- getActor(endCounter, actorFinished)
       _                                               <- actor.gracefulShutdown(shutdownFunction)
-      _ <- fs2.Stream.range(0, count).evalMap(_ => actor.send(Ping())).compile.drain
+      _ <- fs2.Stream.range(0L, count).evalMap(_ => actor.send(Ping())).compile.drain
       _ <- actorFinished.get
       _ <- endCounter.get.map(res => assertEquals(res, count))
     } yield ()

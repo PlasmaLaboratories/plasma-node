@@ -8,7 +8,6 @@ import fs2.Stream
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.consensus.models.BlockHeader
 import org.plasmalabs.indexer.algebras.{BlockFetcherAlgebra, NodeBlockFetcherAlgebra}
-import org.plasmalabs.indexer.interpreter.GraphBlockUpdater
 import org.plasmalabs.indexer.model.{GE, GEs}
 import org.plasmalabs.indexer.orientDb.OrientThread
 import org.plasmalabs.indexer.services.BlockData
@@ -31,14 +30,14 @@ class GraphBlockUpdaterTest extends CatsEffectSuite with ScalaCheckEffectSuite w
   test("Insert genesis block, should fail, if we can not add the vertex") {
     val orientGraph: OrientGraph = new OrientGraph("memory:test") {}
 
-    PropF.forAllF { blockHeader: BlockHeader =>
+    PropF.forAllF { (blockHeader: BlockHeader) =>
       withMock {
         val nodeBlockFetcher = mock[NodeBlockFetcherAlgebra[F, Stream[F, *]]]
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          blockData                                <- Resource.pure(BlockData(blockHeader.copy(height = 1), null, null))
-          graphBlockUpdater <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
+          given OrientThread[F] <- OrientThread.create[F]
+          blockData             <- Resource.pure(BlockData(blockHeader.copy(height = 1), null, null))
+          graphBlockUpdater     <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
           _ <- assertIO(
             graphBlockUpdater.insert(blockData),
             (GEs.InternalMessage("boom!"): GE).asLeft[Unit]
@@ -58,14 +57,14 @@ class GraphBlockUpdaterTest extends CatsEffectSuite with ScalaCheckEffectSuite w
       override def addVertex(id: Object, prop: AnyRef*): OrientVertex = new OrientVertex()
     }
 
-    PropF.forAllF { blockHeader: BlockHeader =>
+    PropF.forAllF { (blockHeader: BlockHeader) =>
       withMock {
         val nodeBlockFetcher = mock[NodeBlockFetcherAlgebra[F, Stream[F, *]]]
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          blockData                                <- Resource.pure(BlockData(blockHeader.copy(height = 1), null, null))
-          graphBlockUpdater <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
+          given OrientThread[F] <- OrientThread.create[F]
+          blockData             <- Resource.pure(BlockData(blockHeader.copy(height = 1), null, null))
+          graphBlockUpdater     <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
           _ <- assertIO(
             graphBlockUpdater.insert(blockData),
             ().asRight[GE]
@@ -81,14 +80,14 @@ class GraphBlockUpdaterTest extends CatsEffectSuite with ScalaCheckEffectSuite w
 
   test("Insert no genesis block, should fail, if we can not add the vertex") {
     val orientGraph: OrientGraph = new OrientGraph("memory:test") {}
-    PropF.forAllF { blockHeader: BlockHeader =>
+    PropF.forAllF { (blockHeader: BlockHeader) =>
       withMock {
         val nodeBlockFetcher = mock[NodeBlockFetcherAlgebra[F, Stream[F, *]]]
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          blockData                                <- Resource.pure(BlockData(blockHeader.copy(height = 2), null, null))
-          graphBlockUpdater <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
+          given OrientThread[F] <- OrientThread.create[F]
+          blockData             <- Resource.pure(BlockData(blockHeader.copy(height = 2), null, null))
+          graphBlockUpdater     <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
           _ <- assertIO(
             graphBlockUpdater.insert(blockData),
             (GEs.InternalMessage("boom!"): GE).asLeft[Unit]
@@ -115,14 +114,14 @@ class GraphBlockUpdaterTest extends CatsEffectSuite with ScalaCheckEffectSuite w
         new OrientEdge()
     }
 
-    PropF.forAllF { blockHeader: BlockHeader =>
+    PropF.forAllF { (blockHeader: BlockHeader) =>
       withMock {
         val nodeBlockFetcher = mock[NodeBlockFetcherAlgebra[F, Stream[F, *]]]
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          blockData                                <- Resource.pure(BlockData(blockHeader.copy(height = 2), null, null))
-          graphBlockUpdater <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
+          given OrientThread[F] <- OrientThread.create[F]
+          blockData             <- Resource.pure(BlockData(blockHeader.copy(height = 2), null, null))
+          graphBlockUpdater     <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
           _ <- assertIO(
             graphBlockUpdater.insert(blockData),
             ().asRight[GE]
@@ -147,14 +146,14 @@ class GraphBlockUpdaterTest extends CatsEffectSuite with ScalaCheckEffectSuite w
         throw new IllegalStateException("boom!")
     }
 
-    PropF.forAllF { blockHeader: BlockHeader =>
+    PropF.forAllF { (blockHeader: BlockHeader) =>
       withMock {
         val nodeBlockFetcher = mock[NodeBlockFetcherAlgebra[F, Stream[F, *]]]
         val blockFetcher = mock[BlockFetcherAlgebra[F]]
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          blockData                                <- Resource.pure(BlockData(blockHeader.copy(height = 2), null, null))
-          graphBlockUpdater <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
+          given OrientThread[F] <- OrientThread.create[F]
+          blockData             <- Resource.pure(BlockData(blockHeader.copy(height = 2), null, null))
+          graphBlockUpdater     <- GraphBlockUpdater.make[F](orientGraph, blockFetcher, nodeBlockFetcher)
           _ <- assertIO(
             graphBlockUpdater.insert(blockData),
             (GEs.InternalMessage("boom!"): GE).asLeft[Unit]

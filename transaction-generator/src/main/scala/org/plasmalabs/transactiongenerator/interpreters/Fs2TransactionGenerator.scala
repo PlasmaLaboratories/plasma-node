@@ -103,7 +103,7 @@ object Fs2TransactionGenerator {
               HeightLockOneSpendingAddress,
               Value.defaultInstance.withLvl(
                 Value.LVL(
-                  inputs.foldMap(_.value.getLvl.quantity: BigInt)
+                  inputs.foldMap(_.value.getLvl.quantity): BigInt
                 )
               )
             )

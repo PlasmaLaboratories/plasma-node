@@ -25,14 +25,14 @@ class BodySyntaxValidationSpec extends CatsEffectSuite with ScalaCheckEffectSuit
   type F[A] = IO[A]
 
   test("validation should fail if any transaction is syntactically invalid") {
-    PropF.forAllF { transaction: IoTransaction =>
+    PropF.forAllF { (transaction: IoTransaction) =>
       withMock {
         val body = BlockBody(List(transaction.id))
         for {
           fetchTransaction <- mockFunction[TransactionId, F[IoTransaction]].pure[F]
           _ = fetchTransaction.expects(transaction.id).once().returning(transaction.pure[F])
           transactionSyntaxValidation = mock[TransactionSyntaxVerifier[F]]
-          _ = (transactionSyntaxValidation.validate _)
+          _ = (transactionSyntaxValidation.validate)
             .expects(transaction)
             .once()
             .returning(
@@ -106,7 +106,7 @@ class BodySyntaxValidationSpec extends CatsEffectSuite with ScalaCheckEffectSuit
           _ = fetchTransaction.expects(transaction.id).once().returning(transaction.pure[F])
           _ = fetchTransaction.expects(rewardTx.id).once().returning(rewardTx.pure[F])
           transactionSyntaxValidation = mock[TransactionSyntaxVerifier[F]]
-          _ = (transactionSyntaxValidation.validate _)
+          _ = (transactionSyntaxValidation.validate)
             .expects(transaction)
             .once()
             .returning(transaction.validNec[TransactionSyntaxError].toEither.pure[F])

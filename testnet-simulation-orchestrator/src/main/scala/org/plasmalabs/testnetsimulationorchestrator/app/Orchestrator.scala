@@ -227,8 +227,8 @@ object Orchestrator
   )(nodes: NodeRpcs, wallet: Wallet): IO[Fiber[IO, Throwable, Unit]] =
     for {
       // Assemble a base wallet of available UTxOs
-      _                            <- Logger[F].info(show"Initializing wallet")
-      implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F]
+      _               <- Logger[F].info(show"Initializing wallet")
+      given Random[F] <- SecureRandom.javaSecuritySecureRandom[F]
       // Combine the Node RPCs into one interface
       client <- MultiNodeRpc.make[F, List](nodes.values.toList)
       _      <- Logger[F].info(show"Initialized wallet with spendableBoxCount=${wallet.spendableBoxes.size}")

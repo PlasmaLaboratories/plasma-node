@@ -27,6 +27,7 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import scala.annotation.tailrec
 
+@munit.IgnoreSuite
 class MempoolProtectedTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]
 

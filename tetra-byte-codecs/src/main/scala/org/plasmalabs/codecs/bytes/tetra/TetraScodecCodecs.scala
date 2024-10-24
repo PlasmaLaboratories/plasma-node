@@ -9,7 +9,6 @@ import org.plasmalabs.models.utility._
 import org.plasmalabs.node.models.KnownHost
 import scodec.Codec
 import scodec.codecs._
-import shapeless.{::, HList, HNil}
 
 /**
  * Use this object or the package object to access all of the codecs from outside of this package.
@@ -26,10 +25,10 @@ trait TetraScodecCodecs {
 
   implicit val ratioCodec: Codec[Ratio] =
     (bigIntCodec :: bigIntCodec)
-      .xmapc { case numerator :: denominator :: HNil =>
+      .xmapc { (numerator, denominator) =>
         Ratio(numerator, denominator)
       } { ratio =>
-        HList(
+        (
           ratio.numerator,
           ratio.denominator
         )
@@ -63,7 +62,7 @@ trait TetraScodecCodecs {
   }
 
   implicit val nodeCryptoSignatureKesSumCodec: Codec[nodeCryptoModels.SignatureKesSum] =
-    (byteArrayCodecSized(32) :: byteArrayCodecSized(64) :: seqCodec(byteArrayCodecSized(32)))
+    (byteArrayCodecSized(32) :: byteArrayCodecSized(64) :: seqCodec(using byteArrayCodecSized(32)))
       .as[nodeCryptoModels.SignatureKesSum]
 
   implicit val nodeCryptoSecretKeyKesSumCodec: Codec[nodeCryptoModels.SecretKeyKesSum] =
@@ -96,7 +95,9 @@ trait TetraScodecCodecs {
       .as[VerificationKeyKesProduct]
 
   implicit val signatureKesSumCodec: Codec[SignatureKesSum] =
-    (byteStringCodecSized(32) :: byteStringCodecSized(64) :: seqCodec(byteStringCodecSized(32)) :: unknownFieldSetCodec)
+    (byteStringCodecSized(32) :: byteStringCodecSized(64) :: seqCodec(using
+      byteStringCodecSized(32)
+    ) :: unknownFieldSetCodec)
       .as[SignatureKesSum]
 
   implicit val signatureKesProductCodec: Codec[SignatureKesProduct] =

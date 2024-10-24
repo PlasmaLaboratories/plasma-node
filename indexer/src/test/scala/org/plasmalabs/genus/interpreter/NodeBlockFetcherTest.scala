@@ -6,7 +6,6 @@ import fs2._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.NodeRpc
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
-import org.plasmalabs.indexer.interpreter.NodeBlockFetcher
 import org.plasmalabs.indexer.model.GEs._
 import org.plasmalabs.indexer.services.BlockData
 import org.plasmalabs.models.generators.consensus.ModelGenerators._
@@ -31,7 +30,7 @@ class NodeBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
   private val nodeBlockFetcher = NodeBlockFetcher.make[F](toplRpc, 1)
 
   test("On no block at given height, a None should be returned") {
-    PropF.forAllF { height: Long =>
+    PropF.forAllF { (height: Long) =>
       withMock {
 
         (toplRpc.blockIdAtHeight _)

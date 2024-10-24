@@ -1,7 +1,5 @@
 package org.plasmalabs.crypto.signing.eddsa
 
-import org.plasmalabs.crypto.signing.eddsa.EC
-
 import java.security.SecureRandom
 
 /**

@@ -45,7 +45,7 @@ class Ed25519VRFSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
   }
 
   test("with Ed25519VRF, keyPairs generated with the same seed should be the same") {
-    PropF.forAllF { seedByteVector: Entropy =>
+    PropF.forAllF { (seedByteVector: Entropy) =>
       if (seedByteVector.value.length != 0) {
         val ed25519vrf = new Ed25519VRF
         val keyPair1 = ed25519vrf.deriveKeyPairFromEntropy(seedByteVector, None)

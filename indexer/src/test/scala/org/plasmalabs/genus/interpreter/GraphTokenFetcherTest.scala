@@ -5,7 +5,6 @@ import cats.implicits._
 import com.tinkerpop.blueprints.Vertex
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.indexer.algebras.VertexFetcherAlgebra
-import org.plasmalabs.indexer.interpreter.GraphTokenFetcher
 import org.plasmalabs.indexer.model.{GE, GEs}
 import org.plasmalabs.indexer.orientDb.instances.{SchemaGroupPolicy, SchemaSeriesPolicy}
 import org.plasmalabs.sdk.generators.ModelGenerators._
