@@ -85,8 +85,6 @@ object TestHelper extends TransactionGenerator {
     } yield (HostId(ByteString.copyFrom(bytes.toArray)))
   )
 
-  type BlockBodyOrTransactionErrorByName = () => BlockBodyOrTransactionError
-
   val arbitraryHostBlockId: Arbitrary[(HostId, BlockId)] = Arbitrary(
     for {
       host    <- arbitraryHost.arbitrary

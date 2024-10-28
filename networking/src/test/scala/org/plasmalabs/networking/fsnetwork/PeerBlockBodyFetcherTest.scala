@@ -41,7 +41,6 @@ object PeerBlockBodyFetcherTest {
   type F[A] = IO[A]
 }
 
-@munit.IgnoreSuite
 class PeerBlockBodyFetcherTest
     extends CatsEffectSuite
     with ScalaCheckEffectSuite
@@ -96,7 +95,7 @@ class PeerBlockBodyFetcherTest
         .expects(*, *, *)
         .anyNumberOfTimes()
         .onCall {
-          case (id: TransactionId, _: BlockBodyOrTransactionErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
+          case (id: TransactionId, _: BlockBodyOrTransactionError, _: MonadThrow[F] @unchecked) =>
             clientTxsData(id).pure[F]
         }
 
@@ -187,7 +186,7 @@ class PeerBlockBodyFetcherTest
         .expects(*, *, *)
         .anyNumberOfTimes()
         .onCall {
-          case (id: TransactionId, _: BlockBodyOrTransactionErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
+          case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
             clientTxsData(id).pure[F]
         }
 
@@ -290,9 +289,9 @@ class PeerBlockBodyFetcherTest
         .expects(*, *, *)
         .anyNumberOfTimes()
         .onCall {
-          case (id: TransactionId, error: BlockBodyOrTransactionErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
+          case (id: TransactionId, error: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
             if (transactionIsMissed(id)) {
-              throw error()
+              throw error
             } else {
               clientTxsData(id).pure[F]
             }
@@ -389,7 +388,7 @@ class PeerBlockBodyFetcherTest
         .expects(*, *, *)
         .anyNumberOfTimes()
         .onCall {
-          case (id: TransactionId, _: BlockBodyOrTransactionErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
+          case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
             if (transactionHaveIncorrectId(id)) {
               incorrectTransaction.pure[F]
             } else {
@@ -459,7 +458,7 @@ class PeerBlockBodyFetcherTest
         .expects(transaction.id, *, *)
         .anyNumberOfTimes()
         .onCall {
-          case (_: TransactionId, _: BlockBodyOrTransactionErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
+          case (_: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
             transaction.pure[F]
         }
 
@@ -522,7 +521,7 @@ class PeerBlockBodyFetcherTest
         .expects(transaction.id, *, *)
         .anyNumberOfTimes()
         .onCall {
-          case (_: TransactionId, _: BlockBodyOrTransactionErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
+          case (_: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
             transaction.pure[F]
         }
 
@@ -584,7 +583,7 @@ class PeerBlockBodyFetcherTest
         .expects(*, *, *)
         .anyNumberOfTimes()
         .onCall {
-          case (id: TransactionId, _: BlockBodyOrTransactionErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
+          case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
             allTx(id).pure[F]
         }
 
@@ -665,7 +664,7 @@ class PeerBlockBodyFetcherTest
         .expects(*, *, *)
         .anyNumberOfTimes()
         .onCall {
-          case (id: TransactionId, _: BlockBodyOrTransactionErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
+          case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
             clientTxsData(id).pure[F]
         }
 
@@ -732,7 +731,7 @@ class PeerBlockBodyFetcherTest
         .expects(*, *, *)
         .anyNumberOfTimes()
         .onCall {
-          case (id: TransactionId, _: BlockBodyOrTransactionErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
+          case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
             Async[F].delayBy(txIdsAndTxs(id).pure[F], FiniteDuration(txDelay, MILLISECONDS))
         }
 

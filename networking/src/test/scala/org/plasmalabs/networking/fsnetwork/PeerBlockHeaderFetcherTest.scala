@@ -19,7 +19,7 @@ import org.plasmalabs.models.p2p._
 import org.plasmalabs.networking.blockchain.BlockchainPeerClient
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError._
-import org.plasmalabs.networking.fsnetwork.PeerBlockHeaderFetcherTest.{BlockHeaderDownloadErrorByName, F}
+import org.plasmalabs.networking.fsnetwork.PeerBlockHeaderFetcherTest.{F}
 import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
 import org.plasmalabs.networking.fsnetwork.RequestsProxy.RequestsProxyActor
 import org.plasmalabs.networking.fsnetwork.TestHelper._
@@ -34,10 +34,8 @@ import scala.concurrent.duration.{FiniteDuration, MILLISECONDS}
 
 object PeerBlockHeaderFetcherTest {
   type F[A] = IO[A]
-  type BlockHeaderDownloadErrorByName = () => BlockHeaderDownloadError
 }
 
-@munit.IgnoreSuite
 class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   implicit val logger: Logger[F] = Slf4jLogger.getLoggerFromName[F](this.getClass.getName)
 
@@ -144,8 +142,8 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
         .getHeaderOrError(_: BlockId, _: Throwable)(_: MonadThrow[F]))
         .expects(*, *, *)
         .rep(blocksCount)
-        .onCall { case (id: BlockId, e: BlockHeaderDownloadErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
-          OptionT(idToHeader.get(id).pure[F]).getOrRaise(e.apply())
+        .onCall { case (id: BlockId, e: Throwable @unchecked, _: MonadThrow[F] @unchecked) =>
+          OptionT(idToHeader.get(id).pure[F]).getOrRaise(e)
         }
 
       idToHeader.foreach { case (id, header) =>
@@ -232,8 +230,8 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
         .getHeaderOrError(_: BlockId, _: Throwable)(_: MonadThrow[F]))
         .expects(*, *, *)
         .rep(idAndHeader.size.toInt)
-        .onCall { case (id: BlockId, e: BlockHeaderDownloadErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
-          OptionT(idToHeaderOnClient.get(id).pure[F]).getOrRaise(e.apply())
+        .onCall { case (id: BlockId, e: Throwable, _: MonadThrow[F] @unchecked) =>
+          OptionT(idToHeaderOnClient.get(id).pure[F]).getOrRaise(e)
         }
 
       val expectedMessage: RequestsProxy.Message =
@@ -279,11 +277,11 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
         .getHeaderOrError(_: BlockId, _: Throwable)(_: MonadThrow[F]))
         .expects(*, *, *)
         .rep(idAndHeader.size.toInt)
-        .onCall { case (id: BlockId, e: BlockHeaderDownloadErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
+        .onCall { case (id: BlockId, e: Throwable, _: MonadThrow[F] @unchecked) =>
           if (missedBlockId(id)) {
             incorrectHeader.pure[F]
           } else {
-            OptionT(idToHeaderOnClient.get(id).pure[F]).getOrRaise(e.apply())
+            OptionT(idToHeaderOnClient.get(id).pure[F]).getOrRaise(e)
           }
         }
 
@@ -357,8 +355,8 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
       .getSlotDataOrError(_: BlockId, _: Throwable)(_: MonadThrow[F]))
       .expects(*, *, *)
       .anyNumberOfTimes()
-      .onCall { case (id: BlockId, e: BlockHeaderDownloadErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
-        OptionT(remoteIdToSlotData.get(id).pure[F]).getOrRaise(e.apply())
+      .onCall { case (id: BlockId, e: Throwable @unchecked, _: MonadThrow[F] @unchecked) =>
+        OptionT(remoteIdToSlotData.get(id).pure[F]).getOrRaise(e)
       }
 
     (mockData.client.getRemoteSlotDataWithParents)
@@ -417,8 +415,8 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
         .getSlotDataOrError(_: BlockId, _: Throwable)(_: MonadThrow[F]))
         .expects(*, *, *)
         .anyNumberOfTimes()
-        .onCall { case (id: BlockId, e: BlockHeaderDownloadErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
-          OptionT(remoteIdToSlotData.get(id).pure[F]).getOrRaise(e.apply())
+        .onCall { case (id: BlockId, e: Throwable, _: MonadThrow[F] @unchecked) =>
+          OptionT(remoteIdToSlotData.get(id).pure[F]).getOrRaise(e)
         }
 
       (() => mockData.clock.globalSlot).expects().anyNumberOfTimes().returning(2L.pure[F])
@@ -726,8 +724,8 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
         .getSlotDataOrError(_: BlockId, _: Throwable)(_: MonadThrow[F]))
         .expects(*, *, *)
         .anyNumberOfTimes()
-        .onCall { case (id: BlockId, e: BlockHeaderDownloadErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
-          OptionT(remoteIdToSlotData.get(id).pure[F]).getOrRaise(e.apply())
+        .onCall { case (id: BlockId, e: Throwable, _: MonadThrow[F] @unchecked) =>
+          OptionT(remoteIdToSlotData.get(id).pure[F]).getOrRaise(e)
         }
       (() => mockData.client.remotePeerAdoptions).expects().once().onCall { () =>
         Stream.emits(Seq(remote1Id, remote2Id)).covary.pure[F]
@@ -794,8 +792,8 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
         .getSlotDataOrError(_: BlockId, _: Throwable)(_: MonadThrow[F]))
         .expects(*, *, *)
         .anyNumberOfTimes()
-        .onCall { case (id: BlockId, e: BlockHeaderDownloadErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
-          OptionT(remoteIdToSlotData.get(id).pure[F]).getOrRaise(e.apply())
+        .onCall { case (id: BlockId, e: Throwable, _: MonadThrow[F] @unchecked) =>
+          OptionT(remoteIdToSlotData.get(id).pure[F]).getOrRaise(e)
         }
       (() => mockData.client.remotePeerAdoptions).expects().once().onCall { () =>
         Stream.emits(Seq(remote1Id, remote2Id)).covary.pure[F]
@@ -866,11 +864,11 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
       val remoteIdToSlotData: Map[BlockId, SlotData] = remoteSlotData.toList.toMap
 
       (mockData.client
-        .getSlotDataOrError(_: BlockId, _: Throwable)(_: MonadThrow[F]))
+        .getSlotDataOrError(_: BlockId, _: BlockHeaderDownloadError)(_: MonadThrow[F]))
         .expects(*, *, *)
         .anyNumberOfTimes()
-        .onCall { case (id: BlockId, e: BlockHeaderDownloadErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
-          OptionT(remoteIdToSlotData.get(id).pure[F]).getOrRaise(e.apply())
+        .onCall { case (id: BlockId, e: BlockHeaderDownloadError @unchecked, _: MonadThrow[F] @unchecked) =>
+          OptionT(remoteIdToSlotData.get(id).pure[F]).getOrRaise(e)
         }
       (() => mockData.client.remotePeerAdoptions).expects().once().onCall { () =>
         Stream.eval[F, BlockId](bestSlotId.pure[F]).pure[F]
@@ -1004,8 +1002,8 @@ class PeerBlockHeaderFetcherTest extends CatsEffectSuite with ScalaCheckEffectSu
         .getSlotDataOrError(_: BlockId, _: Throwable)(_: MonadThrow[F]))
         .expects(*, *, *)
         .anyNumberOfTimes()
-        .onCall { case (id: BlockId, e: BlockHeaderDownloadErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
-          OptionT(remoteIdToSlotData.get(id).pure[F]).getOrRaise(e.apply())
+        .onCall { case (id: BlockId, e: Throwable, _: MonadThrow[F] @unchecked) =>
+          OptionT(remoteIdToSlotData.get(id).pure[F]).getOrRaise(e)
         }
       (() => mockData.client.remotePeerAdoptions).expects().once().onCall { () =>
         Stream.eval[F, BlockId](bestSlotId.pure[F]).pure[F]

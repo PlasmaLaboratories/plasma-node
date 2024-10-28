@@ -28,7 +28,7 @@ import org.plasmalabs.models.utility.NetworkCommands
 import org.plasmalabs.networking.blockchain.{BlockchainPeerClient, NetworkProtocolVersions}
 import org.plasmalabs.networking.fsnetwork.ActorPeerHandlerBridgeAlgebraTest._
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
-import org.plasmalabs.networking.fsnetwork.TestHelper.{BlockBodyOrTransactionErrorByName, arbitraryHost}
+import org.plasmalabs.networking.fsnetwork.TestHelper.{arbitraryHost}
 import org.plasmalabs.networking.p2p.{ConnectedPeer, DisconnectedPeer, PeerConnectionChange}
 import org.plasmalabs.node.models._
 import org.plasmalabs.quivr.runtime.DynamicContext
@@ -164,7 +164,6 @@ object ActorPeerHandlerBridgeAlgebraTest {
   val slotsPerOperationalPeriod: Long = 20L
 }
 
-@munit.IgnoreSuite
 class ActorPeerHandlerBridgeAlgebraTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   implicit val dummyDns: DnsResolver[F] = (host: String) => Option(host).pure[F]
   implicit val dummyReverseDns: ReverseDnsResolver[F] = (h: String) => h.pure[F]
@@ -215,7 +214,7 @@ class ActorPeerHandlerBridgeAlgebraTest extends CatsEffectSuite with ScalaCheckE
         .expects(*, *, *)
         .repeat(transactions.length)
         .onCall {
-          case (id: TransactionId, _: BlockBodyOrTransactionErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
+          case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
             transactionsMap(id).pure[F]
         }
 

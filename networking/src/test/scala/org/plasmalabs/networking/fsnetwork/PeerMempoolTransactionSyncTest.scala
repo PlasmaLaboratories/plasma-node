@@ -17,7 +17,7 @@ import org.plasmalabs.networking.blockchain.BlockchainPeerClient
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
 import org.plasmalabs.networking.fsnetwork.PeerMempoolTransactionSyncTest.F
 import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
-import org.plasmalabs.networking.fsnetwork.TestHelper.{BlockBodyOrTransactionErrorByName, arbitraryHost}
+import org.plasmalabs.networking.fsnetwork.TestHelper.arbitraryHost
 import org.plasmalabs.sdk.generators.ModelGenerators.arbitraryIoTransaction
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
@@ -46,7 +46,6 @@ object TransactionType {
   case object MissedTransactionBadSyntax
 }
 
-@munit.IgnoreSuite
 class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   implicit val logger: Logger[F] = Slf4jLogger.getLoggerFromName[F](this.getClass.getName)
 
@@ -81,7 +80,7 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
           .expects(*, *, *)
           .once()
           .onCall {
-            case (id: TransactionId, _: BlockBodyOrTransactionErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
+            case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
               missedMap(id).pure[F]
           }
         (transactionSyntaxValidation.validate _).expects(tx).once().returns(Either.right(tx).pure[F])
@@ -140,7 +139,7 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
           .expects(*, *, *)
           .once()
           .onCall {
-            case (id: TransactionId, _: BlockBodyOrTransactionErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
+            case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
               missedMap(id).pure[F]
           }
         (transactionSyntaxValidation.validate _).expects(tx).once().returns(Either.right(tx).pure[F])
@@ -201,7 +200,7 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
           .expects(*, *, *)
           .once()
           .onCall {
-            case (id: TransactionId, _: BlockBodyOrTransactionErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
+            case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
               missedMap(id).pure[F]
           }
         (transactionSyntaxValidation.validate _)
@@ -253,7 +252,7 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
           .expects(*, *, *)
           .once()
           .onCall {
-            case (_: TransactionId, _: BlockBodyOrTransactionErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
+            case (_: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
               arbitraryIoTransaction.arbitrary.first.pure[F]
           }
         (peersManager.sendNoWait _)
@@ -302,7 +301,7 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
           .expects(*, *, *)
           .once()
           .onCall {
-            case (_: TransactionId, _: BlockBodyOrTransactionErrorByName @unchecked, _: MonadThrow[F] @unchecked) =>
+            case (_: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
               throw new RuntimeException()
           }
         (peersManager.sendNoWait _)

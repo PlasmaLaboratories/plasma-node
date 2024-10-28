@@ -28,7 +28,6 @@ lazy val commonSettings = Seq(
   sonatypeCredentialHost := "s01.oss.sonatype.org",
   scalacOptions ++= commonScalacOptions,
   semanticdbEnabled := true, // enable SemanticDB for Scalafix
-  semanticdbVersion := scalafixSemanticdb.revision, // use Scalafix compatible version
 //  wartremoverErrors := Warts.unsafe, // settings for wartremover
   Compile / unmanagedSourceDirectories += {
     val sourceDir = (Compile / sourceDirectory).value
@@ -143,8 +142,7 @@ lazy val commonScalacOptions = Seq(
   "-unchecked",
   "-Ykind-projector:underscores",
   "-source:3.4-migration",
-  "-Wunused:imports",
-  "-Yunused:all"
+  "-Wunused:imports"
 )
 
 javaOptions ++= Seq(

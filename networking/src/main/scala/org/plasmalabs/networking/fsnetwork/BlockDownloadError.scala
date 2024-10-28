@@ -19,7 +19,7 @@ object BlockDownloadError {
   object BlockHeaderDownloadError {
 
     case object HeaderNotFoundInPeer extends BlockHeaderDownloadError {
-      override def toString: String = "Block body had been not found in peer"
+      override def toString: String = "Block body had been not found in peer" // TODO should be block header
       override val notCritical: Boolean = false
     }
 
