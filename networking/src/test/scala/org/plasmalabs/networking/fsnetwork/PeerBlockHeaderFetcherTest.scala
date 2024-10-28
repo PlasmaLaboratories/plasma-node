@@ -19,7 +19,7 @@ import org.plasmalabs.models.p2p._
 import org.plasmalabs.networking.blockchain.BlockchainPeerClient
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError._
-import org.plasmalabs.networking.fsnetwork.PeerBlockHeaderFetcherTest.{F}
+import org.plasmalabs.networking.fsnetwork.PeerBlockHeaderFetcherTest.F
 import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
 import org.plasmalabs.networking.fsnetwork.RequestsProxy.RequestsProxyActor
 import org.plasmalabs.networking.fsnetwork.TestHelper._

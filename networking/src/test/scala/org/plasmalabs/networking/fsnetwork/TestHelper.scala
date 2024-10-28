@@ -9,7 +9,6 @@ import org.plasmalabs.models.ModelGenerators.GenHelper
 import org.plasmalabs.models.generators.consensus.ModelGenerators
 import org.plasmalabs.models.generators.consensus.ModelGenerators._
 import org.plasmalabs.models.p2p._
-import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
 import org.plasmalabs.node.models.{BlockBody, KnownHost}
 import org.plasmalabs.sdk.generators.TransactionGenerator
 import org.plasmalabs.sdk.models.transaction.IoTransaction

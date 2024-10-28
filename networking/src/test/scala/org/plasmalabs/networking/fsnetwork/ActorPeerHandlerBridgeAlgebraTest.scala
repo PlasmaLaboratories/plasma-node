@@ -28,7 +28,7 @@ import org.plasmalabs.models.utility.NetworkCommands
 import org.plasmalabs.networking.blockchain.{BlockchainPeerClient, NetworkProtocolVersions}
 import org.plasmalabs.networking.fsnetwork.ActorPeerHandlerBridgeAlgebraTest._
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
-import org.plasmalabs.networking.fsnetwork.TestHelper.{arbitraryHost}
+import org.plasmalabs.networking.fsnetwork.TestHelper.arbitraryHost
 import org.plasmalabs.networking.p2p.{ConnectedPeer, DisconnectedPeer, PeerConnectionChange}
 import org.plasmalabs.node.models._
 import org.plasmalabs.quivr.runtime.DynamicContext
