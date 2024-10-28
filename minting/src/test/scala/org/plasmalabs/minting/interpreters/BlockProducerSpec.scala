@@ -58,7 +58,7 @@ class BlockProducerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with 
           val version = 1
           val protocolVersion = ProtocolVersion(version, 34, 67)
           (() => staker.address).expects().once().returning(stakingAddress.pure[F])
-          (staker.elect _)
+          (staker.elect)
             .expects(parentSlotData.slotId, parentSlotData.slotId.slot + 1)
             .once()
             .returning(vrfHit.some.pure[F])

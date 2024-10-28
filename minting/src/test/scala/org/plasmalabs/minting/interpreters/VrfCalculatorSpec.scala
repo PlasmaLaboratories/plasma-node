@@ -21,28 +21,30 @@ class VrfCalculatorSpec extends CatsEffectSuite with ScalaCheckEffectSuite with 
   val vrfCacheTtl = 0L
 
   test("proofForSlot: fixed input") {
-    for {
-      ed25519Resource <- CatsUnsafeResource.make(new Ed25519VRF, 1).toResource
-      vrfCalculator <- VrfCalculator.make[F](
-        skVrf = ByteString.copyFrom(Array.fill[Byte](32)(0)),
-        ed25519Resource,
-        vrfCacheTtl
-      )
+    val res =
+      for {
+        ed25519Resource <- CatsUnsafeResource.make(new Ed25519VRF, 1).toResource
+        vrfCalculator <- VrfCalculator.make[F](
+          skVrf = ByteString.copyFrom(Array.fill[Byte](32)(0)),
+          ed25519Resource,
+          vrfCacheTtl
+        )
 
-      slot = 10L
-      eta = Sized.strictUnsafe(ByteString.copyFrom(Array.fill[Byte](32)(0))): Eta
+        slot = 10L
+        eta = Sized.strictUnsafe(ByteString.copyFrom(Array.fill[Byte](32)(0))): Eta
 
-      expectedProof =
-        ByteString.copyFrom(
+        expectedProof = ByteString.copyFrom(
           hex"bc31a2fb46995ffbe4b316176407f57378e2f3d7fee57d228a811194361d8e7040c9d15575d7a2e75506ffe1a47d772168b071a99d2e85511730e9c21397a1cea0e7fa4bd161e6d5185a94a665dd190d".toArray
         )
 
-      _ <- vrfCalculator.proofForSlot(slot, eta).assertEquals(expectedProof).toResource
-    } yield ()
+        _ <- vrfCalculator.proofForSlot(slot, eta).assertEquals(expectedProof).toResource
+
+      } yield ()
+    res.use_
   }
 
   test("rhoForSlot: fixed input") {
-    val resource = for {
+    val res = for {
       ed25519Resource <- CatsUnsafeResource.make(new Ed25519VRF, 1).toResource
       vrfCalculator <- VrfCalculator.make[F](
         skVrf = ByteString.copyFrom(Array.fill[Byte](32)(0)),
@@ -62,7 +64,7 @@ class VrfCalculatorSpec extends CatsEffectSuite with ScalaCheckEffectSuite with 
 
       _ <- vrfCalculator.rhoForSlot(slot, eta).assertEquals(expectedRho).toResource
     } yield ()
-    resource.use_
+    res.use_
   }
 
 }

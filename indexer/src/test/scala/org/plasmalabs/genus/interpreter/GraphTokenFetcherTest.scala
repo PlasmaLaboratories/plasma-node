@@ -25,7 +25,7 @@ class GraphTokenFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
         val res = for {
           vertexFetcher <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           expectedTh = new IllegalStateException("boom!")
-          _ = (vertexFetcher.fetchGroupPolicy _)
+          _ = (vertexFetcher.fetchGroupPolicy)
             .expects(groupId)
             .once()
             .returning(
@@ -59,22 +59,25 @@ class GraphTokenFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
 
           groupPolicy = GroupPolicy("fooboo", address, Some(seriesId))
 
-          _ = (vertexFetcher.fetchGroupPolicy _)
+          _ = (vertexFetcher.fetchGroupPolicy)
             .expects(groupId)
             .once()
             .returning(Option(vertex).asRight[GE].pure[F])
 
-          _ = (vertex.getProperty[String] _)
+          _ = (vertex
+            .getProperty[String])
             .expects(SchemaGroupPolicy.Field.Label)
             .once()
             .returning(groupPolicy.label)
 
-          _ = (vertex.getProperty[Array[Byte]] _)
+          _ = (vertex
+            .getProperty[Array[Byte]])
             .expects(SchemaGroupPolicy.Field.RegistrationUtxo)
             .once()
             .returning(groupPolicy.registrationUtxo.toByteArray)
 
-          _ = (vertex.getProperty[Array[Byte]] _)
+          _ = (vertex
+            .getProperty[Array[Byte]])
             .expects(SchemaGroupPolicy.Field.FixedSeries)
             .once()
             .returning(groupPolicy.fixedSeries.map(_.value.toByteArray).getOrElse(Array.empty[Byte]))
@@ -97,7 +100,7 @@ class GraphTokenFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
         val res = for {
           vertexFetcher <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           expectedTh = new IllegalStateException("boom!")
-          _ = (vertexFetcher.fetchSeriesPolicy _)
+          _ = (vertexFetcher.fetchSeriesPolicy)
             .expects(id)
             .once()
             .returning(
@@ -135,42 +138,49 @@ class GraphTokenFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
             registrationUtxo = address
           )
 
-          _ = (vertexFetcher.fetchSeriesPolicy _)
+          _ = (vertexFetcher.fetchSeriesPolicy)
             .expects(id)
             .once()
             .returning(Option(vertex).asRight[GE].pure[F])
 
-          _ = (vertex.getProperty[String] _)
+          _ = (vertex
+            .getProperty[String])
             .expects(SchemaSeriesPolicy.Field.Label)
             .once()
             .returning(seriesPolicy.label)
 
-          _ = (vertex.getProperty[Int] _)
+          _ = (vertex
+            .getProperty[Int])
             .expects(SchemaSeriesPolicy.Field.TokenSupply)
             .once()
             .returning(seriesPolicy.tokenSupply.get)
 
-          _ = (vertex.getProperty[Array[Byte]] _)
+          _ = (vertex
+            .getProperty[Array[Byte]])
             .expects(SchemaSeriesPolicy.Field.RegistrationUtxo)
             .once()
             .returning(seriesPolicy.registrationUtxo.toByteArray)
 
-          _ = (vertex.getProperty[Int] _)
+          _ = (vertex
+            .getProperty[Int])
             .expects(SchemaSeriesPolicy.Field.QuantityDescriptor)
             .once()
             .returning(seriesPolicy.quantityDescriptor.value)
 
-          _ = (vertex.getProperty[Int] _)
+          _ = (vertex
+            .getProperty[Int])
             .expects(SchemaSeriesPolicy.Field.Fungibility)
             .once()
             .returning(seriesPolicy.fungibility.value)
 
-          _ = (vertex.getProperty[Array[Byte]] _)
+          _ = (vertex
+            .getProperty[Array[Byte]])
             .expects(SchemaSeriesPolicy.Field.EphemeralMetadataScheme)
             .once()
             .returning(seriesPolicy.ephemeralMetadataScheme.map(_.toByteArray).getOrElse(Array.empty[Byte]))
 
-          _ = (vertex.getProperty[Array[Byte]] _)
+          _ = (vertex
+            .getProperty[Array[Byte]])
             .expects(SchemaSeriesPolicy.Field.PermanentMetadataScheme)
             .once()
             .returning(seriesPolicy.permanentMetadataScheme.map(_.toByteArray).getOrElse(Array.empty[Byte]))

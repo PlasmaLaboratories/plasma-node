@@ -19,7 +19,7 @@ class EligibilityCacheSpec extends CatsEffectSuite with ScalaCheckEffectSuite wi
     val resource =
       for {
         underTest <- EligibilityCache.make[F](10)
-        _         <- (underTest.tryInclude _).tupled(entry1).assert.toResource
+        _         <- (underTest.tryInclude).tupled(entry1).assert.toResource
       } yield ()
 
     resource.use_
@@ -33,11 +33,11 @@ class EligibilityCacheSpec extends CatsEffectSuite with ScalaCheckEffectSuite wi
     val resource =
       for {
         underTest <- EligibilityCache.make[F](10)
-        _         <- (underTest.tryInclude _).tupled(entry1).assert.toResource
-        _         <- (underTest.tryInclude _).tupled(illegalEntry1).map(!_).assert.toResource
+        _         <- (underTest.tryInclude).tupled(entry1).assert.toResource
+        _         <- (underTest.tryInclude).tupled(illegalEntry1).map(!_).assert.toResource
         // Re-inserting entry1 under the same block ID should be permitted/true
-        _ <- (underTest.tryInclude _).tupled(entry1).assert.toResource
-        _ <- (underTest.tryInclude _).tupled(entry2).assert.toResource
+        _ <- (underTest.tryInclude).tupled(entry1).assert.toResource
+        _ <- (underTest.tryInclude).tupled(entry2).assert.toResource
       } yield ()
 
     resource.use_
@@ -54,15 +54,15 @@ class EligibilityCacheSpec extends CatsEffectSuite with ScalaCheckEffectSuite wi
     val resource =
       for {
         underTest <- EligibilityCache.make[F](2)
-        _         <- (underTest.tryInclude _).tupled(entry1).assert.toResource
-        _         <- (underTest.tryInclude _).tupled(entry2).assert.toResource
-        _         <- (underTest.tryInclude _).tupled(entry3).assert.toResource
+        _         <- (underTest.tryInclude).tupled(entry1).assert.toResource
+        _         <- (underTest.tryInclude).tupled(entry2).assert.toResource
+        _         <- (underTest.tryInclude).tupled(entry3).assert.toResource
 
         // NOTE: No way to assert that entry1 was removed.  Attempting to `tryInclude` it again would return "true",
         // but the entry would be immediately removed because it's at an "older" slot
-        _ <- (underTest.tryInclude _).tupled(illegalEntry2).map(!_).assert.toResource
-        _ <- (underTest.tryInclude _).tupled(illegalEntry3).map(!_).assert.toResource
-        _ <- (underTest.tryInclude _).tupled(entry3A).assert.toResource
+        _ <- (underTest.tryInclude).tupled(illegalEntry2).map(!_).assert.toResource
+        _ <- (underTest.tryInclude).tupled(illegalEntry3).map(!_).assert.toResource
+        _ <- (underTest.tryInclude).tupled(entry3A).assert.toResource
       } yield ()
 
     resource.use_

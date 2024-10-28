@@ -60,7 +60,7 @@ object ActorPeerHandlerBridgeAlgebra {
   // scalastyle:on parameter.number
 
   private def makeAlgebra[F[_]: Async: Logger](peersManager: PeersManagerActor[F]): BlockchainPeerHandlerAlgebra[F] = {
-    underlyingClient: BlockchainPeerClient[F] =>
+    (underlyingClient: BlockchainPeerClient[F]) =>
       for {
         // A callback/Deferred that is signaled by the "closeConnection()" call
         closeDeferred <- Deferred[F, Unit].toResource

@@ -29,7 +29,7 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
 
         (() => replicatorStatus.canonicalHeadSynced).expects().once().returning(true.asRight[GE].pure[F])
 
-        (blockFetcher.fetchBlock _).expects(blockId).once().returning(blockData.some.asRight[GE].pure[F])
+        (blockFetcher.fetchBlock).expects(blockId).once().returning(blockData.some.asRight[GE].pure[F])
 
         for {
           res <- underTest.getBlockById(GetBlockByIdRequest(blockId), new Metadata())
@@ -50,7 +50,7 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
         val replicatorStatus = mock[GraphReplicationStatusAlgebra[F]]
         val underTest = new GrpcBlockService[F](blockFetcher, replicatorStatus)
 
-        (blockFetcher.fetchBlock _)
+        (blockFetcher.fetchBlock)
           .expects(blockId)
           .once()
           .returning(Option.empty[BlockData].asRight[GE].pure[F])
@@ -74,7 +74,7 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
         val replicatorStatus = mock[GraphReplicationStatusAlgebra[F]]
         val underTest = new GrpcBlockService[F](blockFetcher, replicatorStatus)
 
-        (blockFetcher.fetchBlock _)
+        (blockFetcher.fetchBlock)
           .expects(blockId)
           .once()
           .returning((GEs.Internal(new IllegalStateException("Boom!")): GE).asLeft[Option[BlockData]].pure[F])
@@ -100,7 +100,7 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
 
         val blockData = BlockData(blockHeader, blockBody)
 
-        (blockFetcher.fetchBlockByHeight _)
+        (blockFetcher.fetchBlockByHeight)
           .expects(height)
           .once()
           .returning(blockData.some.asRight[GE].pure[F])
@@ -122,7 +122,7 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
         val replicatorStatus = mock[GraphReplicationStatusAlgebra[F]]
         val underTest = new GrpcBlockService[F](blockFetcher, replicatorStatus)
 
-        (blockFetcher.fetchBlockByHeight _)
+        (blockFetcher.fetchBlockByHeight)
           .expects(height)
           .once()
           .returning(Option.empty[BlockData].asRight[GE].pure[F])
@@ -146,7 +146,7 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
         val replicatorStatus = mock[GraphReplicationStatusAlgebra[F]]
         val underTest = new GrpcBlockService[F](blockFetcher, replicatorStatus)
 
-        (blockFetcher.fetchBlockByHeight _)
+        (blockFetcher.fetchBlockByHeight)
           .expects(height)
           .once()
           .returning((GEs.UnImplemented: GE).asLeft[Option[BlockData]].pure[F])
@@ -172,7 +172,7 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
 
         val blockData = BlockData(blockHeader, blockBody)
 
-        (blockFetcher.fetchBlockByDepth _)
+        (blockFetcher.fetchBlockByDepth)
           .expects(depth)
           .once()
           .returning(blockData.some.asRight[GE].pure[F])
@@ -196,7 +196,7 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
         val replicatorStatus = mock[GraphReplicationStatusAlgebra[F]]
         val underTest = new GrpcBlockService[F](blockFetcher, replicatorStatus)
 
-        (blockFetcher.fetchBlockByDepth _)
+        (blockFetcher.fetchBlockByDepth)
           .expects(depth)
           .once()
           .returning(Option.empty[BlockData].asRight[GE].pure[F])
@@ -220,7 +220,7 @@ class GrpcBlockServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
         val replicatorStatus = mock[GraphReplicationStatusAlgebra[F]]
         val underTest = new GrpcBlockService[F](blockFetcher, replicatorStatus)
 
-        (blockFetcher.fetchBlockByDepth _)
+        (blockFetcher.fetchBlockByDepth)
           .expects(depth)
           .once()
           .returning((GEs.InternalMessage("Boom!"): GE).asLeft[Option[BlockData]].pure[F])

@@ -27,7 +27,7 @@ trait TetraPersistableCodecs {
     }
 
   implicit def persistableSeq[T: Codec]: Persistable[Seq[T]] =
-    Persistable.instanceFromCodec(seqCodec[T])
+    Persistable.instanceFromCodec(using seqCodec[T])
 
   implicit def persistableSet[T: Codec]: Persistable[Set[T]] = new Persistable[Set[T]] {
     override def persistedBytes(value: Set[T]): ByteString = persistableSeq[T].persistedBytes(value.toSeq)
@@ -37,15 +37,15 @@ trait TetraPersistableCodecs {
   }
 
   implicit val persistableTransactionOutputIndices: Persistable[NonEmptySet[Short]] =
-    Persistable.instanceFromCodec(
+    Persistable.instanceFromCodec(using
       seqCodec[Short].xmap(s => NonEmptySet.fromSetUnsafe(SortedSet.from(s)), _.toList)
     )
 
   implicit val persistableLong: Persistable[Long] =
-    Persistable.instanceFromCodec(longCodec)
+    Persistable.instanceFromCodec(using longCodec)
 
   implicit val persistableInt: Persistable[Int] =
-    Persistable.instanceFromCodec(intCodec)
+    Persistable.instanceFromCodec(using intCodec)
 
   implicit val persistableBigInt: Persistable[BigInt] =
     Persistable.instanceFromCodec

@@ -29,7 +29,7 @@ class NodeGrpcSpec extends CatsEffectSuite with ScalaCheckEffectSuite with Async
         val interpreter = mock[NodeRpc[F, Stream[F, *]]]
         val underTest = new NodeGrpc.Server.GrpcServerImpl[F](interpreter)
 
-        (interpreter.broadcastTransaction _)
+        (interpreter.broadcastTransaction)
           .expects(transaction)
           .once()
           .returning(Applicative[F].unit)
@@ -49,7 +49,7 @@ class NodeGrpcSpec extends CatsEffectSuite with ScalaCheckEffectSuite with Async
         val interpreter = mock[NodeRpc[F, Stream[F, *]]]
         val underTest = new NodeGrpc.Server.GrpcServerImpl[F](interpreter)
 
-        (interpreter.fetchBlockHeader _)
+        (interpreter.fetchBlockHeader)
           .expects(headerId)
           .once()
           .returning(header.some.pure[F])
@@ -68,7 +68,7 @@ class NodeGrpcSpec extends CatsEffectSuite with ScalaCheckEffectSuite with Async
         val interpreter = mock[NodeRpc[F, Stream[F, *]]]
         val underTest = new NodeGrpc.Server.GrpcServerImpl[F](interpreter)
 
-        (interpreter.fetchBlockBody _)
+        (interpreter.fetchBlockBody)
           .expects(id)
           .once()
           .returning(body.some.pure[F])
@@ -90,7 +90,7 @@ class NodeGrpcSpec extends CatsEffectSuite with ScalaCheckEffectSuite with Async
         val interpreter = mock[NodeRpc[F, Stream[F, *]]]
         val underTest = new NodeGrpc.Server.GrpcServerImpl[F](interpreter)
 
-        (interpreter.fetchTransaction _)
+        (interpreter.fetchTransaction)
           .expects(transactionId)
           .once()
           .returning(transaction.some.pure[F])
@@ -110,7 +110,7 @@ class NodeGrpcSpec extends CatsEffectSuite with ScalaCheckEffectSuite with Async
         val interpreter = mock[NodeRpc[F, Stream[F, *]]]
         val underTest = new NodeGrpc.Server.GrpcServerImpl[F](interpreter)
 
-        (interpreter.blockIdAtHeight _)
+        (interpreter.blockIdAtHeight)
           .expects(height)
           .once()
           .returning(blockId.some.pure[F])
@@ -131,7 +131,7 @@ class NodeGrpcSpec extends CatsEffectSuite with ScalaCheckEffectSuite with Async
         val interpreter = mock[NodeRpc[F, Stream[F, *]]]
         val underTest = new NodeGrpc.Server.GrpcServerImpl[F](interpreter)
 
-        (interpreter.currentMempoolContains _)
+        (interpreter.currentMempoolContains)
           .expects(transactionId)
           .once()
           .returning(false.pure[F])
@@ -153,7 +153,7 @@ class NodeGrpcSpec extends CatsEffectSuite with ScalaCheckEffectSuite with Async
       val underTest = new NodeGrpc.Server.GrpcServerImpl[F](interpreter)
       val nodeConfig = Seq(NodeConfig(0, 100, 300), NodeConfig(1, 200, 600))
 
-      (interpreter.fetchProtocolConfigs _)
+      (() => interpreter.fetchProtocolConfigs())
         .expects()
         .once()
         .returning(Stream.emits(nodeConfig).pure[F])
@@ -175,7 +175,7 @@ class NodeGrpcSpec extends CatsEffectSuite with ScalaCheckEffectSuite with Async
       val underTest = new NodeGrpc.Server.GrpcServerImpl[F](interpreter)
       val epochData = EpochData.defaultInstance
 
-      (interpreter.fetchEpochData _)
+      (interpreter.fetchEpochData)
         .expects(0L.some)
         .once()
         .returning(epochData.some.pure[F])
@@ -197,7 +197,7 @@ class NodeGrpcSpec extends CatsEffectSuite with ScalaCheckEffectSuite with Async
         val interpreter = mock[NodeRpc[F, Stream[F, *]]]
         val underTest = new NodeGrpc.Server.GrpcServerImpl[F](interpreter)
 
-        (interpreter.blockIdAtDepth _)
+        (interpreter.blockIdAtDepth)
           .expects(depth)
           .once()
           .returning(blockId.some.pure[F])
@@ -218,7 +218,7 @@ class NodeGrpcSpec extends CatsEffectSuite with ScalaCheckEffectSuite with Async
         val interpreter = mock[NodeRpc[F, Stream[F, *]]]
         val underTest = new NodeGrpc.Server.GrpcServerImpl[F](interpreter)
 
-        (interpreter.currentMempool _)
+        (() => interpreter.currentMempool())
           .expects()
           .once()
           .returning(ids.pure[F])

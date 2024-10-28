@@ -149,7 +149,7 @@ object NetworkManager {
 
   private def buildSaveRemotePeersFunction[F[_]: Async: Logger](
     remotePeersStore: Store[F, Unit, Seq[KnownRemotePeer]]
-  ): Set[KnownRemotePeer] => F[Unit] = { peers: Set[KnownRemotePeer] =>
+  ): Set[KnownRemotePeer] => F[Unit] = { (peers: Set[KnownRemotePeer]) =>
     Logger[F].info(show"Going to save known hosts $peers to local data storage") >>
     remotePeersStore.put((), peers.toList)
   }

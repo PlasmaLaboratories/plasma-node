@@ -495,7 +495,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           val chainSelectionAlgebra = mock[ChainSelectionAlgebra[F, BlockId, SlotData]]
 
           (headerStore.contains).expects(*).rep(headers.size.toInt).returning(true.pure[F])
-          (validators.header.validate _).expects(*).never()
+          (validators.header.validate).expects(*).never()
           val slotData = headers.map(h => h.id -> h.slotData).toList.toMap
           (slotDataStore
             .getOrRaise(_: BlockId)(_: MonadThrow[F], _: Show[BlockId]))
@@ -609,8 +609,8 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           }
 
           (() => localChain.head).stubs().returning(knownSlotData.pure[F])
-          ((validators.header.couldBeValidated _)).stubs(*, *).returning(true.pure[F])
-          ((validators.header.validate _))
+          ((validators.header.couldBeValidated)).stubs(*, *).returning(true.pure[F])
+          ((validators.header.validate))
             .expects(*)
             .rep(newIdAndHeaders.size)
             .onCall((header: BlockHeader) => Either.right[BlockHeaderValidationFailure, BlockHeader](header).pure[F])
@@ -678,7 +678,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           (headerStore.contains).expects(*).anyNumberOfTimes().returning(false.pure[F])
 
           (() => localChain.head).stubs().returning(knownSlotData.pure[F])
-          ((validators.header.couldBeValidated _)).stubs(*, *).returning(false.pure[F])
+          ((validators.header.couldBeValidated)).stubs(*, *).returning(false.pure[F])
           val bestChainForKnownAndNewIds: NonEmptyChain[SlotData] =
             idAndHeaders.map { case (id, header) =>
               val parentId = header.parentHeaderId
@@ -771,12 +771,12 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           }
 
           (() => localChain.head).stubs().returning(knownSlotData.pure[F])
-          ((validators.header.couldBeValidated _)).stubs(*, *).returning(true.pure[F])
-          ((validators.header.validate _))
+          ((validators.header.couldBeValidated)).stubs(*, *).returning(true.pure[F])
+          ((validators.header.validate))
             .expects(*)
             .once()
             .onCall((header: BlockHeader) => Either.right[BlockHeaderValidationFailure, BlockHeader](header).pure[F])
-          ((validators.header.validate _))
+          ((validators.header.validate))
             .expects(*)
             .once()
             .onCall((_: BlockHeader) =>
@@ -893,12 +893,12 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           }
 
           (() => localChain.head).stubs().returning(knownSlotData.pure[F])
-          (validators.header.couldBeValidated _).stubs(*, *).returning(true.pure[F])
-          (validators.header.validate _)
+          (validators.header.couldBeValidated).stubs(*, *).returning(true.pure[F])
+          (validators.header.validate)
             .expects(*)
             .once()
             .onCall((header: BlockHeader) => Either.right[BlockHeaderValidationFailure, BlockHeader](header).pure[F])
-          ((validators.header.validate _))
+          ((validators.header.validate))
             .expects(*)
             .once()
             .onCall((id: BlockHeader) => throw new IllegalStateException(show"Error for id $id"))
@@ -1049,7 +1049,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
             headerStorageData(id).pure[F]
           }
 
-        (validators.bodySyntax.validate _).expects(*).rep(newBodiesSize).onCall { (b: BlockBody) =>
+        (validators.bodySyntax.validate).expects(*).rep(newBodiesSize).onCall { (b: BlockBody) =>
           Validated.validNec[BodySyntaxError, BlockBody](b).pure[F]
         }
 
@@ -1158,7 +1158,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
             headerStorageData(id).pure[F]
           }
 
-        (validators.bodySyntax.validate _).expects(*).rep(newBodiesSize).onCall { (b: BlockBody) =>
+        (validators.bodySyntax.validate).expects(*).rep(newBodiesSize).onCall { (b: BlockBody) =>
           Validated.validNec[BodySyntaxError, BlockBody](b).pure[F]
         }
 
@@ -1304,7 +1304,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
         headerStorageData.contains(id).pure[F]
       }
 
-      (validators.bodySyntax.validate _).expects(*).rep(requestIdSlotDataHeaderBlockSize).onCall { (b: BlockBody) =>
+      (validators.bodySyntax.validate).expects(*).rep(requestIdSlotDataHeaderBlockSize).onCall { (b: BlockBody) =>
         Validated.validNec[BodySyntaxError, BlockBody](b).pure[F]
       }
 
@@ -1447,7 +1447,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
         headerStorageData.get(id).pure[F]
       }
 
-      (validators.bodySyntax.validate _).expects(*).rep(requestIdSlotDataHeaderBlockSize).onCall { (b: BlockBody) =>
+      (validators.bodySyntax.validate).expects(*).rep(requestIdSlotDataHeaderBlockSize).onCall { (b: BlockBody) =>
         Validated.validNec[BodySyntaxError, BlockBody](b).pure[F]
       }
 
@@ -1588,7 +1588,7 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
         headerStorageData.get(id).pure[F]
       }
 
-      (validators.bodySyntax.validate _).expects(*).rep(2).onCall { (b: BlockBody) =>
+      (validators.bodySyntax.validate).expects(*).rep(2).onCall { (b: BlockBody) =>
         Validated.validNec[BodySyntaxError, BlockBody](b).pure[F]
       }
 
@@ -1734,11 +1734,11 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
         headerStorageData.get(id).pure[F]
       }
 
-      (validators.bodySyntax.validate _).expects(*).once().onCall { (b: BlockBody) =>
+      (validators.bodySyntax.validate).expects(*).once().onCall { (b: BlockBody) =>
         Validated.validNec[BodySyntaxError, BlockBody](b).pure[F]
       }
 
-      (validators.bodySyntax.validate _).expects(*).once().onCall { (_: BlockBody) =>
+      (validators.bodySyntax.validate).expects(*).once().onCall { (_: BlockBody) =>
         throw new IllegalStateException()
       }
 

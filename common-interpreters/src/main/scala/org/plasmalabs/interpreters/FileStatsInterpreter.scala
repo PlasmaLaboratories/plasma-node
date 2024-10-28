@@ -24,9 +24,9 @@ object FileStatsInterpreter {
           Sync[F].blocking {
             if (!Files.exists(filePath)) {
               val header = data.asObject.fold("")(d => d.toList.map(_._1).mkString(",")) + "\n"
-              Files.write(filePath, (header + contents).getBytes(StandardCharsets.UTF_8), openOptions: _*)
+              Files.write(filePath, (header + contents).getBytes(StandardCharsets.UTF_8), openOptions*)
             } else {
-              Files.write(filePath, contents.getBytes(StandardCharsets.UTF_8), openOptions: _*)
+              Files.write(filePath, contents.getBytes(StandardCharsets.UTF_8), openOptions*)
             }
           }
         }

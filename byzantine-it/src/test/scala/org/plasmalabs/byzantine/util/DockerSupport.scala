@@ -159,11 +159,11 @@ object DockerSupport {
       ContainerConfig
         .builder()
         .image(nodeImage)
-        .env(env: _*)
-        .cmd(cmd: _*)
+        .env(env*)
+        .cmd(cmd*)
         .hostname(name)
         .hostConfig(hostConfig)
-        .exposedPorts(exposedPorts: _*)
+        .exposedPorts(exposedPorts*)
         .build()
     }
   }

@@ -57,7 +57,7 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
       val client = mock[BlockchainPeerClient[F]]
       val transactionSyntaxValidation = mock[TransactionSyntaxVerifier[F]]
       val mempool = mock[MempoolAlgebra[F]]
-      (mempool.contains _).expects(headBlock.slotId.blockId, *).anyNumberOfTimes().returns(false.pure[F])
+      (mempool.contains).expects(headBlock.slotId.blockId, *).anyNumberOfTimes().returns(false.pure[F])
       val transactionStore = mock[Store[F, TransactionId, IoTransaction]]
       val peersManager = mock[PeersManagerActor[F]]
       val localChain = mock[LocalChainAlgebra[F]]
@@ -74,7 +74,7 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
 
       val missedMap = missedTransaction.map(tx => tx.id -> tx).toMap
       missedTransaction.map { tx =>
-        (transactionStore.contains _).expects(tx.id).once().returns(false.pure[F])
+        (transactionStore.contains).expects(tx.id).once().returns(false.pure[F])
         (client
           .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
           .expects(*, *, *)
@@ -82,16 +82,16 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
           .onCall { case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
             missedMap(id).pure[F]
           }
-        (transactionSyntaxValidation.validate _).expects(tx).once().returns(Either.right(tx).pure[F])
-        (transactionStore.put _).expects(tx.id, tx).once().returns(Applicative[F].unit)
-        (mempool.add _).expects(tx.id).once().returns(true.pure[F])
+        (transactionSyntaxValidation.validate).expects(tx).once().returns(Either.right(tx).pure[F])
+        (transactionStore.put).expects(tx.id, tx).once().returns(Applicative[F].unit)
+        (mempool.add).expects(tx.id).once().returns(true.pure[F])
       }
 
       transactionInStore.map { tx =>
-        (transactionStore.contains _).expects(tx.id).once().returns(true.pure[F])
+        (transactionStore.contains).expects(tx.id).once().returns(true.pure[F])
       }
 
-      (peersManager.sendNoWait _)
+      (peersManager.sendNoWait)
         .expects(PeersManager.Message.ReceivedTransactionsCount(hostId, missedTransaction.size))
         .returns(Applicative[F].unit)
 
@@ -132,7 +132,7 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
 
       val missedMap = missedTransaction.map(tx => tx.id -> tx).toMap
       missedTransaction.map { tx =>
-        (transactionStore.contains _).expects(tx.id).once().returns(false.pure[F])
+        (transactionStore.contains).expects(tx.id).once().returns(false.pure[F])
         (client
           .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
           .expects(*, *, *)
@@ -140,20 +140,20 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
           .onCall { case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
             missedMap(id).pure[F]
           }
-        (transactionSyntaxValidation.validate _).expects(tx).once().returns(Either.right(tx).pure[F])
-        (transactionStore.put _).expects(tx.id, tx).once().returns(Applicative[F].unit)
-        (mempool.add _).expects(tx.id).once().returns(true.pure[F])
+        (transactionSyntaxValidation.validate).expects(tx).once().returns(Either.right(tx).pure[F])
+        (transactionStore.put).expects(tx.id, tx).once().returns(Applicative[F].unit)
+        (mempool.add).expects(tx.id).once().returns(true.pure[F])
       }
 
-      (transactionStore.contains _).expects(*).anyNumberOfTimes().returns(false.pure[F])
+      (transactionStore.contains).expects(*).anyNumberOfTimes().returns(false.pure[F])
       transactionInMempool.map { tx =>
-        (mempool.contains _).expects(headBlock.slotId.blockId, tx.id).once().returns(true.pure[F])
+        (mempool.contains).expects(headBlock.slotId.blockId, tx.id).once().returns(true.pure[F])
       }
       missedTransaction.map { tx =>
-        (mempool.contains _).expects(headBlock.slotId.blockId, tx.id).once().returns(false.pure[F])
+        (mempool.contains).expects(headBlock.slotId.blockId, tx.id).once().returns(false.pure[F])
       }
 
-      (peersManager.sendNoWait _)
+      (peersManager.sendNoWait)
         .expects(PeersManager.Message.ReceivedTransactionsCount(hostId, missedTransaction.size))
         .returns(Applicative[F].unit)
 
@@ -181,7 +181,7 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
       val peersManager = mock[PeersManagerActor[F]]
       val localChain = mock[LocalChainAlgebra[F]]
       (() => localChain.head).expects().anyNumberOfTimes().returns(headBlock.pure[F])
-      (mempool.contains _).expects(headBlock.slotId.blockId, *).anyNumberOfTimes().returns(false.pure[F])
+      (mempool.contains).expects(headBlock.slotId.blockId, *).anyNumberOfTimes().returns(false.pure[F])
 
       val totalTransactions = 1
       val transactions = Seq.fill(totalTransactions)(arbitraryIoTransaction.arbitrary.first).map(_.embedId)
@@ -192,7 +192,7 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
 
       val missedMap = transactions.map(tx => tx.id -> tx).toMap
       transactions.map { tx =>
-        (transactionStore.contains _).expects(tx.id).once().returns(false.pure[F])
+        (transactionStore.contains).expects(tx.id).once().returns(false.pure[F])
         (client
           .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
           .expects(*, *, *)
@@ -200,17 +200,17 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
           .onCall { case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
             missedMap(id).pure[F]
           }
-        (transactionSyntaxValidation.validate _)
+        (transactionSyntaxValidation.validate)
           .expects(tx)
           .returns(
             Either.left[NonEmptyChain[TransactionSyntaxError], IoTransaction](NonEmptyChain.one(EmptyInputs)).pure[F]
           )
-        (peersManager.sendNoWait _)
+        (peersManager.sendNoWait)
           .expects(PeersManager.Message.CriticalErrorForHost(hostId))
           .once()
           .returns(Applicative[F].unit)
-        (transactionStore.put _).expects(tx.id, tx).never().returns(Applicative[F].unit)
-        (mempool.add _).expects(tx.id).never().returns(true.pure[F])
+        (transactionStore.put).expects(tx.id, tx).never().returns(Applicative[F].unit)
+        (mempool.add).expects(tx.id).never().returns(true.pure[F])
       }
 
       PeerMempoolTransactionSync
@@ -233,7 +233,7 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
       val peersManager = mock[PeersManagerActor[F]]
       val localChain = mock[LocalChainAlgebra[F]]
       (() => localChain.head).expects().anyNumberOfTimes().returns(headBlock.pure[F])
-      (mempool.contains _).expects(headBlock.slotId.blockId, *).anyNumberOfTimes().returns(false.pure[F])
+      (mempool.contains).expects(headBlock.slotId.blockId, *).anyNumberOfTimes().returns(false.pure[F])
 
       val totalTransactions = 1
       val transactions = Seq.fill(totalTransactions)(arbitraryIoTransaction.arbitrary.first).map(_.embedId)
@@ -243,7 +243,7 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
       }
 
       transactions.map { tx =>
-        (transactionStore.contains _).expects(tx.id).once().returns(false.pure[F])
+        (transactionStore.contains).expects(tx.id).once().returns(false.pure[F])
         (client
           .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
           .expects(*, *, *)
@@ -251,13 +251,13 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
           .onCall { case (_: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
             arbitraryIoTransaction.arbitrary.first.pure[F]
           }
-        (peersManager.sendNoWait _)
+        (peersManager.sendNoWait)
           .expects(PeersManager.Message.CriticalErrorForHost(hostId))
           .once()
           .returns(Applicative[F].unit)
-        (transactionSyntaxValidation.validate _).expects(tx).never().returns(Either.right(tx).pure[F])
-        (transactionStore.put _).expects(tx.id, tx).never().returns(Applicative[F].unit)
-        (mempool.add _).expects(tx.id).never().returns(true.pure[F])
+        (transactionSyntaxValidation.validate).expects(tx).never().returns(Either.right(tx).pure[F])
+        (transactionStore.put).expects(tx.id, tx).never().returns(Applicative[F].unit)
+        (mempool.add).expects(tx.id).never().returns(true.pure[F])
       }
 
       PeerMempoolTransactionSync
@@ -280,7 +280,7 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
       val peersManager = mock[PeersManagerActor[F]]
       val localChain = mock[LocalChainAlgebra[F]]
       (() => localChain.head).expects().anyNumberOfTimes().returns(headBlock.pure[F])
-      (mempool.contains _).expects(headBlock.slotId.blockId, *).anyNumberOfTimes().returns(false.pure[F])
+      (mempool.contains).expects(headBlock.slotId.blockId, *).anyNumberOfTimes().returns(false.pure[F])
 
       val totalTransactions = 10
       val transactions = Seq.fill(totalTransactions)(arbitraryIoTransaction.arbitrary.first).map(_.embedId)
@@ -291,7 +291,7 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
       }
 
       missedTransaction.map { tx =>
-        (transactionStore.contains _).expects(tx.id).once().returns(false.pure[F])
+        (transactionStore.contains).expects(tx.id).once().returns(false.pure[F])
         (client
           .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
           .expects(*, *, *)
@@ -299,17 +299,17 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
           .onCall { case (_: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
             throw new RuntimeException()
           }
-        (peersManager.sendNoWait _)
+        (peersManager.sendNoWait)
           .expects(PeersManager.Message.NonCriticalErrorForHost(hostId))
           .once()
           .returns(Applicative[F].unit)
-        (transactionSyntaxValidation.validate _).expects(tx).never().returns(Either.right(tx).pure[F])
-        (transactionStore.put _).expects(tx.id, tx).never().returns(Applicative[F].unit)
-        (mempool.add _).expects(tx.id).never().returns(true.pure[F])
+        (transactionSyntaxValidation.validate).expects(tx).never().returns(Either.right(tx).pure[F])
+        (transactionStore.put).expects(tx.id, tx).never().returns(Applicative[F].unit)
+        (mempool.add).expects(tx.id).never().returns(true.pure[F])
       }
 
       transactionInStore.map { tx =>
-        (transactionStore.contains _).expects(tx.id).once().returns(true.pure[F])
+        (transactionStore.contains).expects(tx.id).once().returns(true.pure[F])
       }
 
       PeerMempoolTransactionSync
@@ -332,7 +332,7 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
       val peersManager = mock[PeersManagerActor[F]]
       val localChain = mock[LocalChainAlgebra[F]]
       (() => localChain.head).expects().anyNumberOfTimes().returns(headBlock.pure[F])
-      (mempool.contains _).expects(headBlock.slotId.blockId, *).anyNumberOfTimes().returns(false.pure[F])
+      (mempool.contains).expects(headBlock.slotId.blockId, *).anyNumberOfTimes().returns(false.pure[F])
 
       (() => client.remoteTransactionNotifications).expects().once().onCall { () =>
         Stream.fromOption[F](Option.empty[TransactionId]).pure[F]
@@ -362,7 +362,7 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
       val peersManager = mock[PeersManagerActor[F]]
       val localChain = mock[LocalChainAlgebra[F]]
       (() => localChain.head).expects().anyNumberOfTimes().returns(headBlock.pure[F])
-      (mempool.contains _).expects(headBlock.slotId.blockId, *).anyNumberOfTimes().returns(false.pure[F])
+      (mempool.contains).expects(headBlock.slotId.blockId, *).anyNumberOfTimes().returns(false.pure[F])
 
       (() => client.remoteTransactionNotifications).expects().once().onCall { () =>
         Stream.fromOption[F](Option.empty[TransactionId]).pure[F]

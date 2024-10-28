@@ -292,8 +292,8 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
       regtestPermitQueue <-
         if (regtestEnabled) Queue.unbounded[F, Unit].toResource.map(_.some)
         else none[Queue[F, Unit]].pure[F].toResource
-      setVersionVoting     <- (if (regtestEnabled) versionVoting.set _ else (_: Int) => ().pure[F]).pure[F].toResource
-      setProposalVoting    <- (if (regtestEnabled) proposalVoting.set _ else (_: Int) => ().pure[F]).pure[F].toResource
+      setVersionVoting     <- (if (regtestEnabled) versionVoting.set else (_: Int) => ().pure[F]).pure[F].toResource
+      setProposalVoting    <- (if (regtestEnabled) proposalVoting.set else (_: Int) => ().pure[F]).pure[F].toResource
       networkCommandsTopic <- Resource.make(Topic[F, NetworkCommands])(_.close.void)
       networkTopic = if (rpcNetworkControlEnabled) networkCommandsTopic.some else None
       _ <- (

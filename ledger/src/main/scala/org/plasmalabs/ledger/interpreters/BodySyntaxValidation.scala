@@ -71,7 +71,7 @@ object BodySyntaxValidation {
                   }
               )
             )
-            .map(BodySyntaxErrors.DoubleSpend)
+            .map(BodySyntaxErrors.DoubleSpend.apply)
             .toInvalidNec(())
 
         /**

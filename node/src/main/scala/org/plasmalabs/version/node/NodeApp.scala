@@ -745,7 +745,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           appConfig.node.rpc.bindPort,
           appConfig.node.rpc.networkControl,
           indexerServices ::: healthServices,
-          (p2pConfig.publicHost, p2pConfig.publicPort).mapN(KnownPeer),
+          (p2pConfig.publicHost, p2pConfig.publicPort).mapN(KnownPeer.apply),
           p2pConfig.networkProperties,
           appConfig.node.votedVersion,
           appConfig.node.votedProposal,

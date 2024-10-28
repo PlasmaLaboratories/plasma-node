@@ -27,8 +27,8 @@ object LocalChainSynchronizationTraversal {
             Pull
               .eval(parentChildTree.findCommonAncestor(currentHead, head))
               .map { case (unapplyChain, applyChain) =>
-                unapplyChain.tail.map(SynchronizationTraversalSteps.Unapplied) ++
-                applyChain.tail.map(SynchronizationTraversalSteps.Applied)
+                unapplyChain.tail.map(SynchronizationTraversalSteps.Unapplied.apply) ++
+                applyChain.tail.map(SynchronizationTraversalSteps.Applied.apply)
               }
               .map(Chunk.chain)
               .flatMap(steps => Pull.output(steps) >> go(tlStream, head))
