@@ -18,9 +18,9 @@ class IndexerRpcApi[F[_]](val client: IndexerRpc[F]) extends AnyVal {
           .retry(
             client
               .blockIdAtHeight(1),
-            250.milli,
+            1.minute, // In case of failures, ttl cache will expire on 1 minute by config
             identity,
-            200
+            3
           )
           .compile
           .lastOrError

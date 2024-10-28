@@ -34,6 +34,12 @@ jobs:
           fetch-depth: 0 # Need full history to update last modified time.
           submodules: true
 
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+
       - name: git-restore-mtime
         uses: chetan/git-restore-mtime-action@v1
 
