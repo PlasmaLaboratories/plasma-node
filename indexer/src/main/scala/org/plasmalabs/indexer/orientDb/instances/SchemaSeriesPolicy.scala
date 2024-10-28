@@ -42,7 +42,7 @@ object SchemaSeriesPolicy {
         .withProperty(Field.Fungibility, seriesPolicy => java.lang.Integer.valueOf(seriesPolicy.fungibility.value), mandatory = true, readOnly = true, notNull= true)
         .withProperty(Field.EphemeralMetadataScheme, _.ephemeralMetadataScheme.map(_.toByteArray).getOrElse(Array.empty[Byte]), mandatory = true, readOnly = true, notNull= true)
         .withProperty(Field.PermanentMetadataScheme, _.permanentMetadataScheme.map(_.toByteArray).getOrElse(Array.empty[Byte]), mandatory = true, readOnly = true, notNull= true)
-        .withIndex[SeriesPolicy](Field.SeriesPolicyIndex, Field.SeriesPolicyId)(OIndexable.Instances.seriesPolicy),
+        .withIndex[SeriesPolicy](Field.SeriesPolicyIndex, Field.SeriesPolicyId)(using OIndexable.Instances.seriesPolicy),
       // @formatter:on
       v =>
         SeriesPolicy(

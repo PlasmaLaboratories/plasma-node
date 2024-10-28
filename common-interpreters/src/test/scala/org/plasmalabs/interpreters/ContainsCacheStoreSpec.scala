@@ -49,7 +49,7 @@ class ContainsCacheStoreSpec extends CatsEffectSuite with AsyncMockFactory {
 
   implicit val logger: Logger[F] = new NoOpLogger[F]
 
-  ResourceFixture[Path](Resource.make(Files[F].createTempDirectory)(Files[F].deleteRecursively))
+  ResourceFunFixture[Path](Resource.make(Files[F].createTempDirectory)(Files[F].deleteRecursively))
     .test("Check multi thread") { testPath =>
       def parWriting(store: Store[F, SpecKey, SpecValue], key: SpecKey, thr: Int): F[Unit] =
         for {

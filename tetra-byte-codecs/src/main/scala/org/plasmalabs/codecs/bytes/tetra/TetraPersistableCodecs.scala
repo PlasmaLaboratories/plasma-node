@@ -59,10 +59,10 @@ trait TetraPersistableCodecs {
     }
 
   implicit val persistableHeightIdTuple: Persistable[(Long, BlockId)] =
-    Persistable.instanceFromCodec(tupleCodec(longCodec, blockIdCodec))
+    Persistable.instanceFromCodec(using tupleCodec(using longCodec, blockIdCodec))
 
   implicit val persistableEpochToProposalId: Persistable[(Epoch, ProposalId)] =
-    Persistable.instanceFromCodec(tupleCodec(longCodec, intCodec))
+    Persistable.instanceFromCodec(using tupleCodec(using longCodec, intCodec))
 
   implicit val persistableByte: Persistable[Byte] =
     Persistable.instanceFromCodec

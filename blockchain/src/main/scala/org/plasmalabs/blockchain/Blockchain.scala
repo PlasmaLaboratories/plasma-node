@@ -147,13 +147,14 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
         )
         .onFinalize(Logger[F].info("P2P Actor system had been shutdown"))
       _ <- Logger[F].info(s"Exposing server on: ${peerAsServer.fold("")(_.toString)}").toResource
-      peerServerF = BlockchainPeerServer.make(
-        p2pBlockchain,
-        () => peerAsServer.map(kp => KnownHost(localPeer.p2pVK, kp.host, kp.port)),
-        () => currentPeers.get,
-        peersStatusChangesTopic,
-        networkProperties.slotDataParentDepth
-      ) _
+      peerServerF = cp =>
+        BlockchainPeerServer.make(
+          p2pBlockchain,
+          () => peerAsServer.map(kp => KnownHost(localPeer.p2pVK, kp.host, kp.port)),
+          () => currentPeers.get,
+          peersStatusChangesTopic,
+          networkProperties.slotDataParentDepth
+        )(cp)
       _ <- BlockchainNetwork
         .make[F](
           localPeer.localAddress.host,
