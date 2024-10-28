@@ -67,6 +67,8 @@ class NodeAppTest extends CatsEffectSuite {
          |    known-peers: 127.0.0.2:9150
          |  rpc:
          |    bind-port: 9153
+         |  ethereum-json-rpc:
+         |    bind-port: 8546
          |  big-bang:
          |    type: public
          |    genesis-id: ${genesisBlockId.show}

@@ -23,6 +23,7 @@ object ApplicationConfig {
     staking:             Node.Staking,
     p2p:                 Node.P2P,
     rpc:                 Node.RPC,
+    ethereumJsonRpc:     Node.EthereumJsonRpc,
     mempool:             Node.Mempool,
     bigBang:             Node.BigBang,
     maxSupportedVersion: Int = 1,
@@ -101,6 +102,8 @@ object ApplicationConfig {
     case class KnownPeer(host: String, port: Int)
 
     case class RPC(bindHost: String, bindPort: Int, networkControl: Boolean = false)
+
+    case class EthereumJsonRpc(bindHost: String, bindPort: Int)
 
     case class Mempool(defaultExpirationSlots: Long, protection: MempoolProtection = MempoolProtection())
 

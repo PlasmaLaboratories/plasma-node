@@ -53,6 +53,12 @@ object ApplicationConfigOps {
         ),
         cmdArgs.runtime.rpcBindHost.map(createF(GenLens[ApplicationConfig](_.node.rpc.bindHost))),
         cmdArgs.runtime.rpcBindPort.map(createF(GenLens[ApplicationConfig](_.node.rpc.bindPort))),
+        cmdArgs.runtime.ethereumJsonRpcBindHost.map(
+          createF(GenLens[ApplicationConfig](_.node.ethereumJsonRpc.bindHost))
+        ),
+        cmdArgs.runtime.ethereumJsonRpcBindPort.map(
+          createF(GenLens[ApplicationConfig](_.node.ethereumJsonRpc.bindPort))
+        ),
         cmdArgs.runtime.p2pBindHost.map(createF(GenLens[ApplicationConfig](_.node.p2p.bindHost))),
         cmdArgs.runtime.p2pBindPort.map(createF(GenLens[ApplicationConfig](_.node.p2p.bindPort))),
         cmdArgs.runtime.p2pPublicHost.map(v => createF(GenLens[ApplicationConfig](_.node.p2p.publicHost))(v.some)),
