@@ -118,6 +118,6 @@ object EtaCalculationSpec {
       List(previousEta.data) ++ List(ByteString.copyFrom(BigInt(epoch).toByteArray)) ++ rhoValues
         .map(_.sizedBytes.data)
         .map(rhoToRhoNonceHash)
-    Sized.strictUnsafe(blake2b256.hash(messages.foldLeft(ByteString.EMPTY)((a,b) => a.concat(b))))
+    Sized.strictUnsafe(blake2b256.hash(messages.foldLeft(ByteString.EMPTY)((a, b) => a.concat(b))))
   }
 }
