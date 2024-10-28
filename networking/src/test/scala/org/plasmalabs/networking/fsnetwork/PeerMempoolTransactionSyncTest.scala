@@ -79,9 +79,8 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
           .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
           .expects(*, *, *)
           .once()
-          .onCall {
-            case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
-              missedMap(id).pure[F]
+          .onCall { case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
+            missedMap(id).pure[F]
           }
         (transactionSyntaxValidation.validate _).expects(tx).once().returns(Either.right(tx).pure[F])
         (transactionStore.put _).expects(tx.id, tx).once().returns(Applicative[F].unit)
@@ -138,9 +137,8 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
           .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
           .expects(*, *, *)
           .once()
-          .onCall {
-            case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
-              missedMap(id).pure[F]
+          .onCall { case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
+            missedMap(id).pure[F]
           }
         (transactionSyntaxValidation.validate _).expects(tx).once().returns(Either.right(tx).pure[F])
         (transactionStore.put _).expects(tx.id, tx).once().returns(Applicative[F].unit)
@@ -199,9 +197,8 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
           .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
           .expects(*, *, *)
           .once()
-          .onCall {
-            case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
-              missedMap(id).pure[F]
+          .onCall { case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
+            missedMap(id).pure[F]
           }
         (transactionSyntaxValidation.validate _)
           .expects(tx)
@@ -251,9 +248,8 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
           .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
           .expects(*, *, *)
           .once()
-          .onCall {
-            case (_: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
-              arbitraryIoTransaction.arbitrary.first.pure[F]
+          .onCall { case (_: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
+            arbitraryIoTransaction.arbitrary.first.pure[F]
           }
         (peersManager.sendNoWait _)
           .expects(PeersManager.Message.CriticalErrorForHost(hostId))
@@ -300,9 +296,8 @@ class PeerMempoolTransactionSyncTest extends CatsEffectSuite with ScalaCheckEffe
           .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
           .expects(*, *, *)
           .once()
-          .onCall {
-            case (_: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
-              throw new RuntimeException()
+          .onCall { case (_: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
+            throw new RuntimeException()
           }
         (peersManager.sendNoWait _)
           .expects(PeersManager.Message.NonCriticalErrorForHost(hostId))

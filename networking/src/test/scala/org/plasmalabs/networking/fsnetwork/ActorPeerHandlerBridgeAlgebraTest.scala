@@ -213,9 +213,8 @@ class ActorPeerHandlerBridgeAlgebraTest extends CatsEffectSuite with ScalaCheckE
         .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
         .expects(*, *, *)
         .repeat(transactions.length)
-        .onCall {
-          case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
-            transactionsMap(id).pure[F]
+        .onCall { case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
+          transactionsMap(id).pure[F]
         }
 
       (() => client.remotePeerAsServer)

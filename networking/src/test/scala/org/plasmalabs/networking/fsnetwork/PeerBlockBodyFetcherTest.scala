@@ -94,9 +94,8 @@ class PeerBlockBodyFetcherTest
         .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
         .expects(*, *, *)
         .anyNumberOfTimes()
-        .onCall {
-          case (id: TransactionId, _: BlockBodyOrTransactionError, _: MonadThrow[F] @unchecked) =>
-            clientTxsData(id).pure[F]
+        .onCall { case (id: TransactionId, _: BlockBodyOrTransactionError, _: MonadThrow[F] @unchecked) =>
+          clientTxsData(id).pure[F]
         }
 
       val downloadedTxs =
@@ -185,9 +184,8 @@ class PeerBlockBodyFetcherTest
         .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
         .expects(*, *, *)
         .anyNumberOfTimes()
-        .onCall {
-          case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
-            clientTxsData(id).pure[F]
+        .onCall { case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
+          clientTxsData(id).pure[F]
         }
 
       val downloadedTxs =
@@ -387,13 +385,12 @@ class PeerBlockBodyFetcherTest
         .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
         .expects(*, *, *)
         .anyNumberOfTimes()
-        .onCall {
-          case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
-            if (transactionHaveIncorrectId(id)) {
-              incorrectTransaction.pure[F]
-            } else {
-              clientTxsData(id).pure[F]
-            }
+        .onCall { case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
+          if (transactionHaveIncorrectId(id)) {
+            incorrectTransaction.pure[F]
+          } else {
+            clientTxsData(id).pure[F]
+          }
         }
 
       (transactionStore.put).expects(*, *).anyNumberOfTimes().returning(().pure[F])
@@ -457,9 +454,8 @@ class PeerBlockBodyFetcherTest
         .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
         .expects(transaction.id, *, *)
         .anyNumberOfTimes()
-        .onCall {
-          case (_: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
-            transaction.pure[F]
+        .onCall { case (_: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
+          transaction.pure[F]
         }
 
       (transactionStore.put).expects(*, *).never().returning(().pure[F])
@@ -520,9 +516,8 @@ class PeerBlockBodyFetcherTest
         .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
         .expects(transaction.id, *, *)
         .anyNumberOfTimes()
-        .onCall {
-          case (_: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
-            transaction.pure[F]
+        .onCall { case (_: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
+          transaction.pure[F]
         }
 
       (headerToBodyValidation.validate).expects(*).once().onCall { (block: Block) =>
@@ -582,9 +577,8 @@ class PeerBlockBodyFetcherTest
         .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
         .expects(*, *, *)
         .anyNumberOfTimes()
-        .onCall {
-          case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
-            allTx(id).pure[F]
+        .onCall { case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
+          allTx(id).pure[F]
         }
 
       (transactionStore.put).expects(*, *).twice().returning(().pure[F])
@@ -663,9 +657,8 @@ class PeerBlockBodyFetcherTest
         .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
         .expects(*, *, *)
         .anyNumberOfTimes()
-        .onCall {
-          case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
-            clientTxsData(id).pure[F]
+        .onCall { case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
+          clientTxsData(id).pure[F]
         }
 
       val downloadedTxs =
@@ -730,9 +723,8 @@ class PeerBlockBodyFetcherTest
         .getRemoteTransactionOrError(_: TransactionId, _: BlockBodyOrTransactionError)(_: MonadThrow[F]))
         .expects(*, *, *)
         .anyNumberOfTimes()
-        .onCall {
-          case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
-            Async[F].delayBy(txIdsAndTxs(id).pure[F], FiniteDuration(txDelay, MILLISECONDS))
+        .onCall { case (id: TransactionId, _: BlockBodyOrTransactionError @unchecked, _: MonadThrow[F] @unchecked) =>
+          Async[F].delayBy(txIdsAndTxs(id).pure[F], FiniteDuration(txDelay, MILLISECONDS))
         }
 
       val downloadedTxs =
