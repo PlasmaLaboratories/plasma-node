@@ -1,4 +1,4 @@
-package xyz.stratalab.grpc
+package org.plasmalabs.grpc
 
 import cats.data.OptionT
 import cats.effect.{Async, Resource}
@@ -14,12 +14,12 @@ import org.http4s.dsl.Http4sDslBinCompat
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.Router
 import org.http4s.server.middleware.CORS
+import org.plasmalabs.blockchain.{BigBang, BlockchainCore}
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.consensus.models.BlockHeader
+import org.plasmalabs.typeclasses.implicits.showBlockId
 import org.typelevel.log4cats.Logger
 import scodec.bits.ByteVector
-import xyz.stratalab.blockchain.{BigBang, BlockchainCore}
-import xyz.stratalab.codecs.bytes.tetra.instances._
-import xyz.stratalab.consensus.models.BlockHeader
-import xyz.stratalab.typeclasses.implicits.showBlockId
 
 object EthereumJsonRpc {
 

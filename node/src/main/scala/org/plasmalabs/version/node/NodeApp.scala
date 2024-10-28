@@ -25,7 +25,7 @@ import org.plasmalabs.consensus.models.{BlockId, VrfConfig}
 import org.plasmalabs.crypto.hash.Blake2b512
 import org.plasmalabs.crypto.signing.Ed25519
 import org.plasmalabs.eventtree.ParentChildTree
-import org.plasmalabs.grpc.HealthCheckGrpc
+import org.plasmalabs.grpc._
 import org.plasmalabs.healthcheck.HealthCheck
 import org.plasmalabs.indexer._
 import org.plasmalabs.interpreters._
@@ -37,7 +37,6 @@ import org.plasmalabs.models.p2p._
 import org.plasmalabs.models.utility.HasLength.instances.byteStringLength
 import org.plasmalabs.models.utility._
 import org.plasmalabs.networking.p2p.LocalPeer
-import org.plasmalabs.node.ApplicationConfigOps._
 import org.plasmalabs.node.cli.ConfiguredCliApp
 import org.plasmalabs.numerics.interpreters.{ExpInterpreter, Log1pInterpreter}
 import org.plasmalabs.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
