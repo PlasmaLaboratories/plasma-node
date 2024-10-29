@@ -87,7 +87,7 @@ object Ledger {
   def make[F[_]: MonadThrow](store: Store[F, TxId, Array[Byte]]): Ledger[F] = new Ledger[F] {
 
     def eventId: F[TxId] =
-      store.getOrRaise(CurrentEventIdId).map(new String(_, StandardCharsets.UTF_8)).map(TxId)
+      store.getOrRaise(CurrentEventIdId).map(new String(_, StandardCharsets.UTF_8)).map(TxId.apply)
 
     def setEventId(id: TxId): F[Unit] =
       store.put(CurrentEventIdId, id.value.getBytes(StandardCharsets.UTF_8))

@@ -141,7 +141,6 @@ object NetworkManager {
           val hostId = remotePeerIdOpt.getOrElse(HostId(ByteString.copyFrom(Random.nextBytes(hostIdBytesLen))))
           val knownPeer = KnownRemotePeer(hostId, remoteAddress, 0, 0, None)
           peersManager.sendNoWait(PeersManager.Message.AddKnownPeers(NonEmptyChain.one(knownPeer)))
-        case _ => Async[F].unit
       }
       .compile
       .drain

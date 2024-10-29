@@ -37,6 +37,9 @@ object RpcServer {
     case TransactionSyntaxError.InvalidDataLength           => "InvalidDataLength"
     case TransactionSyntaxError.InvalidUpdateProposal(_)    => "InvalidUpdateProposal"
     case TransactionSyntaxError.InconsistentNetworkIDs(ids) => show"InconsistentNetworkIDs(ids=$ids, size=${ids.size})"
+    case TransactionSyntaxError.InvalidMergingStatement(_)  => "InvalidMergingStatement"
+    case TransactionSyntaxError.NonDistinctMergingInput(_)  => "NonDistinctMergingInput"
+    case TransactionSyntaxError.IncompatibleMerge(_, _)     => "IncompatibleMerge"
   }
 
   // scalastyle:off method.length
