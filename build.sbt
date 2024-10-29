@@ -1,7 +1,5 @@
-import com.typesafe.sbt.packager.docker.{DockerChmodType, ExecCmd}
 import sbt.Keys.{organization, test}
 import sbtassembly.MergeStrategy
-import NativePackagerHelper.*
 
 val scala3 = "3.4.1"
 
@@ -28,15 +26,7 @@ lazy val commonSettings = Seq(
   sonatypeCredentialHost := "s01.oss.sonatype.org",
   scalacOptions ++= commonScalacOptions,
   semanticdbEnabled := true, // enable SemanticDB for Scalafix
-//  wartremoverErrors := Warts.unsafe, // settings for wartremover
-  Compile / unmanagedSourceDirectories += {
-    val sourceDir = (Compile / sourceDirectory).value
-    CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, n)) if n >= 13 => sourceDir / "scala-2.13+"
-      case _                       => sourceDir / "scala-2.12-"
-    }
-  },
-  crossScalaVersions := Seq(scala3),
+  scalaVersion := scala3,
   resolvers ++= Seq(
     "Typesafe Repository" at "https://repo.typesafe.com/typesafe/releases/",
     "Sonatype Staging" at "https://s01.oss.sonatype.org/content/repositories/staging",
@@ -156,9 +146,6 @@ javaOptions ++= Seq(
 connectInput / run := true
 outputStrategy := Some(StdoutOutput)
 
-connectInput / run := true
-outputStrategy := Some(StdoutOutput)
-
 def versionFmt(out: sbtdynver.GitDescribeOutput): String = {
   val dirtySuffix = out.dirtySuffix.dropPlus.mkString("-", "")
   if (out.isCleanAfterTag) out.ref.dropPrefix + dirtySuffix // no commit info if clean after tag
@@ -212,7 +199,6 @@ lazy val node = project
     assemblySettings("org.plasmalabs.node.NodeApp"),
     assemblyJarName := s"plasma-node-${version.value}.jar",
     nodeDockerSettings,
-    crossScalaVersions := Seq(scala3),
     Compile / mainClass := Some("org.plasmalabs.node.NodeApp"),
     publish / skip := true,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
@@ -246,7 +232,6 @@ lazy val config = project
   .settings(
     name := "config",
     commonSettings,
-    crossScalaVersions := Seq(scala3),
     libraryDependencies ++= Dependencies.monocle :+ Dependencies.pureConfig,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -261,7 +246,6 @@ lazy val networkDelayer = project
     assemblySettings("org.plasmalabs.networkdelayer.NetworkDelayer"),
     assemblyJarName := s"network-delayer-${version.value}.jar",
     networkDelayerDockerSettings,
-    crossScalaVersions := Seq(scala3),
     Compile / mainClass := Some("org.plasmalabs.networkdelayer.NetworkDelayer"),
     publish / skip := true,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
@@ -281,7 +265,6 @@ lazy val testnetSimulationOrchestrator = project
     assemblySettings("org.plasmalabs.testnetsimulationorchestrator.app.Orchestrator"),
     assemblyJarName := s"testnet-simulation-orchestrator-${version.value}.jar",
     testnetSimulationOrchestratorDockerSettings,
-    crossScalaVersions := Seq(scala3),
     Compile / mainClass := Some("org.plasmalabs.testnetsimulationorchestrator.app.Orchestrator"),
     publish / skip := true,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
@@ -297,7 +280,6 @@ lazy val commonApplication = project
   .settings(
     name := "common-application",
     commonSettings,
-    crossScalaVersions := Seq(scala3),
     libraryDependencies ++= Dependencies.commonApplication,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
@@ -335,7 +317,6 @@ lazy val eventTree = project
   .settings(
     name := "event-tree",
     commonSettings,
-    crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.eventtree",
     libraryDependencies ++= Dependencies.eventTree,
@@ -420,7 +401,6 @@ lazy val commonInterpreters = project
   .settings(
     name := "common-interpreters",
     commonSettings,
-    crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.commoninterpreters",
     libraryDependencies ++= Dependencies.commonInterpreters,
@@ -444,7 +424,6 @@ lazy val consensus = project
   .settings(
     name := "consensus",
     commonSettings,
-    crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.consensus",
     libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.consensus,
@@ -469,7 +448,6 @@ lazy val minting = project
   .settings(
     name := "minting",
     commonSettings,
-    crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.minting",
     libraryDependencies ++= Dependencies.minting,
@@ -494,7 +472,6 @@ lazy val networking = project
   .settings(
     name := "networking",
     commonSettings,
-    crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.networking",
     libraryDependencies ++= Dependencies.networking,
@@ -525,7 +502,6 @@ lazy val transactionGenerator = project
     name := "transaction-generator",
     commonSettings,
     coverageEnabled := false,
-    crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.transactiongenerator",
     libraryDependencies ++= Dependencies.transactionGenerator,
@@ -551,7 +527,6 @@ lazy val ledger = project
   .settings(
     name := "ledger",
     commonSettings,
-    crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.ledger",
     libraryDependencies ++= Dependencies.ledger,
@@ -573,7 +548,6 @@ lazy val blockchainCore = project
   .settings(
     name := "blockchain-core",
     commonSettings,
-    crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.blockchaincore",
     libraryDependencies ++= Dependencies.blockchain,
@@ -599,7 +573,6 @@ lazy val blockchain = project
   .settings(
     name := "blockchain",
     commonSettings,
-    crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.blockchain",
     libraryDependencies ++= Dependencies.blockchain,
@@ -685,7 +658,6 @@ lazy val indexer = project
     name := "indexer",
     commonSettings,
     publish / skip := true,
-    crossScalaVersions := Seq(scala3),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.indexer",
     libraryDependencies ++= Dependencies.indexer,
@@ -718,7 +690,6 @@ lazy val nodeIt = project
   .settings(
     name := "node-it",
     commonSettings,
-    crossScalaVersions := Seq(scala3),
     libraryDependencies ++= Dependencies.nodeIt,
     excludeDependencies += Dependencies.scodec213ExlusionRule
   )
