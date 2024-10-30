@@ -120,6 +120,10 @@ object NodeGrpc {
                 .fetchEpochData(FetchEpochDataReq(epoch), new Metadata())
                 .map(_.epochData)
 
+            override def fetchCanonicalHeadId(): F[Option[BlockId]] =
+              client
+                .fetchCanonicalHeadId(FetchCanonicalHeadIdReq(), new Metadata())
+                .map(_.blockId)
           }
         )
   }
@@ -223,7 +227,16 @@ object NodeGrpc {
           .map(FetchNodeConfigRes(_))
 
       def fetchEpochData(request: FetchEpochDataReq, ctx: Metadata): F[FetchEpochDataRes] =
-        interpreter.fetchEpochData(request.epoch).map(FetchEpochDataRes(_))
+        interpreter
+          .fetchEpochData(request.epoch)
+          .map(FetchEpochDataRes(_))
+          .adaptErrorsToGrpc
+
+      override def fetchCanonicalHeadId(request: FetchCanonicalHeadIdReq, ctx: Metadata): F[FetchCanonicalHeadIdRes] =
+        interpreter
+          .fetchCanonicalHeadId()
+          .map(FetchCanonicalHeadIdRes(_))
+          .adaptErrorsToGrpc
     }
   }
 }

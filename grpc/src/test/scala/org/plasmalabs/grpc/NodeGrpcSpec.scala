@@ -232,5 +232,26 @@ class NodeGrpcSpec extends CatsEffectSuite with ScalaCheckEffectSuite with Async
     }
   }
 
+  test("Retrieve Canonical Head Id") {
+    PropF.forAllF { (header: BlockHeader) =>
+      val blockId = header.id
+      withMock {
+        val interpreter = mock[NodeRpc[F, Stream[F, *]]]
+        val underTest = new NodeGrpc.Server.GrpcServerImpl[F](interpreter)
+
+        (() => interpreter.fetchCanonicalHeadId())
+          .expects()
+          .once()
+          .returning(blockId.some.pure[F])
+
+        assertIO(
+          underTest.fetchCanonicalHeadId(FetchCanonicalHeadIdReq(), new Metadata()),
+          FetchCanonicalHeadIdRes(blockId.some)
+        )
+
+      }
+    }
+  }
+
   // TODO: synchronizationTraversal has no unit Testing
 }

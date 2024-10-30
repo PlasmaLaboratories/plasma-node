@@ -68,5 +68,8 @@ object MultiNodeRpc {
 
       def fetchEpochData(epoch: Option[Epoch]): F[Option[EpochData]] =
         randomDelegate.flatMap(_.fetchEpochData(epoch))
+
+      override def fetchCanonicalHeadId(): F[Option[BlockId]] =
+        randomDelegate.flatMap(_.fetchCanonicalHeadId())
     }
 }

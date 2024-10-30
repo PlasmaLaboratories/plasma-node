@@ -129,6 +129,9 @@ object RpcServer {
             .getOrElseF(blockchain.clock.currentEpoch)
             .flatMap(blockchain.epochData.dataOf)
 
+        override def fetchCanonicalHeadId(): F[Option[BlockId]] =
+          blockchain.consensus.localChain.head.map(_.slotId.blockId.some)
+
         private def syntacticValidateOrRaise(transaction: IoTransaction) =
           EitherT(blockchain.validators.transactionSyntax.validate(transaction))
             .leftSemiflatTap(errors =>
