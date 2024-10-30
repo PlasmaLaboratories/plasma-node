@@ -349,6 +349,7 @@ object BlockPackerValidation {
     implicit val logger: SelfAwareStructuredLogger[F] =
       Slf4jLogger.getLoggerFromName[F]("Node.BlockPackerValidation")
     Resource.pure((transaction: IoTransaction, height: Long, slot: Slot) =>
+      Logger[F].debug(show"Start validating tx ${transaction.id}") >>
       (
         EitherT(transactionDataValidation.validate(transaction).map(_.toEither)).leftMap(_.show) >>
         EitherT(
@@ -360,6 +361,7 @@ object BlockPackerValidation {
         .leftSemiflatTap(error =>
           Logger[F].warn(show"Transaction id=${transaction.id} failed validation. reason=$error")
         )
+        .semiflatTap((res: IoTransaction) => Logger[F].debug(show"Transaction ${res.id} is valid"))
         .isRight
     )
   }

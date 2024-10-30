@@ -5,7 +5,7 @@ import cats.implicits._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.ClockAlgebra
 import org.plasmalabs.algebras.testInterpreters._
-import org.plasmalabs.consensus.interpreters.VotingEventSourceState.VotingData
+import org.plasmalabs.consensus.interpreters.CrossEpochEventSourceState.VotingData
 import org.plasmalabs.consensus.models.BlockHeaderValidationFailures._
 import org.plasmalabs.consensus.models.{BlockHeaderValidationFailure, _}
 import org.plasmalabs.eventtree.EventSourcedState
@@ -108,16 +108,21 @@ class BlockHeaderVotingValidationTest extends CatsEffectSuite with ScalaCheckEff
 
         block2 = headerOfEpochWithProposalVote(2, 1)
         res2 <- votingValidation.validate(block2)
-        _    <- assert(res2 == Left(IncorrectVotedProposalId(1))).pure[F]
+        // we allow to vote proposal which exist in previous epoch but not in current
+        _ <- assert(res2.isRight).pure[F]
 
         block3 = headerOfEpochWithProposalVote(1, 2)
         res3 <- votingValidation.validate(block3)
         _    <- assert(res3 == Left(IncorrectVotedProposalId(2))).pure[F]
+
+        block4 = headerOfEpochWithProposalVote(3, 1)
+        res4 <- votingValidation.validate(block4)
+        _    <- assert(res4 == Left(IncorrectVotedProposalId(1))).pure[F]
       } yield ()
     }
   }
 
-  test("Event source use parent of block to get correct state") {
+  test("Event source use id of block to get correct state") {
     withMock {
       val block = arbitraryHeader.arbitrary.first
       val eventSource = mock[EventSourcedState[F, VotingData[F], BlockId]]

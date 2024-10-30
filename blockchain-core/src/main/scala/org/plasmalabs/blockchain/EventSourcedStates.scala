@@ -3,11 +3,7 @@ package org.plasmalabs.blockchain
 import cats.implicits._
 import cats.{Functor, Parallel}
 import org.plasmalabs.blockchain.interpreters.EpochDataEventSourcedState
-import org.plasmalabs.consensus.interpreters.{
-  ConsensusDataEventSourcedState,
-  EpochBoundariesEventSourcedState,
-  VotingEventSourceState
-}
+import org.plasmalabs.consensus.interpreters._
 import org.plasmalabs.consensus.models.BlockId
 import org.plasmalabs.eventtree.EventSourcedState
 import org.plasmalabs.interpreters.{BlockHeightTree, TxIdToBlockIdTree}
@@ -28,8 +24,10 @@ case class EventSourcedStates[F[_]](
   registrationsLocal:   EventSourcedState[F, RegistrationAccumulator.State[F], BlockId],
   registrationsP2P:     EventSourcedState[F, RegistrationAccumulator.State[F], BlockId],
   txIdToBlockIdTree:    EventSourcedState[F, TxIdToBlockIdTree.State[F], BlockId],
-  votingLocal:          EventSourcedState[F, VotingEventSourceState.VotingData[F], BlockId],
-  votingP2P:            EventSourcedState[F, VotingEventSourceState.VotingData[F], BlockId],
+  crossEpochForkLocal:  EventSourcedState[F, CrossEpochEventSourceState.VotingData[F], BlockId],
+  crossEpochForkP2P:    EventSourcedState[F, CrossEpochEventSourceState.VotingData[F], BlockId],
+  votingForkLocal:      EventSourcedState[F, VotingEventSourceState.State[F], BlockId],
+  votingForkP2P:        EventSourcedState[F, VotingEventSourceState.State[F], BlockId],
   proposalLocal:        ProposalEventSourceState.ProposalEventSourceStateType[F],
   proposalP2P:          ProposalEventSourceState.ProposalEventSourceStateType[F]
 ) {
@@ -45,9 +43,11 @@ case class EventSourcedStates[F[_]](
       mempool,
       registrationsLocal,
       txIdToBlockIdTree,
-      votingLocal
+      votingForkLocal
       // This line is included but intentionally commented out due to the N-2 epoch nature of consensus data
-      // proposalLocal
+      // proposalLocal,
+      // This line is included but intentionally commented out due to those event state is controlled by votingForkLocal
+      // crossEpochForkLocal
     ).parTraverse(_.stateAt(id).void).void
 
   def updateAllStatesTo(id: BlockId)(implicit fFunctor: Functor[F], fPar: Parallel[F]): F[Unit] =
@@ -60,8 +60,10 @@ case class EventSourcedStates[F[_]](
       epochBoundariesP2P,
       boxStateP2P,
       registrationsP2P,
-      votingP2P
+      votingForkP2P
       // This line is included but intentionally commented out due to the N-2 epoch nature of consensus data
       // proposalP2P
+      // This line is included but intentionally commented out due to those event state is controlled by votingForkP2P
+      // crossEpochForkP2P
     ).parTraverse(_.stateAt(id).void).void
 }

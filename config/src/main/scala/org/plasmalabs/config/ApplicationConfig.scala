@@ -156,8 +156,11 @@ object ApplicationConfig {
         stakerCount:      Int,
         stakes:           Option[List[BigInt]],
         localStakerIndex: Option[Int],
-        regtestEnabled:   Boolean = false
+        regtestConfig:    Option[RegtestConfig] = None
       ) extends BigBang
+
+      @Lenses
+      case class RegtestConfig(permissiveBlockProduction: Boolean = false)
 
       @Lenses
       case class Public(

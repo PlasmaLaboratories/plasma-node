@@ -6,7 +6,7 @@ import cats.implicits._
 import org.plasmalabs.algebras.ClockAlgebra
 import org.plasmalabs.algebras.ClockAlgebra.implicits._
 import org.plasmalabs.consensus.algebras._
-import org.plasmalabs.consensus.interpreters.VotingEventSourceState.VotingData
+import org.plasmalabs.consensus.interpreters.CrossEpochEventSourceState.VotingData
 import org.plasmalabs.consensus.models.BlockHeaderValidationFailures._
 import org.plasmalabs.consensus.models.{BlockHeader, BlockHeaderValidationFailure, BlockId}
 import org.plasmalabs.eventtree.EventSourcedState

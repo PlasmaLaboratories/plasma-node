@@ -6,7 +6,7 @@ import cats.implicits._
 import org.plasmalabs.algebras.ClockAlgebra.implicits._
 import org.plasmalabs.algebras._
 import org.plasmalabs.consensus.algebras._
-import org.plasmalabs.consensus.interpreters.VotingEventSourceState.VotingData
+import org.plasmalabs.consensus.interpreters.CrossEpochEventSourceState.VotingData
 import org.plasmalabs.consensus.models.BlockHeaderValidationFailures.{IncorrectVotedProposalId, IncorrectVotedVersionId}
 import org.plasmalabs.consensus.models.{BlockHeader, BlockHeaderValidationFailure, BlockId}
 import org.plasmalabs.eventtree.EventSourcedState
@@ -58,7 +58,10 @@ object BlockHeaderVotingValidation {
             proposalVoting <- versionData.proposalVoting.pure[F]
             epoch          <- clockAlgebra.epochOf(header.slot)
             votesOpt       <- proposalVoting.get((epoch, votedProposal))
-          } yield Either.cond(votesOpt.isDefined, header, IncorrectVotedProposalId(votedProposal))
+            // we allow blocks which votes for valid proposal in previous epoch but not for current
+            prevEpochVotesOpt <- proposalVoting.get((epoch - 1, votedProposal))
+            validProposal = votesOpt.isDefined || prevEpochVotesOpt.isDefined
+          } yield Either.cond(validProposal, header, IncorrectVotedProposalId(votedProposal))
         case None => Either.right[BlockHeaderValidationFailure, BlockHeader](header).pure[F]
       }
   }

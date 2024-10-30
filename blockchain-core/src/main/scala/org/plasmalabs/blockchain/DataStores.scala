@@ -151,11 +151,17 @@ class CurrentEventIdGetterSetters[F[_]: MonadThrow](store: Store[F, Byte, BlockI
   val registrationAccumulatorP2P: CurrentEventIdGetterSetters.GetterSetter[F] =
     CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.RegistrationAccumulatorP2P)
 
-  val votingLocal: CurrentEventIdGetterSetters.GetterSetter[F] =
-    CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.VotingLocal)
+  val crossEpochForkLocal: CurrentEventIdGetterSetters.GetterSetter[F] =
+    CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.CrossEpochForkLocal)
 
-  val votingP2P: CurrentEventIdGetterSetters.GetterSetter[F] =
-    CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.VotingP2P)
+  val crossEpochForkP2P: CurrentEventIdGetterSetters.GetterSetter[F] =
+    CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.CrossEpochForkP2P)
+
+  val votingForkLocal: CurrentEventIdGetterSetters.GetterSetter[F] =
+    CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.votingForkLocal)
+
+  val votingForkP2P: CurrentEventIdGetterSetters.GetterSetter[F] =
+    CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.votingForkP2P)
 
   val proposalLocal: CurrentEventIdGetterSetters.GetterSetter[F] =
     CurrentEventIdGetterSetters.GetterSetter.forByte(store)(Indices.ProposalLocal)
@@ -196,10 +202,12 @@ object CurrentEventIdGetterSetters {
     val BlockHeightTreeP2P: Byte = 10
     val BoxStateP2P: Byte = 11
     val RegistrationAccumulatorP2P: Byte = 12
-    val VotingLocal: Byte = 13
-    val VotingP2P: Byte = 14
+    val CrossEpochForkLocal: Byte = 13
+    val CrossEpochForkP2P: Byte = 14
     val ProposalLocal: Byte = 15
     val ProposalP2P: Byte = 16
     val EpochDataP2P: Byte = 17
+    val votingForkLocal: Byte = 18
+    val votingForkP2P: Byte = 19
   }
 }

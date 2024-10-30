@@ -54,7 +54,7 @@ object TransactionGeneratorApp
         else Fs2TransactionGenerator.emptyMetadata[F]
       transactionStream <- Fs2TransactionGenerator
         .make[F](wallet, costCalculator, metadataF)
-        .flatMap(_.generateTransactions)
+        .flatMap(_.generateTransactions())
       _ <- NodeGrpc.Client
         .make[F](clientAddress._1, clientAddress._2, clientAddress._3)
         .use(client =>
