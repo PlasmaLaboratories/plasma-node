@@ -121,7 +121,7 @@ object OrientDBMetadataFactory {
       .onError { case e => Logger[F].error(e)(s"Failed to create link on ${vs.name}") }
       .void
 
-  private[orientDb] def createEdge[F[_]: Sync: Logger](
+  private[indexer] def createEdge[F[_]: Sync: Logger](
     db:   ODatabaseDocumentInternal,
     edge: EdgeSchema
   ): F[Unit] =

@@ -36,7 +36,7 @@ class GraphBlockUpdaterFixtureTest
   override def munitIOTimeout: Duration =
     new FiniteDuration(10, TimeUnit.SECONDS)
 
-  orientDbFixture.test("Insert and remove genesis block") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixtureNew.test("Insert and remove genesis block") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
     PropF.forAllF { (blockHeader: BlockHeader, blockBody: FullBlockBody) =>
       withMock {
         val nodeBlockFetcher = mock[NodeBlockFetcherAlgebra[F, Stream[F, *]]]

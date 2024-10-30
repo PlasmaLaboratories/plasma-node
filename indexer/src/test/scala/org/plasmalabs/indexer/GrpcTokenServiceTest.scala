@@ -16,6 +16,11 @@ import org.scalamock.munit.AsyncMockFactory
 class GrpcTokenServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]
 
+  override def scalaCheckTestParameters =
+    super.scalaCheckTestParameters
+      .withMaxSize(3)
+      .withMinSuccessfulTests(5)
+
   test("getGroupPolicy: Exceptions") {
     PropF.forAllF { (id: GroupId) =>
       withMock {

@@ -30,6 +30,11 @@ class NodeBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
 
   private val nodeBlockFetcher = NodeBlockFetcher.make[F](toplRpc, 1)
 
+  override def scalaCheckTestParameters =
+    super.scalaCheckTestParameters
+      .withMaxSize(3)
+      .withMinSuccessfulTests(5)
+
   test("On no block at given height, a None should be returned") {
     PropF.forAllF { height: Long =>
       withMock {

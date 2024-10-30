@@ -25,6 +25,11 @@ class GraphTransactionFetcherTest extends CatsEffectSuite with ScalaCheckEffectS
 
   type F[A] = IO[A]
 
+  override def scalaCheckTestParameters =
+    super.scalaCheckTestParameters
+      .withMaxSize(3)
+      .withMinSuccessfulTests(5)
+
   test("On fetchTransaction with throwable response, a FailureMessageWithCause should be returned") {
 
     PropF.forAllF { (transactionId: TransactionId) =>

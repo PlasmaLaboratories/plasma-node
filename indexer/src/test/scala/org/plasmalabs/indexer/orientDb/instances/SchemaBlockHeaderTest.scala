@@ -22,7 +22,7 @@ class SchemaBlockHeaderTest
     with CatsEffectFunFixtures
     with DbFixtureUtil {
 
-  orientDbFixture.test("Block Header Schema Metadata") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixtureNew.test("Block Header Schema Metadata") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
     val res = for {
       databaseDocumentTx <- oThread.delay(odbFactory.getNoTx.getRawGraph).toResource
 
@@ -161,7 +161,7 @@ class SchemaBlockHeaderTest
 
   }
 
-  orientDbFixture.test("Block Header Schema Add vertex") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixtureNew.test("Block Header Schema Add vertex") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
     val res = for {
 
       dbTx <- oThread.delay(odbFactory.getTx).toResource

@@ -24,7 +24,7 @@ class SchemaSeriesPolicyTest
     with CatsEffectFunFixtures
     with DbFixtureUtil {
 
-  orientDbFixture.test("SeriesPolicy Schema Metadata") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixtureNew.test("SeriesPolicy Schema Metadata") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
     val res = for {
       dbNoTx             <- oThread.delay(odbFactory.getNoTx).toResource
       databaseDocumentTx <- oThread.delay(dbNoTx.getRawGraph).toResource
@@ -92,7 +92,7 @@ class SchemaSeriesPolicyTest
 
   }
 
-  orientDbFixture.test("Series Policy Schema Add vertex") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixtureNew.test("Series Policy Schema Add vertex") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
     val res = for {
 
       dbTx          <- oThread.delay(odbFactory.getTx).toResource

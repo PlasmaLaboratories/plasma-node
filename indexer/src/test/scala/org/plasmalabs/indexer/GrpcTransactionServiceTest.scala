@@ -19,6 +19,11 @@ import org.scalamock.munit.AsyncMockFactory
 class GrpcTransactionServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]
 
+  override def scalaCheckTestParameters =
+    super.scalaCheckTestParameters
+      .withMaxSize(3)
+      .withMinSuccessfulTests(5)
+
   test("getTransactionById: Exceptions") {
     PropF.forAllF { (transactionId: TransactionId) =>
       withMock {

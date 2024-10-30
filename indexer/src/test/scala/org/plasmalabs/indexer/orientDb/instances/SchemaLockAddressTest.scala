@@ -23,7 +23,7 @@ class SchemaLockAddressTest
     with CatsEffectFunFixtures
     with DbFixtureUtil {
 
-  orientDbFixture.test("Address Schema Metadata") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixtureNew.test("Address Schema Metadata") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
     val res = for {
       databaseDocumentTx <- oThread.delay(odbFactory.getNoTx.getRawGraph).toResource
 
@@ -73,7 +73,7 @@ class SchemaLockAddressTest
 
   }
 
-  orientDbFixture.test("Address Schema Add vertex Lock Address") {
+  orientDbFixtureNew.test("Address Schema Add vertex Lock Address") {
     case (odbFactory, implicit0(oThread: OrientThread[F])) =>
       val res = for {
         dbTx <- oThread.delay(odbFactory.getTx).toResource

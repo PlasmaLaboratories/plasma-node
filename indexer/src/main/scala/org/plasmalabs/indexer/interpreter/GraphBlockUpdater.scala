@@ -141,7 +141,8 @@ object GraphBlockUpdater {
 
                     // Relationship between Header <-> ParentHeader if Not Genesis block
                     if (block.header.height != 1) {
-                      val headerInVertex = graph
+
+                      val parentHeaderVertexMaybe: Option[Vertex] = graph
                         .command(
                           new OCommandSQL(
                             s"SELECT FROM ${SchemaBlockHeader.SchemaName} WHERE ${SchemaBlockHeader.Field.BlockId} = ? LIMIT 1"
@@ -151,10 +152,21 @@ object GraphBlockUpdater {
                         .iterator()
                         .asScala
                         .collectFirst { case v: Vertex @unchecked => v }
-                        .get
 
-                      graph
-                        .addEdge(s"class:${blockHeaderEdge.name}", headerVertex, headerInVertex, blockHeaderEdge.label)
+                      parentHeaderVertexMaybe match {
+                        case Some(parentHeaderVertex) =>
+                          graph.addEdge(
+                            s"class:${blockHeaderEdge.name}",
+                            headerVertex,
+                            parentHeaderVertex,
+                            blockHeaderEdge.label
+                          )
+                        case None =>
+                          throw new IllegalStateException(
+                            show"Parent header vertex not found ${block.header.parentHeaderId}"
+                          )
+                      }
+
                     }
 
                     graph.commit()

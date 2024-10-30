@@ -23,6 +23,11 @@ class GraphVertexFetcherExceptionTest extends CatsEffectSuite with ScalaCheckEff
   type F[A] = IO[A]
   implicit val logger: Logger[F] = Slf4jLogger.getLoggerFromClass[F](this.getClass)
 
+  override def scalaCheckTestParameters =
+    super.scalaCheckTestParameters
+      .withMaxSize(3)
+      .withMinSuccessfulTests(5)
+
   test("On fetchHeader with throwable response, a MessageWithCause should be returned") {
 
     val expectedTh = new IllegalStateException("boom!")

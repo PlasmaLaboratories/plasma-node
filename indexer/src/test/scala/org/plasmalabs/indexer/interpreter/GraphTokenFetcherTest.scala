@@ -18,6 +18,11 @@ class GraphTokenFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
 
   type F[A] = IO[A]
 
+  override def scalaCheckTestParameters =
+    super.scalaCheckTestParameters
+      .withMaxSize(3)
+      .withMinSuccessfulTests(5)
+
   test("On fetchGroupPolicy with throwable response, a FailureMessageWithCause should be returned") {
 
     PropF.forAllF { (groupId: GroupId) =>

@@ -26,7 +26,7 @@ class SchemaIoTransactionTest
     with AsyncMockFactory
     with DbFixtureUtil {
 
-  orientDbFixture.test("IoTransaction Schema Metadata") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixtureNew.test("IoTransaction Schema Metadata") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
     val res = for {
       dbNoTx             <- oThread.delay(odbFactory.getNoTx).toResource
       databaseDocumentTx <- oThread.delay(dbNoTx.getRawGraph).toResource
@@ -74,7 +74,7 @@ class SchemaIoTransactionTest
 
   }
 
-  orientDbFixture.test("Transaction and Block Header Schema Add vertex") {
+  orientDbFixtureNew.test("Transaction and Block Header Schema Add vertex") {
     case (odbFactory, implicit0(oThread: OrientThread[F])) =>
       val res = for {
 
