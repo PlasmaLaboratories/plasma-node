@@ -34,5 +34,5 @@ trait NodeRpc[F[_], S[_]] {
 
   def fetchEpochData(epoch: Option[Epoch]): F[Option[EpochData]]
 
-  def fetchCanonicalHeadId():F[Option[BlockId]]
+  def fetchCanonicalHeadId(): F[Option[BlockId]]
 }
