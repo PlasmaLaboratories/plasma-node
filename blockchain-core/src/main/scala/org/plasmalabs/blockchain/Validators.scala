@@ -5,7 +5,7 @@ import cats.effect.{Async, Resource}
 import cats.implicits._
 import org.plasmalabs.algebras.{ClockAlgebra, Stats}
 import org.plasmalabs.consensus.algebras._
-import org.plasmalabs.consensus.interpreters.VotingEventSourceState.VotingData
+import org.plasmalabs.consensus.interpreters.CrossEpochEventSourceState.VotingData
 import org.plasmalabs.consensus.interpreters._
 import org.plasmalabs.consensus.models.BlockId
 import org.plasmalabs.eventtree.EventSourcedState

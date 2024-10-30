@@ -131,7 +131,7 @@ class NodeAppTest extends CatsEffectSuite {
                   .make[F](wallet, _ => 1000L, Fs2TransactionGenerator.emptyMetadata[F])
                   .toResource
               transactionGraph1 <- Stream
-                .force(transactionGenerator1.generateTransactions)
+                .force(transactionGenerator1.generateTransactions())
                 .take(10)
                 .compile
                 .toList
@@ -143,7 +143,7 @@ class NodeAppTest extends CatsEffectSuite {
                   .make[F](wallet, _ => 10L, Fs2TransactionGenerator.randomMetadata[F])
                   .toResource
               transactionGraph2 <- Stream
-                .force(transactionGenerator2.generateTransactions)
+                .force(transactionGenerator2.generateTransactions())
                 .take(10)
                 .compile
                 .toList

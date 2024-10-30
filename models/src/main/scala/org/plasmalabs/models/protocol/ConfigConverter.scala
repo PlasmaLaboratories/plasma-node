@@ -41,7 +41,7 @@ object ConfigConverter {
   def extractOrRaise[T: ClassTag](config: ConfigProposal): T =
     extract(config).toOption.get
 
-  def pack[T: ClassTag](config: T): ConfigProposal = {
+  def pack[T](config: T): ConfigProposal = {
     val configString = jsonMapper.writeValueAsString(config)
     val proposalMap = Map(jsonConfigKey -> configString)
     ConfigProposal(proposalMap)

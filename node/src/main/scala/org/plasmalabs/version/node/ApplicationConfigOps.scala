@@ -8,6 +8,7 @@ import monocle._
 import monocle.macros._
 import org.plasmalabs.config.ApplicationConfig
 import org.plasmalabs.config.ApplicationConfig.Node
+import org.plasmalabs.config.ApplicationConfig.Node.BigBangs.RegtestConfig
 import org.plasmalabs.config.ApplicationConfig.Node.KnownPeer
 import org.plasmalabs.consensus.models.{BlockId, StakingAddress}
 import org.plasmalabs.models._
@@ -79,8 +80,10 @@ object ApplicationConfigOps {
       cmdArgs.runtime.testnetArgs.testnetTimestamp.nonEmpty ||
       cmdArgs.runtime.testnetArgs.testnetStakerCount.nonEmpty ||
       cmdArgs.runtime.testnetArgs.testnetStakerIndex.nonEmpty ||
-      cmdArgs.runtime.testnetArgs.regtest.value
+      cmdArgs.runtime.testnetArgs.blockRegtestPermission.isDefined
     ) {
+      val regTestConfig =
+        cmdArgs.runtime.testnetArgs.blockRegtestPermission.map(rc => RegtestConfig(rc))
       val bigBangConfig =
         simpleArgApplications.node.bigBang match {
           case p: Node.BigBangs.Private =>
@@ -88,7 +91,7 @@ object ApplicationConfigOps {
               timestamp = cmdArgs.runtime.testnetArgs.testnetTimestamp.getOrElse(p.timestamp),
               stakerCount = cmdArgs.runtime.testnetArgs.testnetStakerCount.getOrElse(p.stakerCount),
               localStakerIndex = cmdArgs.runtime.testnetArgs.testnetStakerIndex.orElse(p.localStakerIndex),
-              regtestEnabled = cmdArgs.runtime.testnetArgs.regtest.value
+              regtestConfig = regTestConfig
             )
           case p => p
         }

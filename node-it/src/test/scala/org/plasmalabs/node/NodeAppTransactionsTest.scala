@@ -183,7 +183,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
                   .make[F](wallet, _ => 1000L, Fs2TransactionGenerator.emptyMetadata[F])
                   .toResource
               transactionGraph <- Stream
-                .force(transactionGenerator.generateTransactions)
+                .force(transactionGenerator.generateTransactions())
                 .take(10)
                 .compile
                 .toList
@@ -277,7 +277,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
                   .make[F](wallet, _ => 1000L, Fs2TransactionGenerator.emptyMetadata[F])
                   .toResource
               transactionGraph <- Stream
-                .force(transactionGenerator.generateTransactions)
+                .force(transactionGenerator.generateTransactions())
                 .take(20)
                 .compile
                 .toList
@@ -391,7 +391,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               // get transactions of such size that last transaction
               // shall no longer take in consideration transactions im memory pool
               transactionGraph <- Stream
-                .force(transactionGenerator.generateTransactions)
+                .force(transactionGenerator.generateTransactions())
                 .map(tx => IoTransactionEx(tx, RewardQuantities(), sizeCalculator.costOf(tx)))
                 .scan((Chain.empty[IoTransactionEx], 0L)) { case ((txs, totalSize), tx) =>
                   (txs.append(tx), totalSize + tx.size)
