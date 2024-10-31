@@ -70,11 +70,11 @@ jobs:
       - name: git-restore-mtime
         uses: chetan/git-restore-mtime-action@v1
 
-      - name: Compile
-        run: sbt Test/compile
+#      - name: Compile
+#        run: sbt Test/compile
 
       - name: Tests and Checks
-        run: sbt checkPRTestQuick
+        run: sbt checkPRTest
 
       - name: Upload Test Results
         if: always()
