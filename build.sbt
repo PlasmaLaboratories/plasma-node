@@ -203,8 +203,7 @@ lazy val node = project
     publish / skip := true,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.node",
-    libraryDependencies ++= Dependencies.node,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.node
   )
   .settings(
     classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.Flat // required for correct loading https://github.com/kamon-io/sbt-kanela-runner
@@ -232,8 +231,7 @@ lazy val config = project
   .settings(
     name := "config",
     commonSettings,
-    libraryDependencies ++= Dependencies.monocle :+ Dependencies.pureConfig,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.monocle :+ Dependencies.pureConfig
   )
   .dependsOn(models, numerics)
 
@@ -250,8 +248,7 @@ lazy val networkDelayer = project
     publish / skip := true,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.networkdelayer",
-    libraryDependencies ++= Dependencies.networkDelayer,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.networkDelayer
   )
   .enablePlugins(BuildInfoPlugin, JavaAppPackaging, DockerPlugin)
   .dependsOn(catsUtils, commonApplication)
@@ -269,8 +266,7 @@ lazy val testnetSimulationOrchestrator = project
     publish / skip := true,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.testnetsimulationorchestator",
-    libraryDependencies ++= Dependencies.testnetSimulationOrchestator,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.testnetSimulationOrchestator
   )
   .enablePlugins(BuildInfoPlugin, JavaAppPackaging, DockerPlugin)
   .dependsOn(commonApplication, transactionGenerator)
@@ -280,8 +276,7 @@ lazy val commonApplication = project
   .settings(
     name := "common-application",
     commonSettings,
-    libraryDependencies ++= Dependencies.commonApplication,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.commonApplication
   )
   .dependsOn(catsUtils)
 
@@ -293,8 +288,7 @@ lazy val models = project
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.models",
-    libraryDependencies ++= Dependencies.models ++ Dependencies.mUnitTest,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.models ++ Dependencies.mUnitTest
   )
   .dependsOn(munitScalamock % "test->test")
 
@@ -306,8 +300,7 @@ lazy val numerics = project
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.numerics",
-    libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.scalacache,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.scalacache
   )
   .dependsOn(models)
 
@@ -319,8 +312,7 @@ lazy val eventTree = project
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.eventtree",
-    libraryDependencies ++= Dependencies.eventTree,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.eventTree
   )
   .dependsOn(algebras % "compile->test")
 
@@ -332,8 +324,7 @@ lazy val byteCodecs = project
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.codecs.bytes",
-    libraryDependencies ++= Dependencies.byteCodecs ++ Dependencies.protobufSpecs,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.byteCodecs ++ Dependencies.protobufSpecs
   )
   .dependsOn(munitScalamock % "test->test")
 
@@ -345,8 +336,7 @@ lazy val tetraByteCodecs = project
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.codecs.bytes.tetra",
-    libraryDependencies ++= Dependencies.munitScalamock ++ Dependencies.protobufSpecs,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.munitScalamock ++ Dependencies.protobufSpecs
   )
   .dependsOn(
     models     % "compile->compile;test->test",
@@ -362,8 +352,7 @@ lazy val typeclasses: Project = project
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.typeclasses",
-    libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.logging ++ Dependencies.circe,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.logging ++ Dependencies.circe
   )
   .dependsOn(models % "compile->compile;test->test", nodeCrypto, tetraByteCodecs)
 
@@ -375,8 +364,7 @@ lazy val algebras = project
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.algebras",
-    libraryDependencies ++= Dependencies.algebras,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.algebras
   )
   .dependsOn(models, nodeCrypto, tetraByteCodecs, munitScalamock % "test->test")
 
@@ -388,8 +376,7 @@ lazy val actor = project
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.actor",
-    libraryDependencies ++= Dependencies.actor,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.actor
   )
   .dependsOn(
     munitScalamock % "test->test"
@@ -403,8 +390,7 @@ lazy val commonInterpreters = project
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.commoninterpreters",
-    libraryDependencies ++= Dependencies.commonInterpreters,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.commonInterpreters
   )
   .dependsOn(
     models,
@@ -426,8 +412,7 @@ lazy val consensus = project
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.consensus",
-    libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.consensus,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.consensus
   )
   .dependsOn(
     ledger,
@@ -450,8 +435,7 @@ lazy val minting = project
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.minting",
-    libraryDependencies ++= Dependencies.minting,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.minting
   )
   .dependsOn(
     models % "compile->compile;test->test",
@@ -474,8 +458,7 @@ lazy val networking = project
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.networking",
-    libraryDependencies ++= Dependencies.networking,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.networking
   )
   .dependsOn(
     models % "compile->compile;test->test",
@@ -504,8 +487,7 @@ lazy val transactionGenerator = project
     coverageEnabled := false,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.transactiongenerator",
-    libraryDependencies ++= Dependencies.transactionGenerator,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.transactionGenerator
   )
   .dependsOn(
     models % "compile->compile;test->test",
@@ -529,8 +511,7 @@ lazy val ledger = project
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.ledger",
-    libraryDependencies ++= Dependencies.ledger,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.ledger
   )
   .dependsOn(
     models   % "compile->compile;test->test",
@@ -550,8 +531,7 @@ lazy val blockchainCore = project
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.blockchaincore",
-    libraryDependencies ++= Dependencies.blockchain,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.blockchain
   )
   .dependsOn(
     models   % "compile->compile;test->test",
@@ -575,8 +555,7 @@ lazy val blockchain = project
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.blockchain",
-    libraryDependencies ++= Dependencies.blockchain,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.blockchain
   )
   .dependsOn(
     models   % "compile->compile;test->test",
@@ -600,8 +579,7 @@ lazy val grpc = project
   .settings(
     name := "grpc",
     commonSettings,
-    libraryDependencies ++= Dependencies.grpc,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.grpc
   )
   .dependsOn(
     models % "compile->compile;test->test",
@@ -619,8 +597,7 @@ lazy val levelDbStore = project
   .settings(
     name := "level-db-store",
     commonSettings,
-    libraryDependencies ++= Dependencies.levelDbStore,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.levelDbStore
   )
   .dependsOn(
     byteCodecs,
@@ -636,8 +613,7 @@ lazy val nodeCrypto = project
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.nodecrypto",
-    libraryDependencies ++= Dependencies.crypto,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.crypto
   )
 
 lazy val catsUtils = project
@@ -648,8 +624,7 @@ lazy val catsUtils = project
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.catsUtils",
-    libraryDependencies ++= Dependencies.catsUtils,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.catsUtils
   )
 
 lazy val indexer = project
@@ -660,8 +635,7 @@ lazy val indexer = project
     publish / skip := true,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.indexer",
-    libraryDependencies ++= Dependencies.indexer,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.indexer
   )
   .settings(indexerDockerSettings)
   .dependsOn(
@@ -681,8 +655,7 @@ lazy val munitScalamock = project
   .settings(
     name := "munit-scalamock",
     commonSettings,
-    libraryDependencies ++= Dependencies.munitScalamock,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.munitScalamock
   )
 
 lazy val nodeIt = project
@@ -690,8 +663,7 @@ lazy val nodeIt = project
   .settings(
     name := "node-it",
     commonSettings,
-    libraryDependencies ++= Dependencies.nodeIt,
-    excludeDependencies += Dependencies.scodec213ExlusionRule
+    libraryDependencies ++= Dependencies.nodeIt
   )
   .dependsOn(
     node,
@@ -706,7 +678,7 @@ lazy val byzantineIt = project
     commonSettings,
     Test / parallelExecution := false,
     libraryDependencies ++= Dependencies.byzantineIt,
-    excludeDependencies ++= Seq(Dependencies.scodec213ExlusionRule, Dependencies.geny213ExlusionRule)
+    excludeDependencies ++= Seq(Dependencies.geny213ExlusionRule)
   )
   .dependsOn(
     node

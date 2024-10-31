@@ -12,7 +12,7 @@ object Dependencies {
   val ioGrpcVersion = "1.64.0"
   val http4sVersion = "0.23.26"
   val protobufSpecsVersion = "0.1.1"
-  val plasmaSdkVersion = "0.1.0+6-0a56f60d-SNAPSHOT"
+  val plasmaSdkVersion = "0.1.0+9-4d010cf9-SNAPSHOT" // TODO bump release after merge https://github.com/PlasmaLaboratories/plasma-sdk-scala/pull/12
 
   val catsSlf4j =
     "org.typelevel" %% "log4cats-slf4j" % "2.7.0"
@@ -80,7 +80,6 @@ object Dependencies {
     "org.scodec" %% "scodec-cats" % "1.2.0"
   )
 
-  val scodec213ExlusionRule = ExclusionRule("org.scodec", "scodec-bits_2.13")
   val geny213ExlusionRule = ExclusionRule("com.lihaoyi", "geny_2.13")
 
   val mainargs = Seq(
