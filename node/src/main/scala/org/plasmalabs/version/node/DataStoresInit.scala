@@ -598,8 +598,8 @@ object DataStoresInit {
         CurrentEventIdGetterSetters.Indices.CrossEpochForkP2P,
         CurrentEventIdGetterSetters.Indices.ProposalLocal,
         CurrentEventIdGetterSetters.Indices.ProposalP2P,
-        CurrentEventIdGetterSetters.Indices.votingForkLocal,
-        CurrentEventIdGetterSetters.Indices.votingForkP2P
+        CurrentEventIdGetterSetters.Indices.VotingForkLocal,
+        CurrentEventIdGetterSetters.Indices.VotingForkP2P
       ).traverseTap(dataStores.currentEventIds.put(_, bigBangBlock.header.parentHeaderId))
       _ <- dataStores.slotData.put(
         bigBangBlock.header.id,

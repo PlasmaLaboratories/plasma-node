@@ -1,21 +1,15 @@
 package org.plasmalabs.node
 
 import cats.MonadThrow
-import cats.data.OptionT
 import cats.effect._
 import cats.effect.implicits._
 import cats.effect.std.{Random, SecureRandom}
 import cats.implicits._
 import fs2.io.file.{Files, Path}
 import fs2.{io => _, _}
-import io.grpc.Metadata
 import munit._
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import org.plasmalabs.blockchain.PrivateTestnet
-import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import org.plasmalabs.consensus.models.BlockId
-import org.plasmalabs.grpc.NodeGrpc
 import org.plasmalabs.grpc.NodeRegTestGrpc
 import org.plasmalabs.indexer.services._
 import org.plasmalabs.interpreters.NodeRpcOps.clientAsNodeRpcApi
@@ -32,7 +26,6 @@ import org.plasmalabs.models.protocol.RatioCodec.ratioToProtoRatio
 import org.plasmalabs.sdk.constants.NetworkConstants
 import org.plasmalabs.sdk.models.LockAddress
 import org.plasmalabs.ledger.interpreters.ProposalEventSourceState
-import org.plasmalabs.consensus.interpreters.BlockHeaderVersionsOps
 import scala.concurrent.duration._
 
 class VersionSwitchingTest extends CatsEffectSuite {
@@ -108,16 +101,6 @@ class VersionSwitchingTest extends CatsEffectSuite {
 
     val resource =
       for {
-        testnetConfigInitial <- createTestnetConfig.toResource
-        newProtocol = testnetConfigInitial.protocol.copy(
-          epochLengthOverride = 6L.some,
-          chainSelectionKLookback = 2,
-          fEffective = Ratio(10, 100),
-          operationalPeriodsPerEpoch = 3,
-          slotDuration = 200.milli
-        )
-        testnetConfig = testnetConfigInitial.copy(protocol = newProtocol)
-
         configALocation <- (
           Files.forAsync[F].tempDirectory,
           Files
@@ -139,8 +122,6 @@ class VersionSwitchingTest extends CatsEffectSuite {
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
               indexerChannelA              <- org.plasmalabs.grpc.makeChannel[F]("localhost", 9151, tls = false)
               indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
-              indexerBlockServiceA         <- BlockServiceFs2Grpc.stubResource[F](indexerChannelA)
-              _                            <- awaitIndexerReady(indexerBlockServiceA).timeout(45.seconds).toResource
               wallet                       <- makeWallet(indexerTxServiceA)
               _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
               implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F].toResource
