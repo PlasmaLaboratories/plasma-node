@@ -8,7 +8,6 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import org.plasmalabs.consensus.models.BlockHeader
 import org.plasmalabs.indexer.algebras.{NodeBlockFetcherAlgebra, VertexFetcherAlgebra}
-import org.plasmalabs.indexer.interpreter.GraphReplicationStatus
 import org.plasmalabs.indexer.model.{GE, GEs}
 import org.plasmalabs.indexer.orientDb.OrientThread
 import org.plasmalabs.indexer.orientDb.instances.SchemaBlockHeader
