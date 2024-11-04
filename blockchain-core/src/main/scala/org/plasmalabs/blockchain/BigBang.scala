@@ -13,6 +13,7 @@ import org.plasmalabs.consensus.algebras.BlockHeaderToBodyValidationAlgebra
 import org.plasmalabs.consensus.models._
 import org.plasmalabs.crypto.hash.Blake2b256
 import org.plasmalabs.models._
+import org.plasmalabs.models.protocol.BigBangConstants._
 import org.plasmalabs.models.protocol.{ConfigConverter, ConfigGenesis}
 import org.plasmalabs.models.utility.HasLength.instances.byteStringLength
 import org.plasmalabs.models.utility._
@@ -67,13 +68,13 @@ object BigBang {
 
     val header =
       BlockHeader(
-        parentHeaderId = ParentId,
-        parentSlot = ParentSlot,
+        parentHeaderId = BigBangParentId,
+        parentSlot = BigBangParentSlot,
         txRoot = config.transactions.merkleTreeRootHash.data,
         bloomFilter = config.transactions.bloomFilter.data,
         timestamp = config.timestamp,
-        height = Height,
-        slot = Slot,
+        height = BigBangHeight,
+        slot = BigBangSlot,
         eligibilityCertificate = vrfCertificate(eta),
         operationalCertificate = kesCertificate,
         metadata = ByteString.EMPTY,
@@ -82,11 +83,6 @@ object BigBang {
       ).embedId
     FullBlock(header, FullBlockBody(config.transactions))
   }
-
-  val ParentId: BlockId = BlockId(ByteString.copyFrom(Array.fill[Byte](32)(0)))
-  val ParentSlot: Slot = -1L
-  val Slot: Slot = 0L
-  val Height: Long = 1L
 
   def vrfCertificate(eta: Eta): EligibilityCertificate = EligibilityCertificate(
     ByteString.copyFrom(Array.fill[Byte](80)(0)),

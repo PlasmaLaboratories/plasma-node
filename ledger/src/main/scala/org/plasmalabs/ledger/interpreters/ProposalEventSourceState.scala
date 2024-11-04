@@ -10,6 +10,7 @@ import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
 import org.plasmalabs.crypto.hash.Blake2b256
 import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
 import org.plasmalabs.models._
+import org.plasmalabs.models.protocol.BigBangConstants._
 import org.plasmalabs.node.models._
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.box.Value.ConfigProposal
@@ -64,11 +65,18 @@ object ProposalEventSourceState {
 
     def apply(state: ProposalData[F], blockId: BlockId): F[ProposalData[F]] =
       for {
-        header       <- fetchBlockHeader(blockId)
+        header <- fetchBlockHeader(blockId)
+        _ <-
+          if (header.height != BigBangHeight) applyNonGenesisBlock(state, blockId, header)
+          else ().pure[F]
+      } yield state
+
+    private def applyNonGenesisBlock(state: ProposalData[F], blockId: BlockId, header: BlockHeader): F[Unit] =
+      for {
         currentEpoch <- clock.epochOf(header.slot)
         _            <- Logger[F].debug(show"Apply block with proposals $blockId of epoch $currentEpoch")
         _            <- applyNewProposals(state, blockId, currentEpoch)
-      } yield state
+      } yield ()
 
     private def applyNewProposals(state: ProposalData[F], blockId: BlockId, currentEpoch: Epoch): F[Unit] =
       for {

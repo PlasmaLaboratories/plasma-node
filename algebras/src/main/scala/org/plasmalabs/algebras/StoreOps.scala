@@ -22,7 +22,7 @@ object StoreOps {
       } yield ()
   }
 
-  implicit class proposalVotingOps[F[_]: MonadThrow](storage: Store[F, (Epoch, ProposalId), Long]) {
+  implicit class ProposalVotingOps[F[_]: MonadThrow](storage: Store[F, (Epoch, ProposalId), Long]) {
 
     def tryToAddOneVote(vote: (Epoch, ProposalId)): F[Unit] =
       for {

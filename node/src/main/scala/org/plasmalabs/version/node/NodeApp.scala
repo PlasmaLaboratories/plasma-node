@@ -34,6 +34,7 @@ import org.plasmalabs.ledger.interpreters.ProposalEventSourceState.ProposalData
 import org.plasmalabs.ledger.interpreters._
 import org.plasmalabs.models.ProposalConfig
 import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.protocol.BigBangConstants._
 import org.plasmalabs.models.utility.HasLength.instances.byteStringLength
 import org.plasmalabs.models.utility._
 import org.plasmalabs.networking.p2p.LocalPeer
@@ -183,7 +184,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           currentEventIdGetterSetters.blockHeightTreeP2P.set
         )
         .toResource
-      _ <- OptionT(blockHeightTreeLocal.useStateAt(canonicalHeadId)(_.apply(BigBang.Height)))
+      _ <- OptionT(blockHeightTreeLocal.useStateAt(canonicalHeadId)(_.apply(BigBangHeight)))
         .ensure(new IllegalStateException("The configured genesis block does not match the stored genesis block."))(
           _ === bigBangBlockId
         )

@@ -28,6 +28,7 @@ import fs2.Chunk
 import fs2.io.file.{Files, Path, PosixPermission, PosixPermissions}
 import org.plasmalabs.quivr.api.Prover
 import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.models.protocol.BigBangConstants._
 
 import java.security.SecureRandom
 import java.time.Instant
@@ -73,7 +74,7 @@ class MultiNodeTest extends IntegrationSuite {
           .parTraverse(node => node.rpcClient[F](node.config.rpcPort).use(_.waitForRpcStartUp))
           .toResource
         client <- node0.rpcClient[F](node0.config.rpcPort)
-        genesisBlockId <- OptionT(client.blockIdAtHeight(BigBang.Height))
+        genesisBlockId <- OptionT(client.blockIdAtHeight(BigBangHeight))
           .getOrRaise(new IllegalStateException)
           .toResource
         genesisTransaction <-

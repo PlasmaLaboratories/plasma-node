@@ -43,7 +43,7 @@ trait LedgerShowInstances {
       "RewardTransactionError"
     case BodySemanticErrors.ProposalTransactionAlreadyUsedId(_) =>
       "ProposalTransactionAlreadyUsedId"
-    case BodySemanticErrors.DoubleProposalTransaction =>
+    case BodySemanticErrors.DoubleProposalIdTransaction =>
       "DoubleProposalTransaction"
 
   }
