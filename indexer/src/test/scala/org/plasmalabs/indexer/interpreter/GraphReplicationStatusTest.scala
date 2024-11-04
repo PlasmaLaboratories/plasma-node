@@ -1,4 +1,4 @@
-package org.plasmalabs.genus.interpreter
+package org.plasmalabs.indexer.interpreter
 
 import cats.effect.IO
 import cats.implicits._
