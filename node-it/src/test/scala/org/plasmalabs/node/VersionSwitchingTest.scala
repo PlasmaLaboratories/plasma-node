@@ -142,7 +142,7 @@ class VersionSwitchingTest extends CatsEffectSuite {
               _ <-
                 Stream
                   .repeatEval(Random[F].elementOf(rpcClients))
-                  .zip(Stream.evalSeq(random.shuffleList(transactionGraph1)))
+                  .zip(Stream.evalSeq(Random[F].shuffleList(transactionGraph1)))
                   .evalMap { case (client, tx) => client.broadcastTransaction(tx) }
                   .compile
                   .drain
