@@ -42,4 +42,9 @@ trait NodeBlockFetcherAlgebra[F[_], G[_]] {
    */
   def fetchHeight(): F[Option[Long]]
 
+  /**
+   * Look-up to the node's canonical head id
+   * @return
+   */
+  def fetchCanonicalHeadId(): F[Option[BlockId]]
 }

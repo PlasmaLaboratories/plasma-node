@@ -1,4 +1,4 @@
-package xyz.stratalab.genus.interpreter
+package org.plasmalabs.genus.interpreter
 
 import cats.effect.IO
 import cats.implicits._
@@ -13,6 +13,7 @@ import org.plasmalabs.indexer.model.{GE, GEs}
 import org.plasmalabs.indexer.orientDb.OrientThread
 import org.plasmalabs.indexer.orientDb.instances.SchemaBlockHeader
 import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.typeclasses.implicits.showBlockId
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 
@@ -79,7 +80,8 @@ class GraphReplicationStatusTest extends CatsEffectSuite with ScalaCheckEffectSu
 
     PropF.forAllF {
       (
-        blockHeader: BlockHeader
+        blockHeaderIndexer: BlockHeader,
+        blockHeaderNode:    BlockHeader
       ) =>
         withMock {
           val res = for {
@@ -93,79 +95,79 @@ class GraphReplicationStatusTest extends CatsEffectSuite with ScalaCheckEffectSu
               .getProperty[Array[Byte]] _)
               .expects(SchemaBlockHeader.Field.BlockId)
               .once()
-              .returning(blockHeader.embedId.id.value.toByteArray)
+              .returning(blockHeaderIndexer.embedId.id.value.toByteArray)
 
             _ = (blockHeaderVertex
               .getProperty[java.lang.Long] _)
               .expects(SchemaBlockHeader.Field.ParentSlot)
               .once()
-              .returning(blockHeader.parentSlot)
+              .returning(blockHeaderIndexer.parentSlot)
 
             _ = (blockHeaderVertex
               .getProperty[Array[Byte]] _)
               .expects(SchemaBlockHeader.Field.EligibilityCertificate)
               .once()
-              .returning(blockHeader.eligibilityCertificate.toByteArray)
+              .returning(blockHeaderIndexer.eligibilityCertificate.toByteArray)
 
             _ = (blockHeaderVertex
               .getProperty[Array[Byte]] _)
               .expects(SchemaBlockHeader.Field.OperationalCertificate)
               .once()
-              .returning(blockHeader.operationalCertificate.toByteArray)
+              .returning(blockHeaderIndexer.operationalCertificate.toByteArray)
 
             _ = (blockHeaderVertex
               .getProperty[Array[Byte]] _)
               .expects(SchemaBlockHeader.Field.Address)
               .once()
-              .returning(blockHeader.address.toByteArray)
+              .returning(blockHeaderIndexer.address.toByteArray)
 
             _ = (blockHeaderVertex
               .getProperty[Array[Byte]] _)
               .expects(SchemaBlockHeader.Field.Metadata)
               .once()
-              .returning(blockHeader.metadata.toByteArray)
+              .returning(blockHeaderIndexer.metadata.toByteArray)
 
             _ = (blockHeaderVertex
               .getProperty[Array[Byte]] _)
               .expects(SchemaBlockHeader.Field.TxRoot)
               .once()
-              .returning(blockHeader.txRoot.toByteArray)
+              .returning(blockHeaderIndexer.txRoot.toByteArray)
 
             _ = (blockHeaderVertex
               .getProperty[Array[Byte]] _)
               .expects(SchemaBlockHeader.Field.BloomFilter)
               .once()
-              .returning(blockHeader.bloomFilter.toByteArray)
+              .returning(blockHeaderIndexer.bloomFilter.toByteArray)
 
             _ = (blockHeaderVertex
               .getProperty[Array[Byte]] _)
               .expects(SchemaBlockHeader.Field.ParentHeaderId)
               .once()
-              .returning(blockHeader.parentHeaderId.value.toByteArray)
+              .returning(blockHeaderIndexer.parentHeaderId.value.toByteArray)
 
             _ = (blockHeaderVertex
               .getProperty[java.lang.Long] _)
               .expects(SchemaBlockHeader.Field.Slot)
               .once()
-              .returning(blockHeader.slot)
+              .returning(blockHeaderIndexer.slot)
 
             _ = (blockHeaderVertex
               .getProperty[java.lang.Long] _)
               .expects(SchemaBlockHeader.Field.Height)
               .once()
-              .returning(blockHeader.height)
+              .returning(blockHeaderIndexer.height)
 
             _ = (blockHeaderVertex
               .getProperty[java.lang.Long] _)
               .expects(SchemaBlockHeader.Field.Timestamp)
               .once()
-              .returning(blockHeader.timestamp)
+              .returning(blockHeaderIndexer.timestamp)
 
             _ = (blockHeaderVertex
               .getProperty[Array[Byte]] _)
               .expects(SchemaBlockHeader.Field.Version)
               .once()
-              .returning(blockHeader.version.toByteArray)
+              .returning(blockHeaderIndexer.version.toByteArray)
 
             // end vertex properties mocks
 
@@ -173,17 +175,16 @@ class GraphReplicationStatusTest extends CatsEffectSuite with ScalaCheckEffectSu
               .expects()
               .returning(blockHeaderVertex.some.asRight[GE].pure[F])
 
-            // Generator is defined with Gen.chooseNum(0L, 20L), height = 100 will create the expectation
-            _ = (() => nodeBlockFetcherAlgebra.fetchHeight())
+            _ = (() => nodeBlockFetcherAlgebra.fetchCanonicalHeadId())
               .expects()
-              .returning(100L.some.pure[F])
+              .returning(blockHeaderNode.id.some.pure[F])
 
             graphReplicatorStatus <- GraphReplicationStatus
               .make[F](graphVertexFetcher, nodeBlockFetcherAlgebra, 1.minute)
 
             _ <- assertIO(
               graphReplicatorStatus.canonicalHeadSynced.map(_.left.map(_.getMessage)),
-              (s"Indexer canonical head height:[${blockHeader.height}] differs to Node head[100]")
+              (show"Indexer canonical head [${blockHeaderIndexer.id}] differs to Node [${blockHeaderNode.id}]")
                 .asLeft[Boolean]
             ).toResource
           } yield ()
@@ -293,10 +294,9 @@ class GraphReplicationStatusTest extends CatsEffectSuite with ScalaCheckEffectSu
               .expects()
               .returning(blockHeaderVertex.some.asRight[GE].pure[F])
 
-            // Generator is defined with Gen.chooseNum(0L, 20L), height = 100 will create the expectation
-            _ = (() => nodeBlockFetcherAlgebra.fetchHeight())
+            _ = (() => nodeBlockFetcherAlgebra.fetchCanonicalHeadId())
               .expects()
-              .returning(blockHeader.height.some.pure[F])
+              .returning(blockHeader.id.some.pure[F])
 
             graphReplicatorStatus <- GraphReplicationStatus
               .make[F](graphVertexFetcher, nodeBlockFetcherAlgebra, 1.minute)
