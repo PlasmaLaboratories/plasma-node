@@ -66,7 +66,7 @@ object BodyProposalValidation {
           val res = if (proposalsIds.sizeIs == proposalsIds.toSet.size) {
             Validated.Valid(Seq(body))
           } else {
-            Validated.Invalid(NonEmptyChain(DoubleProposalTransaction: BodyValidationError))
+            Validated.Invalid(NonEmptyChain(DoubleProposalIdTransaction: BodyValidationError))
           }
           res.pure[F]
         }
@@ -83,7 +83,7 @@ object BodyProposalValidation {
               previousEpochs      <- getPreviousEpochs(proposalData, activeProposalEpoch)
             } yield proposalIds.flatMap(id => checkProposal(id, previousEpochs)) match {
               case Nil          => Validated.Valid(Seq(body))
-              case head :: tail => Validated.Invalid(NonEmptyChain(head, tail: _*))
+              case head :: tail => Validated.Invalid(NonEmptyChain(head, tail*))
             }
           }
 

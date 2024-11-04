@@ -22,7 +22,13 @@ object StoreOps {
       } yield ()
   }
 
-  implicit class proposalVotingOps[F[_]: MonadThrow](storage: Store[F, (Epoch, ProposalId), Long]) {
+  implicit class ProposalVotingOps[F[_]: MonadThrow](storage: Store[F, (Epoch, ProposalId), Long]) {
+
+    def tryToAddOneVote(vote: (Epoch, ProposalId)): F[Unit] =
+      for {
+        currentVoteOpt <- storage.get(vote)
+        _              <- currentVoteOpt.traverse(currentVote => storage.put(vote, currentVote + 1))
+      } yield ()
 
     def addOneVote(vote: (Epoch, ProposalId)): F[Unit] =
       for {
@@ -37,6 +43,14 @@ object StoreOps {
           case None             => 0L.pure[F]
         }
         _ <- storage.put(vote, currentVote + 1)
+      } yield ()
+
+    def tryToRemoveOneVote(vote: (Epoch, ProposalId)): F[Unit] =
+      for {
+        currentVoteOpt <- storage
+          .get(vote)
+          .ensure(new IllegalStateException("Negative vote counter"))(_.getOrElse(Long.MaxValue) > 0)
+        _ <- currentVoteOpt.traverse(currentVote => storage.put(vote, currentVote - 1))
       } yield ()
 
     def removeOneVote(vote: (Epoch, ProposalId)): F[Unit] =

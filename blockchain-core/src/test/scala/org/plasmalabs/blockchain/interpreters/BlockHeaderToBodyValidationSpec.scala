@@ -15,7 +15,7 @@ class BlockHeaderToBodyValidationSpec extends CatsEffectSuite with ScalaCheckEff
   type F[A] = IO[A]
 
   test("validation should fail if block header txRoot is not match block body, i.e. block is arbitrary") {
-    PropF.forAllF { block: Block =>
+    PropF.forAllF { (block: Block) =>
       withMock {
         for {
           underTest <- BlockHeaderToBodyValidation.make[F]()
@@ -27,7 +27,7 @@ class BlockHeaderToBodyValidationSpec extends CatsEffectSuite with ScalaCheckEff
   }
 
   test("validation should success if block header txRoot is match header body") {
-    PropF.forAllF { block: Block =>
+    PropF.forAllF { (block: Block) =>
       val merkleRootHash = block.body.merkleTreeRootHash
       val correctBlock = block.copy(header = block.header.copy(txRoot = merkleRootHash.data))
       withMock {

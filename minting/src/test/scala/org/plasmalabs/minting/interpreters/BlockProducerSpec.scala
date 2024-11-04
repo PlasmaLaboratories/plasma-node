@@ -8,7 +8,7 @@ import fs2._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.ClockAlgebra
 import org.plasmalabs.algebras.Stats.Implicits._
-import org.plasmalabs.consensus.interpreters.VotingEventSourceState.VotingData
+import org.plasmalabs.consensus.interpreters.CrossEpochEventSourceState.VotingData
 import org.plasmalabs.consensus.interpreters._
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId, ProtocolVersion, SlotData, StakingAddress}
 import org.plasmalabs.eventtree.EventSourcedState
@@ -58,7 +58,7 @@ class BlockProducerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with 
           val version = 1
           val protocolVersion = ProtocolVersion(version, 34, 67)
           (() => staker.address).expects().once().returning(stakingAddress.pure[F])
-          (staker.elect _)
+          (staker.elect)
             .expects(parentSlotData.slotId, parentSlotData.slotId.slot + 1)
             .once()
             .returning(vrfHit.some.pure[F])
@@ -88,7 +88,7 @@ class BlockProducerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with 
             .once()
             .returning(55L.pure[F])
 
-          val eventSource = mock[EventSourcedState[F, VotingEventSourceState.VotingData[F], BlockId]]
+          val eventSource = mock[EventSourcedState[F, VotingData[F], BlockId]]
           (eventSource
             .useStateAt(_: BlockId)(_: VotingData[F] => F[VersionId]))
             .expects(*, *)

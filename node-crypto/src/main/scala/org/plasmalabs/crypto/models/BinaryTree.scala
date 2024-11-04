@@ -33,20 +33,20 @@ trait BinaryTree[+A] {
   import scala.annotation.tailrec
 
   def value: Option[A] = this match {
-    case n: Node[A] => Some(n.v)
-    case l: Leaf[A] => Some(l.v)
+    case n: Node[?] => Some(n.v)
+    case l: Leaf[?] => Some(l.v)
     case Empty      => None
   }
 
   def left: Option[BinaryTree[A]] = this match {
-    case n: Node[A] => Some(n.l)
-    case _: Leaf[A] => None
+    case n: Node[?] => Some(n.l)
+    case _: Leaf[?] => None
     case Empty      => None
   }
 
   def right: Option[BinaryTree[A]] = this match {
-    case n: Node[A] => Some(n.r)
-    case _: Leaf[A] => None
+    case n: Node[?] => Some(n.r)
+    case _: Leaf[?] => None
     case Empty      => None
   }
 
@@ -65,8 +65,8 @@ trait BinaryTree[+A] {
     a match {
       case (n: Node[A]) :: tl =>
         foldLoop(o(n, tl), z)(f)(o) // never directly evaluate nodes, function o will create new accumulator
-      case (l: Leaf[A]) :: tl => foldLoop(tl, f(z, l.v))(f)(o) // always evaluate Leaf
-      case (e: Eval[A]) :: tl => foldLoop(tl, f(z, e.v))(f)(o) // always evaluate Eval
+      case (l: Leaf[?]) :: tl => foldLoop(tl, f(z, l.v))(f)(o) // always evaluate Leaf
+      case (e: Eval[?]) :: tl => foldLoop(tl, f(z, e.v))(f)(o) // always evaluate Eval
       case Empty :: tl        => foldLoop(tl, z)(f)(o) // ignore Empty
       case _                  => z // will be Nil (empty list)
     }
@@ -233,8 +233,8 @@ trait BinaryTree[+A] {
    */
   def height: Int = {
     def loop(t: BinaryTree[A]): Int = t match {
-      case _: Leaf[A] => 1
-      case n: Node[A] => Seq(loop(n.left.get), loop(n.right.get)).max + 1
+      case _: Leaf[?] => 1
+      case n: Node[?] => Seq(loop(n.left.get), loop(n.right.get)).max + 1
       case _          => 0
     }
     loop(this) - 1
@@ -247,8 +247,8 @@ trait BinaryTree[+A] {
   def leafCount: Int = {
     @tailrec
     def loop(t: List[BinaryTree[A]], z: Int): Int = t match {
-      case (_: Leaf[A]) :: tl => loop(tl, z + 1)
-      case (n: Node[A]) :: tl => loop(n.left.get :: n.right.get :: tl, z)
+      case (_: Leaf[?]) :: tl => loop(tl, z + 1)
+      case (n: Node[?]) :: tl => loop(n.left.get :: n.right.get :: tl, z)
       case _ :: tl            => loop(tl, z)
       case _                  => z
     }

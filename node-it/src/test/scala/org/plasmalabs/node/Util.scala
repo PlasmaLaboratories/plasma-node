@@ -153,6 +153,15 @@ object Util {
       .compile
       .drain
 
+  def fetchUntilEpoch(rpcClient: RpcClient, epoch: Long): F[Unit] =
+    Stream
+      .force(rpcClient.synchronizationTraversal())
+      .collect { case SynchronizationTraversalSteps.Applied(id) => id }
+      .evalMap(_ => rpcClient.fetchEpochData(epoch.some))
+      .takeWhile(_.isEmpty)
+      .compile
+      .drain
+
   def fetchUntilTx(rpcClient: RpcClient, txId: TransactionId): F[Unit] =
     Stream
       .force(rpcClient.synchronizationTraversal())
@@ -168,6 +177,9 @@ object Util {
       (args, config, appConfig) <- app1.initialize(Array("--config", configLocation)).toResource
       backgroundOutcomeF        <- app1.run(args, config, appConfig).background
     } yield backgroundOutcomeF
+
+  def emptyLaunch(configLocation: String = ""): Resource[F, F[Outcome[F, Throwable, Unit]]] =
+    ().pure[F].background.map(_.foreverM)
 
   def confirmTransactions(
     client: RpcClient

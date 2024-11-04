@@ -1,6 +1,5 @@
 package org.plasmalabs.consensus.models
 
-import org.plasmalabs.consensus.models.{EligibilityCertificate, OperationalCertificate, StakingAddress}
 import org.plasmalabs.crypto.models.SignatureKesProduct
 import org.plasmalabs.{models => legacyModels}
 

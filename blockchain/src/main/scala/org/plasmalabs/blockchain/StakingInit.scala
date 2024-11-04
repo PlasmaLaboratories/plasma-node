@@ -18,6 +18,7 @@ import org.plasmalabs.consensus.models.{VrfConfig, _}
 import org.plasmalabs.interpreters.CatsSecureStore
 import org.plasmalabs.minting.algebras.StakingAlgebra
 import org.plasmalabs.minting.interpreters._
+import org.plasmalabs.models.protocol.BigBangConstants._
 import org.plasmalabs.node.models.BlockBody
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.sdk.models.{LockAddress, TransactionId}
@@ -213,7 +214,7 @@ object StakingInit {
       registrationEpoch <- clock.epochOf(registrationHeader.slot).toResource
       // Stakers who are registered in the genesis block have an activation epoch of 0.  Everyone else has an
       // activation epoch = registration epoch + 2
-      activationEpoch = if (registrationHeader.height == BigBang.Height) 0L else registrationEpoch + 2
+      activationEpoch = if (registrationHeader.height == BigBangHeight) 0L else registrationEpoch + 2
       beginSlot <- clock
         .epochRange(activationEpoch)
         .map(_.start)
@@ -289,7 +290,7 @@ object StakingInit {
         .flatMap(head =>
           fs2.Stream.unfoldLoopEval(head)(id =>
             // TODO optimization: Stop scanning if the headers become older than the maximum KES evolutions would permit
-            fetchHeader(id).map(h => (h, Option.when(h.height > BigBang.Height)(h.parentHeaderId)))
+            fetchHeader(id).map(h => (h, Option.when(h.height > BigBangHeight)(h.parentHeaderId)))
           )
         )
         // In addition to scanning the chain's history, also search new block adoptions

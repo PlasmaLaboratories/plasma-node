@@ -91,7 +91,7 @@ class RegistrationAccumulatorSpec extends CatsEffectSuite with ScalaCheckEffectS
             blockId0 -> BlockBody(List(tx0.id)).pure[IO],
             blockId1 -> BlockBody(List(tx1.id, tx2.id)).pure[IO],
             blockId2 -> BlockBody(List(tx3.id)).pure[IO]
-          ).apply _,
+          ),
           Map(
             tx0.id -> tx0.pure[IO],
             tx1.id -> tx1.pure[IO],

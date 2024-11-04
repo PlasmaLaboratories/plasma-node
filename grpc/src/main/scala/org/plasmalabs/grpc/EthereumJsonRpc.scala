@@ -14,9 +14,10 @@ import org.http4s.dsl.Http4sDslBinCompat
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.Router
 import org.http4s.server.middleware.CORS
-import org.plasmalabs.blockchain.{BigBang, BlockchainCore}
+import org.plasmalabs.blockchain.BlockchainCore
 import org.plasmalabs.codecs.bytes.tetra.instances._
 import org.plasmalabs.consensus.models.BlockHeader
+import org.plasmalabs.models.protocol.BigBangConstants._
 import org.plasmalabs.typeclasses.implicits.showBlockId
 import org.typelevel.log4cats.Logger
 import scodec.bits.ByteVector
@@ -218,7 +219,7 @@ class EthereumJsonRpcImpl[F[_]: Async](core: BlockchainCore[F]) extends Ethereum
   override def blockByNumber(number: String, hydratedTransactions: Boolean): F[Option[Json]] =
     Async[F]
       .delay(number match {
-        case "earliest"              => BigBang.Height
+        case "earliest"              => BigBangHeight
         case "finalized"             => -10L // TODO
         case "safe"                  => -5L
         case "latest"                => 0L

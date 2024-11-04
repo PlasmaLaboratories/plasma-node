@@ -13,6 +13,7 @@ import org.plasmalabs.algebras._
 import org.plasmalabs.blockchain.interpreters.{NetworkControlRpcServer, RegtestRpcServer}
 import org.plasmalabs.catsutils._
 import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.config.ApplicationConfig.Node.BigBangs.RegtestConfig
 import org.plasmalabs.config.ApplicationConfig.Node.{KnownPeer, NetworkProperties}
 import org.plasmalabs.consensus._
 import org.plasmalabs.grpc._
@@ -39,6 +40,8 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import scala.jdk.CollectionConverters._
 
+import ClockAlgebra.implicits._
+
 object Blockchain {
 
   /**
@@ -59,7 +62,7 @@ object Blockchain {
     networkProperties:        NetworkProperties,
     defaultVotedVersion:      VersionId,
     defaultVotedProposal:     ProposalId,
-    regtestEnabled:           Boolean
+    regtestConfigOpt:         Option[RegtestConfig]
   ): Resource[F, Unit] = new BlockchainImpl[F](
     localBlockchain,
     p2pBlockchain,
@@ -75,7 +78,7 @@ object Blockchain {
     networkProperties,
     defaultVotedVersion,
     defaultVotedProposal,
-    regtestEnabled
+    regtestConfigOpt
   ).resource
 
 }
@@ -95,7 +98,7 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
   networkProperties:        NetworkProperties,
   defaultVotedVersion:      VersionId,
   defaultVotedProposal:     ProposalId,
-  regtestEnabled:           Boolean
+  regtestConfigOpt:         Option[RegtestConfig]
 ) {
   implicit private val logger: SelfAwareStructuredLogger[F] = Slf4jLogger.getLoggerFromName[F]("Node.Blockchain")
 
@@ -130,8 +133,8 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
       currentPeers            <- Ref.of[F, Set[RemotePeer]](Set.empty[RemotePeer]).toResource
       initialPeers = knownPeers.map(kp => DisconnectedPeer(RemoteAddress(kp.host, kp.port), none))
       remotePeersStream = Stream.fromQueueUnterminated[F, DisconnectedPeer](remotePeers)
-      implicit0(dnsResolver: DnsResolver[F]) = new DefaultDnsResolver[F]()
-      implicit0(reverseDnsResolver: ReverseDnsResolver[F]) =
+      given DnsResolver[F] = new DefaultDnsResolver[F]()
+      given ReverseDnsResolver[F] =
         if (networkProperties.useHostNames) new DefaultReverseDnsResolver[F]() else new NoOpReverseResolver[F]
       bridge <- ActorPeerHandlerBridgeAlgebra
         .make(
@@ -147,13 +150,14 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
         )
         .onFinalize(Logger[F].info("P2P Actor system had been shutdown"))
       _ <- Logger[F].info(s"Exposing server on: ${peerAsServer.fold("")(_.toString)}").toResource
-      peerServerF = BlockchainPeerServer.make(
-        p2pBlockchain,
-        () => peerAsServer.map(kp => KnownHost(localPeer.p2pVK, kp.host, kp.port)),
-        () => currentPeers.get,
-        peersStatusChangesTopic,
-        networkProperties.slotDataParentDepth
-      ) _
+      peerServerF = cp =>
+        BlockchainPeerServer.make(
+          p2pBlockchain,
+          () => peerAsServer.map(kp => KnownHost(localPeer.p2pVK, kp.host, kp.port)),
+          () => currentPeers.get,
+          peersStatusChangesTopic,
+          networkProperties.slotDataParentDepth
+        )(cp)
       _ <- BlockchainNetwork
         .make[F](
           localPeer.localAddress.host,
@@ -178,14 +182,12 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
       _               <- Resource.make(Logger[F].info("Initializing RPC"))(_ => Logger[F].info("RPC Terminated"))
       rpcInterpreter  <- RpcServer.make(localBlockchain).toResource
       nodeGrpcService <- NodeGrpc.Server.service[F](rpcInterpreter)
-      regtestServices <- regtestPermitQueue.toList.traverse(queue =>
-        RegtestRpcServer
-          .service[F](Async[F].defer(queue.offer(())), regtestUpdateVotedVersion, regtestUpdateVotedProposal)
-      )
+      makeBlock = regtestPermitQueue.fold(().pure[F])(queue => Async[F].defer(queue.offer(())))
+      regtestServices <- RegtestRpcServer.service[F](makeBlock, regtestUpdateVotedVersion, regtestUpdateVotedProposal)
       _ <- networkCommandsOpt.fold(().pure[F])(_ => Logger[F].error("Network could be controlled via RPC")).toResource
       debugControl <- NetworkControlRpcServer.service(thisHostId, networkCommandsOpt)
       rpcServer <- Grpc.Server
-        .serve(rpcHost, rpcPort)(debugControl :: nodeGrpcService :: regtestServices ++ additionalGrpcServices)
+        .serve(rpcHost, rpcPort)(debugControl :: nodeGrpcService :: regtestServices :: additionalGrpcServices)
       _ <- Logger[F].info(s"RPC Server bound at ${rpcServer.getListenSockets.asScala.toList.mkString(",")}").toResource
     } yield ()
 
@@ -200,8 +202,10 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
       )
       mintedBlockStream =
         for {
+          _         <- Stream.eval(Logger[F].debug(show"Staking algebra building"))
           stakerOpt <- Stream.resource(stakerResource)
           staker    <- Stream.fromOption[F](stakerOpt)
+          _         <- Stream.eval(Logger[F].debug(show"Staking algebra had been built successfully"))
           blockPackerValidation <- Stream.resource(
             TransactionSemanticValidation
               .makeDataValidation(localBlockchain.dataStores.transactions.getOrRaise)
@@ -243,7 +247,7 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
               blockPacker,
               localBlockchain.validators.rewardCalculator,
               productionPermit,
-              eventSourcedStates.votingLocal,
+              eventSourcedStates.crossEpochForkLocal,
               votedVersionF,
               votedProposalF
             )
@@ -290,10 +294,16 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
       versionVoting  <- Ref.of(defaultVotedVersion).toResource
       proposalVoting <- Ref.of(defaultVotedProposal).toResource
       regtestPermitQueue <-
-        if (regtestEnabled) Queue.unbounded[F, Unit].toResource.map(_.some)
-        else none[Queue[F, Unit]].pure[F].toResource
-      setVersionVoting     <- (if (regtestEnabled) versionVoting.set _ else (_: Int) => ().pure[F]).pure[F].toResource
-      setProposalVoting    <- (if (regtestEnabled) proposalVoting.set _ else (_: Int) => ().pure[F]).pure[F].toResource
+        if (regtestConfigOpt.exists(_.permissiveBlockProduction)) {
+          Logger[F].info("Permissive block production is enabled").toResource >>
+          Queue.unbounded[F, Unit].toResource.map(_.some)
+        } else {
+          Logger[F].debug("Permissive block production is disabled").toResource >>
+          none[Queue[F, Unit]].pure[F].toResource
+        }
+      votingControl = regtestConfigOpt.isDefined
+      setVersionVoting     <- (if (votingControl) versionVoting.set else (_: Int) => ().pure[F]).pure[F].toResource
+      setProposalVoting    <- (if (votingControl) proposalVoting.set else (_: Int) => ().pure[F]).pure[F].toResource
       networkCommandsTopic <- Resource.make(Topic[F, NetworkCommands])(_.close.void)
       networkTopic = if (rpcNetworkControlEnabled) networkCommandsTopic.some else None
       _ <- (
@@ -311,8 +321,9 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
    */
   private def validateLocalBlock(fullBlock: FullBlock) =
     (for {
+      currentEpoch <- EitherT.liftF(localBlockchain.clock.epochOf(fullBlock.header.slot))
       _ <- EitherT.liftF[F, String, Unit](
-        Logger[F].info(show"Performing validation of local blockId=${fullBlock.header.id}")
+        Logger[F].info(show"Performing validation of local blockId=${fullBlock.header.id} in epoch $currentEpoch")
       )
       _ <- EitherT(
         localBlockchain.validators.header

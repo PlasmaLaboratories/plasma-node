@@ -29,9 +29,9 @@ object FS2P2PServer {
     ed25519Resource:         Resource[F, Ed25519]
   ): Resource[F, P2PServer[F]] =
     for {
-      implicit0(logger: Logger[F]) <- Slf4jLogger.fromName("Node.P2P").toResource
-      _                            <- eventLogger(peersStatusChangesTopic)
-      sockets                      <- socketsStream[F](host, port)
+      given Logger[F] <- Slf4jLogger.fromName("Node.P2P").toResource
+      _               <- eventLogger(peersStatusChangesTopic)
+      sockets         <- socketsStream[F](host, port)
       peerInfoExtractor <- PeerIdentity
         .extractor(Ed25519.SecretKey(localPeer.p2pSK.toByteArray), ed25519Resource)
         .map(f =>

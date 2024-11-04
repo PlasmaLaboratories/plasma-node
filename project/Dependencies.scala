@@ -12,7 +12,7 @@ object Dependencies {
   val ioGrpcVersion = "1.64.0"
   val http4sVersion = "0.23.26"
   val protobufSpecsVersion = "0.1.1+1-1a092800-SNAPSHOT" // TODO replace with final release version
-  val plasmaSdkVersion = "0.1.0"
+  val plasmaSdkVersion = "0.1.0+9-4d010cf9-SNAPSHOT" // TODO bump release after merge https://github.com/PlasmaLaboratories/plasma-sdk-scala/pull/12
 
   val catsSlf4j =
     "org.typelevel" %% "log4cats-slf4j" % "2.7.0"
@@ -75,10 +75,12 @@ object Dependencies {
   )
 
   val scodec = Seq(
-    "org.scodec" %% "scodec-core" % "1.11.10",
-    "org.scodec" %% "scodec-bits" % "1.1.38",
+    "org.scodec" %% "scodec-core" % "2.3.2",
+    "org.scodec" %% "scodec-bits" % "1.2.1",
     "org.scodec" %% "scodec-cats" % "1.2.0"
   )
+
+  val geny213ExlusionRule = ExclusionRule("com.lihaoyi", "geny_2.13")
 
   val mainargs = Seq(
     "com.lihaoyi" %% "mainargs" % "0.6.3"
@@ -87,16 +89,17 @@ object Dependencies {
   val fastparse = "com.lihaoyi" %% "fastparse" % "3.1.0"
 
   val monocle: Seq[ModuleID] = Seq(
-    "com.github.julien-truffaut" %% "monocle-core"  % "3.0.0-M6",
-    "com.github.julien-truffaut" %% "monocle-macro" % "3.0.0-M6"
+    "dev.optics" %% "monocle-core"  % "3.3.0",
+    "dev.optics" %% "monocle-macro" % "3.3.0"
   )
 
-  val fs2Core = "co.fs2"                   %% "fs2-core"             % fs2Version
-  val fs2IO = "co.fs2"                     %% "fs2-io"               % fs2Version
-  val fs2ReactiveStreams = "co.fs2"        %% "fs2-reactive-streams" % fs2Version
-  val pureConfig = "com.github.pureconfig" %% "pureconfig"           % "0.17.6"
-  val circeYaml = "io.circe"               %% "circe-yaml"           % "1.15.0"
-  val kubernetes = "io.kubernetes"          % "client-java"          % "20.0.1"
+  val fs2Core = "co.fs2"                          %% "fs2-core"                  % fs2Version
+  val fs2IO = "co.fs2"                            %% "fs2-io"                    % fs2Version
+  val fs2ReactiveStreams = "co.fs2"               %% "fs2-reactive-streams"      % fs2Version
+  val pureConfig = "com.github.pureconfig"        %% "pureconfig-core"           % "0.17.7"
+  val pureConfigGeneric = "com.github.pureconfig" %% "pureconfig-generic-scala3" % "0.17.7"
+  val circeYaml = "io.circe"                      %% "circe-yaml"                % "1.15.0"
+  val kubernetes = "io.kubernetes"                 % "client-java"               % "20.0.1"
 
   val http4s = Seq(
     "org.http4s" %% "http4s-ember-client" % http4sVersion,
@@ -128,8 +131,7 @@ object Dependencies {
 
   val grpcServices = "io.grpc" % "grpc-services" % ioGrpcVersion
 
-  val jacksonScala = "com.fasterxml.jackson.module"   %% "jackson-module-scala"             % "2.18.0"
-  val jacksonScalaReflection = "com.github.pjfanning" %% "jackson-scala-reflect-extensions" % "2.16.0"
+  val jacksonScala = "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.18.0"
 
   val node: Seq[ModuleID] =
     Seq(
@@ -155,7 +157,8 @@ object Dependencies {
       catsSlf4j,
       fs2Core,
       fs2IO,
-      pureConfig
+      pureConfig,
+      pureConfigGeneric
     )
 
   val testnetSimulationOrchestator: Seq[ModuleID] =
@@ -164,6 +167,7 @@ object Dependencies {
       fs2Core,
       fs2IO,
       pureConfig,
+      pureConfigGeneric,
       kubernetes,
       "com.google.cloud" % "google-cloud-storage" % "2.36.1"
     )
@@ -182,6 +186,7 @@ object Dependencies {
     http4s ++ Seq(
       catsSlf4j,
       pureConfig,
+      pureConfigGeneric,
       circeYaml
     )
 
@@ -203,7 +208,7 @@ object Dependencies {
     cats ++ scodec ++ protobufSpecs ++
     Seq(plasmaScSdk, plasmaScSdk.classifier("tests") % Test) ++
     Seq(quivr4s, quivr4s.classifier("tests") % Test) ++
-    Seq(jacksonScala, jacksonScalaReflection)
+    Seq(jacksonScala)
 
   lazy val consensus: Seq[ModuleID] =
     Dependencies.mUnitTest ++ externalCrypto ++ catsEffect ++ logging ++ scalacache

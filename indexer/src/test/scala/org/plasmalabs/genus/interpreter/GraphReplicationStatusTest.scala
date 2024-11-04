@@ -29,9 +29,9 @@ class GraphReplicationStatusTest extends CatsEffectSuite with ScalaCheckEffectSu
     withMock {
 
       val res = for {
-        implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-        graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
-        nodeBlockFetcherAlgebra                  <- mock[NodeBlockFetcherAlgebra[F, S]].pure[F].toResource
+        given OrientThread[F]   <- OrientThread.create[F]
+        graphVertexFetcher      <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+        nodeBlockFetcherAlgebra <- mock[NodeBlockFetcherAlgebra[F, S]].pure[F].toResource
         expectedTh = new IllegalStateException("boom!")
         _ = (() => graphVertexFetcher.fetchCanonicalHead())
           .expects()
@@ -57,9 +57,9 @@ class GraphReplicationStatusTest extends CatsEffectSuite with ScalaCheckEffectSu
   test("On canonicalHeadSynced if an empty iterator is returned, None BlockHeader should be returned") {
     withMock {
       val res = for {
-        implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-        graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
-        nodeBlockFetcherAlgebra                  <- mock[NodeBlockFetcherAlgebra[F, S]].pure[F].toResource
+        given OrientThread[F]   <- OrientThread.create[F]
+        graphVertexFetcher      <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+        nodeBlockFetcherAlgebra <- mock[NodeBlockFetcherAlgebra[F, S]].pure[F].toResource
         _ = (() => graphVertexFetcher.fetchCanonicalHead())
           .expects()
           .returning(Option.empty[Vertex].asRight[GE].pure[F])
@@ -85,86 +85,86 @@ class GraphReplicationStatusTest extends CatsEffectSuite with ScalaCheckEffectSu
       ) =>
         withMock {
           val res = for {
-            implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-            graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
-            nodeBlockFetcherAlgebra                  <- mock[NodeBlockFetcherAlgebra[F, S]].pure[F].toResource
-            blockHeaderVertex                        <- mock[Vertex].pure[F].toResource
+            given OrientThread[F]   <- OrientThread.create[F]
+            graphVertexFetcher      <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+            nodeBlockFetcherAlgebra <- mock[NodeBlockFetcherAlgebra[F, S]].pure[F].toResource
+            blockHeaderVertex       <- mock[Vertex].pure[F].toResource
 
             // vertex properties mocks
             _ = (blockHeaderVertex
-              .getProperty[Array[Byte]] _)
+              .getProperty[Array[Byte]])
               .expects(SchemaBlockHeader.Field.BlockId)
               .once()
               .returning(blockHeaderIndexer.embedId.id.value.toByteArray)
 
             _ = (blockHeaderVertex
-              .getProperty[java.lang.Long] _)
+              .getProperty[java.lang.Long])
               .expects(SchemaBlockHeader.Field.ParentSlot)
               .once()
               .returning(blockHeaderIndexer.parentSlot)
 
             _ = (blockHeaderVertex
-              .getProperty[Array[Byte]] _)
+              .getProperty[Array[Byte]])
               .expects(SchemaBlockHeader.Field.EligibilityCertificate)
               .once()
               .returning(blockHeaderIndexer.eligibilityCertificate.toByteArray)
 
             _ = (blockHeaderVertex
-              .getProperty[Array[Byte]] _)
+              .getProperty[Array[Byte]])
               .expects(SchemaBlockHeader.Field.OperationalCertificate)
               .once()
               .returning(blockHeaderIndexer.operationalCertificate.toByteArray)
 
             _ = (blockHeaderVertex
-              .getProperty[Array[Byte]] _)
+              .getProperty[Array[Byte]])
               .expects(SchemaBlockHeader.Field.Address)
               .once()
               .returning(blockHeaderIndexer.address.toByteArray)
 
             _ = (blockHeaderVertex
-              .getProperty[Array[Byte]] _)
+              .getProperty[Array[Byte]])
               .expects(SchemaBlockHeader.Field.Metadata)
               .once()
               .returning(blockHeaderIndexer.metadata.toByteArray)
 
             _ = (blockHeaderVertex
-              .getProperty[Array[Byte]] _)
+              .getProperty[Array[Byte]])
               .expects(SchemaBlockHeader.Field.TxRoot)
               .once()
               .returning(blockHeaderIndexer.txRoot.toByteArray)
 
             _ = (blockHeaderVertex
-              .getProperty[Array[Byte]] _)
+              .getProperty[Array[Byte]])
               .expects(SchemaBlockHeader.Field.BloomFilter)
               .once()
               .returning(blockHeaderIndexer.bloomFilter.toByteArray)
 
             _ = (blockHeaderVertex
-              .getProperty[Array[Byte]] _)
+              .getProperty[Array[Byte]])
               .expects(SchemaBlockHeader.Field.ParentHeaderId)
               .once()
               .returning(blockHeaderIndexer.parentHeaderId.value.toByteArray)
 
             _ = (blockHeaderVertex
-              .getProperty[java.lang.Long] _)
+              .getProperty[java.lang.Long])
               .expects(SchemaBlockHeader.Field.Slot)
               .once()
               .returning(blockHeaderIndexer.slot)
 
             _ = (blockHeaderVertex
-              .getProperty[java.lang.Long] _)
+              .getProperty[java.lang.Long])
               .expects(SchemaBlockHeader.Field.Height)
               .once()
               .returning(blockHeaderIndexer.height)
 
             _ = (blockHeaderVertex
-              .getProperty[java.lang.Long] _)
+              .getProperty[java.lang.Long])
               .expects(SchemaBlockHeader.Field.Timestamp)
               .once()
               .returning(blockHeaderIndexer.timestamp)
 
             _ = (blockHeaderVertex
-              .getProperty[Array[Byte]] _)
+              .getProperty[Array[Byte]])
               .expects(SchemaBlockHeader.Field.Version)
               .once()
               .returning(blockHeaderIndexer.version.toByteArray)
@@ -204,86 +204,86 @@ class GraphReplicationStatusTest extends CatsEffectSuite with ScalaCheckEffectSu
       ) =>
         withMock {
           val res = for {
-            implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-            graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
-            nodeBlockFetcherAlgebra                  <- mock[NodeBlockFetcherAlgebra[F, S]].pure[F].toResource
-            blockHeaderVertex                        <- mock[Vertex].pure[F].toResource
+            given OrientThread[F]   <- OrientThread.create[F]
+            graphVertexFetcher      <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+            nodeBlockFetcherAlgebra <- mock[NodeBlockFetcherAlgebra[F, S]].pure[F].toResource
+            blockHeaderVertex       <- mock[Vertex].pure[F].toResource
 
             // vertex properties mocks
             _ = (blockHeaderVertex
-              .getProperty[Array[Byte]] _)
+              .getProperty[Array[Byte]])
               .expects(SchemaBlockHeader.Field.BlockId)
               .once()
               .returning(blockHeader.embedId.id.value.toByteArray)
 
             _ = (blockHeaderVertex
-              .getProperty[java.lang.Long] _)
+              .getProperty[java.lang.Long])
               .expects(SchemaBlockHeader.Field.ParentSlot)
               .once()
               .returning(blockHeader.parentSlot)
 
             _ = (blockHeaderVertex
-              .getProperty[Array[Byte]] _)
+              .getProperty[Array[Byte]])
               .expects(SchemaBlockHeader.Field.EligibilityCertificate)
               .once()
               .returning(blockHeader.eligibilityCertificate.toByteArray)
 
             _ = (blockHeaderVertex
-              .getProperty[Array[Byte]] _)
+              .getProperty[Array[Byte]])
               .expects(SchemaBlockHeader.Field.OperationalCertificate)
               .once()
               .returning(blockHeader.operationalCertificate.toByteArray)
 
             _ = (blockHeaderVertex
-              .getProperty[Array[Byte]] _)
+              .getProperty[Array[Byte]])
               .expects(SchemaBlockHeader.Field.Address)
               .once()
               .returning(blockHeader.address.toByteArray)
 
             _ = (blockHeaderVertex
-              .getProperty[Array[Byte]] _)
+              .getProperty[Array[Byte]])
               .expects(SchemaBlockHeader.Field.Metadata)
               .once()
               .returning(blockHeader.metadata.toByteArray)
 
             _ = (blockHeaderVertex
-              .getProperty[Array[Byte]] _)
+              .getProperty[Array[Byte]])
               .expects(SchemaBlockHeader.Field.TxRoot)
               .once()
               .returning(blockHeader.txRoot.toByteArray)
 
             _ = (blockHeaderVertex
-              .getProperty[Array[Byte]] _)
+              .getProperty[Array[Byte]])
               .expects(SchemaBlockHeader.Field.BloomFilter)
               .once()
               .returning(blockHeader.bloomFilter.toByteArray)
 
             _ = (blockHeaderVertex
-              .getProperty[Array[Byte]] _)
+              .getProperty[Array[Byte]])
               .expects(SchemaBlockHeader.Field.ParentHeaderId)
               .once()
               .returning(blockHeader.parentHeaderId.value.toByteArray)
 
             _ = (blockHeaderVertex
-              .getProperty[java.lang.Long] _)
+              .getProperty[java.lang.Long])
               .expects(SchemaBlockHeader.Field.Slot)
               .once()
               .returning(blockHeader.slot)
 
             _ = (blockHeaderVertex
-              .getProperty[java.lang.Long] _)
+              .getProperty[java.lang.Long])
               .expects(SchemaBlockHeader.Field.Height)
               .once()
               .returning(blockHeader.height)
 
             _ = (blockHeaderVertex
-              .getProperty[java.lang.Long] _)
+              .getProperty[java.lang.Long])
               .expects(SchemaBlockHeader.Field.Timestamp)
               .once()
               .returning(blockHeader.timestamp)
 
             _ = (blockHeaderVertex
-              .getProperty[Array[Byte]] _)
+              .getProperty[Array[Byte]])
               .expects(SchemaBlockHeader.Field.Version)
               .once()
               .returning(blockHeader.version.toByteArray)

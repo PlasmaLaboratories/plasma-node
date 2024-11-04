@@ -5,9 +5,10 @@ import cats.effect.{Async, Resource}
 import cats.implicits._
 import fs2.Stream
 import fs2.concurrent.Topic
-import org.plasmalabs.blockchain.{BlockchainCore, _}
+import org.plasmalabs.blockchain.BlockchainCore
 import org.plasmalabs.catsutils._
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
+import org.plasmalabs.models.protocol.BigBangConstants._
 import org.plasmalabs.networking.fsnetwork.RemotePeer
 import org.plasmalabs.networking.p2p.PeerConnectionChanges.RemotePeerApplicationLevel
 import org.plasmalabs.networking.p2p.{ConnectedPeer, PeerConnectionChange}
@@ -85,7 +86,7 @@ object BlockchainPeerServer {
               if (
                 currentLevel >= slotDataParentDepth ||
                 slotData.slotId.blockId == maxParent ||
-                slotData.height == BigBang.Height
+                slotData.height == BigBangHeight
               ) {
                 acc.prepend(slotData).pure[F]
               } else {

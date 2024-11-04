@@ -69,7 +69,7 @@ trait P2PShowInstances {
     s" WarmHostsUpdateInterval=${config.peersUpdateInterval.toMillis} ms;" ++
     s" AggressiveP2PRequestInterval=${config.aggressiveP2PRequestInterval.toMillis} ms;"
 
-  implicit def showPeer[F[_]]: Show[Peer[F]] = { peer: Peer[F] =>
+  implicit def showPeer[F[_]]: Show[Peer[F]] = { (peer: Peer[F]) =>
     val connectionAddress = peer.connectedAddress.fold("absent")(ra => show"$ra")
     val serverAddress = peer.asServer.fold("absent")(rp => show"$rp")
     "<<< Peer" +
@@ -84,11 +84,11 @@ trait P2PShowInstances {
     " >>>"
   }
 
-  implicit val remotePeerShow: Show[KnownRemotePeer] = { remotePeer: KnownRemotePeer =>
+  implicit val remotePeerShow: Show[KnownRemotePeer] = { (remotePeer: KnownRemotePeer) =>
     s"Remote peer: ${remotePeer.address}"
   }
 
-  implicit val KnownHostShow: Show[KnownHost] = { knownHost: KnownHost =>
+  implicit val KnownHostShow: Show[KnownHost] = { (knownHost: KnownHost) =>
     show"Known host(id=${knownHost.id}, host=${knownHost.host}, port=${knownHost.port})"
   }
 

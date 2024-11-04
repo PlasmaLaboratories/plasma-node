@@ -33,7 +33,7 @@ object BodySemanticErrors {
 
   case class ProposalTransactionAlreadyUsedId(proposalId: ProposalId) extends BodySemanticError
 
-  case object DoubleProposalTransaction extends BodySemanticError
+  case object DoubleProposalIdTransaction extends BodySemanticError
 }
 
 sealed trait BodySyntaxError extends BodyValidationError

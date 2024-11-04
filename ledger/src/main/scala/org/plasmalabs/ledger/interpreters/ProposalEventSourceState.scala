@@ -10,17 +10,22 @@ import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
 import org.plasmalabs.crypto.hash.Blake2b256
 import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
 import org.plasmalabs.models._
+import org.plasmalabs.models.protocol.BigBangConstants._
 import org.plasmalabs.node.models._
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.box.Value.ConfigProposal
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.typeclasses.implicits._
 import org.typelevel.log4cats.Logger
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import java.nio.ByteBuffer
 
 object ProposalEventSourceState {
   type ProposalEventSourceStateType[F[_]] = EventSourcedState[F, ProposalData[F], BlockId]
+
+  implicit private def logger[F[_]: Async]: Logger[F] =
+    Slf4jLogger.getLoggerFromName[F]("Forking.ProposalState")
 
   case class ProposalData[F[_]](
     idToProposal:              Store[F, ProposalId, ConfigProposal],
@@ -30,7 +35,7 @@ object ProposalEventSourceState {
   def getProposalId(proposal: ConfigProposal): ProposalId =
     Math.abs(ByteBuffer.wrap(new Blake2b256().hash(proposal.toByteArray)).getInt)
 
-  def make[F[_]: Async: Logger](
+  def make[F[_]: Async](
     currentBlockId:      F[BlockId],
     parentChildTree:     ParentChildTree[F, BlockId],
     currentEventChanged: BlockId => F[Unit],
@@ -60,11 +65,18 @@ object ProposalEventSourceState {
 
     def apply(state: ProposalData[F], blockId: BlockId): F[ProposalData[F]] =
       for {
-        header       <- fetchBlockHeader(blockId)
+        header <- fetchBlockHeader(blockId)
+        _ <-
+          if (header.height != BigBangHeight) applyNonGenesisBlock(state, blockId, header)
+          else ().pure[F]
+      } yield state
+
+    private def applyNonGenesisBlock(state: ProposalData[F], blockId: BlockId, header: BlockHeader): F[Unit] =
+      for {
         currentEpoch <- clock.epochOf(header.slot)
         _            <- Logger[F].debug(show"Apply block with proposals $blockId of epoch $currentEpoch")
         _            <- applyNewProposals(state, blockId, currentEpoch)
-      } yield state
+      } yield ()
 
     private def applyNewProposals(state: ProposalData[F], blockId: BlockId, currentEpoch: Epoch): F[Unit] =
       for {

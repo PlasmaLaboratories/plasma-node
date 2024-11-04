@@ -6,7 +6,6 @@ import fs2._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.NodeRpc
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
-import org.plasmalabs.indexer.interpreter.NodeBlockFetcher
 import org.plasmalabs.indexer.model.GEs._
 import org.plasmalabs.indexer.services.BlockData
 import org.plasmalabs.models.generators.consensus.ModelGenerators._
@@ -31,10 +30,14 @@ class NodeBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
   private val nodeBlockFetcher = NodeBlockFetcher.make[F](nodeRpc, 1)
 
   test("On no block at given height, a None should be returned") {
-    PropF.forAllF { height: Long =>
+    PropF.forAllF { (height: Long) =>
       withMock {
 
+<<<<<<< HEAD
         (nodeRpc.blockIdAtHeight _)
+=======
+        (toplRpc.blockIdAtHeight)
+>>>>>>> main
           .expects(height)
           .returning(Option.empty[BlockId].pure[F])
           .once()
@@ -57,17 +60,29 @@ class NodeBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
     PropF.forAllF { (height: Long, blockId: BlockId) =>
       withMock {
 
+<<<<<<< HEAD
         (nodeRpc.blockIdAtHeight _)
+=======
+        (toplRpc.blockIdAtHeight)
+>>>>>>> main
           .expects(height)
           .returning(blockId.some.pure[F])
           .once()
 
+<<<<<<< HEAD
         (nodeRpc.fetchBlockHeader _)
+=======
+        (toplRpc.fetchBlockHeader)
+>>>>>>> main
           .expects(blockId)
           .returning(Option.empty[BlockHeader].pure[F])
           .once()
 
+<<<<<<< HEAD
         (nodeRpc.fetchBlockBody _)
+=======
+        (toplRpc.fetchBlockBody)
+>>>>>>> main
           .expects(blockId)
           .returning(BlockBody().some.pure[F])
           .once()
@@ -90,17 +105,29 @@ class NodeBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
     PropF.forAllF { (height: Long, blockId: BlockId, blockHeader: BlockHeader) =>
       withMock {
 
+<<<<<<< HEAD
         (nodeRpc.blockIdAtHeight _)
+=======
+        (toplRpc.blockIdAtHeight)
+>>>>>>> main
           .expects(height)
           .returning(blockId.some.pure[F])
           .once()
 
+<<<<<<< HEAD
         (nodeRpc.fetchBlockHeader _)
+=======
+        (toplRpc.fetchBlockHeader)
+>>>>>>> main
           .expects(blockId)
           .returning(blockHeader.some.pure[F])
           .once()
 
+<<<<<<< HEAD
         (nodeRpc.fetchBlockBody _)
+=======
+        (toplRpc.fetchBlockBody)
+>>>>>>> main
           .expects(blockId)
           .returning(Option.empty[BlockBody].pure[F])
           .once()
@@ -134,22 +161,38 @@ class NodeBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
 
           val blockBody = BlockBody(Seq(transactionId))
 
+<<<<<<< HEAD
           (nodeRpc.blockIdAtHeight _)
+=======
+          (toplRpc.blockIdAtHeight)
+>>>>>>> main
             .expects(height)
             .returning(blockId.some.pure[F])
             .once()
 
+<<<<<<< HEAD
           (nodeRpc.fetchBlockHeader _)
+=======
+          (toplRpc.fetchBlockHeader)
+>>>>>>> main
             .expects(blockId)
             .returning(blockHeader.some.pure[F])
             .once()
 
+<<<<<<< HEAD
           (nodeRpc.fetchBlockBody _)
+=======
+          (toplRpc.fetchBlockBody)
+>>>>>>> main
             .expects(blockId)
             .returning(blockBody.some.pure[F])
             .once()
 
+<<<<<<< HEAD
           (nodeRpc.fetchTransaction _)
+=======
+          (toplRpc.fetchTransaction)
+>>>>>>> main
             .expects(transactionId)
             .returning(Option.empty[IoTransaction].pure[F])
             .once()
@@ -192,27 +235,47 @@ class NodeBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
             )
           )
 
+<<<<<<< HEAD
           (nodeRpc.blockIdAtHeight _)
+=======
+          (toplRpc.blockIdAtHeight)
+>>>>>>> main
             .expects(height)
             .returning(blockId.some.pure[F])
             .once()
 
+<<<<<<< HEAD
           (nodeRpc.fetchBlockHeader _)
+=======
+          (toplRpc.fetchBlockHeader)
+>>>>>>> main
             .expects(blockId)
             .returning(blockHeader.some.pure[F])
             .once()
 
+<<<<<<< HEAD
           (nodeRpc.fetchBlockBody _)
+=======
+          (toplRpc.fetchBlockBody)
+>>>>>>> main
             .expects(blockId)
             .returning(blockBody.some.pure[F])
             .once()
 
+<<<<<<< HEAD
           (nodeRpc.fetchTransaction _)
+=======
+          (toplRpc.fetchTransaction)
+>>>>>>> main
             .expects(transactionId_01)
             .returning(transaction_01.some.pure[F])
             .once()
 
+<<<<<<< HEAD
           (nodeRpc.fetchTransaction _)
+=======
+          (toplRpc.fetchTransaction)
+>>>>>>> main
             .expects(transactionId_02)
             .returning(Option.empty[IoTransaction].pure[F])
             .once()
@@ -258,22 +321,38 @@ class NodeBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
             )
           )
 
+<<<<<<< HEAD
           (nodeRpc.blockIdAtHeight _)
+=======
+          (toplRpc.blockIdAtHeight)
+>>>>>>> main
             .expects(height)
             .returning(blockId.some.pure[F])
             .once()
 
+<<<<<<< HEAD
           (nodeRpc.fetchBlockHeader _)
+=======
+          (toplRpc.fetchBlockHeader)
+>>>>>>> main
             .expects(blockId)
             .returning(blockHeader.some.pure[F])
             .once()
 
+<<<<<<< HEAD
           (nodeRpc.fetchBlockBody _)
+=======
+          (toplRpc.fetchBlockBody)
+>>>>>>> main
             .expects(blockId)
             .returning(blockBody.some.pure[F])
             .once()
 
+<<<<<<< HEAD
           (nodeRpc.fetchTransaction _)
+=======
+          (toplRpc.fetchTransaction)
+>>>>>>> main
             .expects(transactionId_01)
             .returning(Option.empty[IoTransaction].pure[F])
             .once()
@@ -330,32 +409,56 @@ class NodeBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
             )
           )
 
+<<<<<<< HEAD
           (nodeRpc.blockIdAtHeight _)
+=======
+          (toplRpc.blockIdAtHeight)
+>>>>>>> main
             .expects(height)
             .returning(blockId.some.pure[F])
             .once()
 
+<<<<<<< HEAD
           (nodeRpc.fetchBlockHeader _)
+=======
+          (toplRpc.fetchBlockHeader)
+>>>>>>> main
             .expects(blockId)
             .returning(blockHeader.some.pure[F])
             .once()
 
+<<<<<<< HEAD
           (nodeRpc.fetchBlockBody _)
+=======
+          (toplRpc.fetchBlockBody)
+>>>>>>> main
             .expects(blockId)
             .returning(blockBody.some.pure[F])
             .once()
 
+<<<<<<< HEAD
           (nodeRpc.fetchTransaction _)
+=======
+          (toplRpc.fetchTransaction)
+>>>>>>> main
             .expects(transactionId_01)
             .returning(transaction_01.some.pure[F])
             .once()
 
+<<<<<<< HEAD
           (nodeRpc.fetchTransaction _)
+=======
+          (toplRpc.fetchTransaction)
+>>>>>>> main
             .expects(transactionId_02)
             .returning(transaction_02.some.pure[F])
             .once()
 
+<<<<<<< HEAD
           (nodeRpc.fetchTransaction _)
+=======
+          (toplRpc.fetchTransaction)
+>>>>>>> main
             .expects(transactionId_03)
             .returning(transaction_03.some.pure[F])
             .once()

@@ -184,7 +184,7 @@ class NodeRpcServerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with 
         for {
           epochDataAlgebra <- mock[EpochDataAlgebra[F]].pure[F]
           epochData = EpochData.defaultInstance
-          _ = (epochDataAlgebra.dataOf _)
+          _ = (epochDataAlgebra.dataOf)
             .expects(0L)
             .once()
             .returning(epochData.some.pure[F])

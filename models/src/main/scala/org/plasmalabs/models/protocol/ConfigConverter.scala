@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind._
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.scala._
-import com.github.pjfanning.jackson.reflect.ScalaReflectExtensions
 import org.plasmalabs.models.utility.Ratio
 import org.plasmalabs.sdk.models.box.Value._
 import org.plasmalabs.sdk.syntax._
@@ -27,7 +26,7 @@ object ConfigConverter {
     .addModule(module)
     .enable(DeserializationFeature.FAIL_ON_NULL_CREATOR_PROPERTIES)
     .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
-    .build() :: ClassTagExtensions) :: ScalaReflectExtensions
+    .build() :: ClassTagExtensions)
 
   val jsonConfigKey: String = "jsonConfig"
 
@@ -41,7 +40,7 @@ object ConfigConverter {
   def extractOrRaise[T: ClassTag](config: ConfigProposal): T =
     extract(config).toOption.get
 
-  def pack[T: ClassTag](config: T): ConfigProposal = {
+  def pack[T](config: T): ConfigProposal = {
     val configString = jsonMapper.writeValueAsString(config)
     val proposalMap = Map(jsonConfigKey -> configString)
     ConfigProposal(proposalMap)

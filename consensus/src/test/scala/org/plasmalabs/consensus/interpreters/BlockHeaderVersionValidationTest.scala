@@ -5,7 +5,7 @@ import cats.implicits._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.testInterpreters._
 import org.plasmalabs.algebras.{ClockAlgebra, Store}
-import org.plasmalabs.consensus.interpreters.VotingEventSourceState.VotingData
+import org.plasmalabs.consensus.interpreters.CrossEpochEventSourceState.VotingData
 import org.plasmalabs.consensus.models.BlockHeaderValidationFailures._
 import org.plasmalabs.consensus.models._
 import org.plasmalabs.eventtree.EventSourcedState
@@ -109,7 +109,6 @@ class BlockHeaderVersionValidationTest extends CatsEffectSuite with ScalaCheckEf
 
         block8 = headerInEpochWithVersion(10, maxVersion + 1)
         res8 <- versionValidation.validate(block8)
-        _    <- Logger[F].error(s"$res8")
         _    <- assert(res8 == Left(UnsupportedVersionId(maxVersion + 1, maxVersion))).pure[F]
       } yield ()
     }

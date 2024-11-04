@@ -53,7 +53,7 @@ class StakingSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncM
         val leaderElectionValidation = mock[LeaderElectionValidationAlgebra[F]]
         val vrfCalculator = mock[VrfCalculatorAlgebra[F]]
 
-        (etaCalculation.etaToBe _)
+        (etaCalculation.etaToBe)
           .expects(parentSlotId, slot)
           .once()
           .returning(eta.pure[F])
@@ -64,7 +64,7 @@ class StakingSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncM
           .once()
           .returning(relativeStake.some.pure[F])
 
-        (leaderElectionValidation.getThreshold _)
+        (leaderElectionValidation.getThreshold)
           .expects(relativeStake, slot - parentSlotId.slot)
           .once()
           .returning(Ratio.One.pure[F])
@@ -75,12 +75,12 @@ class StakingSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncM
           .once()
           .returning(true.pure[F])
 
-        (vrfCalculator.proofForSlot _)
+        (vrfCalculator.proofForSlot)
           .expects(slot, eta)
           .twice()
           .returning(proof.pure[F])
 
-        (vrfCalculator.rhoForSlot _)
+        (vrfCalculator.rhoForSlot)
           .expects(slot, eta)
           .once()
           .returning(rho.pure[F])
@@ -124,7 +124,7 @@ class StakingSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncM
       withMock {
         val operationalKeyMaker = mock[OperationalKeyMakerAlgebra[F]]
         val eta = etaGen.first
-        (operationalKeyMaker.operationalKeyForSlot _)
+        (operationalKeyMaker.operationalKeyForSlot)
           .expects(slot, parentSlotId, eta)
           .once()
           .returning(Option.empty[OperationalKeyOut].pure[F])

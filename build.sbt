@@ -1,14 +1,12 @@
-import com.typesafe.sbt.packager.docker.{DockerChmodType, ExecCmd}
 import sbt.Keys.{organization, test}
 import sbtassembly.MergeStrategy
-import NativePackagerHelper.*
 
-val scala213 = "2.13.13"
+val scala3 = "3.4.1"
 
 inThisBuild(
   List(
     organization := "org.plasmalabs",
-    scalaVersion := scala213,
+    scalaVersion := scala3,
     versionScheme := Some("early-semver"),
     dynverSeparator := "-",
     version := dynverGitDescribeOutput.value.mkVersion(versionFmt, fallbackVersion(dynverCurrentDate.value)),
@@ -28,16 +26,7 @@ lazy val commonSettings = Seq(
   sonatypeCredentialHost := "s01.oss.sonatype.org",
   scalacOptions ++= commonScalacOptions,
   semanticdbEnabled := true, // enable SemanticDB for Scalafix
-  semanticdbVersion := scalafixSemanticdb.revision, // use Scalafix compatible version
-//  wartremoverErrors := Warts.unsafe, // settings for wartremover
-  Compile / unmanagedSourceDirectories += {
-    val sourceDir = (Compile / sourceDirectory).value
-    CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, n)) if n >= 13 => sourceDir / "scala-2.13+"
-      case _                       => sourceDir / "scala-2.12-"
-    }
-  },
-  crossScalaVersions := Seq(scala213),
+  scalaVersion := scala3,
   resolvers ++= Seq(
     "Typesafe Repository" at "https://repo.typesafe.com/typesafe/releases/",
     "Sonatype Staging" at "https://s01.oss.sonatype.org/content/repositories/staging",
@@ -45,10 +34,8 @@ lazy val commonSettings = Seq(
     "Bintray" at "https://jcenter.bintray.com/",
     "jitpack" at "https://jitpack.io"
   ),
-  addCompilerPlugin("org.typelevel" % "kind-projector"     % "0.13.3" cross CrossVersion.full),
-  addCompilerPlugin("com.olegpy"   %% "better-monadic-for" % "0.3.1"),
   testFrameworks += TestFrameworks.MUnit,
-  dependencyOverrides ++= Dependencies.protobufSpecs ++ Seq(Dependencies.quivr4s),
+  dependencyOverrides ++= Dependencies.protobufSpecs ++ Seq(Dependencies.quivr4s)
 )
 
 lazy val dockerSettings = Seq(
@@ -83,7 +70,7 @@ lazy val nodeDockerSettings =
           DockerAlias(Some("ghcr.io"), Some("plasmalaboratories"), "plasma-node", Some("dev"))
         )
       else Seq()
-      )
+    )
   )
 
 lazy val indexerDockerSettings =
@@ -98,7 +85,7 @@ lazy val indexerDockerSettings =
           DockerAlias(Some("ghcr.io"), Some("plasmalaboratories"), "plasma-indexer", Some("dev"))
         )
       else Seq()
-      )
+    )
   )
 
 lazy val networkDelayerDockerSettings =
@@ -137,22 +124,15 @@ def assemblySettings(main: String) = Seq(
   }
 )
 
-lazy val scalamacrosParadiseSettings =
-  Seq(
-    scalacOptions ++= Seq(
-      "-Ymacro-annotations"
-    )
-  )
-
 lazy val commonScalacOptions = Seq(
   "-deprecation",
   "-feature",
   "-language:higherKinds",
   "-language:postfixOps",
   "-unchecked",
-  "-Ywarn-unused:_",
-  "-Yrangepos",
-  "-Ywarn-macros:after"
+  "-Ykind-projector:underscores",
+  "-source:3.4-migration",
+  "-Wunused:imports"
 )
 
 javaOptions ++= Seq(
@@ -162,9 +142,6 @@ javaOptions ++= Seq(
   // Disabled to prevent a potential security threat
   "-XX:+PerfDisableSharedMem"
 )
-
-connectInput / run := true
-outputStrategy := Some(StdoutOutput)
 
 connectInput / run := true
 outputStrategy := Some(StdoutOutput)
@@ -222,7 +199,6 @@ lazy val node = project
     assemblySettings("org.plasmalabs.node.NodeApp"),
     assemblyJarName := s"plasma-node-${version.value}.jar",
     nodeDockerSettings,
-    crossScalaVersions := Seq(scala213),
     Compile / mainClass := Some("org.plasmalabs.node.NodeApp"),
     publish / skip := true,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
@@ -249,18 +225,15 @@ lazy val node = project
     indexer
   )
   .enablePlugins(BuildInfoPlugin, JavaAppPackaging, DockerPlugin)
-  .settings(scalamacrosParadiseSettings)
 
 lazy val config = project
   .in(file("config"))
   .settings(
     name := "config",
     commonSettings,
-    crossScalaVersions := Seq(scala213),
-    libraryDependencies ++= Dependencies.monocle
+    libraryDependencies ++= Dependencies.monocle :+ Dependencies.pureConfig
   )
   .dependsOn(models, numerics)
-  .settings(scalamacrosParadiseSettings)
 
 lazy val networkDelayer = project
   .in(file("network-delayer"))
@@ -271,7 +244,6 @@ lazy val networkDelayer = project
     assemblySettings("org.plasmalabs.networkdelayer.NetworkDelayer"),
     assemblyJarName := s"network-delayer-${version.value}.jar",
     networkDelayerDockerSettings,
-    crossScalaVersions := Seq(scala213),
     Compile / mainClass := Some("org.plasmalabs.networkdelayer.NetworkDelayer"),
     publish / skip := true,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
@@ -279,7 +251,6 @@ lazy val networkDelayer = project
     libraryDependencies ++= Dependencies.networkDelayer
   )
   .enablePlugins(BuildInfoPlugin, JavaAppPackaging, DockerPlugin)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(catsUtils, commonApplication)
 
 lazy val testnetSimulationOrchestrator = project
@@ -291,7 +262,6 @@ lazy val testnetSimulationOrchestrator = project
     assemblySettings("org.plasmalabs.testnetsimulationorchestrator.app.Orchestrator"),
     assemblyJarName := s"testnet-simulation-orchestrator-${version.value}.jar",
     testnetSimulationOrchestratorDockerSettings,
-    crossScalaVersions := Seq(scala213),
     Compile / mainClass := Some("org.plasmalabs.testnetsimulationorchestrator.app.Orchestrator"),
     publish / skip := true,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
@@ -299,7 +269,6 @@ lazy val testnetSimulationOrchestrator = project
     libraryDependencies ++= Dependencies.testnetSimulationOrchestator
   )
   .enablePlugins(BuildInfoPlugin, JavaAppPackaging, DockerPlugin)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(commonApplication, transactionGenerator)
 
 lazy val commonApplication = project
@@ -307,11 +276,9 @@ lazy val commonApplication = project
   .settings(
     name := "common-application",
     commonSettings,
-    crossScalaVersions := Seq(scala213),
     libraryDependencies ++= Dependencies.commonApplication
   )
   .dependsOn(catsUtils)
-  .settings(scalamacrosParadiseSettings)
 
 lazy val models = project
   .in(file("models"))
@@ -320,10 +287,7 @@ lazy val models = project
     name := "models",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.plasmalabs.buildinfo.models"
-  )
-  .settings(scalamacrosParadiseSettings)
-  .settings(
+    buildInfoPackage := "org.plasmalabs.buildinfo.models",
     libraryDependencies ++= Dependencies.models ++ Dependencies.mUnitTest
   )
   .dependsOn(munitScalamock % "test->test")
@@ -335,10 +299,9 @@ lazy val numerics = project
     name := "numerics",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.plasmalabs.buildinfo.numerics"
+    buildInfoPackage := "org.plasmalabs.buildinfo.numerics",
+    libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.scalacache
   )
-  .settings(scalamacrosParadiseSettings)
-  .settings(libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.scalacache)
   .dependsOn(models)
 
 lazy val eventTree = project
@@ -347,12 +310,10 @@ lazy val eventTree = project
   .settings(
     name := "event-tree",
     commonSettings,
-    crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.plasmalabs.buildinfo.eventtree"
+    buildInfoPackage := "org.plasmalabs.buildinfo.eventtree",
+    libraryDependencies ++= Dependencies.eventTree
   )
-  .settings(libraryDependencies ++= Dependencies.eventTree)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(algebras % "compile->test")
 
 lazy val byteCodecs = project
@@ -362,12 +323,9 @@ lazy val byteCodecs = project
     name := "byte-codecs",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.plasmalabs.buildinfo.codecs.bytes"
-  )
-  .settings(
+    buildInfoPackage := "org.plasmalabs.buildinfo.codecs.bytes",
     libraryDependencies ++= Dependencies.byteCodecs ++ Dependencies.protobufSpecs
   )
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(munitScalamock % "test->test")
 
 lazy val tetraByteCodecs = project
@@ -377,10 +335,9 @@ lazy val tetraByteCodecs = project
     name := "tetra-byte-codecs",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.plasmalabs.buildinfo.codecs.bytes.tetra"
+    buildInfoPackage := "org.plasmalabs.buildinfo.codecs.bytes.tetra",
+    libraryDependencies ++= Dependencies.munitScalamock ++ Dependencies.protobufSpecs
   )
-  .settings(libraryDependencies ++= Dependencies.munitScalamock ++ Dependencies.protobufSpecs)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(
     models     % "compile->compile;test->test",
     byteCodecs % "compile->compile;test->test",
@@ -394,12 +351,9 @@ lazy val typeclasses: Project = project
     name := "typeclasses",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.plasmalabs.buildinfo.typeclasses"
+    buildInfoPackage := "org.plasmalabs.buildinfo.typeclasses",
+    libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.logging ++ Dependencies.circe
   )
-  .settings(
-    libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.logging
-  )
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(models % "compile->compile;test->test", nodeCrypto, tetraByteCodecs)
 
 lazy val algebras = project
@@ -409,10 +363,9 @@ lazy val algebras = project
     name := "algebras",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.plasmalabs.buildinfo.algebras"
+    buildInfoPackage := "org.plasmalabs.buildinfo.algebras",
+    libraryDependencies ++= Dependencies.algebras
   )
-  .settings(libraryDependencies ++= Dependencies.algebras)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(models, nodeCrypto, tetraByteCodecs, munitScalamock % "test->test")
 
 lazy val actor = project
@@ -422,9 +375,9 @@ lazy val actor = project
     name := "actor",
     commonSettings,
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.plasmalabs.buildinfo.actor"
+    buildInfoPackage := "org.plasmalabs.buildinfo.actor",
+    libraryDependencies ++= Dependencies.actor
   )
-  .settings(libraryDependencies ++= Dependencies.actor)
   .dependsOn(
     munitScalamock % "test->test"
   )
@@ -435,12 +388,10 @@ lazy val commonInterpreters = project
   .settings(
     name := "common-interpreters",
     commonSettings,
-    crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.plasmalabs.buildinfo.commoninterpreters"
+    buildInfoPackage := "org.plasmalabs.buildinfo.commoninterpreters",
+    libraryDependencies ++= Dependencies.commonInterpreters
   )
-  .settings(libraryDependencies ++= Dependencies.commonInterpreters)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(
     models,
     algebras,
@@ -459,22 +410,17 @@ lazy val consensus = project
   .settings(
     name := "consensus",
     commonSettings,
-    crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.plasmalabs.buildinfo.consensus"
+    buildInfoPackage := "org.plasmalabs.buildinfo.consensus",
+    libraryDependencies ++= Dependencies.mUnitTest ++ Dependencies.consensus
   )
-  .settings(libraryDependencies ++= Dependencies.mUnitTest)
-  .settings(
-    libraryDependencies ++= Dependencies.consensus
-  )
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(
     ledger,
     models % "compile->compile;test->test",
     typeclasses,
     nodeCrypto,
     tetraByteCodecs % "compile->compile;test->test",
-    algebras % "compile->compile;test->test",
+    algebras        % "compile->compile;test->test",
     numerics,
     eventTree,
     commonInterpreters % "compile->test",
@@ -487,12 +433,10 @@ lazy val minting = project
   .settings(
     name := "minting",
     commonSettings,
-    crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.plasmalabs.buildinfo.minting"
+    buildInfoPackage := "org.plasmalabs.buildinfo.minting",
+    libraryDependencies ++= Dependencies.minting
   )
-  .settings(libraryDependencies ++= Dependencies.minting)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(
     models % "compile->compile;test->test",
     typeclasses,
@@ -512,12 +456,10 @@ lazy val networking = project
   .settings(
     name := "networking",
     commonSettings,
-    crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.plasmalabs.buildinfo.networking"
+    buildInfoPackage := "org.plasmalabs.buildinfo.networking",
+    libraryDependencies ++= Dependencies.networking
   )
-  .settings(libraryDependencies ++= Dependencies.networking)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(
     models % "compile->compile;test->test",
     config,
@@ -543,12 +485,10 @@ lazy val transactionGenerator = project
     name := "transaction-generator",
     commonSettings,
     coverageEnabled := false,
-    crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.plasmalabs.buildinfo.transactiongenerator"
+    buildInfoPackage := "org.plasmalabs.buildinfo.transactiongenerator",
+    libraryDependencies ++= Dependencies.transactionGenerator
   )
-  .settings(libraryDependencies ++= Dependencies.transactionGenerator)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(
     models % "compile->compile;test->test",
     typeclasses,
@@ -569,12 +509,10 @@ lazy val ledger = project
   .settings(
     name := "ledger",
     commonSettings,
-    crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.plasmalabs.buildinfo.ledger"
+    buildInfoPackage := "org.plasmalabs.buildinfo.ledger",
+    libraryDependencies ++= Dependencies.ledger
   )
-  .settings(libraryDependencies ++= Dependencies.ledger)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(
     models   % "compile->compile;test->test",
     algebras % "compile->compile;test->test",
@@ -591,12 +529,10 @@ lazy val blockchainCore = project
   .settings(
     name := "blockchain-core",
     commonSettings,
-    crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.plasmalabs.buildinfo.blockchaincore"
+    buildInfoPackage := "org.plasmalabs.buildinfo.blockchaincore",
+    libraryDependencies ++= Dependencies.blockchain
   )
-  .settings(libraryDependencies ++= Dependencies.blockchain)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(
     models   % "compile->compile;test->test",
     algebras % "compile->compile;test->test",
@@ -617,12 +553,10 @@ lazy val blockchain = project
   .settings(
     name := "blockchain",
     commonSettings,
-    crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.plasmalabs.buildinfo.blockchain"
+    buildInfoPackage := "org.plasmalabs.buildinfo.blockchain",
+    libraryDependencies ++= Dependencies.blockchain
   )
-  .settings(libraryDependencies ++= Dependencies.blockchain)
-  .settings(scalamacrosParadiseSettings)
   .dependsOn(
     models   % "compile->compile;test->test",
     algebras % "compile->compile;test->test",
@@ -692,16 +626,13 @@ lazy val catsUtils = project
     buildInfoPackage := "org.plasmalabs.buildinfo.catsUtils",
     libraryDependencies ++= Dependencies.catsUtils
   )
-  .settings(scalamacrosParadiseSettings)
 
 lazy val indexer = project
   .in(file("indexer"))
   .settings(
     name := "indexer",
     commonSettings,
-    scalamacrosParadiseSettings,
     publish / skip := true,
-    crossScalaVersions := Seq(scala213),
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
     buildInfoPackage := "org.plasmalabs.buildinfo.indexer",
     libraryDependencies ++= Dependencies.indexer
@@ -732,12 +663,11 @@ lazy val nodeIt = project
   .settings(
     name := "node-it",
     commonSettings,
-    crossScalaVersions := Seq(scala213),
     libraryDependencies ++= Dependencies.nodeIt
   )
   .dependsOn(
     node,
-    models % "test->compile",
+    models               % "test->compile",
     transactionGenerator % "test->compile"
   )
 
@@ -747,7 +677,8 @@ lazy val byzantineIt = project
     name := "byzantine-it",
     commonSettings,
     Test / parallelExecution := false,
-    libraryDependencies ++= Dependencies.byzantineIt
+    libraryDependencies ++= Dependencies.byzantineIt,
+    excludeDependencies ++= Seq(Dependencies.geny213ExlusionRule)
   )
   .dependsOn(
     node
@@ -756,6 +687,6 @@ lazy val byzantineIt = project
 lazy val integration = (project in file("integration"))
   .aggregate(nodeIt, byzantineIt)
 
-addCommandAlias("checkPR", s"; scalafixAll --check; scalafmtCheckAll; +test; integration/Test/compile")
-addCommandAlias("preparePR", s"; scalafixAll; scalafmtAll; +test; integration/Test/compile")
-addCommandAlias("checkPRTestQuick", s"; scalafixAll --check; scalafmtCheckAll; testQuick; integration/Test/compile")
+addCommandAlias("checkPR", s"; scalafixAll --check; scalafmtCheckAll; test; integration/Test/compile")
+addCommandAlias("preparePR", s"; scalafixAll; scalafmtAll; test; integration/Test/compile")
+addCommandAlias("checkPRTest", s"; scalafixAll --check; scalafmtCheckAll; test; integration/Test/compile")

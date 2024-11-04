@@ -4,7 +4,6 @@ import cats.implicits._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.indexer.DbFixtureUtil
 import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances._
-import org.plasmalabs.indexer.orientDb.schema.{GraphDataEncoder, VertexSchema}
 import org.plasmalabs.indexer.orientDb.{OrientDBMetadataFactory, OrientThread}
 import org.scalamock.munit.AsyncMockFactory
 
@@ -25,7 +24,7 @@ class VertexSchemaTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
     v => TestClass(v(StringParamName): String)
   )
 
-  orientDbFixture.test("Test Schema Metadata") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixture.test("Test Schema Metadata") { case (odbFactory, oThread: OrientThread[F]) =>
     val res = for {
       databaseDocumentTx <- oThread.delay(odbFactory.getNoTx.getRawGraph).toResource
       _                  <- OrientDBMetadataFactory.createVertex[F](databaseDocumentTx, testSchema).toResource
@@ -44,7 +43,7 @@ class VertexSchemaTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
 
   }
 
-  orientDbFixture.test("Test Schema Add Vertex") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixture.test("Test Schema Add Vertex") { case (odbFactory, oThread: OrientThread[F]) =>
     val res = for {
       databaseDocumentTx <- oThread.delay(odbFactory.getNoTx.getRawGraph).toResource
       _                  <- OrientDBMetadataFactory.createVertex[F](databaseDocumentTx, testSchema).toResource

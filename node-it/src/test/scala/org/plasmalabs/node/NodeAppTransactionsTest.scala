@@ -21,7 +21,6 @@ import munit._
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.plasmalabs.codecs.bytes.tetra.instances._
-import cats.data.Chain
 import org.plasmalabs.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
 import org.plasmalabs.sdk.validation.algebras.TransactionCostCalculator
 import org.plasmalabs.ledger.models._
@@ -170,20 +169,20 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               rpcClientA <- NodeGrpc.Client.make[F]("127.0.0.2", rpcPortA, tls = false)
               rpcClientB <- NodeGrpc.Client.make[F]("127.0.0.3", rpcPortB, tls = false)
               rpcClients = List(rpcClientA, rpcClientB)
-              implicit0(logger: Logger[F]) <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
+              given Logger[F] <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
               indexerChannelA              <- org.plasmalabs.grpc.makeChannel[F]("127.0.0.2", rpcPortA, tls = false)
               indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
               wallet                       <- makeWallet(indexerTxServiceA)
               _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
-              implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F].toResource
+              given Random[F] <- SecureRandom.javaSecuritySecureRandom[F].toResource
 
               transactionGenerator <-
                 Fs2TransactionGenerator
                   .make[F](wallet, _ => 1000L, Fs2TransactionGenerator.emptyMetadata[F])
                   .toResource
               transactionGraph <- Stream
-                .force(transactionGenerator.generateTransactions)
+                .force(transactionGenerator.generateTransactions())
                 .take(10)
                 .compile
                 .toList
@@ -262,11 +261,11 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               rpcClientA <- NodeGrpc.Client.make[F]("127.0.0.4", rpcPortA, tls = false)
               rpcClientB <- NodeGrpc.Client.make[F]("127.0.0.5", rpcPortB, tls = false)
               rpcClients = List(rpcClientA, rpcClientB)
-              implicit0(logger: Logger[F]) <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
+              given Logger[F] <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
               indexerChannelA              <- org.plasmalabs.grpc.makeChannel[F]("127.0.0.4", rpcPortA, tls = false)
               indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
-              implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F].toResource
+              given Random[F] <- SecureRandom.javaSecuritySecureRandom[F].toResource
 
               _ <- rpcClients.parTraverse(fetchUntilHeight(_, height)).toResource
 
@@ -277,7 +276,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
                   .make[F](wallet, _ => 1000L, Fs2TransactionGenerator.emptyMetadata[F])
                   .toResource
               transactionGraph <- Stream
-                .force(transactionGenerator.generateTransactions)
+                .force(transactionGenerator.generateTransactions())
                 .take(20)
                 .compile
                 .toList
@@ -288,8 +287,8 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               // most of them will be rejected because "parent" tx is sent to other node
               _ <-
                 Stream
-                  .repeatEval(random.elementOf(rpcClients))
-                  .zip(Stream.evalSeq(random.shuffleList(transactionGraph)))
+                  .repeatEval(Random[F].elementOf(rpcClients))
+                  .zip(Stream.evalSeq(Random[F].shuffleList(transactionGraph)))
                   .evalMap { case (client, tx) => client.broadcastTransaction(tx) }
                   .compile
                   .drain
@@ -374,7 +373,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               rpcClientA <- NodeGrpc.Client.make[F]("127.0.0.6", rpcPortA, tls = false)
               rpcClientB <- NodeGrpc.Client.make[F]("127.0.0.7", rpcPortB, tls = false)
               rpcClients = List(rpcClientA, rpcClientB)
-              implicit0(logger: Logger[F]) <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
+              given Logger[F] <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
               indexerChannelA              <- org.plasmalabs.grpc.makeChannel[F]("127.0.0.6", rpcPortA, tls = false)
               indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
@@ -382,7 +381,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
 
               wallet                       <- makeWallet(indexerTxServiceA)
               _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
-              implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F].toResource
+              given Random[F] <- SecureRandom.javaSecuritySecureRandom[F].toResource
 
               transactionGenerator <-
                 Fs2TransactionGenerator
@@ -391,7 +390,7 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               // get transactions of such size that last transaction
               // shall no longer take in consideration transactions im memory pool
               transactionGraph <- Stream
-                .force(transactionGenerator.generateTransactions)
+                .force(transactionGenerator.generateTransactions())
                 .map(tx => IoTransactionEx(tx, RewardQuantities(), sizeCalculator.costOf(tx)))
                 .scan((Chain.empty[IoTransactionEx], 0L)) { case ((txs, totalSize), tx) =>
                   (txs.append(tx), totalSize + tx.size)

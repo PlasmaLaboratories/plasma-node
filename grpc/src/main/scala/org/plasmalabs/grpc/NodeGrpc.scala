@@ -25,7 +25,7 @@ object NodeGrpc {
 
     // scalastyle:off method.length
     /**
-     * Creates a Topl RPC Client for interacting with a Node node
+     * Creates a RPC Client for interacting with a Node node
      * @param host Node node host/IP
      * @param port Node node port
      * @param tls Should the connection use TLS?

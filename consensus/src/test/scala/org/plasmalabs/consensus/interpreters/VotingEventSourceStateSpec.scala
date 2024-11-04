@@ -10,17 +10,17 @@ import org.plasmalabs.codecs.bytes.tetra.ModelGenerators._
 import org.plasmalabs.codecs.bytes.tetra.instances._
 import org.plasmalabs.consensus._
 import org.plasmalabs.consensus.algebras.VersionInfoAlgebra
-import org.plasmalabs.consensus.interpreters.VotingEventSourceState
+import org.plasmalabs.consensus.interpreters.CrossEpochEventSourceState.VotingData
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId, _}
 import org.plasmalabs.crypto.signing.Ed25519VRF
 import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
 import org.plasmalabs.ledger.interpreters.ProposalEventSourceState
 import org.plasmalabs.ledger.interpreters.ProposalEventSourceState._
 import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.models._
 import org.plasmalabs.models.generators.consensus.ModelGenerators.arbitraryHeader
 import org.plasmalabs.models.protocol.{ConfigConverter, ConfigGenesis}
 import org.plasmalabs.models.utility.Ratio
-import org.plasmalabs.models.{ProposalId, Slot, Timestamp, VersionId, _}
 import org.plasmalabs.node.models.BlockBody
 import org.plasmalabs.numerics.implicits._
 import org.plasmalabs.proto.node.EpochData
@@ -51,7 +51,7 @@ class VotingEventSourceStateSpec
   import VotingEventSourceStateSpec._
 
   private val epochLen = 10L
-  private val initialFreeVersion = 1
+  private val initialFreeVersion = 2
 
   private val defaultConfig = ProposalConfig(
     proposalVotingMaxWindow = 5,
@@ -77,9 +77,9 @@ class VotingEventSourceStateSpec
     override def delayedUntilTimestamp(timestamp: Timestamp): F[Unit] = ???
   }
 
-  private def makeInitialVersionsData[F[_]: Async](
+  private def makeInitialVersionsData[F[_]: Async: Logger](
     versionStorage: TestStore[F, Epoch, VersionId]
-  ): F[VotingEventSourceState.VotingData[F]] =
+  ): F[VotingData[F]] =
     for {
       epochToProposalIds       <- TestStore.make[F, Epoch, Set[ProposalId]]
       proposalVoting           <- TestStore.make[F, (Epoch, ProposalId), Long]
@@ -90,16 +90,9 @@ class VotingEventSourceStateSpec
       versionVoting            <- TestStore.make[F, (Epoch, VersionId), Long]
       _                        <- versionCounter.put((), initialFreeVersion)
 
-      versionAlgebra: VersionInfoAlgebra[F] = new VersionInfoAlgebra[F] {
+      versionAlgebra: VersionInfoAlgebra[F] <- VersionInfo.make(versionStorage)
 
-        override def addVersionStartEpoch(epoch: Epoch, version: VersionId): F[Unit] =
-          versionStorage.put(epoch, version)
-
-        override def removeVersionStartEpoch(epoch: Epoch): F[Unit] = versionStorage.remove(epoch)
-
-        override def getVersionForEpoch(epoch: Epoch): F[VersionId] = ???
-      }
-    } yield VotingEventSourceState.VotingData(
+    } yield VotingData(
       epochToProposalIds,
       proposalVoting,
       epochToCreatedVersionIds,
@@ -268,10 +261,15 @@ class VotingEventSourceStateSpec
       )
     }
 
-  def createDefaultVersionEventsAndChainFromPlan(plan: List[(Seq[Int], Int, Int)]): F[
+  private val initialVersionMap = Map(Long.MinValue -> 1)
+
+  def createDefaultVersionEventsAndChainFromPlan(
+    plan:     List[(Seq[Int], Int, Int)],
+    versions: Map[Epoch, VersionId] = Map.empty
+  ): F[
     (
-      EventSourcedState[F, VotingEventSourceState.VotingData[F], BlockId],
-      VotingEventSourceState.VotingData[F],
+      EventSourcedState[F, VotingEventSourceState.State[F], BlockId],
+      VotingData[F],
       ProposalData[F],
       Seq[BlockHeader],
       TestStore[F, Epoch, VersionId]
@@ -282,7 +280,9 @@ class VotingEventSourceStateSpec
     for {
       parentTree     <- makeParentTree[F](headers)
       versionStorage <- TestStore.make[F, Epoch, VersionId]
-      versionsData   <- makeInitialVersionsData[F](versionStorage)
+      versionMap = initialVersionMap ++ versions
+      _            <- versionMap.toList.traverse { case (k, v) => versionStorage.put(k, v) }
+      versionsData <- makeInitialVersionsData[F](versionStorage)
 
       initialEpochData <- TestStore.make[F, Epoch, BlockId]
       epochBoundaryEventSourcedState <-
@@ -318,7 +318,7 @@ class VotingEventSourceStateSpec
           f(epochDataStore)
       }
 
-      initialState <- VotingEventSourceState.make[F](
+      crossEpochInitialState <- CrossEpochEventSourceState.make[F](
         headers.head.parentHeaderId.pure[F],
         parentTree,
         eventChangedStub,
@@ -330,6 +330,16 @@ class VotingEventSourceStateSpec
         proposalState,
         headers.head.id,
         defaultConfig
+      )
+
+      initialState <- VotingEventSourceState.make[F](
+        headers.head.parentHeaderId.pure[F],
+        parentTree,
+        eventChangedStub,
+        VotingEventSourceState.State[F]().pure[F],
+        defaultClocks,
+        id => storages.headers(id).pure[F],
+        crossEpochInitialState
       )
     } yield (initialState, versionsData, proposalData, headers, versionStorage)
   }
@@ -446,7 +456,7 @@ class VotingEventSourceStateSpec
         _ <- assert(proposalVersionData1.versionIdToProposal.isEmpty).pure[F]
         _ <- assert(proposalVersionData1.versionCounter == Map(() -> initialFreeVersion)).pure[F]
         _ <- assert(proposalVersionData1.versionVoting.isEmpty).pure[F]
-        _ <- assertIOBoolean(versions.getAll().map(_.isEmpty))
+        _ <- assertIOBoolean(versions.getAll().map(_.toMap == initialVersionMap))
         _ <- assert(
           proposalProposalData1.idToProposal ==
             Map(proposalRealId1 -> getProposalByPseudoId(proposalPseudoId1))
@@ -474,7 +484,7 @@ class VotingEventSourceStateSpec
         _ <- assert(proposalVersionData2.versionIdToProposal.isEmpty).pure[F]
         _ <- assert(proposalVersionData2.versionCounter == Map(() -> initialFreeVersion)).pure[F]
         _ <- assert(proposalVersionData2.versionVoting.isEmpty).pure[F]
-        _ <- assertIOBoolean(versions.getAll().map(_.isEmpty))
+        _ <- assertIOBoolean(versions.getAll().map(_.toMap == initialVersionMap))
         _ <- assert(
           proposalProposalData2.idToProposal ==
             Map(proposalRealId1 -> getProposalByPseudoId(proposalPseudoId1))
@@ -503,7 +513,7 @@ class VotingEventSourceStateSpec
         _ <- assert(proposalVersionData3.versionIdToProposal.isEmpty).pure[F]
         _ <- assert(proposalVersionData3.versionCounter == Map(() -> initialFreeVersion)).pure[F]
         _ <- assert(proposalVersionData3.versionVoting.isEmpty).pure[F]
-        _ <- assertIOBoolean(versions.getAll().map(_.isEmpty))
+        _ <- assertIOBoolean(versions.getAll().map(_.toMap == initialVersionMap))
         _ <- assert(
           proposalProposalData3.idToProposal ==
             Map(proposalRealId1 -> getProposalByPseudoId(proposalPseudoId1))
@@ -533,7 +543,7 @@ class VotingEventSourceStateSpec
         _ <- assert(proposalVersionData4.versionIdToProposal.isEmpty).pure[F]
         _ <- assert(proposalVersionData4.versionCounter == Map(() -> initialFreeVersion)).pure[F]
         _ <- assert(proposalVersionData4.versionVoting.isEmpty).pure[F]
-        _ <- assertIOBoolean(versions.getAll().map(_.isEmpty))
+        _ <- assertIOBoolean(versions.getAll().map(_.toMap == initialVersionMap))
         _ <- assert(
           proposalProposalData4.idToProposal ==
             Map(proposalRealId1 -> getProposalByPseudoId(proposalPseudoId1))
@@ -649,19 +659,20 @@ class VotingEventSourceStateSpec
   test("Make version from voted proposal, vote version to add version starts information") {
     withMock {
       val proposalPseudoId1 = 1
+      val currentVersion = initialFreeVersion - 1
       val plan: List[(Seq[Int], Int, Int)] =
         noPlanForEpoch ++
         List(
-          (Seq(proposalPseudoId1), 0, 0),
+          (Seq(proposalPseudoId1), currentVersion, 0),
           noPlan,
           noPlan,
           noPlan,
           noPlan,
-          (Seq(), 0, 0),
+          (Seq(), currentVersion, -9999), // we shall ignore non-exist proposal voting
           noPlan,
           noPlan,
           noPlan,
-          (Seq(), 0, 0)
+          (Seq(), currentVersion, 0)
         ) ++
         noPlanForEpoch ++
         noPlanForEpoch ++
@@ -691,7 +702,7 @@ class VotingEventSourceStateSpec
         ) ++
         List(
           (Seq(), initialFreeVersion, 0), // index1
-          (Seq(), initialFreeVersion, 0),
+          (Seq(), initialFreeVersion, -9999), // we shall ignore non-exist proposal voting
           (Seq(), initialFreeVersion, 0),
           (Seq(), initialFreeVersion, 0),
           (Seq(), initialFreeVersion, 0),
@@ -745,8 +756,9 @@ class VotingEventSourceStateSpec
         _ <- assert(proposalForVersion1 == getProposalByPseudoId(proposalPseudoId1)).pure[F]
         versionCounter1 = votingDataCopy1.versionCounter(())
         _ <- assert(versionCounter1 == initialFreeVersion + 1).pure[F]
+        // also check that voting for current version has no effect at all
         _ <- assert(votingDataCopy1.versionVoting == Map((index1Epoch, initialFreeVersion) -> 1)).pure[F]
-        _ <- assert(epochToVersion.isEmpty).pure[F]
+        _ = assert(epochToVersion == initialVersionMap)
 
         index2 = epochLen.toInt * 8 + epochLen.toInt - 1
         atHeader2 = headers(index2)
@@ -768,7 +780,7 @@ class VotingEventSourceStateSpec
               (index2Epoch, initialFreeVersion)     -> 10
             )
         ).pure[F]
-        _ <- assert(epochToVersion2.isEmpty).pure[F]
+        _ = assert(epochToVersion2 == initialVersionMap)
 
         index3 = headers.size - 1
         atHeader3 = headers(index3)
@@ -790,7 +802,8 @@ class VotingEventSourceStateSpec
               (index2Epoch, initialFreeVersion)     -> 10
             )
         ).pure[F]
-        _ <- assert(epochToVersion3 == Map((index3Epoch + defaultConfig.versionSwitchWindow) -> initialFreeVersion))
+        expectedMap3 = initialVersionMap ++ Map((index3Epoch + defaultConfig.versionSwitchWindow) -> initialFreeVersion)
+        _ <- assert(epochToVersion3 == expectedMap3)
           .pure[F]
 
         randomPoint1 = Random.nextInt(plan.size - 1)
@@ -839,7 +852,7 @@ object VotingEventSourceStateSpec {
   private def getDataFromStorage[F[_]: Async, Key, T](storage: Store[F, Key, T]): F[Map[Key, T]] =
     storage.getAll().map(_.toMap)
 
-  implicit class VersionsDataOps[F[_]: Async](data: VotingEventSourceState.VotingData[F]) {
+  implicit class VersionsDataOps[F[_]: Async](data: VotingData[F]) {
 
     def makeCopy: F[StoragesData] =
       for {

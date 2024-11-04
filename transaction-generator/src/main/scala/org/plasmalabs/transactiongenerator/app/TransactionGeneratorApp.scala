@@ -34,8 +34,8 @@ object TransactionGeneratorApp
 
   override def run(args: Args, config: Config, appConfig: ApplicationConfig): IO[Unit] =
     for {
-      _                            <- Logger[F].info(show"Launching Transaction Generator with appConfig=$appConfig")
-      implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F]
+      _               <- Logger[F].info(show"Launching Transaction Generator with appConfig=$appConfig")
+      given Random[F] <- SecureRandom.javaSecuritySecureRandom[F]
       // Initialize gRPC Clients
       clientAddress <- parseClientAddress(appConfig)
       _             <- Logger[F].info(show"Initializing client=$clientAddress")
@@ -54,7 +54,7 @@ object TransactionGeneratorApp
         else Fs2TransactionGenerator.emptyMetadata[F]
       transactionStream <- Fs2TransactionGenerator
         .make[F](wallet, costCalculator, metadataF)
-        .flatMap(_.generateTransactions)
+        .flatMap(_.generateTransactions())
       _ <- NodeGrpc.Client
         .make[F](clientAddress._1, clientAddress._2, clientAddress._3)
         .use(client =>
@@ -115,7 +115,7 @@ object TransactionGeneratorApp
       .drain
 
   implicit private val showMempool: Show[Set[TransactionId]] =
-    catsStdShowForSet(showIoTransactionId)
+    catsStdShowForSet(using showIoTransactionId)
 
   /**
    * Periodically poll and log the state of the mempool.

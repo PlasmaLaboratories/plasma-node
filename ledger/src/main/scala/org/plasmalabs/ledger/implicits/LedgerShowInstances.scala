@@ -41,6 +41,11 @@ trait LedgerShowInstances {
       "TransactionRegistrationError"
     case BodySemanticErrors.RewardTransactionError(_) =>
       "RewardTransactionError"
+    case BodySemanticErrors.ProposalTransactionAlreadyUsedId(_) =>
+      "ProposalTransactionAlreadyUsedId"
+    case BodySemanticErrors.DoubleProposalIdTransaction =>
+      "DoubleProposalTransaction"
+
   }
 
   implicit val showBodyAuthorizationError: Show[BodyAuthorizationError] = {

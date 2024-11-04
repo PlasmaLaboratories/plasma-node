@@ -19,13 +19,13 @@ import org.plasmalabs.common.application.IOBaseApp
 import org.plasmalabs.config.ApplicationConfig
 import org.plasmalabs.config.ApplicationConfig.Node.KnownPeer
 import org.plasmalabs.consensus._
-import org.plasmalabs.consensus.interpreters.VotingEventSourceState.VotingData
+import org.plasmalabs.consensus.interpreters.CrossEpochEventSourceState.VotingData
 import org.plasmalabs.consensus.interpreters._
 import org.plasmalabs.consensus.models.{BlockId, VrfConfig}
 import org.plasmalabs.crypto.hash.Blake2b512
 import org.plasmalabs.crypto.signing.Ed25519
 import org.plasmalabs.eventtree.ParentChildTree
-import org.plasmalabs.grpc._
+import org.plasmalabs.grpc.{HealthCheckGrpc, _}
 import org.plasmalabs.healthcheck.HealthCheck
 import org.plasmalabs.indexer._
 import org.plasmalabs.interpreters._
@@ -34,6 +34,7 @@ import org.plasmalabs.ledger.interpreters.ProposalEventSourceState.ProposalData
 import org.plasmalabs.ledger.interpreters._
 import org.plasmalabs.models.ProposalConfig
 import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.protocol.BigBangConstants._
 import org.plasmalabs.models.utility.HasLength.instances.byteStringLength
 import org.plasmalabs.models.utility._
 import org.plasmalabs.networking.p2p.LocalPeer
@@ -80,14 +81,14 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
   // scalastyle:off method.length
   private def applicationResource: Resource[F, Unit] =
     for {
-      implicit0(syncF: Async[F])   <- Resource.pure(implicitly[Async[F]])
-      implicit0(logger: Logger[F]) <- Resource.pure(Slf4jLogger.getLoggerFromName[F]("Node.Node"))
+      given Async[F]  <- Resource.pure(implicitly[Async[F]])
+      given Logger[F] <- Resource.pure(Slf4jLogger.getLoggerFromName[F]("Node.Node"))
 
       _ <- Sync[F].delay(LoggingUtils.initialize(args)).toResource
       _ <- Logger[F].info(show"Launching node with args=$args").toResource
       _ <- Logger[F].info(show"Node configuration=$appConfig").toResource
 
-      implicit0(metrics: Stats[F]) <- KamonStatsRef.make[F]
+      given Stats[F] <- KamonStatsRef.make[F]
 
       cryptoResources            <- CryptoResources.make[F].toResource
       (bigBangBlock, dataStores) <- DataStoresInit.initializeData(appConfig)
@@ -99,12 +100,12 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         .value
         .toResource
 
-      implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F].toResource
+      given Random[F] <- SecureRandom.javaSecuritySecureRandom[F].toResource
 
       proposalConfig <- ProposalConfig().pure[F].toResource
       p2pSK <- OptionT(metadata.readP2PSK)
         .getOrElseF(
-          random
+          Random[F]
             .nextBytes(32)
             .flatMap(seed =>
               cryptoResources.ed25519
@@ -183,7 +184,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           currentEventIdGetterSetters.blockHeightTreeP2P.set
         )
         .toResource
-      _ <- OptionT(blockHeightTreeLocal.useStateAt(canonicalHeadId)(_.apply(BigBang.Height)))
+      _ <- OptionT(blockHeightTreeLocal.useStateAt(canonicalHeadId)(_.apply(BigBangHeight)))
         .ensure(new IllegalStateException("The configured genesis block does not match the stored genesis block."))(
           _ === bigBangBlockId
         )
@@ -525,11 +526,11 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         versionInfoLocal
       )
 
-      votingLocal <- VotingEventSourceState
+      crossEpochForkLocal <- CrossEpochEventSourceState
         .make[F](
-          currentEventIdGetterSetters.votingLocal.get(),
+          currentEventIdGetterSetters.crossEpochForkLocal.get(),
           blockIdTree,
-          currentEventIdGetterSetters.votingLocal.set,
+          currentEventIdGetterSetters.crossEpochForkLocal.set,
           votingLocalInitialState.pure[F],
           clock,
           dataStores.headers.getOrRaise,
@@ -538,6 +539,18 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           proposalEventLocal,
           bigBangBlock.header.id,
           proposalConfig
+        )
+        .toResource
+
+      votingForkLocal <- VotingEventSourceState
+        .make[F](
+          currentEventIdGetterSetters.votingForkLocal.get(),
+          blockIdTree,
+          currentEventIdGetterSetters.votingForkLocal.set,
+          VotingEventSourceState.State[F]().pure[F],
+          clock,
+          dataStores.headers.getOrRaise,
+          crossEpochForkLocal
         )
         .toResource
 
@@ -572,11 +585,11 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         versionInfoP2P
       )
 
-      votingP2P <- VotingEventSourceState
+      crossEpochForkP2P <- CrossEpochEventSourceState
         .make[F](
-          currentEventIdGetterSetters.votingP2P.get(),
+          currentEventIdGetterSetters.crossEpochForkP2P.get(),
           blockIdTree,
-          currentEventIdGetterSetters.votingP2P.set,
+          currentEventIdGetterSetters.crossEpochForkP2P.set,
           votingP2PInitialState.pure[F],
           clock,
           dataStores.headers.getOrRaise,
@@ -585,6 +598,18 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           proposalEventP2P,
           bigBangBlock.header.id,
           proposalConfig
+        )
+        .toResource
+
+      votingForkP2P <- VotingEventSourceState
+        .make[F](
+          currentEventIdGetterSetters.votingForkP2P.get(),
+          blockIdTree,
+          currentEventIdGetterSetters.votingForkP2P.set,
+          VotingEventSourceState.State[F]().pure[F],
+          clock,
+          dataStores.headers.getOrRaise,
+          crossEpochForkLocal
         )
         .toResource
 
@@ -603,8 +628,10 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         registrationAccumulatorStateLocal,
         registrationAccumulatorStateP2P,
         txIdToBlockIdTree,
-        votingLocal,
-        votingP2P,
+        crossEpochForkLocal,
+        crossEpochForkP2P,
+        votingForkLocal,
+        votingForkP2P,
         proposalEventLocal,
         proposalEventP2P
       )
@@ -629,7 +656,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         clock,
         boxStateLocal,
         registrationAccumulatorLocal,
-        votingLocal,
+        crossEpochForkLocal,
         proposalEventLocal,
         proposalConfig,
         appConfig.node.maxSupportedVersion
@@ -646,7 +673,7 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         clock,
         boxStateP2P,
         registrationAccumulatorP2P,
-        votingP2P,
+        crossEpochForkP2P,
         proposalEventLocal,
         proposalConfig,
         appConfig.node.maxSupportedVersion
@@ -733,10 +760,18 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
         protocolConfig
       )
 
+      regTestConfigOpt = appConfig.node.bigBang match {
+        case p: ApplicationConfig.Node.BigBangs.Private => p.regtestConfig
+        case _                                          => None
+      }
+
+      _ <- regTestConfigOpt.fold(ifEmpty = Logger[F].debug(show"Regtest is disabled").toResource) { config =>
+        Logger[F].error(s"Regtest is enabled: with parameters $config").toResource
+      }
+
       _ <- EthereumJsonRpc.serve(appConfig.node.ethereumJsonRpc.bindHost, appConfig.node.ethereumJsonRpc.bindPort)(
         new EthereumJsonRpcImpl(localBlockchain)
       )
-
       // Finally, run the program
       _ <- Blockchain
         .make[F](
@@ -750,14 +785,11 @@ class ConfiguredNodeApp(args: Args, appConfig: ApplicationConfig) {
           appConfig.node.rpc.bindPort,
           appConfig.node.rpc.networkControl,
           indexerServices ::: healthServices,
-          (p2pConfig.publicHost, p2pConfig.publicPort).mapN(KnownPeer),
+          (p2pConfig.publicHost, p2pConfig.publicPort).mapN(KnownPeer.apply),
           p2pConfig.networkProperties,
           appConfig.node.votedVersion,
           appConfig.node.votedProposal,
-          appConfig.node.bigBang match {
-            case p: ApplicationConfig.Node.BigBangs.Private => p.regtestEnabled
-            case _                                          => false
-          }
+          regTestConfigOpt
         )
         .parProduct(indexerOpt.traverse(Replicator.background[F]).void)
         .parProduct(

@@ -22,7 +22,7 @@ class LevelDbStoreSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
 
   implicit val logger: Logger[F] = new NoOpLogger[F]
 
-  ResourceFixture[Path](Resource.make(Files[F].createTempDirectory)(Files[F].deleteRecursively))
+  ResourceFunFixture[Path](Resource.make(Files[F].createTempDirectory)(Files[F].deleteRecursively))
     .test("Save, Contains, Read, Delete, GetAll") { testPath =>
       LevelDbStore.makeFactory[F]().flatMap(LevelDbStore.makeDb[F](testPath, _)).use { dbUnderTest =>
         for {
@@ -66,7 +66,7 @@ class LevelDbStoreSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
       }
     }
 
-  ResourceFixture[Path](Resource.make(Files[F].createTempDirectory)(Files[F].deleteRecursively))
+  ResourceFunFixture[Path](Resource.make(Files[F].createTempDirectory)(Files[F].deleteRecursively))
     .test("Malformed data throws exceptions") { testPath =>
       LevelDbStore.makeFactory[F]().flatMap(LevelDbStore.makeDb[F](testPath, _)).use { dbUnderTest =>
         for {

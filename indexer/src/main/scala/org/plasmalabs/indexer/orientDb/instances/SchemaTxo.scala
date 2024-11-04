@@ -61,7 +61,7 @@ object SchemaTxo {
           readOnly = true,
           notNull = true
         )
-        .withIndex[Txo](Field.TxoIndex, Field.TxoId)(OIndexable.Instances.txo)
+        .withIndex[Txo](Field.TxoIndex, Field.TxoId)(using OIndexable.Instances.txo)
         .withLink(Field.SpendingTransaction, OType.LINK, SchemaIoTransaction.Field.SchemaName)
         .withProperty(
           Field.SpendingInputIndex,
