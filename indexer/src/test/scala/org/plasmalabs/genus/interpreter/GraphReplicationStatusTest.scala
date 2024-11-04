@@ -1,4 +1,4 @@
-package xyz.stratalab.genus.interpreter
+package org.plasmalabs.genus.interpreter
 
 import cats.effect.IO
 import cats.implicits._

@@ -16,11 +16,15 @@ import org.plasmalabs.sdk.models.box.Value.ConfigProposal
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.typeclasses.implicits._
 import org.typelevel.log4cats.Logger
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import java.nio.ByteBuffer
 
 object ProposalEventSourceState {
   type ProposalEventSourceStateType[F[_]] = EventSourcedState[F, ProposalData[F], BlockId]
+
+  implicit private def logger[F[_]: Async]: Logger[F] =
+    Slf4jLogger.getLoggerFromName[F]("Forking.ProposalState")
 
   case class ProposalData[F[_]](
     idToProposal:              Store[F, ProposalId, ConfigProposal],
@@ -30,7 +34,7 @@ object ProposalEventSourceState {
   def getProposalId(proposal: ConfigProposal): ProposalId =
     Math.abs(ByteBuffer.wrap(new Blake2b256().hash(proposal.toByteArray)).getInt)
 
-  def make[F[_]: Async: Logger](
+  def make[F[_]: Async](
     currentBlockId:      F[BlockId],
     parentChildTree:     ParentChildTree[F, BlockId],
     currentEventChanged: BlockId => F[Unit],

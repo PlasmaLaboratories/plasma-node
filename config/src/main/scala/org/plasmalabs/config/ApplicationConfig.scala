@@ -146,8 +146,10 @@ object ApplicationConfig {
         stakerCount:      Int,
         stakes:           Option[List[BigInt]],
         localStakerIndex: Option[Int],
-        regtestEnabled:   Boolean = false
+        regtestConfig:    Option[RegtestConfig] = None
       ) extends BigBang
+
+      case class RegtestConfig(permissiveBlockProduction: Boolean = false)
 
       case class Public(
         genesisId:  BlockId,

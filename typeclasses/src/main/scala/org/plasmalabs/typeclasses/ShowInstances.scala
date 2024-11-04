@@ -9,7 +9,7 @@ import org.plasmalabs.models._
 import org.plasmalabs.models.utility._
 import org.plasmalabs.node.models.BlockBody
 import org.plasmalabs.sdk.models.box.{Box, Value}
-import org.plasmalabs.sdk.models.transaction.SpentTransactionOutput
+import org.plasmalabs.sdk.models.transaction.{SpentTransactionOutput, UnspentTransactionOutput}
 import org.plasmalabs.sdk.models.{GroupId, SeriesId, TransactionId, TransactionOutputAddress}
 import quivr.models.Int128
 
@@ -81,6 +81,9 @@ trait ShowInstances {
 
   implicit val showStxo: Show[SpentTransactionOutput] =
     stxo => show"Stxo(utxo=${stxo.address}, value=${stxo.value})"
+
+  implicit val showUtxo: Show[UnspentTransactionOutput] =
+    utxo => show"Utxo(value=${utxo.value})"
 
   implicit val showBox: Show[Box] =
     box => show"Box(value=${box.value})"

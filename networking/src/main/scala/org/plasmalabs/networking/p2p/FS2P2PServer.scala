@@ -29,7 +29,7 @@ object FS2P2PServer {
     ed25519Resource:         Resource[F, Ed25519]
   ): Resource[F, P2PServer[F]] =
     for {
-      given Logger[F] <- Slf4jLogger.fromName("Bifrost.P2P").toResource
+      given Logger[F] <- Slf4jLogger.fromName("Node.P2P").toResource
       _               <- eventLogger(peersStatusChangesTopic)
       sockets         <- socketsStream[F](host, port)
       peerInfoExtractor <- PeerIdentity

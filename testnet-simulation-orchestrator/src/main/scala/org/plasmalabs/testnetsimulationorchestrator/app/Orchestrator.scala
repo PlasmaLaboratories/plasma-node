@@ -241,7 +241,7 @@ object Orchestrator
           TransactionCostCalculatorInterpreter.make[F](TransactionCostConfig()),
           Fs2TransactionGenerator.randomMetadata[F]
         )
-        .flatMap(_.generateTransactions)
+        .flatMap(_.generateTransactions())
       // Build the stream
       runStreamF = transactionStream
         // Send 1 transaction per _this_ duration

@@ -39,8 +39,13 @@ object Fs2TransactionGenerator {
 
         implicit private val logger: Logger[F] = Slf4jLogger.getLoggerFromName[F]("TransactionGenerator")
 
-        def generateTransactions: F[Stream[F, IoTransaction]] =
-          Stream.unfoldEval(wallet)(nextTransactionOf[F](_, costCalculator, metadataF).value).pure[F]
+        def generateTransactions(
+          specialValues: List[UnspentTransactionOutput] = List.empty
+        ): F[Stream[F, IoTransaction]] =
+          Stream
+            .unfoldEval((wallet, specialValues))(nextTransactionOf[F](_, costCalculator, metadataF).value)
+            .evalMap(tx => provTx(tx))
+            .pure[F]
       }
     )
 
@@ -49,13 +54,21 @@ object Fs2TransactionGenerator {
    * If the wallet is large, consolidate UTxOs.
    */
   private def nextTransactionOf[F[_]: Async: Logger](
-    wallet:         Wallet,
-    costCalculator: TransactionCostCalculator,
-    metadataF:      F[SmallData]
-  ): OptionT[F, (IoTransaction, Wallet)] =
-    (if (wallet.spendableBoxes.size < 25) generateExpandingTransaction(wallet, costCalculator, metadataF)
-     else generateConsolidatingTransaction(wallet, costCalculator, metadataF))
-      .map(transaction => transaction -> applyTransaction(wallet)(transaction))
+    walletAndAdditional: (Wallet, List[UnspentTransactionOutput]),
+    costCalculator:      TransactionCostCalculator,
+    metadataF:           F[SmallData]
+  ): OptionT[F, (IoTransaction, (Wallet, List[UnspentTransactionOutput]))] = {
+    val (wallet, additional) = walletAndAdditional
+    val (element, nextAdditional) = additional match {
+      case head :: next => (Option(head), next)
+      case Nil          => (None, Nil)
+    }
+    (if (wallet.spendableBoxes.size < 25) {
+       generateExpandingTransaction(wallet, costCalculator, metadataF, element)
+     } else
+       generateConsolidatingTransaction(wallet, costCalculator, metadataF, element))
+      .map(transaction => transaction -> (applyTransaction(wallet)(transaction), nextAdditional))
+  }
 
   /**
    * Constructs a Transaction which attempts to split a UTxO into two
@@ -63,15 +76,17 @@ object Fs2TransactionGenerator {
   private def generateExpandingTransaction[F[_]: Async: Logger](
     wallet:         Wallet,
     costCalculator: TransactionCostCalculator,
-    metadataF:      F[SmallData]
+    metadataF:      F[SmallData],
+    additional:     Option[UnspentTransactionOutput]
   ): OptionT[F, IoTransaction] =
     pickSingleInput[F](wallet).semiflatMap { case (inputBoxId, inputBox) =>
       for {
         predicate <- Attestation.Predicate(inputBox.lock.getPredicate, Nil).pure[F]
         unprovenAttestation = Attestation(Attestation.Value.Predicate(predicate))
         inputs = List(SpentTransactionOutput(inputBoxId, unprovenAttestation, inputBox.value))
-        outputs           <- createManyOutputs[F](inputBox)
-        provenTransaction <- formTransaction(costCalculator, metadataF)(inputs, outputs)
+        outputs <- createManyOutputs[F](inputBox)
+        outputsWithAdd = additional.fold(outputs)(outputs :+ _)
+        provenTransaction <- formTransaction(costCalculator, metadataF)(inputs, outputsWithAdd)
       } yield provenTransaction
     }
 
@@ -81,7 +96,8 @@ object Fs2TransactionGenerator {
   private def generateConsolidatingTransaction[F[_]: Async: Logger](
     wallet:         Wallet,
     costCalculator: TransactionCostCalculator,
-    metadataF:      F[SmallData]
+    metadataF:      F[SmallData],
+    additional:     Option[UnspentTransactionOutput]
   ): OptionT[F, IoTransaction] =
     OptionT
       .pure[F](
@@ -95,21 +111,17 @@ object Fs2TransactionGenerator {
           inputBox.value
         )
       })
-      .semiflatMap(inputs =>
-        formTransaction(costCalculator, metadataF)(
-          inputs,
-          List(
-            UnspentTransactionOutput(
-              HeightLockOneSpendingAddress,
-              Value.defaultInstance.withLvl(
-                Value.LVL(
-                  inputs.foldMap(_.value.getLvl.quantity): BigInt
-                )
-              )
-            )
+      .semiflatMap { inputs =>
+        val value = inputs.foldMap(_.value.getLvl.quantity: BigInt)
+        val outputs = List(
+          UnspentTransactionOutput(
+            HeightLockOneSpendingAddress,
+            Value.defaultInstance.withLvl(Value.LVL(value))
           )
         )
-      )
+        val outputsWithAdd = additional.fold(outputs)(outputs :+ _)
+        formTransaction(costCalculator, metadataF)(inputs, outputsWithAdd)
+      }
 
   /**
    * Constructs a proven Transaction from the given inputs and outputs
@@ -126,6 +138,10 @@ object Fs2TransactionGenerator {
       unprovenTransaction <- applyFee(costCalculator)(
         IoTransaction.defaultInstance.withInputs(inputs).withOutputs(outputs).withDatum(datum)
       )
+    } yield unprovenTransaction
+
+  private def provTx[F[_]: Async: Logger](unprovenTransaction: IoTransaction): F[IoTransaction] = {
+    val txF = for {
       _     <- Logger[F].info(show"Spending ${unprovenTransaction.inputs.mkString_(", ")}")
       proof <- Prover.heightProver[F].prove((), unprovenTransaction.signable)
       provenTransaction = unprovenTransaction
@@ -142,6 +158,13 @@ object Fs2TransactionGenerator {
         )
         .embedId
     } yield provenTransaction
+    txF.flatTap { tx =>
+      Logger[F].debug(
+        show"Form tx: ${tx.id}, config: ${tx.outputs.exists(_.value.value.isConfigProposal)}, inputs ${tx.inputs
+            .mkString_(", ")}, outputs: ${tx.outputs.mkString_(", ")}"
+      )
+    }
+  }
 
   /**
    * Selects a single spendable box from the wallet

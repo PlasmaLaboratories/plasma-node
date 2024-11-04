@@ -8,7 +8,9 @@ import fs2._
 import org.plasmalabs.algebras.ClockAlgebra.implicits._
 import org.plasmalabs.algebras.{ClockAlgebra, Stats}
 import org.plasmalabs.catsutils._
-import org.plasmalabs.consensus.interpreters.{VotingEventSourceState, _}
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.consensus.interpreters.CrossEpochEventSourceState.VotingData
+import org.plasmalabs.consensus.interpreters._
 import org.plasmalabs.consensus.models.{BlockId, ProtocolVersion, SlotData, SlotId, StakingAddress}
 import org.plasmalabs.eventtree.EventSourcedState
 import org.plasmalabs.ledger.algebras.TransactionRewardCalculatorAlgebra
@@ -47,15 +49,15 @@ object BlockProducer {
    *                      Under regtest mode, this semantically blocks until an RPC is invoked granting permission
    */
   def make[F[_]: Async: Stats](
-    parentHeaders:      Stream[F, SlotData],
-    staker:             StakingAlgebra[F],
-    clock:              ClockAlgebra[F],
-    blockPacker:        BlockPackerAlgebra[F],
-    rewardCalculator:   TransactionRewardCalculatorAlgebra,
-    constructionPermit: F[Unit],
-    votingLocal:        EventSourcedState[F, VotingEventSourceState.VotingData[F], BlockId],
-    votedVersionF:      F[VersionId],
-    votedProposalF:     F[ProposalId]
+    parentHeaders:       Stream[F, SlotData],
+    staker:              StakingAlgebra[F],
+    clock:               ClockAlgebra[F],
+    blockPacker:         BlockPackerAlgebra[F],
+    rewardCalculator:    TransactionRewardCalculatorAlgebra,
+    constructionPermit:  F[Unit],
+    crossEpochForkLocal: EventSourcedState[F, VotingData[F], BlockId],
+    votedVersionF:       F[VersionId],
+    votedProposalF:      F[ProposalId]
   ): F[BlockProducerAlgebra[F]] =
     (staker.address, Ref.of(0L)).mapN((address, lastUsedSlotRef) =>
       new Impl[F](
@@ -67,24 +69,24 @@ object BlockProducer {
         rewardCalculator,
         lastUsedSlotRef,
         constructionPermit,
-        votingLocal,
+        crossEpochForkLocal,
         votedVersionF,
         votedProposalF
       )
     )
 
   private class Impl[F[_]: Async: Stats](
-    stakerAddress:      StakingAddress,
-    parentHeaders:      Stream[F, SlotData],
-    staker:             StakingAlgebra[F],
-    clock:              ClockAlgebra[F],
-    blockPacker:        BlockPackerAlgebra[F],
-    rewardCalculator:   TransactionRewardCalculatorAlgebra,
-    lastUsedSlotRef:    Ref[F, Slot],
-    constructionPermit: F[Unit],
-    votingLocal:        EventSourcedState[F, VotingEventSourceState.VotingData[F], BlockId],
-    votedVersionF:      F[VersionId],
-    votedProposalF:     F[ProposalId]
+    stakerAddress:       StakingAddress,
+    parentHeaders:       Stream[F, SlotData],
+    staker:              StakingAlgebra[F],
+    clock:               ClockAlgebra[F],
+    blockPacker:         BlockPackerAlgebra[F],
+    rewardCalculator:    TransactionRewardCalculatorAlgebra,
+    lastUsedSlotRef:     Ref[F, Slot],
+    constructionPermit:  F[Unit],
+    crossEpochForkLocal: EventSourcedState[F, VotingData[F], BlockId],
+    votedVersionF:       F[VersionId],
+    votedProposalF:      F[ProposalId]
   ) extends BlockProducerAlgebra[F] {
 
     implicit private val logger: SelfAwareStructuredLogger[F] =
@@ -150,7 +152,7 @@ object BlockProducer {
         timestamp <- (clock.slotToTimestamps(nextHit.slot), clock.currentTimestamp)
           .mapN((boundary, currentTimestamp) => currentTimestamp.min(boundary.last).max(boundary.head))
         epoch         <- clock.epochOf(nextHit.slot)
-        headerVersion <- votingLocal.useStateAt(parentId)(_.versionAlgebra.getVersionForEpoch(epoch))
+        headerVersion <- crossEpochForkLocal.useStateAt(parentId)(_.versionAlgebra.getVersionForEpoch(epoch))
         votedVersion  <- votedVersionF
         votedProposal <- votedProposalF
         protocolVersion = ProtocolVersion()
@@ -162,6 +164,7 @@ object BlockProducer {
         eta: Eta = Sized.strictUnsafe[ByteString, Eta.Length](nextHit.cert.eta)
         _           <- Logger[F].info("Certifying block")
         maybeHeader <- staker.certifyBlock(parentSlotData.slotId, nextHit.slot, blockMaker, eta)
+        _           <- Logger[F].debug(show"Created maybe block header ${maybeHeader.map(_.id)}")
         result <- OptionT
           .fromOption[F](maybeHeader)
           .map(FullBlock(_, fullBody))

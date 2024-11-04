@@ -544,7 +544,6 @@ class BlockCheckerTest extends CatsEffectSuite with ScalaCheckEffectSuite with A
           val chainSelectionAlgebra = mock[ChainSelectionAlgebra[F, BlockId, SlotData]]
 
           (headerStore.contains).expects(*).rep(headers.size.toInt).returning(true.pure[F])
-//          ((() => validators.header.validate)).expects(*).never()
 
           val message = headers.map(UnverifiedBlockHeader(hostId, _, 0))
 

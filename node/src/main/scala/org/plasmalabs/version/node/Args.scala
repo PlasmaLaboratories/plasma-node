@@ -117,7 +117,7 @@ object Args {
     @arg(
       doc = "Enables a testing mode for the node."
     )
-    regtest: Flag
+    blockRegtestPermission: Option[Boolean]
   )
 
   @main

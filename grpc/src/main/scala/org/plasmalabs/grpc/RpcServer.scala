@@ -37,14 +37,14 @@ object RpcServer {
     case TransactionSyntaxError.InvalidDataLength           => "InvalidDataLength"
     case TransactionSyntaxError.InvalidUpdateProposal(_)    => "InvalidUpdateProposal"
     case TransactionSyntaxError.InconsistentNetworkIDs(ids) => show"InconsistentNetworkIDs(ids=$ids, size=${ids.size})"
+    case TransactionSyntaxError.IncompatibleMerge(_, _)     => "IncompatibleMerge"
     case TransactionSyntaxError.InvalidMergingStatement(_)  => "InvalidMergingStatement"
     case TransactionSyntaxError.NonDistinctMergingInput(_)  => "NonDistinctMergingInput"
-    case TransactionSyntaxError.IncompatibleMerge(_, _)     => "IncompatibleMerge"
   }
 
   // scalastyle:off method.length
   /**
-   * Interpreter which serves Topl RPC data using local blockchain interpreters
+   * Interpreter which serves RPC data using local blockchain interpreters
    */
   def make[F[_]: Async](blockchain: BlockchainCore[F]): F[NodeRpc[F, Stream[F, *]]] =
     Async[F].delay {
