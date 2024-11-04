@@ -6,7 +6,6 @@ import fs2._
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.NodeRpc
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
-import org.plasmalabs.indexer.interpreter.NodeBlockFetcher
 import org.plasmalabs.indexer.model.GEs._
 import org.plasmalabs.indexer.services.BlockData
 import org.plasmalabs.models.generators.consensus.ModelGenerators._
@@ -31,10 +30,10 @@ class NodeBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
   private val nodeBlockFetcher = NodeBlockFetcher.make[F](toplRpc, 1)
 
   test("On no block at given height, a None should be returned") {
-    PropF.forAllF { height: Long =>
+    PropF.forAllF { (height: Long) =>
       withMock {
 
-        (toplRpc.blockIdAtHeight _)
+        (toplRpc.blockIdAtHeight)
           .expects(height)
           .returning(Option.empty[BlockId].pure[F])
           .once()
@@ -57,17 +56,17 @@ class NodeBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
     PropF.forAllF { (height: Long, blockId: BlockId) =>
       withMock {
 
-        (toplRpc.blockIdAtHeight _)
+        (toplRpc.blockIdAtHeight)
           .expects(height)
           .returning(blockId.some.pure[F])
           .once()
 
-        (toplRpc.fetchBlockHeader _)
+        (toplRpc.fetchBlockHeader)
           .expects(blockId)
           .returning(Option.empty[BlockHeader].pure[F])
           .once()
 
-        (toplRpc.fetchBlockBody _)
+        (toplRpc.fetchBlockBody)
           .expects(blockId)
           .returning(BlockBody().some.pure[F])
           .once()
@@ -90,17 +89,17 @@ class NodeBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
     PropF.forAllF { (height: Long, blockId: BlockId, blockHeader: BlockHeader) =>
       withMock {
 
-        (toplRpc.blockIdAtHeight _)
+        (toplRpc.blockIdAtHeight)
           .expects(height)
           .returning(blockId.some.pure[F])
           .once()
 
-        (toplRpc.fetchBlockHeader _)
+        (toplRpc.fetchBlockHeader)
           .expects(blockId)
           .returning(blockHeader.some.pure[F])
           .once()
 
-        (toplRpc.fetchBlockBody _)
+        (toplRpc.fetchBlockBody)
           .expects(blockId)
           .returning(Option.empty[BlockBody].pure[F])
           .once()
@@ -134,22 +133,22 @@ class NodeBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
 
           val blockBody = BlockBody(Seq(transactionId))
 
-          (toplRpc.blockIdAtHeight _)
+          (toplRpc.blockIdAtHeight)
             .expects(height)
             .returning(blockId.some.pure[F])
             .once()
 
-          (toplRpc.fetchBlockHeader _)
+          (toplRpc.fetchBlockHeader)
             .expects(blockId)
             .returning(blockHeader.some.pure[F])
             .once()
 
-          (toplRpc.fetchBlockBody _)
+          (toplRpc.fetchBlockBody)
             .expects(blockId)
             .returning(blockBody.some.pure[F])
             .once()
 
-          (toplRpc.fetchTransaction _)
+          (toplRpc.fetchTransaction)
             .expects(transactionId)
             .returning(Option.empty[IoTransaction].pure[F])
             .once()
@@ -192,27 +191,27 @@ class NodeBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
             )
           )
 
-          (toplRpc.blockIdAtHeight _)
+          (toplRpc.blockIdAtHeight)
             .expects(height)
             .returning(blockId.some.pure[F])
             .once()
 
-          (toplRpc.fetchBlockHeader _)
+          (toplRpc.fetchBlockHeader)
             .expects(blockId)
             .returning(blockHeader.some.pure[F])
             .once()
 
-          (toplRpc.fetchBlockBody _)
+          (toplRpc.fetchBlockBody)
             .expects(blockId)
             .returning(blockBody.some.pure[F])
             .once()
 
-          (toplRpc.fetchTransaction _)
+          (toplRpc.fetchTransaction)
             .expects(transactionId_01)
             .returning(transaction_01.some.pure[F])
             .once()
 
-          (toplRpc.fetchTransaction _)
+          (toplRpc.fetchTransaction)
             .expects(transactionId_02)
             .returning(Option.empty[IoTransaction].pure[F])
             .once()
@@ -258,22 +257,22 @@ class NodeBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
             )
           )
 
-          (toplRpc.blockIdAtHeight _)
+          (toplRpc.blockIdAtHeight)
             .expects(height)
             .returning(blockId.some.pure[F])
             .once()
 
-          (toplRpc.fetchBlockHeader _)
+          (toplRpc.fetchBlockHeader)
             .expects(blockId)
             .returning(blockHeader.some.pure[F])
             .once()
 
-          (toplRpc.fetchBlockBody _)
+          (toplRpc.fetchBlockBody)
             .expects(blockId)
             .returning(blockBody.some.pure[F])
             .once()
 
-          (toplRpc.fetchTransaction _)
+          (toplRpc.fetchTransaction)
             .expects(transactionId_01)
             .returning(Option.empty[IoTransaction].pure[F])
             .once()
@@ -330,32 +329,32 @@ class NodeBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
             )
           )
 
-          (toplRpc.blockIdAtHeight _)
+          (toplRpc.blockIdAtHeight)
             .expects(height)
             .returning(blockId.some.pure[F])
             .once()
 
-          (toplRpc.fetchBlockHeader _)
+          (toplRpc.fetchBlockHeader)
             .expects(blockId)
             .returning(blockHeader.some.pure[F])
             .once()
 
-          (toplRpc.fetchBlockBody _)
+          (toplRpc.fetchBlockBody)
             .expects(blockId)
             .returning(blockBody.some.pure[F])
             .once()
 
-          (toplRpc.fetchTransaction _)
+          (toplRpc.fetchTransaction)
             .expects(transactionId_01)
             .returning(transaction_01.some.pure[F])
             .once()
 
-          (toplRpc.fetchTransaction _)
+          (toplRpc.fetchTransaction)
             .expects(transactionId_02)
             .returning(transaction_02.some.pure[F])
             .once()
 
-          (toplRpc.fetchTransaction _)
+          (toplRpc.fetchTransaction)
             .expects(transactionId_03)
             .returning(transaction_03.some.pure[F])
             .once()

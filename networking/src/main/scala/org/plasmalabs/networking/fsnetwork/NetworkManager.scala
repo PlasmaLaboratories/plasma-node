@@ -141,7 +141,6 @@ object NetworkManager {
           val hostId = remotePeerIdOpt.getOrElse(HostId(ByteString.copyFrom(Random.nextBytes(hostIdBytesLen))))
           val knownPeer = KnownRemotePeer(hostId, remoteAddress, 0, 0, None)
           peersManager.sendNoWait(PeersManager.Message.AddKnownPeers(NonEmptyChain.one(knownPeer)))
-        case _ => Async[F].unit
       }
       .compile
       .drain
@@ -149,7 +148,7 @@ object NetworkManager {
 
   private def buildSaveRemotePeersFunction[F[_]: Async: Logger](
     remotePeersStore: Store[F, Unit, Seq[KnownRemotePeer]]
-  ): Set[KnownRemotePeer] => F[Unit] = { peers: Set[KnownRemotePeer] =>
+  ): Set[KnownRemotePeer] => F[Unit] = { (peers: Set[KnownRemotePeer]) =>
     Logger[F].info(show"Going to save known hosts $peers to local data storage") >>
     remotePeersStore.put((), peers.toList)
   }
@@ -161,7 +160,7 @@ object NetworkManager {
   ): Seq[KnownRemotePeer] = {
     val remoteAddressMap = remoteAddress.map { ra =>
       val id =
-        ra.p2pVK.fold(HostId(ByteString.copyFrom(Random.nextBytes(hostIdBytesLen))))(HostId)
+        ra.p2pVK.fold(HostId(ByteString.copyFrom(Random.nextBytes(hostIdBytesLen))))(HostId.apply)
       ra.remoteAddress -> KnownRemotePeer(id, ra.remoteAddress, 0, 0, None)
     }.toMap
     val remotePeersMap = remotePeers.map(p => p.address -> p).toMap

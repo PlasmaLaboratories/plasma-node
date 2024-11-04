@@ -2,7 +2,6 @@ package org.plasmalabs.indexer.model
 
 import com.google.protobuf.ByteString
 import org.plasmalabs.consensus.models.BlockId
-import org.plasmalabs.indexer.model.{GE, GEs}
 import org.plasmalabs.sdk.models.TransactionId
 
 import scala.collection.immutable.ListSet

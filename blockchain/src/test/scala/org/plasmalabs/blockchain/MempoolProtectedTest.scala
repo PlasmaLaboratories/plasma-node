@@ -93,19 +93,19 @@ class MempoolProtectedTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
       val underlying = mock[MempoolAlgebra[F]]
       val readBlockId = arbitraryBlockId.arbitrary.first
       val readMempoolGraph = MempoolGraph(Map.empty, Map.empty, Map.empty, dummyRewardCalc, dummyCostCalc)
-      (underlying.read _).expects(readBlockId).once().returns(readMempoolGraph.pure[F])
+      (underlying.read).expects(readBlockId).once().returns(readMempoolGraph.pure[F])
 
       val removeTx = arbitraryTxWithInput
-      (underlying.remove _).expects(removeTx.id).returns(().pure[F])
+      (underlying.remove).expects(removeTx.id).returns(().pure[F])
 
       val containsBlockId = arbitraryBlockId.arbitrary.first
       val containsTx = arbitraryTxWithInput
-      (underlying.contains _).expects(containsBlockId, containsTx.id).returns(true.pure[F])
+      (underlying.contains).expects(containsBlockId, containsTx.id).returns(true.pure[F])
 
       val (addedTx, fetchTransaction) = makeTransaction
       val addMempoolGraph = MempoolGraph(Map.empty, Map.empty, Map.empty, dummyRewardCalc, dummyCostCalc)
-      (underlying.read _).expects(currentBlockHeader.id).once().returns(addMempoolGraph.pure[F])
-      (underlying.add _).expects(addedTx.id).once().returns(true.pure[F])
+      (underlying.read).expects(currentBlockHeader.id).once().returns(addMempoolGraph.pure[F])
+      (underlying.add).expects(addedTx.id).once().returns(true.pure[F])
 
       val res =
         for {
@@ -156,13 +156,13 @@ class MempoolProtectedTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
         MempoolGraph(Map(txInMempool.id -> txExInMempool), Map.empty, Map.empty, dummyRewardCalc, dummyCostCalc)
 
       // first tx, no check because we didn't hit threshold
-      (underlying.read _).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
-      (costMock.costOf _).expects(addedTx).returns(499L)
-      (underlying.add _).expects(addedTx.id).once().returns(true.pure[F])
+      (underlying.read).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
+      (costMock.costOf).expects(addedTx).returns(499L)
+      (underlying.add).expects(addedTx.id).once().returns(true.pure[F])
 
       // second tx, we hit threshold, semantic check will fail
-      (underlying.read _).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
-      (costMock.costOf _).expects(addedTx).returns(500L)
+      (underlying.read).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
+      (costMock.costOf).expects(addedTx).returns(500L)
       (semanticValidationAlgebra
         .validate(_: TransactionValidationContext)(_: IoTransaction))
         .expects(*, addedTx)
@@ -235,8 +235,8 @@ class MempoolProtectedTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
         MempoolGraph(Map(txInMempool.id -> txExInMempool), Map.empty, Map.empty, dummyRewardCalc, dummyCostCalc)
 
       // Consider tx already in memorypool because did not hit useMempoolForSemanticThreshold threshold
-      (underlying.read _).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
-      (costMock.costOf _).expects(addedTx).returns(500L)
+      (underlying.read).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
+      (costMock.costOf).expects(addedTx).returns(500L)
 
       val useTxInMempoolContext = StaticTransactionValidationContext(
         currentBlockHeader.id,
@@ -265,8 +265,8 @@ class MempoolProtectedTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
         )
 
       // Do not consider tx already in memorypool because hit useMempoolForSemanticThreshold threshold
-      (underlying.read _).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
-      (costMock.costOf _).expects(addedTx).returns(1000L)
+      (underlying.read).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
+      (costMock.costOf).expects(addedTx).returns(1000L)
 
       val doNotUseTxInMempoolContext = StaticTransactionValidationContext(
         currentBlockHeader.id,
@@ -345,8 +345,8 @@ class MempoolProtectedTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
       val mempoolGraph =
         MempoolGraph(Map(txInMempool.id -> txExInMempool), Map.empty, Map.empty, dummyRewardCalc, dummyCostCalc)
 
-      (underlying.read _).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
-      (costMock.costOf _).expects(addedTx).returns(1000L)
+      (underlying.read).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
+      (costMock.costOf).expects(addedTx).returns(1000L)
 
       (semanticValidationAlgebra
         .validate(_: TransactionValidationContext)(_: IoTransaction))
@@ -414,9 +414,9 @@ class MempoolProtectedTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
       val mempoolGraph =
         MempoolGraph(Map(txInMempool.id -> txExInMempool), Map.empty, Map.empty, dummyRewardCalc, dummyCostCalc)
 
-      (underlying.read _).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
-      (costMock.costOf _).expects(addedTx).returns(1000L)
-      (underlying.add _).expects(addedTx.id).once().returns(false.pure[F])
+      (underlying.read).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
+      (costMock.costOf).expects(addedTx).returns(1000L)
+      (underlying.add).expects(addedTx.id).once().returns(false.pure[F])
 
       val res =
         for {
@@ -468,18 +468,38 @@ class MempoolProtectedTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
     val mempoolGraph =
       MempoolGraph(Map(txInMempool.id -> txExInMempool), Map.empty, Map.empty, dummyRewardCalc, dummyCostCalc)
 
-    (underlying.read _).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
+    (underlying.read)
+      .expects(currentBlockHeader.id)
+      .once()
+      .returns(mempoolGraph.pure[F])
+
     val feeBelowTxSize = 1024
     val feeBelow = (feePerKbInMempool / freeMempoolSizePercent - feePerKbInMempool - 1) * feeBelowTxSize / 1024
-    (costMock.costOf _).expects(addedTx).returns(feeBelowTxSize)
-    (rewardMock.rewardsOf _).expects(addedTx).returns(RewardQuantities(topl = Math.floor(feeBelow).toLong))
 
-    (underlying.read _).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
+    (costMock.costOf)
+      .expects(addedTx)
+      .returns(feeBelowTxSize)
+
+    (rewardMock.rewardsOf)
+      .expects(addedTx)
+      .returns(RewardQuantities(topl = Math.floor(feeBelow).toLong))
+
+    (underlying.read).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
     val feeUpperTxSize = 1024
     val feeUpper = (feePerKbInMempool / freeMempoolSizePercent - feePerKbInMempool + 1) * feeBelowTxSize / 1024
-    (costMock.costOf _).expects(addedTx).returns(feeUpperTxSize)
-    (rewardMock.rewardsOf _).expects(addedTx).returns(RewardQuantities(topl = Math.ceil(feeUpper).toLong))
-    (underlying.add _).expects(addedTx.id).once().returns(true.pure[F])
+
+    (costMock.costOf)
+      .expects(addedTx)
+      .returns(feeUpperTxSize)
+
+    (rewardMock.rewardsOf)
+      .expects(addedTx)
+      .returns(RewardQuantities(topl = Math.ceil(feeUpper).toLong))
+
+    (underlying.add)
+      .expects(addedTx.id)
+      .once()
+      .returns(true.pure[F])
 
     val res =
       for {
@@ -502,9 +522,16 @@ class MempoolProtectedTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
     res.use_
   }
 
-  test("Check fee filter") {
-    Seq(0.1, 10, 25, 50, 60, 75, 85, 90, 95, 99).traverse(feeThreshold => withMock(checkFee(feeThreshold)))
-  }
+  test("Check fee filter 0.1")(withMock(checkFee(feeThreshold = 0.1)))
+  test("Check fee filter 10")(withMock(checkFee(feeThreshold = 10)))
+  test("Check fee filter 25")(withMock(checkFee(feeThreshold = 25)))
+  test("Check fee filter 50")(withMock(checkFee(feeThreshold = 50)))
+  test("Check fee filter 60")(withMock(checkFee(feeThreshold = 60)))
+  test("Check fee filter 75")(withMock(checkFee(feeThreshold = 75)))
+  test("Check fee filter 85")(withMock(checkFee(feeThreshold = 85)))
+  test("Check fee filter 90")(withMock(checkFee(feeThreshold = 90)))
+  test("Check fee filter 95")(withMock(checkFee(feeThreshold = 95)))
+  test("Check fee filter 99")(withMock(checkFee(feeThreshold = 99)))
 
   def checkAge(ageThresholdPercent: Double, freeAgePoolPercent: Double): F[Unit] = {
     val boxIdToHeight = mock[TransactionOutputAddress => F[Option[Long]]]
@@ -529,8 +556,8 @@ class MempoolProtectedTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
     val (semanticValidationAlgebra, transactionAuthorizationVerifier) = semanticAndAuthCheckOk(addedTx)
     val rewardMock = mock[TransactionRewardCalculatorAlgebra]
     val costMock = mock[TransactionCostCalculator]
-    (costMock.costOf _).expects(addedTx).anyNumberOfTimes().returns(1)
-    (rewardMock.rewardsOf _)
+    (costMock.costOf).expects(addedTx).anyNumberOfTimes().returns(1)
+    (rewardMock.rewardsOf)
       .expects(addedTx)
       .anyNumberOfTimes()
       .returns(RewardQuantities(topl = BigInt(Math.round(Double.MaxValue))))
@@ -546,16 +573,16 @@ class MempoolProtectedTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
     val mempoolGraph =
       MempoolGraph(Map(txInMempool.id -> txExInMempool), Map.empty, Map.empty, dummyRewardCalc, dummyCostCalc)
 
-    (underlying.read _).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
+    (underlying.read).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
     val heightBellow =
       (currentHeight - (maxOldBoxAge - Math.ceil((maxOldBoxAge * freeAgePoolPercent) / 100)) + 1).toLong
-    (boxIdToHeight.apply _).expects(*).repeat(addedTxInputsSize).returns(heightBellow.some.pure[F])
+    (boxIdToHeight.apply).expects(*).repeat(addedTxInputsSize).returns(heightBellow.some.pure[F])
 
-    (underlying.read _).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
+    (underlying.read).expects(currentBlockHeader.id).once().returns(mempoolGraph.pure[F])
     val heightUpper =
       (currentHeight - (maxOldBoxAge - Math.floor((maxOldBoxAge * freeAgePoolPercent) / 100)) - 1).toLong
-    (boxIdToHeight.apply _).expects(*).repeat(addedTxInputsSize).returns(heightUpper.some.pure[F])
-    (underlying.add _).expects(addedTx.id).once().returns(true.pure[F])
+    (boxIdToHeight.apply).expects(*).repeat(addedTxInputsSize).returns(heightUpper.some.pure[F])
+    (underlying.add).expects(addedTx.id).once().returns(true.pure[F])
 
     val res =
       for {
@@ -578,14 +605,52 @@ class MempoolProtectedTest extends CatsEffectSuite with ScalaCheckEffectSuite wi
     res.use_
   }
 
-  test("Check age filter") {
-    val inputs = for {
-      ageThresholdPercent <- Seq(0.1, 10, 25, 60, 85, 90)
-      freeAgePoolPercent  <- Seq(1, 10, 50, 75, 90, 95, 99)
-    } yield (ageThresholdPercent, freeAgePoolPercent)
+  test("Check age filter 0.1 *")(withMock(checkAge(ageThresholdPercent = 0.1, freeAgePoolPercent = 1)))
+  test("Check age filter 0.1 *")(withMock(checkAge(ageThresholdPercent = 0.1, freeAgePoolPercent = 10)))
+  test("Check age filter 0.1 *")(withMock(checkAge(ageThresholdPercent = 0.1, freeAgePoolPercent = 50)))
+  test("Check age filter 0.1 *")(withMock(checkAge(ageThresholdPercent = 0.1, freeAgePoolPercent = 75)))
+  test("Check age filter 0.1 *")(withMock(checkAge(ageThresholdPercent = 0.1, freeAgePoolPercent = 90)))
+  test("Check age filter 0.1 *")(withMock(checkAge(ageThresholdPercent = 0.1, freeAgePoolPercent = 95)))
+  test("Check age filter 0.1 *")(withMock(checkAge(ageThresholdPercent = 0.1, freeAgePoolPercent = 99)))
 
-    inputs.traverse { case (ageThresholdPercent, freeAgePoolPercent) =>
-      withMock(checkAge(ageThresholdPercent, freeAgePoolPercent))
-    }
-  }
+  test("Check age filter 10 *")(withMock(checkAge(ageThresholdPercent = 10, freeAgePoolPercent = 1)))
+  test("Check age filter 10 *")(withMock(checkAge(ageThresholdPercent = 10, freeAgePoolPercent = 10)))
+  test("Check age filter 10 *")(withMock(checkAge(ageThresholdPercent = 10, freeAgePoolPercent = 50)))
+  test("Check age filter 10 *")(withMock(checkAge(ageThresholdPercent = 10, freeAgePoolPercent = 75)))
+  test("Check age filter 10 *")(withMock(checkAge(ageThresholdPercent = 10, freeAgePoolPercent = 90)))
+  test("Check age filter 10 *")(withMock(checkAge(ageThresholdPercent = 10, freeAgePoolPercent = 95)))
+  test("Check age filter 10 *")(withMock(checkAge(ageThresholdPercent = 10, freeAgePoolPercent = 99)))
+
+  test("Check age filter 25 *")(withMock(checkAge(ageThresholdPercent = 25, freeAgePoolPercent = 1)))
+  test("Check age filter 25 *")(withMock(checkAge(ageThresholdPercent = 25, freeAgePoolPercent = 10)))
+  test("Check age filter 25 *")(withMock(checkAge(ageThresholdPercent = 25, freeAgePoolPercent = 50)))
+  test("Check age filter 25 *")(withMock(checkAge(ageThresholdPercent = 25, freeAgePoolPercent = 75)))
+  test("Check age filter 25 *")(withMock(checkAge(ageThresholdPercent = 25, freeAgePoolPercent = 90)))
+  test("Check age filter 25 *")(withMock(checkAge(ageThresholdPercent = 25, freeAgePoolPercent = 95)))
+  test("Check age filter 25 *")(withMock(checkAge(ageThresholdPercent = 25, freeAgePoolPercent = 99)))
+
+  test("Check age filter 60 *")(withMock(checkAge(ageThresholdPercent = 60, freeAgePoolPercent = 1)))
+  test("Check age filter 60 *")(withMock(checkAge(ageThresholdPercent = 60, freeAgePoolPercent = 10)))
+  test("Check age filter 60 *")(withMock(checkAge(ageThresholdPercent = 60, freeAgePoolPercent = 50)))
+  test("Check age filter 60 *")(withMock(checkAge(ageThresholdPercent = 60, freeAgePoolPercent = 75)))
+  test("Check age filter 60 *")(withMock(checkAge(ageThresholdPercent = 60, freeAgePoolPercent = 90)))
+  test("Check age filter 60 *")(withMock(checkAge(ageThresholdPercent = 60, freeAgePoolPercent = 95)))
+  test("Check age filter 60 *")(withMock(checkAge(ageThresholdPercent = 60, freeAgePoolPercent = 99)))
+
+  test("Check age filter 85 *")(withMock(checkAge(ageThresholdPercent = 85, freeAgePoolPercent = 1)))
+  test("Check age filter 85 *")(withMock(checkAge(ageThresholdPercent = 85, freeAgePoolPercent = 10)))
+  test("Check age filter 85 *")(withMock(checkAge(ageThresholdPercent = 85, freeAgePoolPercent = 50)))
+  test("Check age filter 85 *")(withMock(checkAge(ageThresholdPercent = 85, freeAgePoolPercent = 75)))
+  test("Check age filter 85 *")(withMock(checkAge(ageThresholdPercent = 85, freeAgePoolPercent = 90)))
+  test("Check age filter 85 *")(withMock(checkAge(ageThresholdPercent = 85, freeAgePoolPercent = 95)))
+  test("Check age filter 85 *")(withMock(checkAge(ageThresholdPercent = 85, freeAgePoolPercent = 99)))
+
+  test("Check age filter 90 *")(withMock(checkAge(ageThresholdPercent = 90, freeAgePoolPercent = 1)))
+  test("Check age filter 90 *")(withMock(checkAge(ageThresholdPercent = 90, freeAgePoolPercent = 10)))
+  test("Check age filter 90 *")(withMock(checkAge(ageThresholdPercent = 90, freeAgePoolPercent = 50)))
+  test("Check age filter 90 *")(withMock(checkAge(ageThresholdPercent = 90, freeAgePoolPercent = 75)))
+  test("Check age filter 90 *")(withMock(checkAge(ageThresholdPercent = 90, freeAgePoolPercent = 90)))
+  test("Check age filter 90 *")(withMock(checkAge(ageThresholdPercent = 90, freeAgePoolPercent = 95)))
+  test("Check age filter 90 *")(withMock(checkAge(ageThresholdPercent = 90, freeAgePoolPercent = 99)))
+
 }

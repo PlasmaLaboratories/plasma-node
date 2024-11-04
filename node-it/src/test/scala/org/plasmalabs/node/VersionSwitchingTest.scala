@@ -118,13 +118,13 @@ class VersionSwitchingTest extends CatsEffectSuite {
             nodeCompletion.toResource.race(for {
               rpcClientA <- NodeRegTestGrpc.Client.make[F]("127.0.0.2", 9151, tls = false)
               rpcClients = List(rpcClientA)
-              implicit0(logger: Logger[F]) <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
+              given Logger[F] <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
               indexerChannelA              <- org.plasmalabs.grpc.makeChannel[F]("localhost", 9151, tls = false)
               indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
               wallet                       <- makeWallet(indexerTxServiceA)
               _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
-              implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F].toResource
+              given Random[F] <- SecureRandom.javaSecuritySecureRandom[F].toResource
               transactionGenerator1 <-
                 Fs2TransactionGenerator
                   .make[F](wallet, _ => 1000L, Fs2TransactionGenerator.emptyMetadata[F])
@@ -141,8 +141,8 @@ class VersionSwitchingTest extends CatsEffectSuite {
 
               _ <-
                 Stream
-                  .repeatEval(random.elementOf(rpcClients))
-                  .zip(Stream.evalSeq(random.shuffleList(transactionGraph1)))
+                  .repeatEval(Random[F].elementOf(rpcClients))
+                  .zip(Stream.evalSeq(Random[F].shuffleList(transactionGraph1)))
                   .evalMap { case (client, tx) => client.broadcastTransaction(tx) }
                   .compile
                   .drain

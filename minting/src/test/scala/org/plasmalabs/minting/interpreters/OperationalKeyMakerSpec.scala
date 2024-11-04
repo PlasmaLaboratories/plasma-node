@@ -74,13 +74,13 @@ class OperationalKeyMakerSpec extends CatsEffectSuite with ScalaCheckEffectSuite
         .returning(Chain("a").pure[F])
 
       (secureStore
-        .consume[SecretKeyKesProduct](_: String)(_: Persistable[SecretKeyKesProduct]))
+        .consume[SecretKeyKesProduct](_: String)(using _: Persistable[SecretKeyKesProduct]))
         .expects("a", *)
         .once()
         .returning(sk.some.pure[F])
 
       (secureStore
-        .write[SecretKeyKesProduct](_: String, _: SecretKeyKesProduct)(_: Persistable[SecretKeyKesProduct]))
+        .write[SecretKeyKesProduct](_: String, _: SecretKeyKesProduct)(using _: Persistable[SecretKeyKesProduct]))
         .expects(*, *, *)
         .once()
         .returning(Applicative[F].unit)
@@ -185,13 +185,13 @@ class OperationalKeyMakerSpec extends CatsEffectSuite with ScalaCheckEffectSuite
         .returning(Chain("a").pure[F])
 
       (secureStore
-        .consume[SecretKeyKesProduct](_: String)(_: Persistable[SecretKeyKesProduct]))
+        .consume[SecretKeyKesProduct](_: String)(using _: Persistable[SecretKeyKesProduct]))
         .expects("a", *)
         .once()
         .returning(sk.some.pure[F])
 
       (secureStore
-        .write[SecretKeyKesProduct](_: String, _: SecretKeyKesProduct)(_: Persistable[SecretKeyKesProduct]))
+        .write[SecretKeyKesProduct](_: String, _: SecretKeyKesProduct)(using _: Persistable[SecretKeyKesProduct]))
         .expects(*, *, *)
         .once()
         .returning(Applicative[F].unit)

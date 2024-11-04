@@ -277,7 +277,7 @@ object BlockPacker {
               ListSet.from(graph.unresolved.keys),
               RegistrationAccumulator.Augmentation.empty
             )
-          )((go _).tupled)
+          )((go).tupled)
           .unNone
       }
 

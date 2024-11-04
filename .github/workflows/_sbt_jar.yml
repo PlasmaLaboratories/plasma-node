@@ -43,7 +43,7 @@ jobs:
       - name: Setup SBT
         run: |
           mkdir -p $HOME/bin/sbt
-          set -eux && curl --fail --silent --location --retry 3 https://github.com/sbt/sbt/releases/download/v1.7.1/sbt-1.7.1.tgz | gunzip | tar x -C $HOME/bin/sbt
+          set -eux && curl --fail --silent --location --retry 3 https://github.com/sbt/sbt/releases/download/v1.9.9/sbt-1.9.9.tgz | gunzip | tar x -C $HOME/bin/sbt
           echo "$HOME/bin/sbt" >> $GITHUB_PATH
 
       - name: Cache sbt
@@ -58,14 +58,14 @@ jobs:
             ~/Library/Caches/Coursier/v1
           key: ${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
 
-      - name: Cache project
-        uses: actions/cache@v3
-        with:
-          path: |
-            **/target/**
-            !**/test-results/**
-          key: ${{ format('{0}-project-{1}-{2}', runner.os, github.base_ref, github.run_number) }}
-          restore-keys: ${{ inputs.preserve-cache-between-runs && format('{0}-project-{1}-', runner.os, github.base_ref) || format('{0}-project-{1}-{2}', runner.os, github.base_ref, github.run_number) }}
+#      - name: Cache project
+#        uses: actions/cache@v3
+#        with:
+#          path: |
+#            **/target/**
+#            !**/test-results/**
+#          key: ${{ format('{0}-project-{1}-{2}', runner.os, github.base_ref, github.run_number) }}
+#          restore-keys: ${{ inputs.preserve-cache-between-runs && format('{0}-project-{1}-', runner.os, github.base_ref) || format('{0}-project-{1}-{2}', runner.os, github.base_ref, github.run_number) }}
 
       - name: git-restore-mtime
         uses: chetan/git-restore-mtime-action@v1
@@ -77,7 +77,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Strata Node Jar (${{ matrix.java }})
-          path: node/target/scala-2.13/plasma-node-*.jar
+          path: node/target/scala-3.4.1/plasma-node-*.jar
           if-no-files-found: error
       
       - name: Cleanup before cache

@@ -2,40 +2,33 @@ package org.plasmalabs.transactiongenerator.app
 
 import cats.Show
 import com.typesafe.config.Config
-import monocle.macros.Lenses
-import pureconfig.ConfigSource
-import pureconfig.generic.auto._
+import pureconfig.generic.derivation.default._
+import pureconfig.{ConfigSource, _}
 
 import scala.concurrent.duration.FiniteDuration
 
-@Lenses
 case class ApplicationConfig(
   transactionGenerator: ApplicationConfig.TransactionGenerator
-)
+) derives ConfigReader
 
 object ApplicationConfig {
 
-  @Lenses
   case class TransactionGenerator(
     rpc:         TransactionGenerator.Rpc,
     generator:   TransactionGenerator.Generator,
     broadcaster: TransactionGenerator.Broadcaster,
     mempool:     TransactionGenerator.Mempool
-  )
+  ) derives ConfigReader
 
   object TransactionGenerator {
 
-    @Lenses
-    case class Rpc(client: String)
+    case class Rpc(client: String) derives ConfigReader
 
-    @Lenses
-    case class Generator(insertMetadata: Boolean)
+    case class Generator(insertMetadata: Boolean) derives ConfigReader
 
-    @Lenses
-    case class Broadcaster(tps: Double)
+    case class Broadcaster(tps: Double) derives ConfigReader
 
-    @Lenses
-    case class Mempool(period: FiniteDuration)
+    case class Mempool(period: FiniteDuration) derives ConfigReader
   }
 
   def unsafe(config: Config): ApplicationConfig =

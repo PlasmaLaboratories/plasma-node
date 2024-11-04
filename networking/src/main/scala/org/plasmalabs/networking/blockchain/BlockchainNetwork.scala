@@ -41,7 +41,7 @@ object BlockchainNetwork {
     networkTimeout:          FiniteDuration
   ): Resource[F, P2PServer[F]] =
     for {
-      implicit0(logger: Logger[F]) <- Slf4jLogger.fromName("Node.P2P.Blockchain").toResource
+      given Logger[F] <- Slf4jLogger.fromName("Node.P2P.Blockchain").toResource
       p2pServer <- FS2P2PServer.make[F](
         host,
         bindPort,

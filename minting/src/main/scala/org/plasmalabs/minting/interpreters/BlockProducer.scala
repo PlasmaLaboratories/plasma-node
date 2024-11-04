@@ -176,7 +176,7 @@ object BlockProducer {
               "strata_node_blocks_minted",
               "Blocks minted",
               Map(),
-              block.header.height
+              longToJson(block.header.height)
             )
           )
           // Despite being eligible, there may not be a corresponding linear KES key if the node restarted in the middle

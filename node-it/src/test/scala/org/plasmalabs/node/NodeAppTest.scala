@@ -117,13 +117,13 @@ class NodeAppTest extends CatsEffectSuite {
               rpcClientA <- NodeGrpc.Client.make[F]("127.0.0.2", 9151, tls = false)
               rpcClientB <- NodeGrpc.Client.make[F]("localhost", 9153, tls = false)
               rpcClients = List(rpcClientA, rpcClientB)
-              implicit0(logger: Logger[F]) <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
+              given Logger[F] <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
               _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
               indexerChannelA              <- org.plasmalabs.grpc.makeChannel[F]("localhost", 9151, tls = false)
               indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
               wallet                       <- makeWallet(indexerTxServiceA)
               _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
-              implicit0(random: Random[F]) <- SecureRandom.javaSecuritySecureRandom[F].toResource
+              given Random[F] <- SecureRandom.javaSecuritySecureRandom[F].toResource
               // Construct two competing graphs of transactions.
               // Graph 1 has higher fees and should be included in the chain
               transactionGenerator1 <-
@@ -153,8 +153,8 @@ class NodeAppTest extends CatsEffectSuite {
               // Broadcast _all_ of the good transactions to the nodes randomly
               _ <-
                 Stream
-                  .repeatEval(random.elementOf(rpcClients))
-                  .zip(Stream.evalSeq(random.shuffleList(transactionGraph1)))
+                  .repeatEval(Random[F].elementOf(rpcClients))
+                  .zip(Stream.evalSeq(Random[F].shuffleList(transactionGraph1)))
                   .evalMap { case (client, tx) => client.broadcastTransaction(tx) }
                   .compile
                   .drain
@@ -167,8 +167,8 @@ class NodeAppTest extends CatsEffectSuite {
                 .toResource
               // Submit the bad transactions
               _ <- Stream
-                .repeatEval(random.elementOf(rpcClients))
-                .zip(Stream.evalSeq(random.shuffleList(transactionGraph2)))
+                .repeatEval(Random[F].elementOf(rpcClients))
+                .zip(Stream.evalSeq(Random[F].shuffleList(transactionGraph2)))
                 .evalMap { case (client, tx) => client.broadcastTransaction(tx) }
                 .compile
                 .drain

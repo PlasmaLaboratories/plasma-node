@@ -29,19 +29,19 @@ class LogParserTest extends CatsEffectSuite {
     """.stripMargin
 
   test("transactionId") {
-    val parsedLine = parse("t_2JrfPrQHwtgFeVY8QVVVbRq8mrwmvChgN6VTHct5PFCX", LogParserTest.transactionId(_))
+    val parsedLine = parse("t_2JrfPrQHwtgFeVY8QVVVbRq8mrwmvChgN6VTHct5PFCX", LogParserTest.transactionId(using _))
     assert(parsedLine.get.value == "t_2JrfPrQHwtgFeVY8QVVVbRq8mrwmvChgN6VTHct5PFCX")
   }
 
   test("Parse Line") {
-    val parsedLine = parse(logLine, LogParserTest.processedFromRpc(_))
+    val parsedLine = parse(logLine, LogParserTest.processedFromRpc(using _))
     assert(parsedLine.get.value == "t_2JrfPrQHwtgFeVY8QVVVbRq8mrwmvChgN6VTHct5PFCX")
   }
 
   test("Parse multiple lines processedFromRpc") {
 
     val parsedLines = logMultiLine.linesIterator
-      .map(line => parse(line, LogParserTest.processedFromRpc(_)))
+      .map(line => parse(line, LogParserTest.processedFromRpc(using _)))
       .collect { case Parsed.Success(value, _) => value }
       .toSeq
 
@@ -56,7 +56,7 @@ class LogParserTest extends CatsEffectSuite {
 
   test("Parse multiple lines receivedSyntacticallyInvalid") {
     val parsedLines = logMultiLine.linesIterator
-      .map(line => parse(line, LogParserTest.receivedSyntacticallyInvalid(_)))
+      .map(line => parse(line, LogParserTest.receivedSyntacticallyInvalid(using _)))
       .collect { case Parsed.Success(value, _) => value }
       .toSeq
 
@@ -70,7 +70,7 @@ class LogParserTest extends CatsEffectSuite {
 
   test("Parse list of minted transaction Ids") {
     val parsedLines = logMultiLine.linesIterator
-      .map(line => parse(line, LogParserTest.minted(_)))
+      .map(line => parse(line, LogParserTest.minted(using _)))
       .collect { case Parsed.Success(value, _) => value }
       .toSeq
 
@@ -95,7 +95,7 @@ class LogParserTest extends CatsEffectSuite {
         .covary[F]
         .through(fs2.text.utf8.decode)
         .through(fs2.text.lines)
-        .map(line => parse(line, LogParserTest.processedFromRpc(_)))
+        .map(line => parse(line, LogParserTest.processedFromRpc(using _)))
         .collect { case Parsed.Success(value, _) =>
           value
         }
@@ -138,17 +138,17 @@ object LogParserTest {
     time ~ "|" ~ level ~ packagePath ~ "-" ~ "Received syntactically invalid transaction" ~ "id=" ~ transactionId.! ~ "reasons="
   )
 
-  private def blockHeader[$: P]: P[Unit] =
+  private def blockHeader[$: P]: P[(String,String)] =
     P("header=BlockHeader(id=") ~ blockIdId ~ "parentId=" ~ blockIdId ~ CharsWhile(_ != ')') ~ ")"
 
   private def minted[$: P]: P[String] = P(
-    time ~ "|" ~ level ~ packagePath ~ "-" ~ "Minted" ~ blockHeader ~ "body=Body(transactionIds=" ~ seqCount ~ "List(" ~ seqTransactionId.!
-  ).map(_._2)
+    time ~ "|" ~ level ~ packagePath ~ "-" ~ "Minted" ~ blockHeader.map(_ => ()) ~ "body=Body(transactionIds=" ~ seqCount.map(_ => ()) ~ "List(" ~ seqTransactionId.!
+  )
 
   def processStreamFromRpc[F[_]: Async](s: Stream[F, Byte]): F[List[String]] =
     s.through(fs2.text.utf8.decode)
       .through(fs2.text.lines)
-      .map(line => parse(line, LogParserTest.processedFromRpc(_)))
+      .map(line => parse(line, LogParserTest.processedFromRpc(using _)))
       .filter(_.isSuccess)
       .map(_.get.value)
       .compile
@@ -157,7 +157,7 @@ object LogParserTest {
   def receivedSyntacticallyInvalidStream[F[_]: Async](s: Stream[F, Byte]): F[List[String]] =
     s.through(fs2.text.utf8.decode)
       .through(fs2.text.lines)
-      .map(line => parse(line, LogParserTest.receivedSyntacticallyInvalid(_)))
+      .map(line => parse(line, LogParserTest.receivedSyntacticallyInvalid(using _)))
       .filter(_.isSuccess)
       .map(_.get.value)
       .compile
@@ -166,7 +166,7 @@ object LogParserTest {
   def mintedStream[F[_]: Async](s: Stream[F, Byte]): F[List[String]] =
     s.through(fs2.text.utf8.decode)
       .through(fs2.text.lines)
-      .map(line => parse(line, LogParserTest.minted(_)))
+      .map(line => parse(line, LogParserTest.minted(using _)))
       .filter(_.isSuccess)
       .map(_.get.value)
       .compile

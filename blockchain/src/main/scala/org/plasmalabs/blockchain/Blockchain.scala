@@ -133,8 +133,8 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
       currentPeers            <- Ref.of[F, Set[RemotePeer]](Set.empty[RemotePeer]).toResource
       initialPeers = knownPeers.map(kp => DisconnectedPeer(RemoteAddress(kp.host, kp.port), none))
       remotePeersStream = Stream.fromQueueUnterminated[F, DisconnectedPeer](remotePeers)
-      implicit0(dnsResolver: DnsResolver[F]) = new DefaultDnsResolver[F]()
-      implicit0(reverseDnsResolver: ReverseDnsResolver[F]) =
+      given DnsResolver[F] = new DefaultDnsResolver[F]()
+      given ReverseDnsResolver[F] =
         if (networkProperties.useHostNames) new DefaultReverseDnsResolver[F]() else new NoOpReverseResolver[F]
       bridge <- ActorPeerHandlerBridgeAlgebra
         .make(
@@ -150,13 +150,14 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
         )
         .onFinalize(Logger[F].info("P2P Actor system had been shutdown"))
       _ <- Logger[F].info(s"Exposing server on: ${peerAsServer.fold("")(_.toString)}").toResource
-      peerServerF = BlockchainPeerServer.make(
-        p2pBlockchain,
-        () => peerAsServer.map(kp => KnownHost(localPeer.p2pVK, kp.host, kp.port)),
-        () => currentPeers.get,
-        peersStatusChangesTopic,
-        networkProperties.slotDataParentDepth
-      ) _
+      peerServerF = cp =>
+        BlockchainPeerServer.make(
+          p2pBlockchain,
+          () => peerAsServer.map(kp => KnownHost(localPeer.p2pVK, kp.host, kp.port)),
+          () => currentPeers.get,
+          peersStatusChangesTopic,
+          networkProperties.slotDataParentDepth
+        )(cp)
       _ <- BlockchainNetwork
         .make[F](
           localPeer.localAddress.host,
@@ -301,8 +302,8 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
           none[Queue[F, Unit]].pure[F].toResource
         }
       votingControl = regtestConfigOpt.isDefined
-      setVersionVoting     <- (if (votingControl) versionVoting.set _ else (_: Int) => ().pure[F]).pure[F].toResource
-      setProposalVoting    <- (if (votingControl) proposalVoting.set _ else (_: Int) => ().pure[F]).pure[F].toResource
+      setVersionVoting     <- (if (votingControl) versionVoting.set else (_: Int) => ().pure[F]).pure[F].toResource
+      setProposalVoting    <- (if (votingControl) proposalVoting.set else (_: Int) => ().pure[F]).pure[F].toResource
       networkCommandsTopic <- Resource.make(Topic[F, NetworkCommands])(_.close.void)
       networkTopic = if (rpcNetworkControlEnabled) networkCommandsTopic.some else None
       _ <- (

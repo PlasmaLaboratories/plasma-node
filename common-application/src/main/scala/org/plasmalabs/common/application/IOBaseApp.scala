@@ -46,7 +46,7 @@ abstract class IOBaseApp[CmdArgs, AppConfig](
 
       def run(args: List[String]): IO[ExitCode] =
         initialize(args.toArray)
-          .flatMap((IOBaseApp.this.run _).tupled)
+          .flatMap((IOBaseApp.this.run).tupled)
           .as(ExitCode.Success)
     }.main(args)
 }
@@ -54,7 +54,7 @@ abstract class IOBaseApp[CmdArgs, AppConfig](
 object IOBaseApp {
 
   implicit val monoidConfig: Monoid[Config] =
-    Monoid.instance(ConfigFactory.empty(), _ withFallback _)
+    Monoid.instance(ConfigFactory.empty(), _.withFallback(_))
 
   implicit private val logger: SelfAwareStructuredLogger[IO] =
     Slf4jLogger.getLoggerFromName[IO]("IOBaseApp")

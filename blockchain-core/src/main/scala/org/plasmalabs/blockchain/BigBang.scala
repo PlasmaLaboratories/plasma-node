@@ -61,7 +61,7 @@ object BigBang {
         new Blake2b256().hash(
           (config.etaPrefix.toByteArray +:
           Longs.toByteArray(config.timestamp) +:
-          config.transactions.map(_.id.value.toByteArray)): _*
+          config.transactions.map(_.id.value.toByteArray))*
         )
       )
 

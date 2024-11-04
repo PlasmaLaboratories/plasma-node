@@ -26,7 +26,7 @@ object SchemaBlockBody {
     GraphDataEncoder[BlockBody]
       .withProperty(Field.TransactionIds, _.toByteArray, mandatory = false, readOnly = false, notNull = false)
       .withLink(Field.Header, OType.LINK, SchemaBlockHeader.SchemaName)
-      .withIndex[BlockBody](Field.BodyHeaderIndex, Field.Header)(Instances.bodyHeader),
+      .withIndex[BlockBody](Field.BodyHeaderIndex, Field.Header)(using Instances.bodyHeader),
     v => BlockBody.parseFrom(v(Field.TransactionIds): Array[Byte])
   )
 

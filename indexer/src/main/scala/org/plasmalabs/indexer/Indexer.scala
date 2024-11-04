@@ -38,17 +38,17 @@ object Indexer {
     ttlCacheCheck:    Duration
   ): Resource[F, Indexer[F, fs2.Stream[F, *]]] =
     for {
-      implicit0(logger: Logger[F]) <- Resource.pure(Slf4jLogger.getLoggerFromName[F]("Indexer"))
+      given Logger[F] <- Resource.pure(Slf4jLogger.getLoggerFromName[F]("Indexer"))
       // A dedicated single thread executor in which all OrientDB calls are expected to run
-      implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-      orientdb                                 <- OrientDBFactory.make[F](dataDir, dbPassword)
+      given OrientThread[F] <- OrientThread.create[F]
+      orientdb              <- OrientDBFactory.make[F](dataDir, dbPassword)
 
       dbTx <- Resource
         .eval(Async[F].delay(orientdb.getTx))
-        .evalTap(db => orientThread.delay(db.makeActive()))
+        .evalTap(db => OrientThread[F].delay(db.makeActive()))
       dbNoTx <- Resource
         .eval(Async[F].delay(orientdb.getNoTx))
-        .evalTap(db => orientThread.delay(db.makeActive()))
+        .evalTap(db => OrientThread[F].delay(db.makeActive()))
 
       nodeRpcClient    <- NodeGrpc.Client.make[F](nodeRpcHost, nodeRpcPort, tls = nodeRpcTls)
       nodeBlockFetcher <- NodeBlockFetcher.make(nodeRpcClient, fetchConcurrency)

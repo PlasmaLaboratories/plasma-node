@@ -4,7 +4,6 @@ import cats.implicits._
 import com.orientechnologies.orient.core.metadata.schema.OType
 import munit.{CatsEffectFunFixtures, CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.indexer.DbFixtureUtil
-import org.plasmalabs.indexer.orientDb.instances.SchemaTxo
 import org.plasmalabs.indexer.orientDb.instances.SchemaTxo.Field
 import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances.txoSchema
 import org.plasmalabs.indexer.orientDb.{OrientDBMetadataFactory, OrientThread}
@@ -22,7 +21,7 @@ class SchemaTxoTest
     with CatsEffectFunFixtures
     with DbFixtureUtil {
 
-  orientDbFixture.test("Txo Schema Metadata") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixture.test("Txo Schema Metadata") { case (odbFactory, oThread: OrientThread[F]) =>
     val res = for {
       databaseDocumentTx <- oThread.delay(odbFactory.getNoTx.getRawGraph).toResource
       schema = SchemaTxo.make()
@@ -65,7 +64,7 @@ class SchemaTxoTest
 
   }
 
-  orientDbFixture.test("Txo Schema Add vertex") { case (odbFactory, implicit0(oThread: OrientThread[F])) =>
+  orientDbFixture.test("Txo Schema Add vertex") { case (odbFactory, oThread: OrientThread[F]) =>
     val res = for {
       dbTx <- oThread.delay(odbFactory.getTx).toResource
 

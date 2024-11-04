@@ -121,7 +121,7 @@ object CrossEpochEventSourceState {
 
             _ <- newActiveProposals match {
               case Some(proposalIds) =>
-                proposalIds.toList.traverse(processNewActiveProposalIds(state, currentEpoch, _))
+                proposalIds.toList.traverse(processNewActiveProposalIds(state, currentEpoch, _)).void
               case None => ().pure[F]
             }
           } yield ()

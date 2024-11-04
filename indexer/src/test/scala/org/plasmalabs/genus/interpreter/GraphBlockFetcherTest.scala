@@ -7,7 +7,6 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import org.plasmalabs.consensus.models.BlockHeader
 import org.plasmalabs.indexer.algebras.VertexFetcherAlgebra
-import org.plasmalabs.indexer.interpreter.GraphBlockFetcher
 import org.plasmalabs.indexer.model.{GE, GEs}
 import org.plasmalabs.indexer.orientDb.OrientThread
 import org.plasmalabs.models.generators.consensus.ModelGenerators._
@@ -24,8 +23,8 @@ class GraphBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
     withMock {
 
       val res = for {
-        implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-        graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+        given OrientThread[F] <- OrientThread.create[F]
+        graphVertexFetcher    <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
         expectedTh = new IllegalStateException("boom!")
         _ = (() => graphVertexFetcher.fetchCanonicalHead())
           .expects()
@@ -53,8 +52,8 @@ class GraphBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
 
     withMock {
       val res = for {
-        implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-        graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+        given OrientThread[F] <- OrientThread.create[F]
+        graphVertexFetcher    <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
         _ = (() => graphVertexFetcher.fetchCanonicalHead())
           .expects()
           .returning(Option.empty[Vertex].asRight[GE].pure[F])
@@ -76,10 +75,10 @@ class GraphBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
       withMock {
 
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          given OrientThread[F] <- OrientThread.create[F]
+          graphVertexFetcher    <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           expectedTh = new IllegalStateException("boom!")
-          _ = (graphVertexFetcher.fetchHeader _)
+          _ = (graphVertexFetcher.fetchHeader)
             .expects(header.id)
             .once()
             .returning(
@@ -106,9 +105,9 @@ class GraphBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
     PropF.forAllF { (header: BlockHeader) =>
       withMock {
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
-          _ = (graphVertexFetcher.fetchHeader _)
+          given OrientThread[F] <- OrientThread.create[F]
+          graphVertexFetcher    <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          _ = (graphVertexFetcher.fetchHeader)
             .expects(header.id)
             .returning(Option.empty[Vertex].asRight[GE].pure[F])
           graphBlockFetcher <- GraphBlockFetcher.make[F](graphVertexFetcher)
@@ -128,10 +127,10 @@ class GraphBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
     PropF.forAllF { (header: BlockHeader) =>
       withMock {
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          given OrientThread[F] <- OrientThread.create[F]
+          graphVertexFetcher    <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
           expectedTh = new IllegalStateException("boom!")
-          _ = (graphVertexFetcher.fetchHeaderByHeight _)
+          _ = (graphVertexFetcher.fetchHeaderByHeight)
             .expects(header.height)
             .once()
             .returning(
@@ -157,9 +156,9 @@ class GraphBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
     PropF.forAllF { (header: BlockHeader) =>
       withMock {
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
-          _ = (graphVertexFetcher.fetchHeaderByHeight _)
+          given OrientThread[F] <- OrientThread.create[F]
+          graphVertexFetcher    <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          _ = (graphVertexFetcher.fetchHeaderByHeight)
             .expects(header.height)
             .once()
             .returning(Option.empty[Vertex].asRight[GE].pure[F])
@@ -179,9 +178,9 @@ class GraphBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
     PropF.forAllF { (header: BlockHeader) =>
       withMock {
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
-          _ = (graphVertexFetcher.fetchHeader _)
+          given OrientThread[F] <- OrientThread.create[F]
+          graphVertexFetcher    <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          _ = (graphVertexFetcher.fetchHeader)
             .expects(header.id)
             .once()
             .returning(Option.empty[Vertex].asRight[GE].pure[F])
@@ -201,16 +200,16 @@ class GraphBlockFetcherTest extends CatsEffectSuite with ScalaCheckEffectSuite w
     PropF.forAllF { (header: BlockHeader) =>
       withMock {
         val res = for {
-          implicit0(orientThread: OrientThread[F]) <- OrientThread.create[F]
-          graphVertexFetcher                       <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
-          headerVertex                             <- mock[Vertex].pure[F].toResource
+          given OrientThread[F] <- OrientThread.create[F]
+          graphVertexFetcher    <- mock[VertexFetcherAlgebra[F]].pure[F].toResource
+          headerVertex          <- mock[Vertex].pure[F].toResource
 
-          _ = (graphVertexFetcher.fetchHeader _)
+          _ = (graphVertexFetcher.fetchHeader)
             .expects(header.id)
             .once()
             .returning(headerVertex.some.asRight[GE].pure[F])
 
-          _ = (graphVertexFetcher.fetchBody _)
+          _ = (graphVertexFetcher.fetchBody)
             .expects(headerVertex)
             .once()
             .returning(Option.empty[Vertex].asRight[GE].pure[F])

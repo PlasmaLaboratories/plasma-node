@@ -22,14 +22,14 @@ object KesTestHelper {
               args.head._2._2,
               args.head._2._3,
               KesBinaryTree.Empty(),
-              this.build(sk, vk, args.tail: _*)
+              this.build(sk, vk, args.tail*)
             )
           } else {
             KesBinaryTree.MerkleNode(
               args.head._2._1,
               args.head._2._2,
               args.head._2._3,
-              this.build(sk, vk, args.tail: _*),
+              this.build(sk, vk, args.tail*),
               KesBinaryTree.Empty()
             )
           }

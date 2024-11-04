@@ -49,7 +49,7 @@ class MultiNodeTest extends IntegrationSuite {
     val resource =
       for {
         (dockerSupport, _dockerClient) <- DockerSupport.make[F]()
-        implicit0(dockerClient: DockerClient) = _dockerClient
+        given DockerClient = _dockerClient
         initialNodes <- List
           .tabulate(totalNodeCount - 1)(index =>
             dockerSupport.createNode(

@@ -13,7 +13,7 @@ import org.plasmalabs.sdk.common.ContainsSignable.instances._
 import org.plasmalabs.sdk.models.box._
 import org.plasmalabs.sdk.models.transaction._
 import org.plasmalabs.sdk.models.{Datum, Event, TransactionOutputAddress}
-import org.plasmalabs.sdk.syntax.{ioTransactionAsTransactionSyntaxOps, _}
+import org.plasmalabs.sdk.syntax._
 import org.plasmalabs.sdk.validation.algebras.TransactionCostCalculator
 import org.plasmalabs.transactiongenerator.algebras.TransactionGenerator
 import org.plasmalabs.transactiongenerator.models.Wallet
@@ -112,10 +112,11 @@ object Fs2TransactionGenerator {
         )
       })
       .semiflatMap { inputs =>
+        val value = inputs.foldMap(_.value.getLvl.quantity: BigInt)
         val outputs = List(
           UnspentTransactionOutput(
             HeightLockOneSpendingAddress,
-            Value.defaultInstance.withLvl(Value.LVL(inputs.foldMap(_.value.getLvl.quantity: BigInt)))
+            Value.defaultInstance.withLvl(Value.LVL(value))
           )
         )
         val outputsWithAdd = additional.fold(outputs)(outputs :+ _)

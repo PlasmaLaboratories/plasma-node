@@ -65,6 +65,7 @@ class EtaCalculationSpec extends CatsEffectSuite with ScalaCheckEffectSuite with
                 ),
                 parentHeaderIdGen = Gen.const(items.last.id)
               ).first
+
               (nextHeader -> (items :+ nextHeader)).some
           }
           .toList
@@ -117,6 +118,6 @@ object EtaCalculationSpec {
       List(previousEta.data) ++ List(ByteString.copyFrom(BigInt(epoch).toByteArray)) ++ rhoValues
         .map(_.sizedBytes.data)
         .map(rhoToRhoNonceHash)
-    Sized.strictUnsafe(blake2b256.hash(messages.foldLeft(ByteString.EMPTY)(_ concat _)))
+    Sized.strictUnsafe(blake2b256.hash(messages.foldLeft(ByteString.EMPTY)((a, b) => a.concat(b))))
   }
 }
