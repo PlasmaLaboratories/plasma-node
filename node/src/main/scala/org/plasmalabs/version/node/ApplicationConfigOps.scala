@@ -260,6 +260,9 @@ object ApplicationConfigOps {
   implicit val bigBangPrivateReader: ConfigReader[ApplicationConfig.Node.BigBangs.Private] =
     deriveReader[ApplicationConfig.Node.BigBangs.Private]
 
+  implicit val bigBangRegtestConfigReader: ConfigReader[ApplicationConfig.Node.BigBangs.RegtestConfig] =
+    deriveReader[ApplicationConfig.Node.BigBangs.RegtestConfig]
+
   implicit val bigBangPublicReader: ConfigReader[ApplicationConfig.Node.BigBangs.Public] =
     deriveReader[ApplicationConfig.Node.BigBangs.Public]
 
