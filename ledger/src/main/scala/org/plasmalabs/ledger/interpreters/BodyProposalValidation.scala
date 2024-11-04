@@ -66,7 +66,7 @@ object BodyProposalValidation {
           val res = if (proposalsIds.sizeIs == proposalsIds.toSet.size) {
             Validated.Valid(Seq(body))
           } else {
-            Validated.Invalid(NonEmptyChain(DoubleProposalTransaction: BodyValidationError))
+            Validated.Invalid(NonEmptyChain(DoubleProposalIdTransaction: BodyValidationError))
           }
           res.pure[F]
         }
