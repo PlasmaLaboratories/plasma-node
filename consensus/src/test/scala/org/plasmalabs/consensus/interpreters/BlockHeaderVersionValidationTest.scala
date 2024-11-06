@@ -67,7 +67,7 @@ class BlockHeaderVersionValidationTest extends CatsEffectSuite with ScalaCheckEf
     }
 
   private def headerInEpochWithVersion(epoch: Epoch, version: VersionId = 0) =
-    arbitraryHeader.arbitrary.first.copy(slot = epoch + 1, version = ProtocolVersion(firstDigit = version))
+    arbitraryHeader.arbitrary.first.copy(slot = epoch + 1, version = ProtocolVersion(versionId = version))
 
   test("Header version validation shall be done according to version information") {
     withMock {

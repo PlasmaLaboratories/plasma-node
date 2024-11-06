@@ -155,10 +155,11 @@ object BlockProducer {
         headerVersion <- crossEpochForkLocal.useStateAt(parentId)(_.versionAlgebra.getVersionForEpoch(epoch))
         votedVersion  <- votedVersionF
         votedProposal <- votedProposalF
-        protocolVersion = ProtocolVersion()
-          .setVersionId(headerVersion)
-          .setVersionVote(votedVersion)
-          .setProposalVote(votedProposal)
+        protocolVersion = ProtocolVersion(
+          versionId = headerVersion,
+          votedVersionId = votedVersion,
+          votedProposalId = votedProposal
+        )
 
         blockMaker = prepareUnsignedBlock(parentSlotData, fullBody, timestamp, nextHit, protocolVersion)
         eta: Eta = Sized.strictUnsafe[ByteString, Eta.Length](nextHit.cert.eta)

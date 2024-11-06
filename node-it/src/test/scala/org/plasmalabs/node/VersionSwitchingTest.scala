@@ -65,8 +65,8 @@ class VersionSwitchingTest extends CatsEffectSuite {
 
   test("One node which change version based on voting") {
     def configNodeAPrivate(
-      dataDir:           Path,
-      stakingDir:        Path
+      dataDir:    Path,
+      stakingDir: Path
     ): String =
       s"""
          |node:
@@ -118,13 +118,13 @@ class VersionSwitchingTest extends CatsEffectSuite {
             nodeCompletion.toResource.race(for {
               rpcClientA <- NodeRegTestGrpc.Client.make[F]("127.0.0.2", 9151, tls = false)
               rpcClients = List(rpcClientA)
-              given Logger[F] <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
-              _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
-              indexerChannelA              <- org.plasmalabs.grpc.makeChannel[F]("localhost", 9151, tls = false)
-              indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
-              wallet                       <- makeWallet(indexerTxServiceA)
-              _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
-              given Random[F] <- SecureRandom.javaSecuritySecureRandom[F].toResource
+              given Logger[F]   <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
+              _                 <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
+              indexerChannelA   <- org.plasmalabs.grpc.makeChannel[F]("localhost", 9151, tls = false)
+              indexerTxServiceA <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
+              wallet            <- makeWallet(indexerTxServiceA)
+              _                 <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
+              given Random[F]   <- SecureRandom.javaSecuritySecureRandom[F].toResource
               transactionGenerator1 <-
                 Fs2TransactionGenerator
                   .make[F](wallet, _ => 1000L, Fs2TransactionGenerator.emptyMetadata[F])
@@ -153,12 +153,12 @@ class VersionSwitchingTest extends CatsEffectSuite {
               _                       <- rpcClientA.setVoting(0, proposalId).toResource
               _                       <- rpcClients.parTraverse(fetchUntilEpoch(_, 3)).toResource
               blockWithProposalVoting <- rpcClientA.canonicalHeadFullBlock(implicitly[MonadThrow[F]]).toResource
-              _ <- IO(blockWithProposalVoting.header.version.thirdDigit == proposalId).assert.toResource
+              _ <- IO(blockWithProposalVoting.header.version.votedProposalId == proposalId).assert.toResource
               _ <- rpcClients.parTraverse(fetchUntilEpoch(_, 4)).toResource
               _ <- rpcClientA.setVoting(2, 0).toResource
               _ <- rpcClients.parTraverse(fetchUntilEpoch(_, 9)).toResource
               blockWithNewVersion <- rpcClientA.canonicalHeadFullBlock(implicitly[MonadThrow[F]]).toResource
-              _                   <- IO(blockWithNewVersion.header.version.firstDigit == 2).assert.toResource
+              _                   <- IO(blockWithNewVersion.header.version.versionId == 2).assert.toResource
             } yield ())
           )
       } yield ()
