@@ -253,7 +253,7 @@ class VotingEventSourceStateSpec
 
   def getProposalIdByPseudoId(pseudoId: Int): Int =
     if (pseudoId == 0) {
-      emptyVersion
+      emptyVersionId
     } else {
       pseudoIdToProposalId.getOrElseUpdate(
         pseudoId,
