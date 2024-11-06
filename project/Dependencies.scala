@@ -11,8 +11,10 @@ object Dependencies {
   val orientDbVersion = "3.2.34"
   val ioGrpcVersion = "1.64.0"
   val http4sVersion = "0.23.26"
-  val protobufSpecsVersion = "0.1.1"
-  val plasmaSdkVersion = "0.1.0+9-4d010cf9-SNAPSHOT" // TODO bump release after merge https://github.com/PlasmaLaboratories/plasma-sdk-scala/pull/12
+  val protobufSpecsVersion = "0.1.1+2-290af250-SNAPSHOT"
+
+  val plasmaSdkVersion =
+    "0.1.0+9-4d010cf9-SNAPSHOT" // TODO bump release after merge https://github.com/PlasmaLaboratories/plasma-sdk-scala/pull/12
 
   val catsSlf4j =
     "org.typelevel" %% "log4cats-slf4j" % "2.7.0"

@@ -16,7 +16,7 @@ import org.plasmalabs.models.generators.consensus.ModelGenerators._
 import org.plasmalabs.models.protocol.RatioCodec.ratioToProtoRatio
 import org.plasmalabs.models.protocol.{ConfigConverter, ConfigGenesis}
 import org.plasmalabs.models.utility.Ratio
-import org.plasmalabs.models.{Epoch, ProposalConfig, ProposalId, Slot, Timestamp, emptyVersion, proposalDelta}
+import org.plasmalabs.models.{Epoch, ProposalConfig, ProposalId, Slot, Timestamp, emptyVersionId, proposalDelta}
 import org.plasmalabs.node.models.BlockBody
 import org.plasmalabs.sdk.generators.ModelGenerators._
 import org.plasmalabs.sdk.models.TransactionId
@@ -130,7 +130,7 @@ class BodyProposalValidationTest extends CatsEffectSuite with ScalaCheckEffectSu
 
   def getProposalIdByPseudoId(pseudoId: Int): Int =
     if (pseudoId == 0) {
-      emptyVersion
+      emptyVersionId
     } else {
       pseudoIdToProposalId.getOrElseUpdate(
         pseudoId,
