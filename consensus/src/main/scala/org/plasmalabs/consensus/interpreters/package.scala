@@ -17,17 +17,12 @@ package object interpreters {
   implicit class ProtocolVersionOps(protocolVersion: ProtocolVersion) {
 
     def getProposalVote: Option[ProposalId] =
-      Option.when(protocolVersion.thirdDigit != emptyProposal)(protocolVersion.thirdDigit)
-
-    def setProposalVote(proposalId: ProposalId): ProtocolVersion = protocolVersion.copy(thirdDigit = proposalId)
+      Option.when(protocolVersion.votedProposalId != emptyProposalId)(protocolVersion.votedProposalId)
 
     def getVersionVote: Option[VersionId] =
-      Option.when(protocolVersion.secondDigit != emptyVersion)(protocolVersion.secondDigit)
+      Option.when(protocolVersion.votedVersionId != emptyVersionId)(protocolVersion.votedVersionId)
 
-    def setVersionVote(versionVote: VersionId): ProtocolVersion = protocolVersion.copy(secondDigit = versionVote)
-
-    def setVersionId(version: VersionId): ProtocolVersion = protocolVersion.copy(firstDigit = version)
-    def versionId: VersionId = protocolVersion.firstDigit
+    def versionId: VersionId = protocolVersion.versionId
   }
 
 }
