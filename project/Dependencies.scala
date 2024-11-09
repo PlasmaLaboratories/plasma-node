@@ -7,12 +7,13 @@ object Dependencies {
   val catsCoreVersion = "2.10.0"
   val catsEffectVersion = "3.5.4"
   val fs2Version = "3.10.2"
-  val logback = "1.5.6"
+  val logback = "1.5.12"
   val orientDbVersion = "3.2.34"
   val ioGrpcVersion = "1.64.0"
   val http4sVersion = "0.23.26"
   val protobufSpecsVersion = "0.1.1+2-290af250-SNAPSHOT"
   val plasmaSdkVersion = "0.2.0"
+
   val catsSlf4j =
     "org.typelevel" %% "log4cats-slf4j" % "2.7.0"
 
