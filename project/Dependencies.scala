@@ -119,7 +119,7 @@ object Dependencies {
     "org.plasmalabs" %% "protobuf-fs2" % protobufSpecsVersion
   )
 
-  val ipaddress = "com.github.seancfoley" % "ipaddress" % "5.5.0"
+  val ipaddress = "com.github.seancfoley" % "ipaddress" % "5.5.1"
 
   val apacheCommonLang = "org.apache.commons" % "commons-lang3" % "3.0"
 
