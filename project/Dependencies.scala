@@ -9,7 +9,7 @@ object Dependencies {
   val fs2Version = "3.11.0"
   val logback = "1.5.12"
   val orientDbVersion = "3.2.35"
-  val ioGrpcVersion = "1.64.0"
+  val ioGrpcVersion = "1.64.2"
   val http4sVersion = "0.23.26"
   val protobufSpecsVersion = "0.1.1+2-290af250-SNAPSHOT"
   val plasmaSdkVersion = "0.2.0"
