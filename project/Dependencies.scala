@@ -121,7 +121,7 @@ object Dependencies {
 
   val ipaddress = "com.github.seancfoley" % "ipaddress" % "5.5.1"
 
-  val apacheCommonLang = "org.apache.commons" % "commons-lang3" % "3.0"
+  val apacheCommonLang = "org.apache.commons" % "commons-lang3" % "3.17.0"
 
   // For NTP-UDP
   val commonsNet = "commons-net" % "commons-net" % "3.11.1"
