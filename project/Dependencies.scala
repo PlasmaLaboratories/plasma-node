@@ -83,7 +83,7 @@ object Dependencies {
   val geny213ExlusionRule = ExclusionRule("com.lihaoyi", "geny_2.13")
 
   val mainargs = Seq(
-    "com.lihaoyi" %% "mainargs" % "0.6.3"
+    "com.lihaoyi" %% "mainargs" % "0.7.6"
   )
 
   val fastparse = "com.lihaoyi" %% "fastparse" % "3.1.0"
