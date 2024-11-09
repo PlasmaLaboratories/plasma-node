@@ -169,7 +169,7 @@ object Dependencies {
       pureConfig,
       pureConfigGeneric,
       kubernetes,
-      "com.google.cloud" % "google-cloud-storage" % "2.36.1"
+      "com.google.cloud" % "google-cloud-storage" % "2.44.1"
     )
 
   lazy val actor: Seq[sbt.ModuleID] = fs2All
