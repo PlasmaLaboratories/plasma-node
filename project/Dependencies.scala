@@ -99,7 +99,7 @@ object Dependencies {
   val pureConfig = "com.github.pureconfig"        %% "pureconfig-core"           % "0.17.7"
   val pureConfigGeneric = "com.github.pureconfig" %% "pureconfig-generic-scala3" % "0.17.7"
   val circeYaml = "io.circe"                      %% "circe-yaml"                % "1.15.0"
-  val kubernetes = "io.kubernetes"                 % "client-java"               % "20.0.1"
+  val kubernetes = "io.kubernetes"                 % "client-java"               % "22.0.0"
 
   val http4s = Seq(
     "org.http4s" %% "http4s-ember-client" % http4sVersion,
