@@ -25,6 +25,7 @@ import org.plasmalabs.sdk.generators.ModelGenerators._
 import org.plasmalabs.sdk.models.box.{FungibilityType, QuantityDescriptorType}
 import org.plasmalabs.sdk.models.{GroupId, LockAddress, SeriesId}
 import org.plasmalabs.sdk.syntax._
+import org.scalacheck.Test
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 
@@ -36,7 +37,7 @@ class BlockProducerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with 
 
   override val munitIOTimeout: FiniteDuration = 10.seconds
 
-  override def scalaCheckTestParameters =
+  override def scalaCheckTestParameters: Test.Parameters =
     super.scalaCheckTestParameters
       .withMaxSize(3)
       .withMinSuccessfulTests(5)

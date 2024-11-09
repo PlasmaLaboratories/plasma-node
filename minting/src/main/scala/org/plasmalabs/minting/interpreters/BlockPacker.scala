@@ -348,21 +348,36 @@ object BlockPackerValidation {
 
     implicit val logger: SelfAwareStructuredLogger[F] =
       Slf4jLogger.getLoggerFromName[F]("Node.BlockPackerValidation")
-    Resource.pure((transaction: IoTransaction, height: Long, slot: Slot) =>
-      Logger[F].debug(show"Start validating tx ${transaction.id}") >>
-      (
-        EitherT(transactionDataValidation.validate(transaction).map(_.toEither)).leftMap(_.show) >>
-        EitherT(
-          transactionAuthorizationValidation.validate(QuivrContext.forProposedBlock(height, slot, transaction))(
-            transaction
-          )
-        ).leftMap(_.show)
+    def checkTxData(transaction: IoTransaction): EitherT[F, String, IoTransaction] =
+      EitherT(
+        Async[F]
+          .catchNonFatal(transactionDataValidation.validate(transaction))
+          .flatten
+          .map(_.leftMap(ec => ec.toList.map(_.show).mkString(";")))
+          .map(v => v.toEither)
+          .handleError(e => Either.left[String, IoTransaction](e.toString))
       )
+
+    def checkTxAuth(transaction: IoTransaction, height: Long, slot: Slot): EitherT[F, String, IoTransaction] =
+      EitherT(
+        Async[F]
+          .catchNonFatal(
+            transactionAuthorizationValidation
+              .validate(QuivrContext.forProposedBlock(height, slot, transaction))(transaction)
+          )
+          .flatten
+          .map(_.leftMap(_.show))
+          .handleError(e => Either.left[String, IoTransaction](e.toString))
+      )
+
+    Resource.pure { (transaction: IoTransaction, height: Long, slot: Slot) =>
+      Logger[F].debug(show"Start validating tx ${transaction.id}") >>
+      (checkTxData(transaction) >> checkTxAuth(transaction, height, slot))
         .leftSemiflatTap(error =>
           Logger[F].warn(show"Transaction id=${transaction.id} failed validation. reason=$error")
         )
         .semiflatTap((res: IoTransaction) => Logger[F].debug(show"Transaction ${res.id} is valid"))
         .isRight
-    )
+    }
   }
 }
