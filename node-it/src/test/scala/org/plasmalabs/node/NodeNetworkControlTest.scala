@@ -126,12 +126,12 @@ class NodeNetworkControlTest extends CatsEffectSuite {
               networkControlA <- NetworkControlClient.make[F](nodeAIp, nodeARpcPort, tls = false)
               networkControlB <- NetworkControlClient.make[F](nodeBIp, nodeBRpcPort, tls = false)
               rpcClients = List(rpcClientA, rpcClientB)
-              given Logger[F] <- Slf4jLogger.fromName[F]("NodeNetworkControlTest").toResource
-              _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
-              indexerChannelA              <- org.plasmalabs.grpc.makeChannel[F](nodeAIp, nodeARpcPort, tls = false)
-              indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
-              wallet                       <- makeWallet(indexerTxServiceA)
-              _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
+              given Logger[F]   <- Slf4jLogger.fromName[F]("NodeNetworkControlTest").toResource
+              _                 <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
+              indexerChannelA   <- org.plasmalabs.grpc.makeChannel[F](nodeAIp, nodeARpcPort, tls = false)
+              indexerTxServiceA <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
+              wallet            <- makeWallet(indexerTxServiceA)
+              _                 <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
 
               // check consensus
               firstHeight = 3
