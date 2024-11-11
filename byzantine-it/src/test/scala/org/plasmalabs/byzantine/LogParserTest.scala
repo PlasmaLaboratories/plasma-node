@@ -138,11 +138,13 @@ object LogParserTest {
     time ~ "|" ~ level ~ packagePath ~ "-" ~ "Received syntactically invalid transaction" ~ "id=" ~ transactionId.! ~ "reasons="
   )
 
-  private def blockHeader[$: P]: P[(String,String)] =
+  private def blockHeader[$: P]: P[(String, String)] =
     P("header=BlockHeader(id=") ~ blockIdId ~ "parentId=" ~ blockIdId ~ CharsWhile(_ != ')') ~ ")"
 
   private def minted[$: P]: P[String] = P(
-    time ~ "|" ~ level ~ packagePath ~ "-" ~ "Minted" ~ blockHeader.map(_ => ()) ~ "body=Body(transactionIds=" ~ seqCount.map(_ => ()) ~ "List(" ~ seqTransactionId.!
+    time ~ "|" ~ level ~ packagePath ~ "-" ~ "Minted" ~ blockHeader.map(_ =>
+      ()
+    ) ~ "body=Body(transactionIds=" ~ seqCount.map(_ => ()) ~ "List(" ~ seqTransactionId.!
   )
 
   def processStreamFromRpc[F[_]: Async](s: Stream[F, Byte]): F[List[String]] =

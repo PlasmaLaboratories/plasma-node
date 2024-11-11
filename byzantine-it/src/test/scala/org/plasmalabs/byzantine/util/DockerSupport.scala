@@ -44,15 +44,17 @@ object DockerSupport {
     debugLoggingEnabled:    Boolean = loggingEnabledFromEnvironment
   ): Resource[F, (DockerSupport[F], DockerClient)] =
     for {
-      given DockerClient <- Resource.make(Sync[F].blocking(DefaultDockerClient.fromEnv().build()))(
-        c => Sync[F].blocking(c.close())
+      given DockerClient <- Resource.make(Sync[F].blocking(DefaultDockerClient.fromEnv().build()))(c =>
+        Sync[F].blocking(c.close())
       )
       nodeCache <- Resource.make[F, Ref[F, Set[DockerNode]]](Ref.of(Set.empty[DockerNode]))(
         _.get.flatMap(
           _.toList
             .traverse(node =>
               Sync[F]
-                .blocking(summon[DockerClient].removeContainer(node.containerId, DockerClient.RemoveContainerParam.forceKill))
+                .blocking(
+                  summon[DockerClient].removeContainer(node.containerId, DockerClient.RemoveContainerParam.forceKill)
+                )
                 .voidError
             )
             .void

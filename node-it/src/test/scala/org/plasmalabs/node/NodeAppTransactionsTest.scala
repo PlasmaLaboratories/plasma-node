@@ -169,13 +169,13 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               rpcClientA <- NodeGrpc.Client.make[F]("127.0.0.2", rpcPortA, tls = false)
               rpcClientB <- NodeGrpc.Client.make[F]("127.0.0.3", rpcPortB, tls = false)
               rpcClients = List(rpcClientA, rpcClientB)
-              given Logger[F] <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
-              _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
-              indexerChannelA              <- org.plasmalabs.grpc.makeChannel[F]("127.0.0.2", rpcPortA, tls = false)
-              indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
-              wallet                       <- makeWallet(indexerTxServiceA)
-              _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
-              given Random[F] <- SecureRandom.javaSecuritySecureRandom[F].toResource
+              given Logger[F]   <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
+              _                 <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
+              indexerChannelA   <- org.plasmalabs.grpc.makeChannel[F]("127.0.0.2", rpcPortA, tls = false)
+              indexerTxServiceA <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
+              wallet            <- makeWallet(indexerTxServiceA)
+              _                 <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
+              given Random[F]   <- SecureRandom.javaSecuritySecureRandom[F].toResource
 
               transactionGenerator <-
                 Fs2TransactionGenerator
@@ -261,11 +261,11 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               rpcClientA <- NodeGrpc.Client.make[F]("127.0.0.4", rpcPortA, tls = false)
               rpcClientB <- NodeGrpc.Client.make[F]("127.0.0.5", rpcPortB, tls = false)
               rpcClients = List(rpcClientA, rpcClientB)
-              given Logger[F] <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
-              _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
-              indexerChannelA              <- org.plasmalabs.grpc.makeChannel[F]("127.0.0.4", rpcPortA, tls = false)
-              indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
-              given Random[F] <- SecureRandom.javaSecuritySecureRandom[F].toResource
+              given Logger[F]   <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
+              _                 <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
+              indexerChannelA   <- org.plasmalabs.grpc.makeChannel[F]("127.0.0.4", rpcPortA, tls = false)
+              indexerTxServiceA <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
+              given Random[F]   <- SecureRandom.javaSecuritySecureRandom[F].toResource
 
               _ <- rpcClients.parTraverse(fetchUntilHeight(_, height)).toResource
 
@@ -373,14 +373,14 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
               rpcClientA <- NodeGrpc.Client.make[F]("127.0.0.6", rpcPortA, tls = false)
               rpcClientB <- NodeGrpc.Client.make[F]("127.0.0.7", rpcPortB, tls = false)
               rpcClients = List(rpcClientA, rpcClientB)
-              given Logger[F] <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
-              _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
-              indexerChannelA              <- org.plasmalabs.grpc.makeChannel[F]("127.0.0.6", rpcPortA, tls = false)
-              indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
-              _                            <- rpcClients.parTraverse(fetchUntilHeight(_, height)).toResource
+              given Logger[F]   <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
+              _                 <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
+              indexerChannelA   <- org.plasmalabs.grpc.makeChannel[F]("127.0.0.6", rpcPortA, tls = false)
+              indexerTxServiceA <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
+              _                 <- rpcClients.parTraverse(fetchUntilHeight(_, height)).toResource
 
-              wallet                       <- makeWallet(indexerTxServiceA)
-              _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
+              wallet          <- makeWallet(indexerTxServiceA)
+              _               <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
               given Random[F] <- SecureRandom.javaSecuritySecureRandom[F].toResource
 
               transactionGenerator <-
