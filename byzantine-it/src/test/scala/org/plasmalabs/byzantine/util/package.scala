@@ -1,7 +1,8 @@
 package org.plasmalabs.byzantine
 
-import org.plasmalabs.algebras.IndexerRpc
 import com.spotify.docker.client.DockerClient
+import org.plasmalabs.algebras.IndexerRpc
+
 import scala.language.implicitConversions
 
 package object util {

@@ -5,25 +5,25 @@ import cats.effect._
 import cats.effect.implicits._
 import cats.effect.std.{Random, SecureRandom}
 import cats.implicits._
-import org.plasmalabs.algebras.NodeRpc
-import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.sdk.syntax._
-import org.plasmalabs.consensus.models.BlockId
-import org.plasmalabs.indexer.services._
-import org.plasmalabs.grpc.NodeGrpc
-import org.plasmalabs.interpreters.NodeRpcOps.clientAsNodeRpcApi
-import org.plasmalabs.node.Util._
-import org.plasmalabs.transactiongenerator.interpreters.Fs2TransactionGenerator
-import org.plasmalabs.typeclasses.implicits._
 import fs2.io.file.{Files, Path}
 import fs2.{io => _, _}
 import munit._
+import org.plasmalabs.algebras.NodeRpc
+import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.grpc.NodeGrpc
+import org.plasmalabs.indexer.services._
+import org.plasmalabs.interpreters.NodeRpcOps.clientAsNodeRpcApi
+import org.plasmalabs.ledger.models._
+import org.plasmalabs.node.Util._
+import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.validation.algebras.TransactionCostCalculator
+import org.plasmalabs.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
+import org.plasmalabs.transactiongenerator.interpreters.Fs2TransactionGenerator
+import org.plasmalabs.typeclasses.implicits._
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import org.plasmalabs.codecs.bytes.tetra.instances._
-import org.plasmalabs.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
-import org.plasmalabs.sdk.validation.algebras.TransactionCostCalculator
-import org.plasmalabs.ledger.models._
 
 import scala.concurrent.duration._
 
@@ -281,31 +281,28 @@ class NodeAppTransactionsTest extends CatsEffectSuite {
                 .compile
                 .toList
                 .toResource
+
               _ <- Logger[F].info(show"Generated txs: ${transactionGraph.map(_.id)}").toResource
 
               // send txs chain to different nodes,
               // most of them will be rejected because "parent" tx is sent to other node
-              _ <-
-                Stream
-                  .repeatEval(Random[F].elementOf(rpcClients))
-                  .zip(Stream.evalSeq(Random[F].shuffleList(transactionGraph)))
-                  .evalMap { case (client, tx) => client.broadcastTransaction(tx) }
-                  .compile
-                  .drain
-                  .toResource
+              _ <- Stream
+                .repeatEval(Random[F].elementOf(rpcClients))
+                .zip(Stream.evalSeq(Random[F].shuffleList(transactionGraph)))
+                .evalMap { case (client, tx) => client.broadcastTransaction(tx) }
+                .compile
+                .drain
+                .toResource
 
               // verify that first transaction had been confirmed
               _ <- Async[F].timeout(fetchUntilTx(rpcClientB, transactionGraph.head.id), 30.seconds).toResource
-              _ <- rpcClients
-                .parTraverse(client =>
-                  Async[F].timeout(confirmTransactions(client)(Set(transactionGraph.head.id)), 30.seconds)
-                )
-                .toResource
+
+              _ <- rpcClients.parTraverse { client =>
+                Async[F].timeout(confirmTransactions(client)(Set(transactionGraph.head.id)), 30.seconds)
+              }.toResource
 
               // verify that last transaction had not been confirmed
-              _ <- rpcClients
-                .parTraverse(verifyNotConfirmed(_)(Set(transactionGraph.last.id)))
-                .toResource
+              _ <- rpcClients.parTraverse(verifyNotConfirmed(_)(Set(transactionGraph.last.id))).toResource
 
             } yield ())
           )

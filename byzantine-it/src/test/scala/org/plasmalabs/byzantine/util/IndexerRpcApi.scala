@@ -2,10 +2,10 @@ package org.plasmalabs.byzantine.util
 
 import cats.effect._
 import cats.implicits._
-import org.plasmalabs.algebras.IndexerRpc
-
 import fs2.Stream
+import org.plasmalabs.algebras.IndexerRpc
 import org.typelevel.log4cats.Logger
+
 import scala.concurrent.duration._
 
 class IndexerRpcApi[F[_]](val client: IndexerRpc[F]) extends AnyVal {

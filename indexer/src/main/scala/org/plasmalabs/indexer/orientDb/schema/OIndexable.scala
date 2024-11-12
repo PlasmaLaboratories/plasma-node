@@ -5,9 +5,8 @@ import com.orientechnologies.orient.core.metadata.schema.OClass.INDEX_TYPE
 import org.plasmalabs.consensus.models.BlockHeader
 import org.plasmalabs.indexer.services.Txo
 import org.plasmalabs.node.models.BlockBody
-import org.plasmalabs.sdk.models.Event.{GroupPolicy, SeriesPolicy}
-import org.plasmalabs.sdk.models.LockAddress
 import org.plasmalabs.sdk.models.transaction.IoTransaction
+import org.plasmalabs.sdk.models.{GroupPolicy, LockAddress, SeriesPolicy}
 
 trait OIndexable[T] {
   def indexType: OClass.INDEX_TYPE

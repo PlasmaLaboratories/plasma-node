@@ -10,8 +10,7 @@ import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances
 import org.plasmalabs.models.ModelGenerators.GenHelper
 import org.plasmalabs.sdk.constants.NetworkConstants
 import org.plasmalabs.sdk.generators.{ModelGenerators => BramblGenerator}
-import org.plasmalabs.sdk.models.Event.SeriesPolicy
-import org.plasmalabs.sdk.models.TransactionOutputAddress
+import org.plasmalabs.sdk.models._
 import org.plasmalabs.sdk.syntax.seriesPolicyAsSeriesPolicySyntaxOps
 import org.scalamock.munit.AsyncMockFactory
 

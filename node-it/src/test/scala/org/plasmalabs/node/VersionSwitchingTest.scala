@@ -8,24 +8,24 @@ import cats.implicits._
 import fs2.io.file.{Files, Path}
 import fs2.{io => _, _}
 import munit._
-import org.typelevel.log4cats.Logger
-import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.plasmalabs.grpc.NodeRegTestGrpc
 import org.plasmalabs.indexer.services._
 import org.plasmalabs.interpreters.NodeRpcOps.clientAsNodeRpcApi
+import org.plasmalabs.ledger.interpreters.ProposalEventSourceState
 import org.plasmalabs.models.ProposalId
+import org.plasmalabs.models.protocol.RatioCodec.ratioToProtoRatio
 import org.plasmalabs.models.protocol.{ConfigConverter, ConfigGenesis}
 import org.plasmalabs.models.utility.Ratio
 import org.plasmalabs.node.Util._
+import org.plasmalabs.sdk.constants.NetworkConstants
+import org.plasmalabs.sdk.models.LockAddress
 import org.plasmalabs.sdk.models.box.{Lock, Value}
 import org.plasmalabs.sdk.models.transaction.UnspentTransactionOutput
 import org.plasmalabs.sdk.syntax._
 import org.plasmalabs.transactiongenerator.interpreters.Fs2TransactionGenerator
-import org.plasmalabs.typeclasses.implicits._
-import org.plasmalabs.models.protocol.RatioCodec.ratioToProtoRatio
-import org.plasmalabs.sdk.constants.NetworkConstants
-import org.plasmalabs.sdk.models.LockAddress
-import org.plasmalabs.ledger.interpreters.ProposalEventSourceState
+import org.typelevel.log4cats.Logger
+import org.typelevel.log4cats.slf4j.Slf4jLogger
+
 import scala.concurrent.duration._
 
 class VersionSwitchingTest extends CatsEffectSuite {
@@ -139,14 +139,13 @@ class VersionSwitchingTest extends CatsEffectSuite {
 
               _ <- rpcClients.parTraverse(fetchUntilHeight(_, 2)).toResource
 
-              _ <-
-                Stream
-                  .repeatEval(Random[F].elementOf(rpcClients))
-                  .zip(Stream.evalSeq(Random[F].shuffleList(transactionGraph1)))
-                  .evalMap { case (client, tx) => client.broadcastTransaction(tx) }
-                  .compile
-                  .drain
-                  .toResource
+              _ <- Stream
+                .repeatEval(Random[F].elementOf(rpcClients))
+                .zip(Stream.evalSeq(Random[F].shuffleList(transactionGraph1)))
+                .evalMap { case (client, tx) => client.broadcastTransaction(tx) }
+                .compile
+                .drain
+                .toResource
 
               _ <- rpcClients.parTraverse(fetchUntilEpoch(_, 2)).toResource
               proposalId = configProposalId(defaultNewConfig)

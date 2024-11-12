@@ -1,8 +1,7 @@
 package org.plasmalabs.indexer.algebras
 
 import org.plasmalabs.indexer.model.GE
-import org.plasmalabs.sdk.models.Event.{GroupPolicy, SeriesPolicy}
-import org.plasmalabs.sdk.models.{GroupId, SeriesId}
+import org.plasmalabs.sdk.models.{GroupId, GroupPolicy, SeriesId, SeriesPolicy}
 
 /**
  * Fetch Value information stored the data store.

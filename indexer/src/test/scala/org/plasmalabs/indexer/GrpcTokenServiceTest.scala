@@ -8,8 +8,7 @@ import org.plasmalabs.indexer.algebras.TokenFetcherAlgebra
 import org.plasmalabs.indexer.model.{GE, GEs}
 import org.plasmalabs.indexer.services._
 import org.plasmalabs.sdk.generators.ModelGenerators._
-import org.plasmalabs.sdk.models.Event.{GroupPolicy, SeriesPolicy}
-import org.plasmalabs.sdk.models.{GroupId, SeriesId, TransactionOutputAddress}
+import org.plasmalabs.sdk.models._
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 

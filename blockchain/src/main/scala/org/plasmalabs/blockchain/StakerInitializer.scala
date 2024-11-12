@@ -8,10 +8,10 @@ import org.plasmalabs.crypto.models.SecretKeyKesProduct
 import org.plasmalabs.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
 import org.plasmalabs.models._
 import org.plasmalabs.models.utility._
+import org.plasmalabs.quivr.models._
 import org.plasmalabs.sdk.models._
 import org.plasmalabs.sdk.models.box._
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, UnspentTransactionOutput}
-import quivr.models._
 
 /**
  * Represents the data required to initialize a new staking.  This includes the necessary secret keys, plus their

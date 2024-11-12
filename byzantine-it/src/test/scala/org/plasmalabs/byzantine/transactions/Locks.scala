@@ -1,16 +1,15 @@
 package org.plasmalabs.byzantine.transactions
 
-import org.plasmalabs.sdk.constants.NetworkConstants
-import org.plasmalabs.sdk.models.Indices
-import org.plasmalabs.sdk.models.box.{Challenge, Lock}
-import org.plasmalabs.sdk.syntax.lockAsLockSyntaxOps
-import org.plasmalabs.sdk.syntax.{cryptoToPbKeyPair, pbKeyPairToCryptoKeyPair}
+import com.google.protobuf.ByteString
 import org.plasmalabs.crypto.generation.Bip32Indexes
 import org.plasmalabs.crypto.hash.Blake2b256
 import org.plasmalabs.crypto.signing.ExtendedEd25519
-import com.google.protobuf.ByteString
-import quivr.models.{Digest, KeyPair, Preimage, Proposition}
-import quivr.models.Proposition.{DigitalSignature, TickRange}
+import org.plasmalabs.quivr.models.Proposition.{DigitalSignature, TickRange}
+import org.plasmalabs.quivr.models.{Digest, KeyPair, Preimage, Proposition}
+import org.plasmalabs.sdk.constants.NetworkConstants
+import org.plasmalabs.sdk.models.Indices
+import org.plasmalabs.sdk.models.box.{Challenge, Lock}
+import org.plasmalabs.sdk.syntax.{cryptoToPbKeyPair, lockAsLockSyntaxOps, pbKeyPairToCryptoKeyPair}
 
 /**
  * Locks used on byzantine-it.TransactionTest

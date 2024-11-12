@@ -16,6 +16,7 @@ import org.plasmalabs.ledger.models.{
 import org.plasmalabs.models.ModelGenerators._
 import org.plasmalabs.models.Slot
 import org.plasmalabs.models.generators.consensus.ModelGenerators
+import org.plasmalabs.quivr.models.Int128
 import org.plasmalabs.quivr.runtime.DynamicContext
 import org.plasmalabs.sdk.generators.ModelGenerators._
 import org.plasmalabs.sdk.models._
@@ -26,7 +27,6 @@ import org.plasmalabs.sdk.validation.TransactionAuthorizationError
 import org.plasmalabs.sdk.validation.algebras._
 import org.scalacheck.Test
 import org.scalamock.munit.AsyncMockFactory
-import quivr.models.Int128
 
 import java.util.concurrent.TimeoutException
 import scala.concurrent.duration._

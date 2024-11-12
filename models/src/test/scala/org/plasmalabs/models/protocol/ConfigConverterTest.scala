@@ -3,12 +3,13 @@ package org.plasmalabs.models.protocol
 import munit.FunSuite
 import org.plasmalabs.models.protocol.RatioCodec._
 import org.plasmalabs.models.utility.Ratio
+import org.plasmalabs.quivr.models.{Ratio => QuivrRatio}
 import org.plasmalabs.sdk.models.box.Value.ConfigProposal
 
 case class SimpleTest1(stringPar: String, intPar: Int, longPar: Long)
 case class SimpleTest2(stringPar: String, intPar: Int, longPar: Long, stringList: List[String], listInt: List[Int])
 case class SimpleTest3(stringParOpt: Option[String])
-case class RatioTest(ratio: quivr.models.Ratio)
+case class RatioTest(ratio: QuivrRatio)
 
 class ConfigConverterTest extends FunSuite {
 

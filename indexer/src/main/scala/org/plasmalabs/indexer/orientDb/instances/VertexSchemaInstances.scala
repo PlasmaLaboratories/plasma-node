@@ -9,9 +9,8 @@ import org.plasmalabs.indexer.orientDb.schema.EdgeSchemaInstances._
 import org.plasmalabs.indexer.orientDb.schema.VertexSchema
 import org.plasmalabs.indexer.services.Txo
 import org.plasmalabs.node.models.BlockBody
-import org.plasmalabs.sdk.models.Event.{GroupPolicy, SeriesPolicy}
+import org.plasmalabs.sdk.models._
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.sdk.models.{GroupId, LockAddress, SeriesId, TransactionOutputAddress}
 
 import scala.jdk.CollectionConverters._
 import scala.language.implicitConversions

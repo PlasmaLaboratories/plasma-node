@@ -7,10 +7,10 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.ledger.models.AssetId
 import org.plasmalabs.models.ModelGenerators.GenHelper
 import org.plasmalabs.numerics.implicits.intAsInt128
+import org.plasmalabs.quivr.models.Int128
 import org.plasmalabs.sdk.generators.ModelGenerators._
 import org.plasmalabs.sdk.models.box.{Attestation, FungibilityType, QuantityDescriptorType, Value}
 import org.plasmalabs.sdk.models.transaction._
-import quivr.models.Int128
 
 class TransactionRewardCalculatorSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
 

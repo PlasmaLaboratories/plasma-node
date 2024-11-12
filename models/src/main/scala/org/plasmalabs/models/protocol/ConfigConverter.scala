@@ -6,10 +6,10 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.scala._
 import org.plasmalabs.models.utility.Ratio
+import org.plasmalabs.quivr.models
+import org.plasmalabs.quivr.models.Int128
 import org.plasmalabs.sdk.models.box.Value._
 import org.plasmalabs.sdk.syntax._
-import quivr.models
-import quivr.models.Int128
 
 import scala.language.implicitConversions
 import scala.reflect.ClassTag
@@ -52,10 +52,10 @@ object RatioCodec {
   private val numeratorField = "numerator"
   private val denominatorField = "denominator"
 
-  implicit def ratioToProtoRatio(ratio: Ratio): quivr.models.Ratio =
-    quivr.models.Ratio(ratio.numerator: Int128, ratio.denominator: Int128)
+  implicit def ratioToProtoRatio(ratio: Ratio): models.Ratio =
+    models.Ratio(ratio.numerator: Int128, ratio.denominator: Int128)
 
-  class RatioDeserializer() extends JsonDeserializer[quivr.models.Ratio] {
+  class RatioDeserializer() extends JsonDeserializer[models.Ratio] {
 
     override def deserialize(p: JsonParser, context: DeserializationContext): models.Ratio = {
       val node: JsonNode = p.getCodec.readTree(p)
@@ -65,7 +65,7 @@ object RatioCodec {
     }
   }
 
-  class RatioSerializer() extends JsonSerializer[quivr.models.Ratio] {
+  class RatioSerializer() extends JsonSerializer[models.Ratio] {
 
     override def serialize(value: models.Ratio, gen: JsonGenerator, serializers: SerializerProvider): Unit = {
       val numerator = BigInt(value.numerator.value.toByteArray).toString()
