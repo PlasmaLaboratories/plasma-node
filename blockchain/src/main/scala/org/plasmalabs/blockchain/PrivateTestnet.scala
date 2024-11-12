@@ -1,7 +1,7 @@
 package org.plasmalabs.blockchain
 
 import cats.effect.Async
-import cats.implicits.*
+import cats.implicits._
 import com.google.protobuf.ByteString
 import fs2.Chunk
 import fs2.io.file.{Files, Path}
@@ -12,17 +12,18 @@ import org.plasmalabs.config.ApplicationConfig
 import org.plasmalabs.consensus.models.ProtocolVersion
 import org.plasmalabs.crypto.hash.Blake2b256
 import org.plasmalabs.crypto.models.SecretKeyKesProduct
-import org.plasmalabs.models.*
-import org.plasmalabs.models.utility.*
-import org.plasmalabs.numerics.implicits.*
+import org.plasmalabs.models._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.numerics.implicits._
 import org.plasmalabs.sdk.constants.NetworkConstants
-import org.plasmalabs.sdk.models.box.*
+import org.plasmalabs.sdk.models.box._
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, UnspentTransactionOutput}
-import org.plasmalabs.sdk.models.{Datum, Event, LockAddress, TransactionOutputAddress, TransactionId}
-import org.plasmalabs.sdk.syntax.*
+import org.plasmalabs.sdk.models.{Datum, Event, LockAddress, TransactionId, TransactionOutputAddress}
+import org.plasmalabs.sdk.syntax._
 import org.typelevel.log4cats.Logger
 import quivr.models.{Int128, Proposition}
-import scala.concurrent.duration.*
+
+import scala.concurrent.duration._
 
 object PrivateTestnet {
 
