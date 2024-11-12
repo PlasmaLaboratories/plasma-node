@@ -1,7 +1,7 @@
 package org.plasmalabs.blockchain
 
 import cats.effect.Async
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import fs2.Chunk
 import fs2.io.file.{Files, Path}
@@ -12,23 +12,57 @@ import org.plasmalabs.config.ApplicationConfig
 import org.plasmalabs.consensus.models.ProtocolVersion
 import org.plasmalabs.crypto.hash.Blake2b256
 import org.plasmalabs.crypto.models.SecretKeyKesProduct
-import org.plasmalabs.models._
-import org.plasmalabs.models.utility._
-import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.models.*
+import org.plasmalabs.models.utility.*
+import org.plasmalabs.numerics.implicits.*
 import org.plasmalabs.sdk.constants.NetworkConstants
-import org.plasmalabs.sdk.models.box.{Challenge, Lock, Value}
+import org.plasmalabs.sdk.models.box.*
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, UnspentTransactionOutput}
-import org.plasmalabs.sdk.models.{Datum, LockAddress}
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.models.{Datum, Event, LockAddress, TransactionOutputAddress, TransactionId}
+import org.plasmalabs.sdk.syntax.*
 import org.typelevel.log4cats.Logger
 import quivr.models.{Int128, Proposition}
-
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 object PrivateTestnet {
 
   val DefaultTotalStake: Int128 = 10_000_000L
   val DefaultTotalLvls: Int128 = 10_000_000L
+  private val DefaultTotalGroupEthQuantity: Int128 = 1L
+  private val DefaultTotalSeriesEthQuantity: Int128 = 1L
+  private val RegistrationUtxoGroupSeries = ByteString.copyFrom(Array.fill[Byte](32)(0))
+
+  /**
+   * Group Policy for Eth token
+   */
+  private[blockchain] val GroupPolicyEth =
+    Event.GroupPolicy(
+      label = "Eth Group",
+      registrationUtxo = TransactionOutputAddress(
+        network = NetworkConstants.PRIVATE_NETWORK_ID,
+        ledger = NetworkConstants.MAIN_LEDGER_ID,
+        index = 0,
+        id = TransactionId(RegistrationUtxoGroupSeries)
+      ),
+      fixedSeries = None
+    )
+
+  /**
+   * Serires Policy for Eth token
+   */
+  private[blockchain] val SeriesPolicyEth =
+    Event.SeriesPolicy(
+      label = "Eth Series",
+      tokenSupply = None,
+      registrationUtxo = TransactionOutputAddress(
+        network = NetworkConstants.PRIVATE_NETWORK_ID,
+        ledger = NetworkConstants.MAIN_LEDGER_ID,
+        index = 1,
+        id = TransactionId(RegistrationUtxoGroupSeries)
+      ),
+      quantityDescriptor = QuantityDescriptorType.LIQUID,
+      fungibility = FungibilityType.GROUP_AND_SERIES
+    )
 
   /**
    * Constructs several Operator StakerInitializers.  A Staker is initialized using the concatenation of the timestamp (bytes)
@@ -80,6 +114,25 @@ object PrivateTestnet {
               UnspentTransactionOutput(
                 HeightLockOneSpendingAddress,
                 Value.defaultInstance.withConfigProposal(BigBang.protocolToConfigProposal(protocol))
+              ),
+              UnspentTransactionOutput(
+                HeightLockOneSpendingAddress,
+                Value.defaultInstance.withGroup(
+                  Value.Group(
+                    groupId = GroupPolicyEth.computeId,
+                    quantity = DefaultTotalGroupEthQuantity: Int128,
+                    fixedSeries = Some(SeriesPolicyEth.computeId)
+                  )
+                )
+              ),
+              UnspentTransactionOutput(
+                HeightLockOneSpendingAddress,
+                Value.defaultInstance.withSeries(
+                  Value.Series(
+                    seriesId = SeriesPolicyEth.computeId,
+                    quantity = DefaultTotalGroupEthQuantity: Int128
+                  )
+                )
               )
             ),
             datum = Datum.IoTransaction.defaultInstance
