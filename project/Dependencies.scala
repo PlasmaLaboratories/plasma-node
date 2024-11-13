@@ -12,7 +12,7 @@ object Dependencies {
   val ioGrpcVersion = "1.68.1"
   val http4sVersion = "0.23.29"
   val protobufSpecsVersion = "0.1.2"
-  val plasmaSdkVersion = "0.2.0"
+  val plasmaSdkVersion = "0.2.1"
 
   val catsSlf4j =
     "org.typelevel" %% "log4cats-slf4j" % "2.7.0"
