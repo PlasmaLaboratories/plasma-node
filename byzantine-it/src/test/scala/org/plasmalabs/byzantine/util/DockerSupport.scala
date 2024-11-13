@@ -2,19 +2,14 @@ package org.plasmalabs.byzantine.util
 
 import cats.Applicative
 import cats.effect._
-import cats.implicits._
 import cats.effect.implicits._
+import cats.implicits._
+import com.spotify.docker.client.messages.{ContainerConfig, HostConfig, NetworkConfig, NetworkCreation}
+import com.spotify.docker.client.{DefaultDockerClient, DockerClient}
+import fs2.io.file.{Files, Path}
 import org.plasmalabs.buildinfo.node.BuildInfo
 import org.plasmalabs.consensus.models.StakingAddress
 import org.plasmalabs.typeclasses.implicits._
-import com.spotify.docker.client.messages.ContainerConfig
-import com.spotify.docker.client.messages.HostConfig
-import com.spotify.docker.client.messages.NetworkConfig
-import com.spotify.docker.client.messages.NetworkCreation
-import com.spotify.docker.client.DefaultDockerClient
-import com.spotify.docker.client.DockerClient
-import fs2.io.file.Files
-import fs2.io.file.Path
 
 import java.time.Instant
 import scala.jdk.CollectionConverters._

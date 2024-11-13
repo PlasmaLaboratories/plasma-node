@@ -1,9 +1,10 @@
 package org.plasmalabs.byzantine
 
-import org.plasmalabs.byzantine.util._
 import com.spotify.docker.client.DockerClient
-import org.typelevel.log4cats.Logger
+import org.plasmalabs.byzantine.util._
 import org.plasmalabs.interpreters.NodeRpcOps._
+import org.typelevel.log4cats.Logger
+
 import scala.concurrent.duration._
 
 class SanityCheckNodeTest extends IntegrationSuite {

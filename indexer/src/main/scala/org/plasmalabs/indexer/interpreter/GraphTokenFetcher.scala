@@ -6,8 +6,7 @@ import cats.effect.kernel.Async
 import org.plasmalabs.indexer.algebras.{TokenFetcherAlgebra, VertexFetcherAlgebra}
 import org.plasmalabs.indexer.model.GE
 import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances._
-import org.plasmalabs.sdk.models.Event.GroupPolicy
-import org.plasmalabs.sdk.models.{Event, GroupId, SeriesId}
+import org.plasmalabs.sdk.models._
 
 object GraphTokenFetcher {
 
@@ -20,7 +19,7 @@ object GraphTokenFetcher {
             .map(_.map(groupPolicySchema.decode))
             .value
 
-        override def fetchSeriesPolicy(seriesId: SeriesId): F[Either[GE, Option[Event.SeriesPolicy]]] =
+        override def fetchSeriesPolicy(seriesId: SeriesId): F[Either[GE, Option[SeriesPolicy]]] =
           EitherT(vertexFetcher.fetchSeriesPolicy(seriesId))
             .map(_.map(seriesPolicySchema.decode))
             .value

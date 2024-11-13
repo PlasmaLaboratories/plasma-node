@@ -3,23 +3,24 @@ package org.plasmalabs.byzantine
 import cats.data.OptionT
 import cats.effect.Async
 import cats.implicits._
+import com.spotify.docker.client.DockerClient
+import fs2.Stream
+import munit.{FailSuiteException, Location}
 import org.plasmalabs.algebras.NodeRpc
 import org.plasmalabs.blockchain.PrivateTestnet
+import org.plasmalabs.byzantine.transactions.{Locks, TransactionFactory, Wallet}
+import org.plasmalabs.byzantine.util._
+import org.plasmalabs.interpreters.NodeRpcOps._
 import org.plasmalabs.sdk.builders.locks.PropositionTemplate
+import org.plasmalabs.sdk.constants.NetworkConstants
 import org.plasmalabs.sdk.models._
 import org.plasmalabs.sdk.models.box._
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.sdk.syntax._
-import org.plasmalabs.byzantine.transactions.{Locks, TransactionFactory, Wallet}
-import org.plasmalabs.byzantine.util._
-import org.plasmalabs.interpreters.NodeRpcOps._
 import org.plasmalabs.typeclasses.implicits._
-import com.spotify.docker.client.DockerClient
-import fs2.Stream
-import munit.{FailSuiteException, Location}
 import org.typelevel.log4cats.Logger
+
 import scala.concurrent.duration.{Duration, DurationInt}
-import org.plasmalabs.sdk.constants.NetworkConstants
 
 class TransactionTest extends IntegrationSuite {
 

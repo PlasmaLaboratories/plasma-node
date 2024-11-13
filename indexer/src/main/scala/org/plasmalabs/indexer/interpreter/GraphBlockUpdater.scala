@@ -123,12 +123,12 @@ object GraphBlockUpdater {
                         lockAddressVertex.addEdge(addressTxoEdge.label, txoVertex)
                       }
 
-                      ioTx.groupPolicies.map(_.event).map { policy =>
+                      ioTx.datum.event.groupPolicies.map { policy =>
                         if (graph.getGroupPolicy(policy.computeId).isEmpty)
                           graph.addGroupPolicy(policy)
                       }
 
-                      ioTx.seriesPolicies.map(_.event).map { policy =>
+                      ioTx.datum.event.seriesPolicies.map { policy =>
                         if (graph.getSeriesPolicy(policy.computeId).isEmpty)
                           graph.addSeriesPolicy(policy)
                       }
@@ -201,10 +201,10 @@ object GraphBlockUpdater {
                   }
                 )
 
-                block.body.allTransactions.flatMap(_.groupPolicies).map(_.event).foreach { policy =>
+                block.body.allTransactions.flatMap(_.datum.event.groupPolicies).foreach { policy =>
                   graph.getGroupPolicy(policy.computeId).foreach(graph.removeVertex)
                 }
-                block.body.allTransactions.flatMap(_.seriesPolicies).map(_.event).foreach { policy =>
+                block.body.allTransactions.flatMap(_.datum.event.seriesPolicies).foreach { policy =>
                   graph.getSeriesPolicy(policy.computeId).foreach(graph.removeVertex)
                 }
 

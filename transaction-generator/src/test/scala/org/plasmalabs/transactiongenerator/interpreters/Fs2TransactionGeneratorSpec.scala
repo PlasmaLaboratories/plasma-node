@@ -5,11 +5,11 @@ import cats.effect.std.{Random, SecureRandom}
 import cats.implicits._
 import munit.CatsEffectSuite
 import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.quivr.models.SmallData
 import org.plasmalabs.sdk.models.box.Value
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
 import org.plasmalabs.sdk.models.{Datum, Event}
 import org.plasmalabs.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
-import quivr.models.SmallData
 
 class Fs2TransactionGeneratorSpec extends CatsEffectSuite {
   type F[A] = IO[A]

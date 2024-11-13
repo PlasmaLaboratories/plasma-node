@@ -6,6 +6,7 @@ import cats.effect.Sync
 import cats.implicits._
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
+import com.google.protobuf.duration.Duration
 import org.plasmalabs.codecs.bytes.tetra.instances._
 import org.plasmalabs.codecs.bytes.typeclasses.Transmittable
 import org.plasmalabs.config.ApplicationConfig
@@ -19,6 +20,7 @@ import org.plasmalabs.models.utility.HasLength.instances.byteStringLength
 import org.plasmalabs.models.utility._
 import org.plasmalabs.node.models._
 import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.quivr.models.Ratio
 import org.plasmalabs.sdk.models._
 import org.plasmalabs.sdk.models.box.Value
 import org.plasmalabs.sdk.models.transaction._
@@ -195,13 +197,13 @@ object BigBang {
   def protocolToConfigProposal(protocol: ApplicationConfig.Node.Protocol): Value.ConfigProposal = {
     val genesisConfig = ConfigGenesis(
       label = "genesis",
-      fEffective = protocol.fEffective: quivr.models.Ratio,
+      fEffective = protocol.fEffective: Ratio,
       vrfLddCutoff = protocol.vrfLddCutoff,
       vrfPrecision = protocol.vrfPrecision,
-      vrfBaselineDifficulty = protocol.vrfBaselineDifficulty: quivr.models.Ratio,
-      vrfAmplitude = protocol.vrfAmplitude: quivr.models.Ratio,
+      vrfBaselineDifficulty = protocol.vrfBaselineDifficulty: Ratio,
+      vrfAmplitude = protocol.vrfAmplitude: Ratio,
       chainSelectionKLookback = protocol.chainSelectionKLookback,
-      slotDuration = protocol.slotDuration: com.google.protobuf.duration.Duration,
+      slotDuration = protocol.slotDuration: Duration,
       forwardBiasedSlotWindow = protocol.forwardBiasedSlotWindow,
       operationalPeriodsPerEpoch = protocol.operationalPeriodsPerEpoch,
       kesKeyHours = protocol.kesKeyHours,

@@ -103,11 +103,11 @@ object BodySyntaxValidation {
                 for {
                   _ <- cond(rewardTransaction.inputs.sizeIs == 1)
                   // Prohibit policy/statement creation
-                  _ <- cond(rewardTransaction.groupPolicies.isEmpty)
-                  _ <- cond(rewardTransaction.seriesPolicies.isEmpty)
-                  _ <- cond(rewardTransaction.mintingStatements.isEmpty)
-                  _ <- cond(rewardTransaction.mergingStatements.isEmpty)
-                  _ <- cond(rewardTransaction.splittingStatements.isEmpty)
+                  _ <- cond(rewardTransaction.datum.event.groupPolicies.isEmpty)
+                  _ <- cond(rewardTransaction.datum.event.seriesPolicies.isEmpty)
+                  _ <- cond(rewardTransaction.datum.event.mintingStatements.isEmpty)
+                  _ <- cond(rewardTransaction.datum.event.mergingStatements.isEmpty)
+                  _ <- cond(rewardTransaction.datum.event.splittingStatements.isEmpty)
                   // Prohibit registrations in Topl rewards
                   _ <- cond(rewardTransaction.outputs.forall(_.value.value.topl.forall(_.registration.isEmpty)))
                   // Verify quantities

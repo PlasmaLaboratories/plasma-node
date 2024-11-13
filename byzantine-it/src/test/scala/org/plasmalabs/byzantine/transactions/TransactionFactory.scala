@@ -2,20 +2,19 @@ package org.plasmalabs.byzantine.transactions
 
 import cats.effect.Async
 import cats.implicits._
+import com.google.protobuf.ByteString
 import org.plasmalabs.blockchain.StakerInitializers
+import org.plasmalabs.crypto.signing.ExtendedEd25519
+import org.plasmalabs.quivr.api.Prover
+import org.plasmalabs.quivr.models._
 import org.plasmalabs.sdk.builders.locks.PropositionTemplate
 import org.plasmalabs.sdk.builders.locks.PropositionTemplate.PropositionType
 import org.plasmalabs.sdk.common.ContainsSignable.ContainsSignableTOps
 import org.plasmalabs.sdk.common.ContainsSignable.instances.ioTransactionSignable
+import org.plasmalabs.sdk.models._
 import org.plasmalabs.sdk.models.box.{Attestation, Box, Lock, Value}
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, Schedule, SpentTransactionOutput, UnspentTransactionOutput}
-import org.plasmalabs.sdk.models._
-import org.plasmalabs.sdk.syntax._
-import org.plasmalabs.sdk.syntax.pbKeyPairToCryptoKeyPair
-import org.plasmalabs.crypto.signing.ExtendedEd25519
-import org.plasmalabs.quivr.api.Prover
-import com.google.protobuf.ByteString
-import quivr.models._
+import org.plasmalabs.sdk.syntax.{pbKeyPairToCryptoKeyPair, _}
 
 object TransactionFactory {
 
@@ -457,7 +456,7 @@ object TransactionFactory {
         )
       )
 
-      groupPolicy = Event.GroupPolicy(label = "Crypto Frogs", inputBoxId)
+      groupPolicy = GroupPolicy(label = "Crypto Frogs", inputBoxId)
       outputs = List(
         UnspentTransactionOutput(
           Locks.HeightRangeLockAddress,
@@ -475,10 +474,13 @@ object TransactionFactory {
         IoTransaction.defaultInstance
           .withInputs(inputs)
           .withOutputs(outputs)
-          .withGroupPolicies(Seq(Datum.GroupPolicy(groupPolicy)))
           .withDatum(
             Datum.IoTransaction(
-              Event.IoTransaction(Schedule(0, Long.MaxValue, timestamp.toEpochMilli), SmallData.defaultInstance)
+              Event.IoTransaction(
+                schedule = Schedule(0, Long.MaxValue, timestamp.toEpochMilli),
+                metadata = SmallData.defaultInstance,
+                groupPolicies = Seq(groupPolicy)
+              )
             )
           )
 
@@ -514,7 +516,7 @@ object TransactionFactory {
         )
       )
 
-      seriesPolicy = Event.SeriesPolicy(label = "Crypto Frogs", registrationUtxo = inputBoxId)
+      seriesPolicy = SeriesPolicy(label = "Crypto Frogs", registrationUtxo = inputBoxId)
       outputs = List(
         UnspentTransactionOutput(
           Locks.HeightRangeLockAddress,
@@ -531,10 +533,13 @@ object TransactionFactory {
         IoTransaction.defaultInstance
           .withInputs(inputs)
           .withOutputs(outputs)
-          .withSeriesPolicies(Seq(Datum.SeriesPolicy(seriesPolicy)))
           .withDatum(
             Datum.IoTransaction(
-              Event.IoTransaction(Schedule(0, Long.MaxValue, timestamp.toEpochMilli), SmallData.defaultInstance)
+              Event.IoTransaction(
+                schedule = Schedule(0, Long.MaxValue, timestamp.toEpochMilli),
+                metadata = SmallData.defaultInstance,
+                seriesPolicies = Seq(seriesPolicy)
+              )
             )
           )
 
@@ -579,8 +584,8 @@ object TransactionFactory {
         )
       )
 
-      groupPolicy = Event.GroupPolicy(label = "Crypto Frogs", registrationUtxo = inputBoxIdGroup)
-      seriesPolicy = Event.SeriesPolicy(label = "Crypto Frogs", registrationUtxo = inputBoxIdSeries)
+      groupPolicy = GroupPolicy(label = "Crypto Frogs", registrationUtxo = inputBoxIdGroup)
+      seriesPolicy = SeriesPolicy(label = "Crypto Frogs", registrationUtxo = inputBoxIdSeries)
 
       outputs = List(
         UnspentTransactionOutput(
@@ -608,11 +613,14 @@ object TransactionFactory {
         IoTransaction.defaultInstance
           .withInputs(inputs)
           .withOutputs(outputs)
-          .withGroupPolicies(Seq(Datum.GroupPolicy(groupPolicy)))
-          .withSeriesPolicies(Seq(Datum.SeriesPolicy(seriesPolicy)))
           .withDatum(
             Datum.IoTransaction(
-              Event.IoTransaction(Schedule(0, Long.MaxValue, timestamp.toEpochMilli), SmallData.defaultInstance)
+              Event.IoTransaction(
+                schedule = Schedule(0, Long.MaxValue, timestamp.toEpochMilli),
+                metadata = SmallData.defaultInstance,
+                groupPolicies = Seq(groupPolicy),
+                seriesPolicies = Seq(seriesPolicy)
+              )
             )
           )
 

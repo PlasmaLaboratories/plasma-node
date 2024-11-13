@@ -9,9 +9,9 @@ import fs2.Chunk
 import fs2.io.file.{Files, Path}
 import org.plasmalabs.consensus.models.{BlockId, StakingAddress}
 import org.plasmalabs.models.utility._
+import org.plasmalabs.quivr.models.{Int128, Ratio}
 import org.plasmalabs.sdk.models.LockAddress
 import org.plasmalabs.sdk.syntax._
-import quivr.models.{Int128, Ratio}
 
 import scala.concurrent.duration._
 import scala.util.Try

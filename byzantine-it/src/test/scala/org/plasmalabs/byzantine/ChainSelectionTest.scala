@@ -3,13 +3,12 @@ package org.plasmalabs.byzantine
 import cats.effect.Async
 import cats.effect.implicits._
 import cats.implicits._
-import org.plasmalabs.interpreters.NodeRpcOps._
-import org.plasmalabs.byzantine.util._
 import com.spotify.docker.client.DockerClient
-
-import java.time.Instant
+import org.plasmalabs.byzantine.util._
+import org.plasmalabs.interpreters.NodeRpcOps._
 import org.typelevel.log4cats.Logger
 
+import java.time.Instant
 import scala.concurrent.duration._
 
 /**

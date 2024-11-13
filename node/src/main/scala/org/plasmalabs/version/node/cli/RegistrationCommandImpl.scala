@@ -14,10 +14,10 @@ import org.plasmalabs.consensus.models.StakingAddress
 import org.plasmalabs.crypto.generation.EntropyToSeed
 import org.plasmalabs.crypto.generation.mnemonic.Entropy
 import org.plasmalabs.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
+import org.plasmalabs.quivr.models.Int128
 import org.plasmalabs.sdk.models.transaction.Schedule
 import org.plasmalabs.sdk.models.{Datum, Event}
 import org.plasmalabs.typeclasses.implicits._
-import quivr.models.Int128
 
 object RegistrationCommand {
 

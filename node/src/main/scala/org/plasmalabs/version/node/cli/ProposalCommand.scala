@@ -6,10 +6,10 @@ import com.google.protobuf.duration.Duration
 import fs2.io.file.Path
 import org.plasmalabs.models.protocol.{ConfigConverter, ConfigGenesis}
 import org.plasmalabs.node.cli.ProposalCommand.Messages
+import org.plasmalabs.quivr.models.Ratio
 import org.plasmalabs.sdk.models.box.Value
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
 import org.plasmalabs.sdk.models.{Datum, Event, LockAddress}
-import quivr.models.Ratio
 
 object ProposalCommand {
 

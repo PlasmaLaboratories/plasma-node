@@ -5,19 +5,19 @@ import cats.effect._
 import cats.effect.implicits._
 import cats.effect.std.{Random, SecureRandom}
 import cats.implicits._
-import org.plasmalabs.sdk.syntax._
-import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import org.plasmalabs.consensus.models.BlockId
-import org.plasmalabs.indexer.services._
-import org.plasmalabs.grpc.NodeGrpc
-import org.plasmalabs.interpreters.NodeRpcOps.clientAsNodeRpcApi
-import org.plasmalabs.node.Util._
-import org.plasmalabs.transactiongenerator.interpreters.Fs2TransactionGenerator
-import org.plasmalabs.typeclasses.implicits._
 import fs2.io.file.{Files, Path}
 import fs2.{io => _, _}
 import io.grpc.Metadata
 import munit._
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.grpc.NodeGrpc
+import org.plasmalabs.indexer.services._
+import org.plasmalabs.interpreters.NodeRpcOps.clientAsNodeRpcApi
+import org.plasmalabs.node.Util._
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.transactiongenerator.interpreters.Fs2TransactionGenerator
+import org.plasmalabs.typeclasses.implicits._
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 

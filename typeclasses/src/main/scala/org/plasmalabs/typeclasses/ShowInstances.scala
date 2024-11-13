@@ -8,10 +8,10 @@ import org.plasmalabs.consensus.models.{BlockHeader, SlotId, StakingAddress}
 import org.plasmalabs.models._
 import org.plasmalabs.models.utility._
 import org.plasmalabs.node.models.BlockBody
+import org.plasmalabs.quivr.models.Int128
 import org.plasmalabs.sdk.models.box.{Box, Value}
 import org.plasmalabs.sdk.models.transaction.{SpentTransactionOutput, UnspentTransactionOutput}
 import org.plasmalabs.sdk.models.{GroupId, SeriesId, TransactionId, TransactionOutputAddress}
-import quivr.models.Int128
 
 import java.time.Instant
 
