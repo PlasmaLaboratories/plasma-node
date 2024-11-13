@@ -103,12 +103,12 @@ object ChainSelection {
             show" tineX=[${xSegment.tineLength}](${xSegment.head.slotId}..${xSegment.last.slotId})" +
             show" tineY=[${ySegment.tineLength}](${ySegment.head.slotId}..${ySegment.last.slotId})"
           ) >> Stats[F].recordHistogram(
-            "strata_node_chain_selection_longest_tinex",
+            "plasma_node_chain_selection_longest_tinex",
             "Histogram to track standard chain selection and the tines as attributes.",
             Map("tine_y_length" -> longToJson(ySegment.tineLength)),
             longToJson(xSegment.tineLength)
           ) >> Stats[F].recordHistogram(
-            "strata_node_chain_selection_longest_tiney",
+            "plasma_node_chain_selection_longest_tiney",
             "Histogram to track standard chain selection and the tines as attributes.",
             Map("tine_x_length" -> longToJson(xSegment.tineLength)),
             longToJson(ySegment.tineLength)
@@ -119,7 +119,7 @@ object ChainSelection {
             show" tineX=[${xSegment.tineLength}](${xSegment.head.slotId}..${xSegment.last.slotId})" +
             show" tineY=[${ySegment.tineLength}](${ySegment.head.slotId}..${ySegment.last.slotId})"
           ) >> Stats[F].incrementCounter(
-            "strata_node_chain_selection_density",
+            "plasma_node_chain_selection_density",
             "Counter to track density chain selection events and the tines as attributes.",
             Map("tine_x_length" -> longToJson(xSegment.tineLength), "tine_y_length" -> longToJson(ySegment.tineLength))
           )

@@ -22,8 +22,8 @@ import org.plasmalabs.algebras.Stats
  * implicit0(metrics: Stats[F]) <- KamonStatsRef.make[F]
  *
  * Use:
- * Stats[F].incrementCounter("strata_node_counter", "description", Map("attributeKey" -> "attributeValue"))
- * Stats[F].recordGauge("strata_node_gauge", "description", Map("attributeKey" -> "attributeValue"))
+ * Stats[F].incrementCounter("plasma_node_counter", "description", Map("attributeKey" -> "attributeValue"))
+ * Stats[F].recordGauge("plasma_node_gauge", "description", Map("attributeKey" -> "attributeValue"))
  */
 object KamonStatsRef {
 
