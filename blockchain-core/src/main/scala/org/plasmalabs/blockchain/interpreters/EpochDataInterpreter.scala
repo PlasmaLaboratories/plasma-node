@@ -176,31 +176,31 @@ object EpochDataEventSourcedState {
         newEpochData <- applyTransactions(newEpochDataBase)(header)
         _            <- state.put(epoch, newEpochData)
         _ <- Stats[F].recordGauge(
-          "strata_node_epoch_timestamp",
+          "plasma_node_epoch_timestamp",
           "Timestamp of the epoch.",
           Map("epoch" -> stringToJson(epoch.toString)),
           longToJson(newEpochData.startTimestamp)
         )
         _ <- Stats[F].recordGauge(
-          "strata_node_epoch",
+          "plasma_node_epoch",
           "Current value of the Epoch.",
           Map(),
           longToJson(newEpochData.epoch)
         )
         _ <- Stats[F].recordGauge(
-          "strata_node_epoch_eon",
+          "plasma_node_epoch_eon",
           "Current value of the Eon.",
           Map(),
           longToJson(newEpochData.eon)
         )
         _ <- Stats[F].recordGauge(
-          "strata_node_epoch_era",
+          "plasma_node_epoch_era",
           "Current value of the Era.",
           Map(),
           longToJson(newEpochData.era)
         )
         _ <- Stats[F].recordGauge(
-          "strata_node_epoch_transaction_count",
+          "plasma_node_epoch_transaction_count",
           "Current value of the Era.",
           Map("epoch" -> stringToJson(epoch.toString)),
           longToJson(newEpochData.transactionCount)

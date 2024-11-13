@@ -61,7 +61,7 @@ object Mempool {
                 for {
                   _ <- expireTransaction(transaction)
                   _ <- Stats[F].incrementCounter(
-                    "strata_node_mempool_transaction_expired",
+                    "plasma_node_mempool_transaction_expired",
                     "Counter when a transaction is expired from the mempool",
                     Map()
                   )
@@ -113,7 +113,7 @@ object Mempool {
                 EitherT(for {
                   adoptionsTopic <- adoptionsTopic.publish1(transactionId)
                   _ <- Stats[F].incrementCounter(
-                    "strata_node_mempool_transaction_published",
+                    "plasma_node_mempool_transaction_published",
                     "Counter when a transaction is published to the mempool topic",
                     Map()
                   )
@@ -126,7 +126,7 @@ object Mempool {
         def remove(transactionId: TransactionId): F[Unit] = for {
           _ <- fetchTransaction(transactionId).flatMap(removeWithExpiration)
           _ <- Stats[F].incrementCounter(
-            "strata_node_mempool_transaction_removed",
+            "plasma_node_mempool_transaction_removed",
             "Counter when a transaction is removed from the mempool",
             Map()
           )
