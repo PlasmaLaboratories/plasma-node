@@ -9,7 +9,7 @@ object Dependencies {
   val fs2Version = "3.11.0"
   val logback = "1.5.12"
   val orientDbVersion = "3.2.35"
-  val ioGrpcVersion = "1.64.2"
+  val ioGrpcVersion = "1.68.1"
   val http4sVersion = "0.23.29"
   val protobufSpecsVersion = "0.1.3"
   val plasmaSdkVersion = "0.2.1"
@@ -53,8 +53,7 @@ object Dependencies {
   )
 
   val cats: Seq[ModuleID] = Seq(
-    "org.typelevel" %% "cats-core" % catsCoreVersion,
-    "org.typelevel" %% "mouse"     % "1.2.4"
+    "org.typelevel" %% "cats-core" % catsCoreVersion
   )
 
   val catsEffect: Seq[ModuleID] = Seq(

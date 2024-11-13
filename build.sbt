@@ -1,7 +1,7 @@
 import sbt.Keys.{organization, test}
 import sbtassembly.MergeStrategy
 
-val scala3 = "3.4.1"
+val scala3 = "3.4.3"
 
 inThisBuild(
   List(
