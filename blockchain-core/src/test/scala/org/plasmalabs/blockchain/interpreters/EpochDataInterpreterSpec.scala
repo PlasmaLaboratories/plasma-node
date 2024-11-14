@@ -20,6 +20,7 @@ import org.plasmalabs.models.utility._
 import org.plasmalabs.node.models.{BlockBody, FullBlock, FullBlockBody}
 import org.plasmalabs.numerics.implicits._
 import org.plasmalabs.proto.node.EpochData
+import org.plasmalabs.quivr.models.Int128
 import org.plasmalabs.sdk.common.ContainsImmutable
 import org.plasmalabs.sdk.models.box.{Attestation, Value}
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
@@ -27,7 +28,6 @@ import org.plasmalabs.sdk.models.{Datum, LockAddress, LockId, TransactionId, Tra
 import org.plasmalabs.sdk.syntax._
 import org.plasmalabs.typeclasses.implicits._
 import org.scalamock.munit.AsyncMockFactory
-import quivr.models.Int128
 
 import java.time.Instant
 import scala.concurrent.duration._

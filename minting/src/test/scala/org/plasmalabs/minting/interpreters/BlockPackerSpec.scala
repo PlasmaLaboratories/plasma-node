@@ -16,6 +16,7 @@ import org.plasmalabs.ledger.models.{
 import org.plasmalabs.models.ModelGenerators._
 import org.plasmalabs.models.Slot
 import org.plasmalabs.models.generators.consensus.ModelGenerators
+import org.plasmalabs.quivr.models.Int128
 import org.plasmalabs.quivr.runtime.DynamicContext
 import org.plasmalabs.sdk.generators.ModelGenerators._
 import org.plasmalabs.sdk.models._
@@ -24,8 +25,8 @@ import org.plasmalabs.sdk.models.transaction.{IoTransaction, SpentTransactionOut
 import org.plasmalabs.sdk.syntax._
 import org.plasmalabs.sdk.validation.TransactionAuthorizationError
 import org.plasmalabs.sdk.validation.algebras._
+import org.scalacheck.Test
 import org.scalamock.munit.AsyncMockFactory
-import quivr.models.Int128
 
 import java.util.concurrent.TimeoutException
 import scala.concurrent.duration._
@@ -33,13 +34,14 @@ import scala.concurrent.duration._
 class BlockPackerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]
 
-  override def scalaCheckTestParameters =
+  override def scalaCheckTestParameters: Test.Parameters =
     super.scalaCheckTestParameters
       .withMaxSize(3)
       .withMinSuccessfulTests(5)
 
   private val dummyRewardCalc: TransactionRewardCalculatorAlgebra = (_: IoTransaction) => RewardQuantities()
   private val dummyCostCalc: TransactionCostCalculator = (tx: IoTransaction) => tx.inputs.size
+  private val emptyLockAddress = LockAddress(id = LockId(ByteString.copyFrom(Array.fill(32)(0.toByte))))
 
   test("return empty for empty mempool") {
     withMock {
@@ -130,12 +132,12 @@ class BlockPackerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with As
       val boxState = mock[BoxStateAlgebra[F]]
       (boxState
         .boxExistsAt(_: BlockId)(_: TransactionOutputAddress))
-        .expects(*, tx2.inputs(0).address)
+        .expects(*, tx2.inputs.head.address)
         .once()
         .returning(true.pure[F])
       (boxState
         .boxExistsAt(_: BlockId)(_: TransactionOutputAddress))
-        .expects(*, tx3.inputs(0).address)
+        .expects(*, tx3.inputs.head.address)
         .once()
         .returning(true.pure[F])
       val rewardCalculator = mock[TransactionRewardCalculatorAlgebra]
@@ -237,7 +239,7 @@ class BlockPackerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with As
       val boxState = mock[BoxStateAlgebra[F]]
       (boxState
         .boxExistsAt(_: BlockId)(_: TransactionOutputAddress))
-        .expects(*, tx2.inputs(0).address)
+        .expects(*, tx2.inputs.head.address)
         .once()
         .returning(true.pure[F])
       val rewardCalculator = mock[TransactionRewardCalculatorAlgebra]
@@ -281,6 +283,135 @@ class BlockPackerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with As
     }
   }
 
+  test("evict transactions from the mempool when verification throws exception") {
+    withMock {
+      val tx1 =
+        IoTransaction(datum = Datum.IoTransaction.defaultInstance)
+          .withOutputs(
+            List(
+              UnspentTransactionOutput(value = lvlValue(100), address = emptyLockAddress),
+              UnspentTransactionOutput(value = lvlValue(200), address = emptyLockAddress)
+            )
+          )
+          .embedId
+
+      val tx2 =
+        IoTransaction(datum = Datum.IoTransaction.defaultInstance)
+          .withInputs(
+            List(stxo(tx1, 0))
+          )
+          .withOutputs(
+            List(
+              UnspentTransactionOutput(value = lvlValue(50), address = emptyLockAddress)
+            )
+          )
+          .embedId
+
+      val tx31 =
+        IoTransaction(datum = Datum.IoTransaction.defaultInstance)
+          .withInputs(
+            List(stxo(tx1, 1))
+          )
+          .withOutputs(
+            List(
+              UnspentTransactionOutput(value = lvlValue(150), address = emptyLockAddress)
+            )
+          )
+          .embedId
+
+      val tx32 =
+        IoTransaction(datum = Datum.IoTransaction.defaultInstance)
+          .withInputs(
+            List(stxo(tx1, 1))
+          )
+          .withOutputs(
+            List(
+              UnspentTransactionOutput(value = lvlValue(250), address = emptyLockAddress)
+            )
+          )
+          .embedId
+
+      // tx4 is a child of tx3, so it will also be evicted
+      val tx4 =
+        IoTransaction(datum = Datum.IoTransaction.defaultInstance)
+          .withInputs(
+            List(
+              stxo(tx2, 0),
+              stxo(tx31, 0),
+              stxo(tx32, 0)
+            )
+          )
+          .withOutputs(
+            List(
+              UnspentTransactionOutput(value = lvlValue(100), address = emptyLockAddress)
+            )
+          )
+          .embedId
+
+      val mempool = mock[MempoolAlgebra[F]]
+      val mempoolGraph = MempoolGraph.empty(dummyRewardCalc, dummyCostCalc).add(tx2).add(tx31).add(tx32).add(tx4)
+      (mempool.read(_: BlockId)).expects(*).once().returning(mempoolGraph.pure[F])
+      (mempool.remove(_: TransactionId)).expects(tx31.id).once().returning(().pure[F])
+      (mempool.remove(_: TransactionId)).expects(tx32.id).once().returning(().pure[F])
+      (mempool.remove(_: TransactionId)).expects(tx4.id).once().returning(().pure[F])
+      val boxState = mock[BoxStateAlgebra[F]]
+      (boxState
+        .boxExistsAt(_: BlockId)(_: TransactionOutputAddress))
+        .expects(*, tx2.inputs.head.address)
+        .once()
+        .returning(true.pure[F])
+      val rewardCalculator = mock[TransactionRewardCalculatorAlgebra]
+      (rewardCalculator
+        .rewardsOf(_: IoTransaction))
+        .expects(*)
+        .anyNumberOfTimes()
+        .returning(RewardQuantities(BigInt(100)))
+      val costCalculator = mock[TransactionCostCalculator]
+      (costCalculator.costOf(_: IoTransaction)).expects(*).anyNumberOfTimes().returning(50L)
+      val transactionDataValidation = mock[ContextlessValidationAlgebra[F, TransactionSemanticError, IoTransaction]]
+      (transactionDataValidation
+        .validate(_: IoTransaction))
+        .expects(*)
+        .anyNumberOfTimes()
+        .onCall { case tx: IoTransaction =>
+          if (tx.id == tx31.id) throw IllegalStateException()
+          else tx.valid.pure[F]
+        }
+      val transactionAuthorizationValidation = mock[TransactionAuthorizationVerifier[F]]
+      (transactionAuthorizationValidation
+        .validate(_: DynamicContext[F, String, Datum])(_: IoTransaction))
+        .expects(*, *)
+        .anyNumberOfTimes()
+        .onCall { case (_, tx: IoTransaction) =>
+          if (tx.id == tx32.id) throw IllegalStateException()
+          else Either.right(tx).pure[F]
+        }
+
+      val registrationAccumulator = mock[RegistrationAccumulatorAlgebra[F]]
+      val testResource =
+        for {
+          validation <- BlockPackerValidation.make[F](transactionDataValidation, transactionAuthorizationValidation)
+          underTest <- BlockPacker.make[F](
+            mempool,
+            boxState,
+            rewardCalculator,
+            costCalculator,
+            validation,
+            registrationAccumulator
+          )
+          stream = underTest.blockImprover(ModelGenerators.arbitraryBlockId.arbitrary.first, 0, 0)
+          result <- stream
+            .interruptAfter(3.seconds)
+            .compile
+            .lastOrError
+            .toResource
+          _ <- IO(result.transactions).assertEquals(List(tx2)).toResource
+        } yield ()
+
+      testResource.use_
+    }
+  }
+
   test("validation") {
     withMock {
       val tx = IoTransaction(datum = Datum.IoTransaction.defaultInstance)
@@ -292,7 +423,7 @@ class BlockPackerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with As
             val m = mock[ContextlessValidationAlgebra[F, TransactionSemanticError, IoTransaction]]
             val e: TransactionSemanticError =
               TransactionSemanticErrors.InputDataMismatch(arbitrarySpentTransactionOutput.arbitrary.first)
-            (m.validate(_))
+            m.validate
               .expects(*)
               .once()
               .returning(e.invalidNec[IoTransaction].pure[F])
@@ -314,7 +445,7 @@ class BlockPackerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with As
         for {
           dataValidation <- Resource.pure[F, ContextlessValidationAlgebra[F, TransactionSemanticError, IoTransaction]] {
             val m = mock[ContextlessValidationAlgebra[F, TransactionSemanticError, IoTransaction]]
-            (m.validate(_))
+            m.validate
               .expects(tx)
               .once()
               .returning(tx.validNec[TransactionSemanticError].pure[F])
@@ -339,7 +470,7 @@ class BlockPackerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with As
         for {
           dataValidation <- Resource.pure[F, ContextlessValidationAlgebra[F, TransactionSemanticError, IoTransaction]] {
             val m = mock[ContextlessValidationAlgebra[F, TransactionSemanticError, IoTransaction]]
-            (m.validate(_))
+            m.validate
               .expects(tx)
               .once()
               .returning(tx.validNec[TransactionSemanticError].pure[F])
@@ -362,8 +493,6 @@ class BlockPackerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with As
 
   private def lvlValue(quantity: BigInt): Value =
     Value().withLvl(Value.LVL(Int128(ByteString.copyFrom(quantity.toByteArray))))
-
-  private val emptyLockAddress = LockAddress(id = LockId(ByteString.copyFrom(Array.fill(32)(0.toByte))))
 
   private def stxo(tx: IoTransaction, index: Int) =
     SpentTransactionOutput(

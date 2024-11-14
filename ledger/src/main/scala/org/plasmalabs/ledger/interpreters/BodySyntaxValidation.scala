@@ -103,11 +103,11 @@ object BodySyntaxValidation {
                 for {
                   _ <- cond(rewardTransaction.inputs.sizeIs == 1)
                   // Prohibit policy/statement creation
-                  _ <- cond(rewardTransaction.groupPolicies.isEmpty)
-                  _ <- cond(rewardTransaction.seriesPolicies.isEmpty)
-                  _ <- cond(rewardTransaction.mintingStatements.isEmpty)
-                  _ <- cond(rewardTransaction.mergingStatements.isEmpty)
-                  _ <- cond(rewardTransaction.splittingStatements.isEmpty)
+                  _ <- cond(rewardTransaction.datum.event.groupPolicies.isEmpty)
+                  _ <- cond(rewardTransaction.datum.event.seriesPolicies.isEmpty)
+                  _ <- cond(rewardTransaction.datum.event.mintingStatements.isEmpty)
+                  _ <- cond(rewardTransaction.datum.event.mergingStatements.isEmpty)
+                  _ <- cond(rewardTransaction.datum.event.splittingStatements.isEmpty)
                   // Prohibit registrations in Topl rewards
                   _ <- cond(rewardTransaction.outputs.forall(_.value.value.topl.forall(_.registration.isEmpty)))
                   // Verify quantities
@@ -115,7 +115,7 @@ object BodySyntaxValidation {
                   _             <- cond(!maximumReward.isEmpty)
                   _ <- EitherT.liftF(
                     Stats[F].recordHistogram(
-                      "strata_node_max_reward_lvl",
+                      "plasma_node_max_reward_lvl",
                       "Maximum reward in lvls.",
                       Map(),
                       longToJson(maximumReward.lvl.toLong)
@@ -123,7 +123,7 @@ object BodySyntaxValidation {
                   )
                   _ <- EitherT.liftF(
                     Stats[F].recordHistogram(
-                      "strata_node_max_reward_topl",
+                      "plasma_node_max_reward_topl",
                       "Maximum reward in topls.",
                       Map(),
                       longToJson(maximumReward.topl.toLong)
@@ -133,7 +133,7 @@ object BodySyntaxValidation {
                   _ <- cond(maximumReward.lvl >= claimedLvls)
                   _ <- EitherT.liftF(
                     Stats[F].recordHistogram(
-                      "strata_node_claimed_lvls",
+                      "plasma_node_claimed_lvls",
                       "Lvls claimed via transaction rewards.",
                       Map(),
                       longToJson(claimedLvls.toLong)
@@ -143,7 +143,7 @@ object BodySyntaxValidation {
                   _ <- cond(maximumReward.topl >= claimedTopls)
                   _ <- EitherT.liftF(
                     Stats[F].recordHistogram(
-                      "strata_node_claimed_topls",
+                      "plasma_node_claimed_topls",
                       "Topls claimed via transaction rewards.",
                       Map(),
                       longToJson(claimedTopls.toLong)
@@ -152,7 +152,7 @@ object BodySyntaxValidation {
                   claimedAssets = TransactionRewardCalculator.sumAssets(rewardTransaction.outputs)(_.value)
                   _ <- EitherT.liftF(
                     Stats[F].recordHistogram(
-                      "strata_node_claimed_assets",
+                      "plasma_node_claimed_assets",
                       "Assets claimed via transaction rewards.",
                       Map(),
                       longToJson(claimedAssets.size.toLong)

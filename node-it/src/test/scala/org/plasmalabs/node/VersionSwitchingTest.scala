@@ -8,24 +8,24 @@ import cats.implicits._
 import fs2.io.file.{Files, Path}
 import fs2.{io => _, _}
 import munit._
-import org.typelevel.log4cats.Logger
-import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.plasmalabs.grpc.NodeRegTestGrpc
 import org.plasmalabs.indexer.services._
 import org.plasmalabs.interpreters.NodeRpcOps.clientAsNodeRpcApi
+import org.plasmalabs.ledger.interpreters.ProposalEventSourceState
 import org.plasmalabs.models.ProposalId
+import org.plasmalabs.models.protocol.RatioCodec.ratioToProtoRatio
 import org.plasmalabs.models.protocol.{ConfigConverter, ConfigGenesis}
 import org.plasmalabs.models.utility.Ratio
 import org.plasmalabs.node.Util._
+import org.plasmalabs.sdk.constants.NetworkConstants
+import org.plasmalabs.sdk.models.LockAddress
 import org.plasmalabs.sdk.models.box.{Lock, Value}
 import org.plasmalabs.sdk.models.transaction.UnspentTransactionOutput
 import org.plasmalabs.sdk.syntax._
 import org.plasmalabs.transactiongenerator.interpreters.Fs2TransactionGenerator
-import org.plasmalabs.typeclasses.implicits._
-import org.plasmalabs.models.protocol.RatioCodec.ratioToProtoRatio
-import org.plasmalabs.sdk.constants.NetworkConstants
-import org.plasmalabs.sdk.models.LockAddress
-import org.plasmalabs.ledger.interpreters.ProposalEventSourceState
+import org.typelevel.log4cats.Logger
+import org.typelevel.log4cats.slf4j.Slf4jLogger
+
 import scala.concurrent.duration._
 
 class VersionSwitchingTest extends CatsEffectSuite {
@@ -65,8 +65,8 @@ class VersionSwitchingTest extends CatsEffectSuite {
 
   test("One node which change version based on voting") {
     def configNodeAPrivate(
-      dataDir:           Path,
-      stakingDir:        Path
+      dataDir:    Path,
+      stakingDir: Path
     ): String =
       s"""
          |node:
@@ -118,13 +118,13 @@ class VersionSwitchingTest extends CatsEffectSuite {
             nodeCompletion.toResource.race(for {
               rpcClientA <- NodeRegTestGrpc.Client.make[F]("127.0.0.2", 9151, tls = false)
               rpcClients = List(rpcClientA)
-              given Logger[F] <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
-              _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
-              indexerChannelA              <- org.plasmalabs.grpc.makeChannel[F]("localhost", 9151, tls = false)
-              indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
-              wallet                       <- makeWallet(indexerTxServiceA)
-              _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
-              given Random[F] <- SecureRandom.javaSecuritySecureRandom[F].toResource
+              given Logger[F]   <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
+              _                 <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
+              indexerChannelA   <- org.plasmalabs.grpc.makeChannel[F]("localhost", 9151, tls = false)
+              indexerTxServiceA <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
+              wallet            <- makeWallet(indexerTxServiceA)
+              _                 <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
+              given Random[F]   <- SecureRandom.javaSecuritySecureRandom[F].toResource
               transactionGenerator1 <-
                 Fs2TransactionGenerator
                   .make[F](wallet, _ => 1000L, Fs2TransactionGenerator.emptyMetadata[F])
@@ -139,26 +139,25 @@ class VersionSwitchingTest extends CatsEffectSuite {
 
               _ <- rpcClients.parTraverse(fetchUntilHeight(_, 2)).toResource
 
-              _ <-
-                Stream
-                  .repeatEval(Random[F].elementOf(rpcClients))
-                  .zip(Stream.evalSeq(Random[F].shuffleList(transactionGraph1)))
-                  .evalMap { case (client, tx) => client.broadcastTransaction(tx) }
-                  .compile
-                  .drain
-                  .toResource
+              _ <- Stream
+                .repeatEval(Random[F].elementOf(rpcClients))
+                .zip(Stream.evalSeq(Random[F].shuffleList(transactionGraph1)))
+                .evalMap { case (client, tx) => client.broadcastTransaction(tx) }
+                .compile
+                .drain
+                .toResource
 
               _ <- rpcClients.parTraverse(fetchUntilEpoch(_, 2)).toResource
               proposalId = configProposalId(defaultNewConfig)
               _                       <- rpcClientA.setVoting(0, proposalId).toResource
               _                       <- rpcClients.parTraverse(fetchUntilEpoch(_, 3)).toResource
               blockWithProposalVoting <- rpcClientA.canonicalHeadFullBlock(implicitly[MonadThrow[F]]).toResource
-              _ <- IO(blockWithProposalVoting.header.version.thirdDigit == proposalId).assert.toResource
+              _ <- IO(blockWithProposalVoting.header.version.votedProposalId == proposalId).assert.toResource
               _ <- rpcClients.parTraverse(fetchUntilEpoch(_, 4)).toResource
               _ <- rpcClientA.setVoting(2, 0).toResource
               _ <- rpcClients.parTraverse(fetchUntilEpoch(_, 9)).toResource
               blockWithNewVersion <- rpcClientA.canonicalHeadFullBlock(implicitly[MonadThrow[F]]).toResource
-              _                   <- IO(blockWithNewVersion.header.version.firstDigit == 2).assert.toResource
+              _                   <- IO(blockWithNewVersion.header.version.versionId == 2).assert.toResource
             } yield ())
           )
       } yield ()

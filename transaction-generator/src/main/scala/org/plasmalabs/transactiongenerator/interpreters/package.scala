@@ -1,12 +1,12 @@
 package org.plasmalabs.transactiongenerator
 
+import org.plasmalabs.quivr.models._
 import org.plasmalabs.sdk.constants.NetworkConstants
 import org.plasmalabs.sdk.models._
 import org.plasmalabs.sdk.models.box._
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.sdk.syntax._
 import org.plasmalabs.transactiongenerator.models.Wallet
-import quivr.models._
 
 package object interpreters {
 

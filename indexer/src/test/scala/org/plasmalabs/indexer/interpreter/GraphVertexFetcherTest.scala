@@ -17,7 +17,7 @@ import org.plasmalabs.models.ModelGenerators.GenHelper
 import org.plasmalabs.models.generators.consensus.ModelGenerators
 import org.plasmalabs.node.models.BlockBody
 import org.plasmalabs.sdk.generators.{ModelGenerators => BramblGenerator}
-import org.plasmalabs.sdk.models.Event.{GroupPolicy, SeriesPolicy}
+import org.plasmalabs.sdk.models._
 import org.plasmalabs.sdk.syntax.{
   groupPolicyAsGroupPolicySyntaxOps,
   ioTransactionAsTransactionSyntaxOps,

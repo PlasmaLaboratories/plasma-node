@@ -13,13 +13,13 @@ import org.plasmalabs.codecs.bytes.tetra.instances._
 import org.plasmalabs.consensus.models.BlockId
 import org.plasmalabs.models.protocol.{ConfigConverter, ConfigGenesis}
 import org.plasmalabs.node.models.{BlockBody, FullBlock}
+import org.plasmalabs.quivr.models.{Int128, Ratio}
 import org.plasmalabs.sdk.models.LockAddress
 import org.plasmalabs.sdk.models.box.Value
 import org.plasmalabs.sdk.models.box.Value.ConfigProposal
 import org.plasmalabs.sdk.models.transaction.UnspentTransactionOutput
 import org.plasmalabs.sdk.syntax._
 import org.plasmalabs.typeclasses.implicits._
-import quivr.models.{Int128, Ratio}
 
 import java.nio.charset.StandardCharsets
 import java.time.format.DateTimeFormatter

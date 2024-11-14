@@ -71,7 +71,7 @@ class BlockHeaderVotingValidationTest extends CatsEffectSuite with ScalaCheckEff
     }
 
   private def headerWithVersionVote(version: VersionId = 0) =
-    arbitraryHeader.arbitrary.first.copy(version = ProtocolVersion(secondDigit = version))
+    arbitraryHeader.arbitrary.first.copy(version = ProtocolVersion(votedVersionId = version))
 
   test("Version voting shall use only available version") {
     withMock {
@@ -95,7 +95,7 @@ class BlockHeaderVotingValidationTest extends CatsEffectSuite with ScalaCheckEff
   }
 
   private def headerOfEpochWithProposalVote(epoch: Epoch = 0, proposalId: ProposalId) =
-    arbitraryHeader.arbitrary.first.copy(slot = epoch + 1, version = ProtocolVersion(thirdDigit = proposalId))
+    arbitraryHeader.arbitrary.first.copy(slot = epoch + 1, version = ProtocolVersion(votedProposalId = proposalId))
 
   test("Proposal vote shall use only available proposals") {
     withMock {

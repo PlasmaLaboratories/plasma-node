@@ -10,11 +10,11 @@ import org.plasmalabs.config.ApplicationConfig
 import org.plasmalabs.crypto.hash.Blake2b256
 import org.plasmalabs.node.ProtocolVersioner
 import org.plasmalabs.node.models.FullBlock
+import org.plasmalabs.quivr.models.{Int128, SmallData}
 import org.plasmalabs.sdk.models.box.Value
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
 import org.plasmalabs.sdk.models.{Datum, Event}
 import org.plasmalabs.typeclasses.implicits._
-import quivr.models.{Int128, SmallData}
 
 import java.nio.charset.StandardCharsets
 

@@ -20,6 +20,7 @@ import org.plasmalabs.models._
 import org.plasmalabs.models.utility.HasLength.instances.byteStringLength
 import org.plasmalabs.models.utility.Sized
 import org.plasmalabs.node.models.{BlockBody, FullBlock, FullBlockBody}
+import org.plasmalabs.quivr.models.SmallData
 import org.plasmalabs.sdk.models._
 import org.plasmalabs.sdk.models.box._
 import org.plasmalabs.sdk.models.transaction._
@@ -27,7 +28,6 @@ import org.plasmalabs.sdk.syntax._
 import org.plasmalabs.typeclasses.implicits._
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
-import quivr.models.SmallData
 
 import scala.concurrent.duration._
 
@@ -155,10 +155,11 @@ object BlockProducer {
         headerVersion <- crossEpochForkLocal.useStateAt(parentId)(_.versionAlgebra.getVersionForEpoch(epoch))
         votedVersion  <- votedVersionF
         votedProposal <- votedProposalF
-        protocolVersion = ProtocolVersion()
-          .setVersionId(headerVersion)
-          .setVersionVote(votedVersion)
-          .setProposalVote(votedProposal)
+        protocolVersion = ProtocolVersion(
+          versionId = headerVersion,
+          votedVersionId = votedVersion,
+          votedProposalId = votedProposal
+        )
 
         blockMaker = prepareUnsignedBlock(parentSlotData, fullBody, timestamp, nextHit, protocolVersion)
         eta: Eta = Sized.strictUnsafe[ByteString, Eta.Length](nextHit.cert.eta)
@@ -173,7 +174,7 @@ object BlockProducer {
               .delay(BlockBody(block.fullBody.transactions.map(_.id), block.fullBody.rewardTransaction.map(_.id)))
               .flatMap(body => Logger[F].info(show"Minted header=${block.header} body=$body")) >>
             Stats[F].recordHistogram(
-              "strata_node_blocks_minted",
+              "plasma_node_blocks_minted",
               "Blocks minted",
               Map(),
               longToJson(block.header.height)

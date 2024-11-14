@@ -54,8 +54,6 @@ jobs:
             ~/.ivy2/cache
             ~/.coursier/cache/v1
             ~/.cache/coursier/v1
-            ~/AppData/Local/Coursier/Cache/v1
-            ~/Library/Caches/Coursier/v1
           key: ${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
 
 #      - name: Cache project

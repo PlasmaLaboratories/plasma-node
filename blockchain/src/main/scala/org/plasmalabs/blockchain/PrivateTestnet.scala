@@ -15,13 +15,13 @@ import org.plasmalabs.crypto.models.SecretKeyKesProduct
 import org.plasmalabs.models._
 import org.plasmalabs.models.utility._
 import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.quivr.models.{Int128, Proposition}
 import org.plasmalabs.sdk.constants.NetworkConstants
 import org.plasmalabs.sdk.models.box.{Challenge, Lock, Value}
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, UnspentTransactionOutput}
 import org.plasmalabs.sdk.models.{Datum, LockAddress}
 import org.plasmalabs.sdk.syntax._
 import org.typelevel.log4cats.Logger
-import quivr.models.{Int128, Proposition}
 
 import scala.concurrent.duration._
 

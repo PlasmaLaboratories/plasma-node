@@ -27,10 +27,10 @@ package object models {
   type Digest32 = Sized.Strict[Bytes, Lengths.`32`.type]
 
   type ProposalId = Int
-  val emptyProposal = 0
+  val emptyProposalId = 0
 
   type VersionId = Int
-  val emptyVersion = 0
+  val emptyVersionId = 0
 
   // how many epoch shall pass before proposal became active
   val proposalDelta = 2
