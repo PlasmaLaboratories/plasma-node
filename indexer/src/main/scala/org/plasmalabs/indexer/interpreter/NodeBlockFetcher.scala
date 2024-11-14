@@ -92,6 +92,8 @@ object NodeBlockFetcher {
             blockHeader <- OptionT(nodeRpc.fetchBlockHeader(headBlockId))
           } yield blockHeader.height).value
 
+        def fetchCanonicalHeadId(): F[Option[BlockId]] =
+          nodeRpc.fetchCanonicalHeadId()
       }
     }
 }

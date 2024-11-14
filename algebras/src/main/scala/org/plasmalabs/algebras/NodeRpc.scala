@@ -33,4 +33,6 @@ trait NodeRpc[F[_], S[_]] {
   def fetchProtocolConfigs(): F[S[NodeConfig]]
 
   def fetchEpochData(epoch: Option[Epoch]): F[Option[EpochData]]
+
+  def fetchCanonicalHeadId(): F[Option[BlockId]]
 }

@@ -50,6 +50,8 @@ object NodeRegTestGrpc {
         override def fetchProtocolConfigs(): F[Stream[F, NodeConfig]] = rpcClient.fetchProtocolConfigs()
 
         override def fetchEpochData(epoch: Option[Epoch]): F[Option[EpochData]] = rpcClient.fetchEpochData(epoch)
+
+        override def fetchCanonicalHeadId(): F[Option[BlockId]] = rpcClient.fetchCanonicalHeadId()
       }
   }
 }

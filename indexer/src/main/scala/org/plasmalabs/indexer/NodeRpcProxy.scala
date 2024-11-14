@@ -44,6 +44,9 @@ class NodeRpcProxy[F[_], Ctx](client: NodeRpcFs2Grpc[F, Ctx]) extends NodeRpcFs2
 
   override def fetchEpochData(request: FetchEpochDataReq, ctx: Ctx): F[FetchEpochDataRes] =
     client.fetchEpochData(request, ctx)
+
+  override def fetchCanonicalHeadId(request: FetchCanonicalHeadIdReq, ctx: Ctx): F[FetchCanonicalHeadIdRes] =
+    client.fetchCanonicalHeadId(request, ctx)
 }
 
 object NodeRpcProxy {
