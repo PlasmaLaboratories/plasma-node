@@ -1,8 +1,8 @@
 package org.plasmalabs.ledger.models
 
 import org.plasmalabs.models.Slot
-import org.plasmalabs.sdk.models.TransactionOutputAddress
 import org.plasmalabs.sdk.models.transaction.{Schedule, SpentTransactionOutput}
+import org.plasmalabs.sdk.models.{TransactionId, TransactionOutputAddress}
 
 sealed abstract class TransactionSemanticError
 
@@ -26,4 +26,10 @@ object TransactionSemanticErrors {
    * @param schedule the transaction's schedule
    */
   case class UnsatisfiedSchedule(slot: Slot, schedule: Schedule) extends TransactionSemanticError
+
+  /**
+   * Input transaction is missed in our transaction store
+   * @param id missed transaction id
+   */
+  case class InputTransactionIsMissed(id: TransactionId) extends TransactionSemanticError
 }
