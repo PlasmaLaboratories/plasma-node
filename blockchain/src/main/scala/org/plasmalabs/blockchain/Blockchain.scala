@@ -208,7 +208,7 @@ class BlockchainImpl[F[_]: Async: Random: Dns: Stats](
           _         <- Stream.eval(Logger[F].debug(show"Staking algebra had been built successfully"))
           blockPackerValidation <- Stream.resource(
             TransactionSemanticValidation
-              .makeDataValidation(localBlockchain.dataStores.transactions.getOrRaise)
+              .makeDataValidation(localBlockchain.dataStores.transactions.get)
               .flatMap(
                 BlockPackerValidation.make[F](_, localBlockchain.ledger.transactionAuthorizationValidation)
               )

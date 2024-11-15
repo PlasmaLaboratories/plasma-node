@@ -1,7 +1,7 @@
 package org.plasmalabs.ledger.interpreters
 
 import cats.Monad
-import cats.data.{EitherT, NonEmptyChain, Validated, ValidatedNec}
+import cats.data.{EitherT, NonEmptyChain, OptionT, Validated, ValidatedNec}
 import cats.effect._
 import cats.implicits._
 import org.plasmalabs.algebras.ContextlessValidationAlgebra
@@ -19,7 +19,7 @@ import org.plasmalabs.sdk.models.transaction.{IoTransaction, Schedule, SpentTran
 object TransactionSemanticValidation {
 
   def make[F[_]: Async](
-    fetchTransaction: TransactionId => F[IoTransaction],
+    fetchTransaction: TransactionId => F[Option[IoTransaction]],
     boxState:         BoxStateAlgebra[F]
   ): Resource[F, TransactionSemanticValidationAlgebra[F]] =
     (makeDataValidation(fetchTransaction), makeContextualValidation(boxState))
@@ -37,7 +37,7 @@ object TransactionSemanticValidation {
       )
 
   def makeDataValidation[F[_]: Monad](
-    fetchTransaction: TransactionId => F[IoTransaction]
+    fetchTransaction: TransactionId => F[Option[IoTransaction]]
   ): Resource[F, TransactionSemanticDataValidation[F]] =
     Resource.pure(new TransactionSemanticDataValidation(fetchTransaction))
 
@@ -52,7 +52,7 @@ object TransactionSemanticValidation {
  * Verifies that each claimed input value+attestation matches the information saved in the referenced output
  */
 class TransactionSemanticDataValidation[F[_]: Monad](
-  fetchTransaction: TransactionId => F[IoTransaction]
+  fetchTransaction: TransactionId => F[Option[IoTransaction]]
 ) extends ContextlessValidationAlgebra[F, TransactionSemanticError, IoTransaction] {
 
   /**
@@ -79,8 +79,8 @@ class TransactionSemanticDataValidation[F[_]: Monad](
   private def dataValidation(
     input: SpentTransactionOutput
   ): F[Validated[NonEmptyChain[TransactionSemanticError], Unit]] =
-    fetchTransaction(input.address.id)
-      .map(spentTransaction =>
+    OptionT(fetchTransaction(input.address.id))
+      .map { spentTransaction =>
         // Did the output referenced by this input ever exist?  (Not a spend-ability check, just existence)
         spentTransaction.outputs
           .get(input.address.index)
@@ -97,7 +97,8 @@ class TransactionSemanticDataValidation[F[_]: Monad](
               .value
           )
           .void
-      )
+      }
+      .getOrElse(TransactionSemanticErrors.InputTransactionIsMissed(input.address.id).invalidNec[Unit])
 }
 
 class TransactionSemanticContextualValidation[F[_]: Async](boxState: BoxStateAlgebra[F])
