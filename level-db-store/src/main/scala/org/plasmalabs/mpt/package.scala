@@ -7,11 +7,11 @@ package object mpt {
   def hp(nibbles: Array[Byte], flag: Boolean): Array[Byte] = {
     val f = if (flag) 2 else 0
     if (nibbles.length % 2 == 0)
-      (f.toByte << 4).toByte +: nibbles.grouped(2).map { case Array(a, b) => (a << 4 | b).toByte }.toArray
+      (f.toByte << 4).toByte +: nibbles.grouped(2).map { case Array(a, b) => ((a << 4) | b).toByte }.toArray
     else
       (((f + 1) << 4) + nibbles.head).toByte +: nibbles.tail
         .grouped(2)
-        .map { case Array(a, b) => (a << 4 | b).toByte }
+        .map { case Array(a, b) => ((a << 4) | b).toByte }
         .toArray
   }
 

@@ -7,9 +7,10 @@ import fs2.io.file.Path
 import org.plasmalabs.codecs.bytes.typeclasses.Persistable
 import org.plasmalabs.db.leveldb.LevelDbStore
 import org.typelevel.log4cats.Logger
-import org.web3j.rlp.{RlpDecoder, RlpEncoder, RlpType}
+import org.web3j.rlp.{RlpDecoder, RlpType}
 
 import scala.annotation.{nowarn, targetName}
+import cats.effect.IO
 
 opaque type MPTKey = Array[Byte]
 
@@ -33,7 +34,7 @@ extension (x: Array[Byte]) {
 
 trait MPTrieContainer[F[_], Key, T] {
 
-  def getMPTrie(trieHash: TreeRoot): F[Option[MPTrie[F[_], Key, T]]]
+  def getMPTrie(trieHash: Array[Byte]): F[MPTrie[F[_], Key, T]]
 }
 
 trait MPTrie[F[_], Key, T] {
@@ -46,7 +47,7 @@ trait MPTrie[F[_], Key, T] {
    * @return The new root hash of the trie. If there is a problem with the
    * database or the trie, this will return None.
    */
-  def put(id: Key, t: T): F[Option[TreeRoot]]
+  def put(id: Key, t: T): F[TreeRoot]
 
   /**
    * Updates a value in the trie.
@@ -88,16 +89,17 @@ object MPTrie {
 
     val kEv = implicitly[MPTKeyEncoder[Key]]
 
-    def getMPTrie(trieHash: TreeRoot): F[Option[MPTrie[F[_], Key, T]]] =
+    def getMPTrie(trieHash: Array[Byte]): F[MPTrie[F[_], Key, T]] =
       levelDb
-        .get(trieHash.toByteArray)
-        .map(_.map { root =>
+        .get(trieHash)
+        .map { x =>
+          val root = x.getOrElse(Array.emptyByteArray)
           new MPTrie[F, Key, T] {
 
             val auxFcts = AuxFunctions[F, T](levelDb)
             import auxFcts._
 
-            def put(id: Key, t: T): F[Option[TreeRoot]] = {
+            def put(id: Key, t: T): F[TreeRoot] = {
 
               @nowarn("msg=.*cannot be checked at runtime because its type arguments can't be determined from.*")
               def auxPut(currentNode: Node, currentPartialKeyNibbles: Array[Byte], t: T): F[Option[Node]] =
@@ -307,12 +309,12 @@ object MPTrie {
 
               val list = RlpDecoder.decode(root)
               if (list.getValues().size() == 0) {
-                val leaf = LeafNode(kEv.toNibbles(id), t)
-                val newRoot = nodeToRlp(leaf)
-                val newTreeRootByes = keccak256(RlpEncoder.encode(newRoot))
+                val leaf = LeafNode(hp(kEv.toNibbles(id), true), t)
+                val newRootBytes = bytesRlpList.reverseGet(nodeToRlp(leaf))
+                val newTreeRootByes = keccak256(newRootBytes)
                 levelDb
-                  .put(newTreeRootByes, RlpEncoder.encode(newRoot))
-                  .as(Option(newTreeRootByes.toTreeRoot))
+                  .put(newTreeRootByes, newRootBytes)
+                  .as(newTreeRootByes.toTreeRoot)
               } else {
                 rlpTypeToNode(list) match {
                   case Some(node) =>
@@ -320,14 +322,15 @@ object MPTrie {
                       updatedNode <- OptionT(auxPut(node, kEv.toNibbles(id), t))
                       newRoot     <- OptionT.liftF(capNode(updatedNode))
                       refRoot     <- OptionT.fromOption(nodeToRef(newRoot))
-                    } yield refRoot.hash).value
-                  case None => Async[F].pure(None)
+                    } yield refRoot.hash).value.flatMap { case Some(hash) =>
+                      Async[F].pure(hash.toByteArray.toTreeRoot)
+                    }
+                  case None => Async[F].raiseError(new RuntimeException("Invalid root node"))
                 }
               }
             }
 
             def get(id: Key): F[Option[T]] = {
-              val list = RlpDecoder.decode(root)
               // there is no way that the root node is just an rlp string
               // that would mean it is a reference, so it has to be a list
               @nowarn("msg=.*cannot be checked at runtime because its type arguments can't be determined from.*")
@@ -353,7 +356,10 @@ object MPTrie {
                   case BranchNode[T](children, value) =>
                     OptionT(auxGet(partialKey.tail, children(partialKey.head)))
                 }).value
+              
+              // val list = RlpDecoder.decode(root)
               (for {
+                list <- OptionT.fromOption(bytesRlpList.getOption(root))
                 node <- OptionT.fromOption(rlpTypeToNode(list))
                 res  <- OptionT(auxGet(kEv.toNibbles(id), node))
               } yield res).value
@@ -362,6 +368,6 @@ object MPTrie {
             def update(id: Key, f: T => T): F[TreeRoot] = ???
 
           }
-        })
+        }
   }
 }

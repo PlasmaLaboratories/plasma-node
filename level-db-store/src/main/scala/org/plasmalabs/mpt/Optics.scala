@@ -23,9 +23,10 @@ private[mpt] trait Optics[T: RLPPersistable] {
 
   val rlpListPrism = Prism[RlpType, RlpList] {
     case rlpList: RlpList => Some(rlpList)
-    case _                => None
+    case _ =>
+      None
   } { case (list) =>
-    new RlpList(list)
+    list
   }
 
   val rlpLeaf = Prism[(RlpType, RlpType), LeafNode[T]] {
@@ -113,10 +114,9 @@ private[mpt] trait Optics[T: RLPPersistable] {
   }
 
   val bytesRlpList = Prism[Array[Byte], RlpType] { bytes =>
-    val list = RlpDecoder.decode(bytes)
-    Some(list)
-  } { case (list) =>
-    RlpEncoder.encode(list)
+    Some(RlpDecoder.decode(bytes).getValues().get(0))
+  } { case (elt) =>
+    RlpEncoder.encode(elt)
   }
 
   val byteToLeafPrism = bytesRlpList
