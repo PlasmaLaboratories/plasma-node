@@ -7,7 +7,6 @@ import org.plasmalabs.consensus.models.BlockHeader
 import org.plasmalabs.indexer.DbFixtureUtil
 import org.plasmalabs.indexer.algebras.{BlockFetcherAlgebra, NodeBlockFetcherAlgebra}
 import org.plasmalabs.indexer.interpreter.GraphBlockUpdater
-import org.plasmalabs.indexer.orientDb.OrientThread
 import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.implicits._
 import org.plasmalabs.indexer.orientDb.schema.EdgeSchemaInstances._
 import org.plasmalabs.indexer.services.BlockData

@@ -68,9 +68,6 @@ jobs:
       - name: git-restore-mtime
         uses: chetan/git-restore-mtime-action@v1
 
-      - name: Compile
-        run: sbt clean
-
       - name: Tests and Checks
         run: sbt checkPR
 
