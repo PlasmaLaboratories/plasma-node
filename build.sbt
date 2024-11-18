@@ -689,4 +689,3 @@ lazy val integration = (project in file("integration"))
 
 addCommandAlias("checkPR", s"; scalafixAll --check; scalafmtCheckAll; test; integration/Test/compile")
 addCommandAlias("preparePR", s"; scalafixAll; scalafmtAll; test; integration/Test/compile")
-addCommandAlias("checkPRTest", s"; scalafixAll --check; scalafmtCheckAll; test; integration/Test/compile")
