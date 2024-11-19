@@ -58,7 +58,7 @@ class AuxFunctions[F[_]: Async, T: RLPPersistable](private val levelDb: Store[F,
   def createBranch(partialKey1: Array[Byte], v1: T, partialKey2: Array[Byte], v2: T) = {
     val branch = if (partialKey2.isEmpty) {
       for {
-        newLeaf <- createNewLeaf(hp(partialKey1.tail, true), v1)
+        newLeaf <- createNewLeaf(partialKey1.tail, v1)
       } yield BranchNode[T](
         Vector
           .fill(16)(EmptyNode)
@@ -67,7 +67,7 @@ class AuxFunctions[F[_]: Async, T: RLPPersistable](private val levelDb: Store[F,
       )
     } else if (partialKey1.isEmpty) {
       for {
-        newLeaf <- createNewLeaf(hp(partialKey2.tail, true), v2)
+        newLeaf <- createNewLeaf(partialKey2.tail, v2)
       } yield BranchNode[T](
         Vector
           .fill(16)(EmptyNode)
@@ -76,8 +76,8 @@ class AuxFunctions[F[_]: Async, T: RLPPersistable](private val levelDb: Store[F,
       )
     } else {
       for {
-        newLeaf      <- createNewLeaf(hp(partialKey1.tail, true), v1)
-        previousLeaf <- createNewLeaf(hp(partialKey2.tail, true), v2)
+        newLeaf      <- createNewLeaf(partialKey1.tail, v1)
+        previousLeaf <- createNewLeaf(partialKey2.tail, v2)
       } yield BranchNode[T](
         Vector
           .fill(16)(EmptyNode)
@@ -125,7 +125,7 @@ class AuxFunctions[F[_]: Async, T: RLPPersistable](private val levelDb: Store[F,
     assert(partialKey1.length > 0)
     assert(partialKey2.length > 0)
     for {
-      cappedLeaf <- createNewLeaf(hp(partialKey2.tail, true), v)
+      cappedLeaf <- createNewLeaf(partialKey2.tail, v)
       newBranch = BranchNode[T](
         Vector
           .fill(16)(EmptyNode)

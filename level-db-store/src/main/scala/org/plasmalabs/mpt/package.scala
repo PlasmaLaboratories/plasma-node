@@ -23,7 +23,7 @@ package object mpt {
     }
   }
 
-  inline def hpFlag(hp: Array[Byte]): Boolean = hp.head >> 4 == 2
+  inline def hpFlag(hp: Array[Byte]): Boolean = ((hp.head >> 4) & 0x2) == 2
 
   def keccak256(input: Array[Byte]): Array[Byte] = {
     val kecc = new Keccak.Digest256()

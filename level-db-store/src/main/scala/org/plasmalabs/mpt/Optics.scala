@@ -49,7 +49,13 @@ private[mpt] trait Optics[T: RLPPersistable] {
   }(node => (RlpString.create(node.key), nodeToRlp(node.node)))
 
   def rlpTypeToNode(rlpType: RlpType): Option[Node] = {
-    val singleElt = rlpStringPrism.getOption(rlpType).map(x => RefNode(x.getBytes().toTreeRoot))
+    val singleElt = rlpStringPrism
+      .getOption(rlpType)
+      .flatMap { x =>
+        Option
+          .when(x.getBytes().length == 32)(RefNode(x.getBytes().toTreeRoot))
+          .orElse(Option.when(x.getBytes().isEmpty)(EmptyNode))
+      }
     val leafOrExt = for {
       list <- rlpListPrism.getOption(rlpType)
       pair <- listToPairPrism.getOption(list)
@@ -114,7 +120,9 @@ private[mpt] trait Optics[T: RLPPersistable] {
   }
 
   val bytesRlpList = Prism[Array[Byte], RlpType] { bytes =>
-    Some(RlpDecoder.decode(bytes).getValues().get(0))
+    if (bytes.isEmpty) Some(RlpDecoder.decode(bytes))
+    else
+      Some(RlpDecoder.decode(bytes).getValues().get(0))
   } { case (elt) =>
     RlpEncoder.encode(elt)
   }

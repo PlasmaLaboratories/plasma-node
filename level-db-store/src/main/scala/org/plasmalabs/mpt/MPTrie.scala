@@ -11,6 +11,7 @@ import org.web3j.rlp.{RlpDecoder, RlpType}
 
 import scala.annotation.{nowarn, targetName}
 import cats.effect.IO
+import org.web3j.rlp.RlpList
 
 opaque type MPTKey = Array[Byte]
 
@@ -104,12 +105,17 @@ object MPTrie {
               @nowarn("msg=.*cannot be checked at runtime because its type arguments can't be determined from.*")
               def auxPut(currentNode: Node, currentPartialKeyNibbles: Array[Byte], t: T): F[Option[Node]] =
                 (currentNode match
-                  case EmptyNode => OptionT(createNewLeaf(currentPartialKeyNibbles, t).map(_.some))
+                  case EmptyNode =>
+                    OptionT(createNewLeaf(currentPartialKeyNibbles, t).map(_.some))
                   case RefNode(hash) =>
                     for {
-                      refNode  <- OptionT(levelDb.get(hash.toByteArray))
-                      nextNode <- OptionT.fromOption((rlpTypeToNode compose RlpDecoder.decode)(refNode))
-                      res      <- OptionT(auxPut(nextNode, currentPartialKeyNibbles, t))
+                      refNode <- OptionT(levelDb.get(hash.toByteArray))
+                      nextNode <- OptionT.fromOption(
+                        (rlpTypeToNode compose ((x: RlpList) => x.getValues().get(0)) compose RlpDecoder.decode)(
+                          refNode
+                        )
+                      )
+                      res <- OptionT(auxPut(nextNode, currentPartialKeyNibbles, t))
                     } yield res
                   case LeafNode[T](hpEncodedPreviousPartialKey, value) =>
                     val previousPartialKeyNibbles = nibblesFromHp(hpEncodedPreviousPartialKey)
@@ -140,8 +146,8 @@ object MPTrie {
                       // we are updating the value of the node at the end of the extension
                       // we leave that to the next call to decide how to do that
                       for {
-                        node   <- OptionT(auxPut(node, Array.emptyByteArray, t))
-                        result <- OptionT.liftF(capNode(ExtensionNode[T](hpEncodedPreviousPartialKey, node)))
+                        newNode <- OptionT(auxPut(node, Array.emptyByteArray, t))
+                        result  <- OptionT.liftF(capNode(ExtensionNode[T](hpEncodedPreviousPartialKey, newNode)))
                       } yield result
                     } else if (currentPartialKeyNibbles.isEmpty) {
                       // in this case we are getting here from a branch node that consumed the last nibble
@@ -158,7 +164,7 @@ object MPTrie {
                         // we create a branch with the extension as a node and the value as the branch's end value
                         for {
                           cappedExtension <- OptionT
-                            .liftF(capNode(ExtensionNode[T](previousPartialKeyNibbles.tail, node)))
+                            .liftF(capNode(ExtensionNode[T](hp(previousPartialKeyNibbles.tail, false), node)))
                           newBranch <- OptionT.liftF(
                             createBranch(
                               previousPartialKeyNibbles,
@@ -188,7 +194,7 @@ object MPTrie {
                           // in this case we create a branch with the extension and another with the leaf containing the value
                           for {
                             cappedExtension <- OptionT
-                              .liftF(capNode(ExtensionNode[T](previousPartialKeyNibbles.tail, node)))
+                              .liftF(capNode(ExtensionNode[T](hp(previousPartialKeyNibbles.tail, false), node)))
                             newBranch <- OptionT.liftF(
                               createBranch(
                                 previousPartialKeyNibbles,
@@ -216,7 +222,7 @@ object MPTrie {
                               auxPut(node, currentPartialKeyNibbles.drop(prefixLength), t)
                             )
                             cappedExtension <- OptionT.liftF(
-                              capNode(ExtensionNode[T](previousPartialKeyNibbles, updatedChild))
+                              capNode(ExtensionNode[T](hpEncodedPreviousPartialKey, updatedChild))
                             )
                           } yield cappedExtension
                         } else if (currentPartialKeyNibbles.drop(prefixLength).length == 0) {
@@ -242,7 +248,9 @@ object MPTrie {
                             for {
                               cappedExtension <- OptionT
                                 .liftF(
-                                  capNode(ExtensionNode[T](previousPartialKeyNibbles.drop(prefixLength).tail, node))
+                                  capNode(
+                                    ExtensionNode[T](hp(previousPartialKeyNibbles.drop(prefixLength).tail, false), node)
+                                  )
                                 )
                               newBranch <- OptionT.liftF(
                                 createBranch(
@@ -265,7 +273,7 @@ object MPTrie {
                               )
                             )
                             cappedExtension <- OptionT.liftF(
-                              capNode(ExtensionNode[T](previousPartialKeyNibbles.drop(prefixLength), node))
+                              capNode(ExtensionNode[T](hp(previousPartialKeyNibbles.drop(prefixLength), false), node))
                             )
                             newBranch <- OptionT.liftF(
                               createBranch(
@@ -276,7 +284,9 @@ object MPTrie {
                               )
                             )
                             cappedExtension <- OptionT.liftF(
-                              capNode(ExtensionNode[T](previousPartialKeyNibbles.take(prefixLength), newBranch))
+                              capNode(
+                                ExtensionNode[T](hp(previousPartialKeyNibbles.take(prefixLength), false), newBranch)
+                              )
                             )
                           } yield cappedExtension
                         }
@@ -316,7 +326,8 @@ object MPTrie {
                   .put(newTreeRootByes, newRootBytes)
                   .as(newTreeRootByes.toTreeRoot)
               } else {
-                rlpTypeToNode(list) match {
+                val rlpType = list.getValues().get(0)
+                rlpTypeToNode(rlpType) match {
                   case Some(node) =>
                     (for {
                       updatedNode <- OptionT(auxPut(node, kEv.toNibbles(id), t))
@@ -339,25 +350,42 @@ object MPTrie {
                   case EmptyNode => OptionT.none
                   case RefNode(hash) =>
                     (for {
-                      refNode  <- OptionT(levelDb.get(hash.toByteArray))
-                      nextNode <- OptionT.fromOption((rlpTypeToNode compose RlpDecoder.decode)(refNode))
-                      res      <- OptionT(auxGet(partialKey, nextNode))
+                      refNode <- OptionT(levelDb.get(hash.toByteArray))
+                      nextNode <- OptionT.fromOption(
+                        (rlpTypeToNode compose ((x: RlpList) => x.getValues().get(0)) compose RlpDecoder.decode)(
+                          refNode
+                        )
+                      )
+                      res <- OptionT(auxGet(partialKey, nextNode))
                     } yield res)
                   case LeafNode[T](key, value) =>
                     // key is encoded using the hp function
                     // we encode the key using the hp function
                     OptionT.when(hp(partialKey, flag = true).sameElements(key))(value)
-                  case ExtensionNode[T](key, value) =>
+                  case ExtensionNode[T](hpEncodedKey, value) =>
                     OptionT
-                      .whenF(hp(partialKey, flag = false).sameElements(key))(
-                        auxGet(partialKey, value)
+                      .whenF(hp(partialKey, flag = false).sameElements(hpEncodedKey))(
+                        auxGet(Array.emptyByteArray, value)
                       )
+                      .orElse {
+                        val previousKeyNibbles = nibblesFromHp(hpEncodedKey)
+                        val prefixLength = partialKey.zip(previousKeyNibbles).takeWhile(_ == _).length
+                        if (prefixLength == 0) {
+                          OptionT.none
+                        } else {
+                          OptionT.liftF(auxGet(partialKey.drop(prefixLength), value))
+                        }
+                      }
                       .mapFilter(identity)
                   case BranchNode[T](children, value) =>
-                    OptionT(auxGet(partialKey.tail, children(partialKey.head)))
+                    if (partialKey.isEmpty) {
+                      OptionT.fromOption(value)
+                    } else {
+                      val child = children(partialKey.head)
+                      OptionT(auxGet(partialKey.tail, child))
+                    }
                 }).value
-              
-              // val list = RlpDecoder.decode(root)
+
               (for {
                 list <- OptionT.fromOption(bytesRlpList.getOption(root))
                 node <- OptionT.fromOption(rlpTypeToNode(list))
