@@ -1,7 +1,7 @@
 import sbt.Keys.{organization, test}
 import sbtassembly.MergeStrategy
 
-val scala3 = "3.4.3"
+val scala3 = "3.5.2"
 
 inThisBuild(
   List(
@@ -130,7 +130,7 @@ lazy val commonScalacOptions = Seq(
   "-language:higherKinds",
   "-language:postfixOps",
   "-unchecked",
-  "-Ykind-projector:underscores",
+  "-Xkind-projector:underscores",
   "-source:3.4-migration",
   "-Wunused:imports"
 )
@@ -689,4 +689,3 @@ lazy val integration = (project in file("integration"))
 
 addCommandAlias("checkPR", s"; scalafixAll --check; scalafmtCheckAll; test; integration/Test/compile")
 addCommandAlias("preparePR", s"; scalafixAll; scalafmtAll; test; integration/Test/compile")
-addCommandAlias("checkPRTest", s"; scalafixAll --check; scalafmtCheckAll; test; integration/Test/compile")
