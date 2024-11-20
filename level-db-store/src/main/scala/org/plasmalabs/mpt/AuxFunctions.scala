@@ -4,8 +4,12 @@ import cats.effect.kernel.Async
 import org.plasmalabs.algebras.Store
 import scala.annotation.nowarn
 
-class AuxFunctions[F[_]: Async, T: RLPPersistable](private val levelDb: Store[F, Array[Byte], Array[Byte]])
-    extends Optics[T] {
+private[mpt] trait AuxFunctions[F[_]: Async, T: RLPPersistable]
+    extends Optics[T]
+    with MPTUpdateOps[F, T]
+    with MPTPutOps[F, T] {
+
+  val levelDb: Store[F, Array[Byte], Array[Byte]]
 
   import cats.implicits._
 
