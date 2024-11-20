@@ -56,7 +56,7 @@ trait MPTrie[F[_], Key, T] {
    * @param f The function to apply to the value.
    * @return The new root hash of the trie.
    */
-  def update(id: Key, f: T => T): F[TreeRoot]
+  def update(id: Key, f: T => T): F[Option[TreeRoot]]
 
   /**
    * Gets a value from the trie.
@@ -98,6 +98,85 @@ object MPTrie {
 
             val auxFcts = AuxFunctions[F, T](levelDb)
             import auxFcts._
+
+            @nowarn("msg=.*cannot be checked at runtime because its type arguments can't be determined from.*")
+            def auxUpdate(currentNode: Node, currentPartialKeyNibbles: Array[Byte], f: T => T): F[Option[Node]] =
+              (currentNode match
+                case EmptyNode =>
+                  OptionT.none
+                case RefNode(hash) =>
+                  for {
+                    refNode <- OptionT(levelDb.get(hash.toByteArray))
+                    nextNode <- OptionT.fromOption(
+                      (rlpTypeToNode compose ((x: RlpList) => x.getValues().get(0)) compose RlpDecoder.decode)(
+                        refNode
+                      )
+                    )
+                    res <- OptionT(auxUpdate(nextNode, currentPartialKeyNibbles, f))
+                  } yield res
+                case LeafNode[T](hpEncodedPreviousPartialKey, value) =>
+                  val previousPartialKeyNibbles = nibblesFromHp(hpEncodedPreviousPartialKey)
+                  if (currentPartialKeyNibbles.sameElements(previousPartialKeyNibbles)) { // replace case
+                    OptionT.liftF(createNewLeaf(currentPartialKeyNibbles, f(value)))
+                  } else {
+                    OptionT.none
+                  }
+                case n @ ExtensionNode[T](hpEncodedPreviousPartialKey, node) =>
+                  // this by definition has at least one nibble
+                  val previousPartialKeyNibbles = nibblesFromHp(hpEncodedPreviousPartialKey)
+                  if (currentPartialKeyNibbles.sameElements(previousPartialKeyNibbles)) {
+                    // we are updating the value of the node at the end of the extension
+                    // we leave that to the next call to decide how to do that
+                    for {
+                      newNode <- OptionT(auxUpdate(node, Array.emptyByteArray, f))
+                      result  <- OptionT.liftF(capNode(ExtensionNode[T](hpEncodedPreviousPartialKey, newNode)))
+                    } yield result
+                  } else {
+                    val prefixLength =
+                      currentPartialKeyNibbles.zip(previousPartialKeyNibbles).takeWhile(_ == _).length
+                    if (prefixLength != 0) {
+                      if (previousPartialKeyNibbles.drop(prefixLength).length == 0) {
+                        // here we will replace the whole node at the end of the extension
+                        // with a new value
+                        // the currentPartialKeyNibbles.drop(prefixLength) might
+                        // be empty, but  that is handled in the next call
+                        for {
+                          updatedChild <- OptionT(
+                            auxUpdate(node, currentPartialKeyNibbles.drop(prefixLength), f)
+                          )
+                          cappedExtension <- OptionT.liftF(
+                            capNode(ExtensionNode[T](hpEncodedPreviousPartialKey, updatedChild))
+                          )
+                        } yield cappedExtension
+                      } else OptionT.none
+                    } else {
+                      OptionT.none
+                    }
+                  }
+                case n @ BranchNode[T](children, someValue) =>
+                  // two cases
+                  // 1. currentPartialKeyNibbles.isEmpty
+                  // here we just update the value of the branch
+                  if (currentPartialKeyNibbles.isEmpty) {
+                    val newBranch = BranchNode[T](
+                      children,
+                      someValue.map(f)
+                    )
+                    OptionT.liftF(capNode(newBranch))
+                  } else {
+                    // 2. currentPartialKeyNibbles.nonEmpty
+                    // here we have to go down the branch and update the child or children
+                    val child = children(currentPartialKeyNibbles.head)
+                    for {
+                      updatedChild <- OptionT(auxUpdate(child, currentPartialKeyNibbles.tail, f))
+                      newBranch = BranchNode[T](
+                        children.updated(currentPartialKeyNibbles.head, updatedChild),
+                        someValue
+                      )
+                      result <- OptionT.liftF(capNode(newBranch))
+                    } yield result
+                  }
+              ).value
 
             @nowarn("msg=.*cannot be checked at runtime because its type arguments can't be determined from.*")
             def auxPut(currentNode: Node, currentPartialKeyNibbles: Array[Byte], t: T): F[Option[Node]] =
@@ -401,7 +480,23 @@ object MPTrie {
               } yield res).value
             }
 
-            def update(id: Key, f: T => T): F[TreeRoot] = ???
+            def update(id: Key, f: T => T): F[Option[TreeRoot]] = {
+              val list = RlpDecoder.decode(root)
+              if (list.getValues().size() == 0) {
+                None.pure[F]
+              } else {
+                val rlpType = list.getValues().get(0)
+                rlpTypeToNode(rlpType) match {
+                  case Some(node) =>
+                    (for {
+                      updatedNode <- OptionT(auxUpdate(node, kEv.toNibbles(id), f))
+                      newRoot     <- OptionT.liftF(capNode(updatedNode))
+                      refRoot     <- OptionT.liftF(nodeToRef(newRoot))
+                    } yield refRoot.hash).value
+                  case None => None.pure[F]
+                }
+              }
+            }
 
           }
         }
