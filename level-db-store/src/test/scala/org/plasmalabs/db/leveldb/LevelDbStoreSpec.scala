@@ -1,12 +1,12 @@
 package org.plasmalabs.db.leveldb
 
 import cats.effect.{IO, Resource}
-import cats.implicits.*
+import cats.implicits._
 import fs2.io.file.{Files, Path}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.testInterpreters.NoOpLogger
 import org.plasmalabs.codecs.bytes.typeclasses.Persistable
-import org.plasmalabs.codecs.bytes.typeclasses.implicits.*
+import org.plasmalabs.codecs.bytes.typeclasses.implicits._
 import org.typelevel.log4cats.Logger
 import scodec.{Codec, codecs}
 
