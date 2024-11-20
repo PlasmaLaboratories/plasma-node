@@ -1,7 +1,7 @@
 package org.plasmalabs.mpt
 
 import cats.effect.IO
-import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
+import munit.CatsEffectSuite
 import org.plasmalabs.algebras.testInterpreters.NoOpLogger
 import org.typelevel.log4cats.Logger
 import org.web3j.rlp.RlpType
@@ -9,8 +9,6 @@ import fs2.io.file.Files
 import cats.effect.kernel.Resource
 import fs2.io.file.Path
 import org.web3j.rlp.RlpString
-import org.web3j.rlp.RlpList
-import fs2.text.utf8
 
 /**
  * This is a test suite for the MPTrie class.
@@ -197,16 +195,102 @@ class MPTrieSpec extends CatsEffectSuite {
   cleanUpDb.test("Insert with branch creation") { mpt =>
     assertIO(
       for {
-        mptRoot    <- mpt.getMPTrie(keccak256(Array.empty))
-        treeRoot   <- mptRoot.put("testKey".getBytes(), "testValue")
-        mptRoot    <- mpt.getMPTrie(treeRoot.toByteArray)
-        treeRoot   <- mptRoot.put("testKey0".getBytes(), "testValue0")
-        mptRoot    <- mpt.getMPTrie(treeRoot.toByteArray)
-        treeRoot   <- mptRoot.put("testKeyA".getBytes(), "testValueA")
-        mptRoot    <- mpt.getMPTrie(treeRoot.toByteArray)
+        mptRoot  <- mpt.getMPTrie(keccak256(Array.empty))
+        treeRoot <- mptRoot.put("testKey".getBytes(), "testValue")
+        mptRoot  <- mpt.getMPTrie(treeRoot.toByteArray)
+        treeRoot <- mptRoot.put("testKey0".getBytes(), "testValue0")
+        mptRoot  <- mpt.getMPTrie(treeRoot.toByteArray)
+        treeRoot <- mptRoot.put("testKeyA".getBytes(), "testValueA")
       } yield treeRoot.toByteArray.toList,
       branchExample
     )
+  }
+
+  // ca 77 01 a9 08 a4 f2 a5 6c 04 49 2f ae 96 2c c1 d0 87 1a 73 4e 1d dd f6 ff 39 3c 5a db 9a 8f 99>
+  val extensionExample =
+    List(
+      0xca.toByte,
+      0x77.toByte,
+      0x01.toByte,
+      0xa9.toByte,
+      0x08.toByte,
+      0xa4.toByte,
+      0xf2.toByte,
+      0xa5.toByte,
+      0x6c.toByte,
+      0x04.toByte,
+      0x49.toByte,
+      0x2f.toByte,
+      0xae.toByte,
+      0x96.toByte,
+      0x2c.toByte,
+      0xc1.toByte,
+      0xd0.toByte,
+      0x87.toByte,
+      0x1a.toByte,
+      0x73.toByte,
+      0x4e.toByte,
+      0x1d.toByte,
+      0xdd.toByte,
+      0xf6.toByte,
+      0xff.toByte,
+      0x39.toByte,
+      0x3c.toByte,
+      0x5a.toByte,
+      0xdb.toByte,
+      0x9a.toByte,
+      0x8f.toByte,
+      0x99.toByte
+    )
+
+  cleanUpDb.test("Insert with branch extension node") { mpt =>
+    assertIO(
+      for {
+        mptRoot  <- mpt.getMPTrie(keccak256(Array.empty))
+        treeRoot <- mptRoot.put("testKey".getBytes(), "testValue")
+        mptRoot  <- mpt.getMPTrie(treeRoot.toByteArray)
+        treeRoot <- mptRoot.put("testKey0001".getBytes(), "testValue0")
+        mptRoot  <- mpt.getMPTrie(treeRoot.toByteArray)
+        treeRoot <- mptRoot.put("testKey000A".getBytes(), "testValueA")
+        mptRoot  <- mpt.getMPTrie(treeRoot.toByteArray)
+      } yield treeRoot.toByteArray.toList,
+      extensionExample
+    )
+  }
+
+  cleanUpDb.test("Random key/value test") { mpt =>
+    val keys = 1000
+    val key_len = 3
+    var i = 0
+    for {
+      keyPairs <- IO {
+        (1 to keys).map { _ =>
+          val key = scala.util.Random.alphanumeric.take(key_len).mkString.getBytes()
+          val value = scala.util.Random.alphanumeric.take(key_len).mkString
+          (key, value)
+        }
+      }
+      treeRoot <- keyPairs.foldLeft(mpt.getMPTrie(keccak256(Array.empty))) { case (mptRoot, (key, value)) =>
+        for {
+          mptRoot  <- mptRoot
+          treeRoot <- mptRoot.put(key, value)
+          mptRoot  <- mpt.getMPTrie(treeRoot.toByteArray)
+          _        <- IO.println("test: " + i)
+          _ <- IO.println(
+            "key: " + key.map(_.toChar).mkString + " value: " + value
+          )
+          _ <- IO { i = i + 1 }
+          _ <- assertIOBoolean(
+            for {
+              retrievedValue <- mptRoot.get(key)
+              _ <- IO.println(
+                "retrievedValue: " + retrievedValue
+              )
+            } yield retrievedValue == Some(value)
+          )
+        } yield mptRoot
+      }
+    } yield ()
   }
 
 }

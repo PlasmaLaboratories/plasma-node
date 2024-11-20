@@ -151,7 +151,8 @@ class AuxFunctions[F[_]: Async, T: RLPPersistable](private val levelDb: Store[F,
         partialKey2,
         v2
       )
-      result <- capNode(ExtensionNode[T](hp(prefix, false), newBranch))
+      newExtension = ExtensionNode[T](hp(prefix, false), newBranch)
+      result <- capNode(newExtension)
     } yield result
 
   def createNewExtension(

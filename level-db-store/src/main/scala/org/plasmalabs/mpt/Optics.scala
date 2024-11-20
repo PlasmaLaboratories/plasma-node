@@ -42,8 +42,7 @@ private[mpt] trait Optics[T: RLPPersistable] {
     case (encodedKey, encodedValue) =>
       for {
         key   <- rlpStringPrism.getOption(encodedKey) if !hpFlag(key.getBytes())
-        value <- rlpStringPrism.getOption(encodedValue)
-        node  <- rlpTypeToNode(value)
+        node  <- rlpTypeToNode(encodedValue)
       } yield ExtensionNode(key.getBytes(), node)
     case null => None
   }(node => (RlpString.create(node.key), nodeToRlp(node.node)))
