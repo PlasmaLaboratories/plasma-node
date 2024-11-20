@@ -11,10 +11,8 @@ import fs2.io.file.Path
 import org.web3j.rlp.RlpString
 import munit.ScalaCheckEffectSuite
 import org.scalacheck.Gen
-import org.scalacheck.Prop
 import org.scalacheck.effect.PropF
 import cats.effect.kernel.Ref
-import org.checkerframework.checker.units.qual.s
 
 /**
  * This is a test suite for the MPTrie class.
