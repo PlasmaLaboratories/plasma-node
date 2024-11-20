@@ -9,6 +9,7 @@ class AuxFunctions[F[_]: Async, T: RLPPersistable](private val levelDb: Store[F,
 
   import cats.implicits._
 
+  @nowarn("msg=.*cannot be checked at runtime because its type arguments can't be determined from.*")
   def nodeToRef(node: Node): F[RefNode] = node match {
     case ref: RefNode => ref.pure[F]
     case n: LeafNode[T] =>
