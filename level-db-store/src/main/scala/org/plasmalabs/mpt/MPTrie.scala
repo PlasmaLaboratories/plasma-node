@@ -7,10 +7,9 @@ import fs2.io.file.Path
 import org.plasmalabs.codecs.bytes.typeclasses.Persistable
 import org.plasmalabs.db.leveldb.LevelDbStore
 import org.typelevel.log4cats.Logger
-import org.web3j.rlp.{RlpDecoder, RlpType}
+import org.web3j.rlp.RlpDecoder
 
-import scala.annotation.{nowarn, targetName}
-import org.web3j.rlp.RlpList
+import scala.annotation.targetName
 
 opaque type MPTKey = Array[Byte]
 
@@ -99,7 +98,6 @@ object MPTrie {
             override val levelDb = levelDbRef
 
             def put(id: Key, t: T): F[TreeRoot] = {
-
               val list = RlpDecoder.decode(root)
               if (list.getValues().size() == 0) {
                 val leaf = LeafNode(hp(kEv.toNibbles(id), true), t)
@@ -126,58 +124,12 @@ object MPTrie {
               }
             }
 
-            def get(id: Key): F[Option[T]] = {
-              // there is no way that the root node is just an rlp string
-              // that would mean it is a reference, so it has to be a list
-              @nowarn("msg=.*cannot be checked at runtime because its type arguments can't be determined from.*")
-              def auxGet(partialKey: Array[Byte], currentNode: Node): F[Option[T]] =
-                (currentNode match {
-                  case EmptyNode =>
-                    OptionT.none
-                  case RefNode(hash) =>
-                    (for {
-                      refNode <- OptionT(levelDb.get(hash.toByteArray))
-                      nextNode <- OptionT.fromOption(
-                        (rlpTypeToNode compose ((x: RlpList) => x.getValues().get(0)) compose RlpDecoder.decode)(
-                          refNode
-                        )
-                      )
-                      res <- OptionT(auxGet(partialKey, nextNode))
-                    } yield res)
-                  case LeafNode[T](key, value) =>
-                    // key is encoded using the hp function
-                    // we encode the key using the hp function
-                    OptionT.when(hp(partialKey, flag = true).sameElements(key))(value)
-                  case ExtensionNode[T](hpEncodedKey, value) =>
-                    OptionT
-                      .whenF(hp(partialKey, flag = false).sameElements(hpEncodedKey)) {
-                        auxGet(Array.emptyByteArray, value)
-                      }
-                      .orElse {
-                        val previousKeyNibbles = nibblesFromHp(hpEncodedKey)
-                        val prefixLength = partialKey.zip(previousKeyNibbles).takeWhile(_ == _).length
-                        if (prefixLength == previousKeyNibbles.length) {
-                          OptionT.liftF(auxGet(partialKey.drop(prefixLength), value))
-                        } else {
-                          OptionT.none
-                        }
-                      }
-                      .mapFilter(identity)
-                  case BranchNode[T](children, value) =>
-                    if (partialKey.isEmpty) {
-                      OptionT.fromOption(value)
-                    } else {
-                      val child = children(partialKey.head)
-                      OptionT(auxGet(partialKey.tail, child))
-                    }
-                }).value
-
+            def get(id: Key): F[Option[T]] =
               (for {
                 list <- OptionT.fromOption(bytesRlpList.getOption(root))
                 node <- OptionT.fromOption(rlpTypeToNode(list))
                 res  <- OptionT(auxGet(kEv.toNibbles(id), node))
               } yield res).value
-            }
 
             def update(id: Key, f: T => T): F[Option[TreeRoot]] = {
               val list = RlpDecoder.decode(root)

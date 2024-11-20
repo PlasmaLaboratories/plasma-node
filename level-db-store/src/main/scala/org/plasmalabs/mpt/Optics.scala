@@ -2,6 +2,7 @@ package org.plasmalabs.mpt
 
 import monocle.Prism
 import org.web3j.rlp.{RlpDecoder, RlpEncoder, RlpList, RlpString, RlpType}
+
 import scala.annotation.nowarn
 
 private[mpt] trait Optics[T: RLPPersistable] {
@@ -73,7 +74,6 @@ private[mpt] trait Optics[T: RLPPersistable] {
     case RefNode(hash)  => rlpStringPrism.reverseGet(RlpString.create(hash.toByteArray))
     case EmptyNode      => RlpString.create(Array.emptyByteArray)
   }
-
 
   val rlpBranch: Prism[RlpList, BranchNode[T]] = Prism[RlpList, BranchNode[T]] { list =>
     val size = list.getValues().size()

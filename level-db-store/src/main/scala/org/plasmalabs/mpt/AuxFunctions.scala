@@ -2,12 +2,14 @@ package org.plasmalabs.mpt
 
 import cats.effect.kernel.Async
 import org.plasmalabs.algebras.Store
+
 import scala.annotation.nowarn
 
 private[mpt] trait AuxFunctions[F[_]: Async, T: RLPPersistable]
     extends Optics[T]
     with MPTUpdateOps[F, T]
-    with MPTPutOps[F, T] {
+    with MPTPutOps[F, T]
+    with MPTGetOps[F, T] {
 
   val levelDb: Store[F, Array[Byte], Array[Byte]]
 

@@ -1,7 +1,7 @@
 package org.plasmalabs.mpt
 
 trait MPTTestData {
-  
+
   val simpleMPTHash = List(
     0x8e.toByte,
     0x81.toByte,
@@ -73,7 +73,6 @@ trait MPTTestData {
     0xfb.toByte
   )
 
-
   // 98 aa bc d8 89 d3 3a f5 97 1f 95 82 31 be 14 6c bd 28 64 d4 48 5a b6 8c f1 fc 8c a3 e8 ce 23 88>
   val branchExample =
     List(
@@ -110,6 +109,7 @@ trait MPTTestData {
       0x23.toByte,
       0x88.toByte
     )
+
   // ca 77 01 a9 08 a4 f2 a5 6c 04 49 2f ae 96 2c c1 d0 87 1a 73 4e 1d dd f6 ff 39 3c 5a db 9a 8f 99>
   val extensionExample =
     List(

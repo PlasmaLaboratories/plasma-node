@@ -1,18 +1,14 @@
 package org.plasmalabs.mpt
 
 import cats.effect.IO
-import munit.CatsEffectSuite
+import cats.effect.kernel.{Ref, Resource}
+import fs2.io.file.{Files, Path}
+import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.testInterpreters.NoOpLogger
-import org.typelevel.log4cats.Logger
-import org.web3j.rlp.RlpType
-import fs2.io.file.Files
-import cats.effect.kernel.Resource
-import fs2.io.file.Path
-import org.web3j.rlp.RlpString
-import munit.ScalaCheckEffectSuite
 import org.scalacheck.Gen
 import org.scalacheck.effect.PropF
-import cats.effect.kernel.Ref
+import org.typelevel.log4cats.Logger
+import org.web3j.rlp.{RlpString, RlpType}
 
 /**
  * This is a test suite for the MPTrie class.
