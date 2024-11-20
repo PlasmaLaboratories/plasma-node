@@ -9,12 +9,18 @@ import fs2.io.file.Files
 import cats.effect.kernel.Resource
 import fs2.io.file.Path
 import org.web3j.rlp.RlpString
+import munit.ScalaCheckEffectSuite
+import org.scalacheck.Gen
+import org.scalacheck.Prop
+import org.scalacheck.effect.PropF
+import cats.effect.kernel.Ref
+import org.checkerframework.checker.units.qual.s
 
 /**
  * This is a test suite for the MPTrie class.
  * Examples from https://github.com/gabrocheleau/merkle-patricia-trees-examples
  */
-class MPTrieSpec extends CatsEffectSuite {
+class MPTrieSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
 
   type F[A] = IO[A]
 
@@ -42,13 +48,13 @@ class MPTrieSpec extends CatsEffectSuite {
 
   implicit val logger: Logger[F] = new NoOpLogger[F]
 
+  val dbResource = for {
+    testPath <- Resource.make(Files[IO].createTempDirectory)(Files[IO].deleteRecursively)
+    mpt      <- MPTrie.makeContainer[IO, SpecKey, SpecValue](testPath)
+  } yield mpt
+
   val cleanUpDb =
-    ResourceFunFixture(
-      for {
-        testPath <- Resource.make(Files[IO].createTempDirectory)(Files[IO].deleteRecursively)
-        mpt      <- MPTrie.makeContainer[IO, SpecKey, SpecValue](testPath)
-      } yield mpt
-    )
+    ResourceFunFixture(dbResource)
 
   cleanUpDb.test("Get root of empty") { mpt =>
     assertIO(
@@ -258,39 +264,65 @@ class MPTrieSpec extends CatsEffectSuite {
     )
   }
 
-  cleanUpDb.test("Random key/value test") { mpt =>
-    val keys = 1000
-    val key_len = 3
-    var i = 0
-    for {
-      keyPairs <- IO {
-        (1 to keys).map { _ =>
-          val key = scala.util.Random.alphanumeric.take(key_len).mkString.getBytes()
-          val value = scala.util.Random.alphanumeric.take(key_len).mkString
-          (key, value)
-        }
-      }
-      treeRoot <- keyPairs.foldLeft(mpt.getMPTrie(keccak256(Array.empty))) { case (mptRoot, (key, value)) =>
-        for {
-          mptRoot  <- mptRoot
-          treeRoot <- mptRoot.put(key, value)
-          mptRoot  <- mpt.getMPTrie(treeRoot.toByteArray)
-          _        <- IO.println("test: " + i)
-          _ <- IO.println(
-            "key: " + key.map(_.toChar).mkString + " value: " + value
-          )
-          _ <- IO { i = i + 1 }
-          _ <- assertIOBoolean(
+  def genKey() = Gen.alphaNumStr
+
+  def genValue() = Gen.alphaNumStr
+
+  def genMap() =
+    Gen
+      .nonEmptyMap(for {
+        key   <- genKey()
+        value <- genValue()
+      } yield (key, value))
+
+  test("Random key/value test") {
+    PropF.forAllF(genMap()) { map =>
+      for {
+        treeRoot <- dbResource.use(mpt =>
+          map.foldLeft(mpt.getMPTrie(keccak256(Array.empty))) { case (mptRoot, (key, value)) =>
             for {
-              retrievedValue <- mptRoot.get(key)
-              _ <- IO.println(
-                "retrievedValue: " + retrievedValue
+
+              mptRoot  <- mptRoot
+              treeRoot <- mptRoot.put(key.getBytes(), value)
+              mptRoot  <- mpt.getMPTrie(treeRoot.toByteArray)
+              _ <- assertIOBoolean(
+                for {
+                  retrievedValue <- mptRoot.get(key.getBytes())
+                } yield retrievedValue == Some(value)
               )
-            } yield retrievedValue == Some(value)
-          )
-        } yield mptRoot
-      }
-    } yield ()
+            } yield mptRoot
+          }
+        )
+      } yield ()
+    }
+  }
+
+  cleanUpDb.test("Random key/value test large map") { mpt =>
+    PropF.forAllF(for {
+      key             <- Gen.stringOfN(4, Gen.alphaNumChar)
+      value           <- Gen.alphaNumStr
+      someTreeRootRef <- Gen.const(Ref.of[IO, Option[Array[Byte]]](None).unsafeRunSync())
+    } yield (key, value, someTreeRootRef)) { entry =>
+      val (key, value, someTreeRootRef) = entry
+      for {
+        someTreeRoot <- someTreeRootRef.get
+        mptRoot      <- mpt.getMPTrie(someTreeRoot.getOrElse(keccak256(Array.empty)))
+        treeRoot <-
+          for {
+            treeRoot <- mptRoot.put(key.getBytes(), value)
+            mptRoot  <- mpt.getMPTrie(treeRoot.toByteArray)
+            _ <- someTreeRootRef.set(
+              Some(treeRoot.toByteArray)
+            )
+            _ <- assertIOBoolean(
+              for {
+                retrievedValue <- mptRoot.get(key.getBytes())
+              } yield retrievedValue == Some(value)
+            )
+          } yield mptRoot
+
+      } yield ()
+    }
   }
 
 }

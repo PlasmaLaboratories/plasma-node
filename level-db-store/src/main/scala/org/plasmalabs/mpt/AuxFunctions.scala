@@ -9,6 +9,30 @@ class AuxFunctions[F[_]: Async, T: RLPPersistable](private val levelDb: Store[F,
 
   import cats.implicits._
 
+  def nodeToRef(node: Node): F[RefNode] = node match {
+    case ref: RefNode => ref.pure[F]
+    case n: LeafNode[T] =>
+      val encodedNewLeaf = byteToLeafPrism.reverseGet(n)
+      val keccak = keccak256(encodedNewLeaf)
+      for {
+        _ <- levelDb.put(keccak, encodedNewLeaf)
+      } yield RefNode(keccak.toTreeRoot)
+
+    case n: ExtensionNode[T] =>
+      val encodedExtension = byteToExtension.reverseGet(n)
+      val keccak = keccak256(encodedExtension)
+      for {
+        _ <- levelDb.put(keccak, encodedExtension)
+      } yield RefNode(keccak.toTreeRoot)
+    case n: BranchNode[T] =>
+      val encodedBranch = byteToBranch.reverseGet(n)
+      val keccak = keccak256(encodedBranch)
+      for {
+        _ <- levelDb.put(keccak, encodedBranch)
+      } yield RefNode(keccak256(encodedBranch).toTreeRoot)
+    case EmptyNode => RefNode(keccak256(Array.emptyByteArray).toTreeRoot).pure[F]
+  }
+
   @nowarn("msg=.*cannot be checked at runtime because its type arguments can't be determined from.*")
   def capNode(node: Node): F[Node] = node match {
     case n: RefNode =>

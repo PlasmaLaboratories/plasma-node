@@ -337,7 +337,7 @@ object MPTrie {
                     (for {
                       updatedNode <- OptionT(auxPut(node, kEv.toNibbles(id), t))
                       newRoot     <- OptionT.liftF(capNode(updatedNode))
-                      refRoot     <- OptionT.fromOption(nodeToRef(newRoot))
+                      refRoot     <- OptionT.liftF(nodeToRef(newRoot))
                     } yield refRoot.hash).value.flatMap {
                       case Some(hash) =>
                         Async[F].pure(hash.toByteArray.toTreeRoot)

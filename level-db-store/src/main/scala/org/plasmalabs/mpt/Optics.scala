@@ -41,8 +41,8 @@ private[mpt] trait Optics[T: RLPPersistable] {
   val rlpExtension = Prism[(RlpType, RlpType), ExtensionNode[T]] {
     case (encodedKey, encodedValue) =>
       for {
-        key   <- rlpStringPrism.getOption(encodedKey) if !hpFlag(key.getBytes())
-        node  <- rlpTypeToNode(encodedValue)
+        key  <- rlpStringPrism.getOption(encodedKey) if !hpFlag(key.getBytes())
+        node <- rlpTypeToNode(encodedValue)
       } yield ExtensionNode(key.getBytes(), node)
     case null => None
   }(node => (RlpString.create(node.key), nodeToRlp(node.node)))
@@ -74,10 +74,6 @@ private[mpt] trait Optics[T: RLPPersistable] {
     case EmptyNode      => RlpString.create(Array.emptyByteArray)
   }
 
-  def nodeToRef(node: Node): Option[RefNode] = node match {
-    case ref: RefNode => Some(ref)
-    case _            => None
-  }
 
   val rlpBranch: Prism[RlpList, BranchNode[T]] = Prism[RlpList, BranchNode[T]] { list =>
     val size = list.getValues().size()
