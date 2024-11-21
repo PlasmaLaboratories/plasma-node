@@ -8,10 +8,10 @@ import org.plasmalabs.blockchain.PrivateTestnet.{DefaultTotalStake, GroupPolicyE
 import org.plasmalabs.config.ApplicationConfig
 import org.plasmalabs.models.utility.Ratio
 import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.quivr.models.Int128
 import org.plasmalabs.sdk.models.box.Value
 import org.plasmalabs.sdk.syntax._
 import org.scalamock.munit.AsyncMockFactory
-import quivr.models.Int128
 
 import scala.concurrent.duration.FiniteDuration
 

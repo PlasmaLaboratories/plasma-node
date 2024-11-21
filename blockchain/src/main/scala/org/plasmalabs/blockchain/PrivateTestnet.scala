@@ -17,9 +17,9 @@ import org.plasmalabs.models.utility._
 import org.plasmalabs.numerics.implicits._
 import org.plasmalabs.quivr.models.{Int128, Proposition}
 import org.plasmalabs.sdk.constants.NetworkConstants
+import org.plasmalabs.sdk.models._
 import org.plasmalabs.sdk.models.box._
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, UnspentTransactionOutput}
-import org.plasmalabs.sdk.models.{Datum, Event, LockAddress, TransactionId, TransactionOutputAddress}
 import org.plasmalabs.sdk.syntax._
 import org.typelevel.log4cats.Logger
 
@@ -37,7 +37,7 @@ object PrivateTestnet {
    * Group Policy for Eth token
    */
   private[blockchain] val GroupPolicyEth =
-    Event.GroupPolicy(
+    GroupPolicy(
       label = "Eth Group",
       registrationUtxo = TransactionOutputAddress(
         network = NetworkConstants.PRIVATE_NETWORK_ID,
@@ -52,7 +52,7 @@ object PrivateTestnet {
    * Serires Policy for Eth token
    */
   private[blockchain] val SeriesPolicyEth =
-    Event.SeriesPolicy(
+    SeriesPolicy(
       label = "Eth Series",
       tokenSupply = None,
       registrationUtxo = TransactionOutputAddress(
