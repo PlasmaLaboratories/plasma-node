@@ -3,16 +3,16 @@ package org.plasmalabs.networking.fsnetwork
 import cats.Applicative
 import cats.data.NonEmptyChain
 import cats.effect.{Async, IO}
-import cats.implicits._
+import cats.implicits.*
 import com.github.benmanes.caffeine.cache.{Cache, Caffeine}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.Store
 import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData, SlotId}
 import org.plasmalabs.models.ModelGenerators.GenHelper
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
 import org.plasmalabs.models.generators.node.ModelGenerators
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.networking.fsnetwork.BlockChecker.BlockCheckerActor
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError.BodyNotFoundInPeer
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError.HeaderNotFoundInPeer

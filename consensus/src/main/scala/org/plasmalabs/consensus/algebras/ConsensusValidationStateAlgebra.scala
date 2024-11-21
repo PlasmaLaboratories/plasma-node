@@ -2,11 +2,11 @@ package org.plasmalabs.consensus.algebras
 
 import cats.Monad
 import cats.data.OptionT
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.consensus.models.{ActiveStaker, BlockId, StakingAddress}
-import org.plasmalabs.models._
+import org.plasmalabs.models.*
 import org.plasmalabs.models.utility.Ratio
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 
 trait ConsensusValidationStateAlgebra[F[_]] {
 

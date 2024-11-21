@@ -1,6 +1,6 @@
 package org.plasmalabs.consensus.algebras
 
-import org.plasmalabs.models._
+import org.plasmalabs.models.*
 
 trait VersionInfoAlgebra[F[_]] {
   def addVersionStartEpoch(epoch:    Epoch, version: VersionId): F[Unit]

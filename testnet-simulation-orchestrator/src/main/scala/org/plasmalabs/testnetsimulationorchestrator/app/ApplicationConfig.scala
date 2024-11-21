@@ -2,8 +2,8 @@ package org.plasmalabs.testnetsimulationorchestrator.app
 
 import cats.Show
 import com.typesafe.config.Config
-import pureconfig.generic.derivation.default._
-import pureconfig.{ConfigSource, _}
+import pureconfig.generic.derivation.default.*
+import pureconfig.{ConfigSource, *}
 
 import scala.concurrent.duration.FiniteDuration
 

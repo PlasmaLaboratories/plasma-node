@@ -5,16 +5,16 @@ import cats.data.NonEmptyChain
 import cats.effect.Async
 import cats.effect.implicits.genSpawnOps
 import cats.effect.kernel.{Outcome, Resource}
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import fs2.concurrent.Topic
 import org.plasmalabs.algebras.Store
 import org.plasmalabs.blockchain.BlockchainCore
 import org.plasmalabs.config.ApplicationConfig.Node.NetworkProperties
 import org.plasmalabs.crypto.signing.Ed25519VRF
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.models.utility.NetworkCommands
-import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances.*
 import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
 import org.plasmalabs.networking.p2p.{DisconnectedPeer, PeerConnectionChange, PeerConnectionChanges}
 import org.typelevel.log4cats.Logger

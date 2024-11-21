@@ -1,18 +1,18 @@
 package org.plasmalabs.networking.blockchain
 
-import cats._
+import cats.*
 import cats.data.OptionT
 import cats.effect.kernel.Sync
-import cats.implicits._
+import cats.implicits.*
 import fs2.Stream
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
 import org.plasmalabs.models.utility.Ratio
 import org.plasmalabs.networking.p2p.ConnectedPeer
-import org.plasmalabs.node.models._
-import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.node.models.*
+import org.plasmalabs.numerics.implicits.*
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 
 /**

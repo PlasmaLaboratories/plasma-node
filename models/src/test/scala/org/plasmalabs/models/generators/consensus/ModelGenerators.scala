@@ -2,9 +2,9 @@ package org.plasmalabs.models.generators.consensus
 
 import cats.data.{Chain, NonEmptyChain}
 import com.google.protobuf.ByteString
-import org.plasmalabs.consensus.models._
-import org.plasmalabs.models.generators.common.ModelGenerators._
-import org.plasmalabs.models.utility._
+import org.plasmalabs.consensus.models.*
+import org.plasmalabs.models.generators.common.ModelGenerators.*
+import org.plasmalabs.models.utility.*
 import org.scalacheck.{Arbitrary, Gen}
 
 import scala.annotation.tailrec

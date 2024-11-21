@@ -1,16 +1,16 @@
 package org.plasmalabs.blockchain
 
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
-import org.plasmalabs.consensus.models._
+import org.plasmalabs.consensus.models.*
 import org.plasmalabs.crypto.hash.Blake2b256
 import org.plasmalabs.crypto.models.SecretKeyKesProduct
 import org.plasmalabs.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
-import org.plasmalabs.models._
-import org.plasmalabs.models.utility._
-import org.plasmalabs.quivr.models._
-import org.plasmalabs.sdk.models._
-import org.plasmalabs.sdk.models.box._
+import org.plasmalabs.models.*
+import org.plasmalabs.models.utility.*
+import org.plasmalabs.quivr.models.*
+import org.plasmalabs.sdk.models.*
+import org.plasmalabs.sdk.models.box.*
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, UnspentTransactionOutput}
 
 /**

@@ -3,9 +3,9 @@ package org.plasmalabs.networking.fsnetwork
 import cats.Applicative
 import cats.data.Chain
 import cats.effect.Async
-import cats.implicits._
-import org.plasmalabs.models.p2p._
-import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import cats.implicits.*
+import org.plasmalabs.models.p2p.*
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances.*
 import org.plasmalabs.networking.fsnetwork.PeerActor.PeerActor
 import org.plasmalabs.networking.fsnetwork.PeersHandler.allowedTransition
 import org.typelevel.log4cats.Logger

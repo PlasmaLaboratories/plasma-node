@@ -4,8 +4,8 @@ import cats.data.EitherT
 import cats.effect.Async
 import cats.effect.kernel.Sync
 import cats.effect.std.Queue
-import cats.implicits._
-import fs2._
+import cats.implicits.*
+import fs2.*
 
 object AbandonerPipe {
 

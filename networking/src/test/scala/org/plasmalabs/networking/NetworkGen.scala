@@ -1,9 +1,9 @@
 package org.plasmalabs.networking
 
 import com.google.protobuf.ByteString
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.networking.blockchain.NetworkProtocolVersions
-import org.plasmalabs.networking.p2p._
+import org.plasmalabs.networking.p2p.*
 import org.scalacheck.{Arbitrary, Gen}
 
 trait NetworkGen {

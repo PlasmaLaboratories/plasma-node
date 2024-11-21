@@ -3,7 +3,7 @@ package org.plasmalabs.networking.fsnetwork
 import cats.data.NonEmptyChain
 import cats.effect.kernel.{Async, Sync}
 import cats.effect.{IO, Resource}
-import cats.implicits._
+import cats.implicits.*
 import cats.{Applicative, MonadThrow, Show}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.Store
@@ -14,8 +14,8 @@ import org.plasmalabs.crypto.signing.Ed25519VRF
 import org.plasmalabs.eventtree.ParentChildTree
 import org.plasmalabs.ledger.algebras.MempoolAlgebra
 import org.plasmalabs.models.ModelGenerators.GenHelper
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.networking.KnownHostOps
 import org.plasmalabs.networking.blockchain.BlockchainPeerClient
 import org.plasmalabs.networking.fsnetwork.NetworkQualityError.{IncorrectPongMessage, NoPongMessage}
@@ -27,7 +27,7 @@ import org.plasmalabs.networking.fsnetwork.PeersManager.Message.PingPongMessageP
 import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
 import org.plasmalabs.networking.fsnetwork.RequestsProxy.RequestsProxyActor
 import org.plasmalabs.networking.fsnetwork.TestHelper.{arbitraryHost, arbitraryKnownHost}
-import org.plasmalabs.node.models._
+import org.plasmalabs.node.models.*
 import org.plasmalabs.sdk.generators.TransactionGenerator
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction

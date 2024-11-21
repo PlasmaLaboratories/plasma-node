@@ -1,7 +1,7 @@
 package org.plasmalabs.consensus.models
 
 import org.plasmalabs.crypto.models.SignatureKesProduct
-import org.plasmalabs.{models => legacyModels}
+import org.plasmalabs.models as legacyModels
 
 import legacyModels.Bytes
 import legacyModels.Eta

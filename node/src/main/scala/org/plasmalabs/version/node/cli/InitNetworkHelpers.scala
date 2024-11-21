@@ -1,15 +1,15 @@
 package org.plasmalabs.node.cli
 
 import cats.MonadThrow
-import cats.data._
-import cats.effect._
+import cats.data.*
+import cats.effect.*
 import cats.effect.std.Console
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import com.google.protobuf.duration.Duration
 import fs2.io.file.Path
-import org.plasmalabs.blockchain._
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.blockchain.*
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.consensus.models.BlockId
 import org.plasmalabs.models.protocol.{ConfigConverter, ConfigGenesis}
 import org.plasmalabs.node.models.{BlockBody, FullBlock}
@@ -18,8 +18,8 @@ import org.plasmalabs.sdk.models.LockAddress
 import org.plasmalabs.sdk.models.box.Value
 import org.plasmalabs.sdk.models.box.Value.ConfigProposal
 import org.plasmalabs.sdk.models.transaction.UnspentTransactionOutput
-import org.plasmalabs.sdk.syntax._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.sdk.syntax.*
+import org.plasmalabs.typeclasses.implicits.*
 
 import java.nio.charset.StandardCharsets
 import java.time.format.DateTimeFormatter

@@ -1,11 +1,11 @@
 package org.plasmalabs.indexer.orientDb.instances
 
 import com.orientechnologies.orient.core.metadata.schema.OType
-import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances._
+import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances.*
 import org.plasmalabs.indexer.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
 import org.plasmalabs.sdk.common.ContainsImmutable.instances.ioTransactionImmutable
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 
 object SchemaIoTransaction {
 

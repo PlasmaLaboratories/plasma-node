@@ -1,6 +1,6 @@
 package org.plasmalabs.codecs.bytes.scodecs.valuetypes
 
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.codecs.bytes.scodecs.valuetypes.Constants.byteSize
 import scodec.bits.BitVector
 import scodec.{Attempt, Codec, DecodeResult, Decoder, Encoder, Err, SizeBound}

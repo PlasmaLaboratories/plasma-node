@@ -1,12 +1,12 @@
 package org.plasmalabs.ledger.implicits
 
 import cats.Show
-import cats.implicits._
-import org.plasmalabs.ledger.models._
+import cats.implicits.*
+import org.plasmalabs.ledger.models.*
 import org.plasmalabs.quivr.runtime.QuivrRuntimeError
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 import org.plasmalabs.sdk.validation.{TransactionAuthorizationError, TransactionSyntaxError}
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 trait LedgerShowInstances {
 

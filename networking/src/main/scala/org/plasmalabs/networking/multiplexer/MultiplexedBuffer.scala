@@ -2,10 +2,10 @@ package org.plasmalabs.networking.multiplexer
 
 import cats.MonadThrow
 import cats.data.OptionT
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.std.Queue
 import cats.effect.{Async, Deferred, Resource}
-import cats.implicits._
+import cats.implicits.*
 import fs2.Stream
 
 /**

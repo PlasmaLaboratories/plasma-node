@@ -1,16 +1,16 @@
 package org.plasmalabs.consensus.interpreters
 
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.ClockAlgebra
 import org.plasmalabs.algebras.testInterpreters.TestStore
 import org.plasmalabs.consensus.interpreters.EpochBoundariesEventSourcedState.EpochBoundaries
-import org.plasmalabs.consensus.models._
+import org.plasmalabs.consensus.models.*
 import org.plasmalabs.eventtree.EventSourcedState
-import org.plasmalabs.models._
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
-import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.models.*
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
+import org.plasmalabs.numerics.implicits.*
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 

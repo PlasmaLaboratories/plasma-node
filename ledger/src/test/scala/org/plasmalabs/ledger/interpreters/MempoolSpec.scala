@@ -2,30 +2,30 @@ package org.plasmalabs.ledger.interpreters
 
 import cats.Applicative
 import cats.data.NonEmptyChain
-import cats.effect._
-import cats.implicits._
+import cats.effect.*
+import cats.implicits.*
 import fs2.Stream
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.ClockAlgebra
-import org.plasmalabs.algebras.Stats.Implicits._
+import org.plasmalabs.algebras.Stats.Implicits.*
 import org.plasmalabs.consensus.models.BlockId
 import org.plasmalabs.eventtree.ParentChildTree
 import org.plasmalabs.ledger.algebras.TransactionRewardCalculatorAlgebra
 import org.plasmalabs.ledger.models.RewardQuantities
-import org.plasmalabs.models.ModelGenerators._
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.ModelGenerators.*
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
 import org.plasmalabs.node.models.BlockBody
-import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.sdk.generators.ModelGenerators.*
 import org.plasmalabs.sdk.models.TransactionId
-import org.plasmalabs.sdk.models.transaction._
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.models.transaction.*
+import org.plasmalabs.sdk.syntax.*
 import org.plasmalabs.sdk.validation.algebras.TransactionCostCalculator
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.scalacheck.effect.PropF
 import org.scalacheck.{Gen, Test}
 import org.scalamock.munit.AsyncMockFactory
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 class MempoolSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

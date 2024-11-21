@@ -1,12 +1,12 @@
 package org.plasmalabs.grpc
 
 import cats.effect.kernel.{Async, Resource}
-import cats.implicits._
+import cats.implicits.*
 import fs2.Stream
 import io.grpc.Metadata
-import org.plasmalabs.algebras._
+import org.plasmalabs.algebras.*
 import org.plasmalabs.models.{ProposalId, VersionId}
-import org.plasmalabs.node.services._
+import org.plasmalabs.node.services.*
 
 object RegTestGrpc {
 

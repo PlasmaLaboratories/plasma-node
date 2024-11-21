@@ -1,29 +1,29 @@
 package org.plasmalabs.node
 
 import cats.Show
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import com.typesafe.config.Config
-import monocle._
-import monocle.macros._
+import monocle.*
+import monocle.macros.*
 import org.plasmalabs.config.ApplicationConfig
 import org.plasmalabs.config.ApplicationConfig.Node
 import org.plasmalabs.config.ApplicationConfig.Node.BigBangs.RegtestConfig
 import org.plasmalabs.config.ApplicationConfig.Node.KnownPeer
 import org.plasmalabs.consensus.models.{BlockId, StakingAddress}
-import org.plasmalabs.models._
-import org.plasmalabs.models.utility._
+import org.plasmalabs.models.*
+import org.plasmalabs.models.utility.*
 import org.plasmalabs.sdk.codecs.AddressCodecs.decodeAddress
 import org.plasmalabs.sdk.models.LockAddress
 import org.plasmalabs.sdk.utils.Encoding
-import pureconfig._
-import pureconfig.configurable._
+import pureconfig.*
+import pureconfig.configurable.*
 import pureconfig.generic.ProductHint
-import pureconfig.generic.semiauto._
+import pureconfig.generic.semiauto.*
 import scodec.bits.ByteVector
 
-import scala.concurrent.duration.{FiniteDuration, _}
-import scala.jdk.CollectionConverters._
+import scala.concurrent.duration.{FiniteDuration, *}
+import scala.jdk.CollectionConverters.*
 import scala.util.Try
 
 // $COVERAGE-OFF$

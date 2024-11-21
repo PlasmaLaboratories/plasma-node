@@ -2,24 +2,24 @@ package org.plasmalabs.blockchain
 
 import cats.data.EitherT
 import cats.effect.Resource
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.kernel.Async
 import cats.effect.std.Semaphore
-import cats.implicits._
+import cats.implicits.*
 import fs2.concurrent.Topic
 import org.plasmalabs.algebras.Stats
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.config.ApplicationConfig.Node.MempoolProtection
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
-import org.plasmalabs.ledger.algebras._
-import org.plasmalabs.ledger.implicits._
+import org.plasmalabs.ledger.algebras.*
+import org.plasmalabs.ledger.implicits.*
 import org.plasmalabs.ledger.interpreters.QuivrContext
-import org.plasmalabs.ledger.models._
+import org.plasmalabs.ledger.models.*
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.sdk.models.{TransactionId, TransactionOutputAddress}
 import org.plasmalabs.sdk.syntax.ioTransactionAsTransactionSyntaxOps
 import org.plasmalabs.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 
 object MempoolProtected {

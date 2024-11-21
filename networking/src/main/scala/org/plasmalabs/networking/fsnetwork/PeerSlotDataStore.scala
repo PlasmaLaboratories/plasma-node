@@ -1,7 +1,7 @@
 package org.plasmalabs.networking.fsnetwork
 
 import cats.effect.Sync
-import cats.implicits._
+import cats.implicits.*
 import com.github.benmanes.caffeine.cache.Caffeine
 import org.plasmalabs.algebras.{Store, StoreReader}
 import org.plasmalabs.consensus.models.{BlockId, SlotData}

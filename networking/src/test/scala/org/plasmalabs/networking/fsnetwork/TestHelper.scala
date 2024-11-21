@@ -1,19 +1,19 @@
 package org.plasmalabs.networking.fsnetwork
 
 import cats.data.NonEmptyChain
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
 import org.plasmalabs.models.ModelGenerators.GenHelper
 import org.plasmalabs.models.generators.consensus.ModelGenerators
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.node.models.{BlockBody, KnownHost}
 import org.plasmalabs.sdk.generators.TransactionGenerator
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.sdk.syntax._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.sdk.syntax.*
+import org.plasmalabs.typeclasses.implicits.*
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalamock.function.FunctionAdapter1
 import org.scalamock.handlers.{CallHandler1, CallHandler2, CallHandler3}

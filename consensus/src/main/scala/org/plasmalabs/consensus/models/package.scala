@@ -1,8 +1,8 @@
 package org.plasmalabs.consensus
 
 import com.google.protobuf.ByteString
-import org.plasmalabs.consensus.{models => consensusModels}
-import org.plasmalabs.crypto.{models => cryptoModels}
+import org.plasmalabs.consensus.models as consensusModels
+import org.plasmalabs.crypto.models as cryptoModels
 
 import scala.language.implicitConversions
 

@@ -2,11 +2,11 @@ package org.plasmalabs.networking.p2p
 
 import cats.data.{EitherT, OptionT}
 import cats.effect.Async
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import fs2.Chunk
 import fs2.io.net.Socket
-import org.plasmalabs.networking._
+import org.plasmalabs.networking.*
 
 object PeerVersion {
 

@@ -1,16 +1,16 @@
 package org.plasmalabs.consensus.interpreters
 
 import cats.data.EitherT
-import cats.effect._
-import cats.implicits._
+import cats.effect.*
+import cats.implicits.*
 import cats.{Monad, MonadThrow, Show}
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.{ClockAlgebra, Store}
-import org.plasmalabs.codecs.bytes.tetra.instances._
-import org.plasmalabs.codecs.bytes.typeclasses.implicits._
-import org.plasmalabs.consensus.algebras._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
+import org.plasmalabs.codecs.bytes.typeclasses.implicits.*
+import org.plasmalabs.consensus.algebras.*
 import org.plasmalabs.consensus.models.{
   ActiveStaker,
   BlockHeaderValidationFailures,
@@ -18,22 +18,22 @@ import org.plasmalabs.consensus.models.{
   StakingAddress,
   VrfArgument,
   VrfConfig,
-  _
+  *
 }
 import org.plasmalabs.consensus.thresholdEvidence
 import org.plasmalabs.crypto.generation.mnemonic.Entropy
 import org.plasmalabs.crypto.hash.{Blake2b256, Blake2b512}
 import org.plasmalabs.crypto.models.SecretKeyKesProduct
-import org.plasmalabs.crypto.signing.{Ed25519, _}
+import org.plasmalabs.crypto.signing.{Ed25519, *}
+import org.plasmalabs.models.*
 import org.plasmalabs.models.ModelGenerators.GenHelper
-import org.plasmalabs.models._
 import org.plasmalabs.models.generators.common.ModelGenerators.genSizedStrictByteString
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
+import org.plasmalabs.models.utility.*
 import org.plasmalabs.models.utility.HasLength.instances.byteStringLength
-import org.plasmalabs.models.utility._
-import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.numerics.implicits.*
 import org.plasmalabs.numerics.interpreters.{ExpInterpreter, Log1pInterpreter}
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 import org.plasmalabs.sdk.utils.CatsUnsafeResource
 import org.scalacheck.Gen
 import org.scalacheck.effect.PropF

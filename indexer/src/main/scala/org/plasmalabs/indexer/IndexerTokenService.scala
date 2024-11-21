@@ -4,7 +4,7 @@ import cats.data.EitherT
 import cats.effect.kernel.Async
 import io.grpc.Metadata
 import org.plasmalabs.indexer.algebras.TokenFetcherAlgebra
-import org.plasmalabs.indexer.services._
+import org.plasmalabs.indexer.services.*
 
 class GrpcTokenService[F[_]: Async](
   tokenFetcherAlgebra: TokenFetcherAlgebra[F]

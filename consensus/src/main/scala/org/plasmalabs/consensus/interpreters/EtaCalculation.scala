@@ -1,21 +1,21 @@
 package org.plasmalabs.consensus.interpreters
 
 import cats.data.NonEmptyChain
-import cats.effect._
-import cats.implicits._
+import cats.effect.*
+import cats.implicits.*
 import cats.{MonadThrow, Parallel}
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.google.protobuf.ByteString
-import org.plasmalabs.algebras.ClockAlgebra.implicits._
+import org.plasmalabs.algebras.ClockAlgebra.implicits.*
 import org.plasmalabs.algebras.{ClockAlgebra, Stats}
 import org.plasmalabs.consensus.algebras.EtaCalculationAlgebra
 import org.plasmalabs.consensus.models.{BlockId, EtaCalculationArgs, SlotData, SlotId}
 import org.plasmalabs.consensus.rhoToRhoNonceHash
 import org.plasmalabs.crypto.hash.{Blake2b256, Blake2b512}
-import org.plasmalabs.models._
-import org.plasmalabs.models.utility.HasLength.instances._
-import org.plasmalabs.models.utility.{Sized, _}
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.models.*
+import org.plasmalabs.models.utility.HasLength.instances.*
+import org.plasmalabs.models.utility.{Sized, *}
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import scalacache.Entry

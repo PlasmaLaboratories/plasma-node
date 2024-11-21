@@ -1,17 +1,17 @@
 package org.plasmalabs.networking.p2p
 
 import cats.data.OptionT
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.std.Random
 import cats.effect.{Async, Resource}
-import cats.implicits._
-import com.comcast.ip4s._
+import cats.implicits.*
+import com.comcast.ip4s.*
 import fs2.Stream
 import fs2.concurrent.Topic
-import fs2.io.net._
+import fs2.io.net.*
 import org.plasmalabs.crypto.signing.Ed25519
 import org.plasmalabs.models.Bytes
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.networking.SocketAddressOps
 import org.plasmalabs.networking.blockchain.NetworkProtocolVersions
 import org.typelevel.log4cats.Logger

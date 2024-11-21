@@ -2,35 +2,35 @@ package org.plasmalabs.minting.interpreters
 
 import cats.effect.std.Queue
 import cats.effect.{Async, IO}
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
-import fs2._
+import fs2.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.ClockAlgebra
-import org.plasmalabs.algebras.Stats.Implicits._
+import org.plasmalabs.algebras.Stats.Implicits.*
+import org.plasmalabs.consensus.interpreters.*
 import org.plasmalabs.consensus.interpreters.CrossEpochEventSourceState.VotingData
-import org.plasmalabs.consensus.interpreters._
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId, ProtocolVersion, SlotData, StakingAddress}
 import org.plasmalabs.eventtree.EventSourcedState
 import org.plasmalabs.ledger.algebras.TransactionRewardCalculatorAlgebra
 import org.plasmalabs.ledger.models.{AssetId, RewardQuantities}
 import org.plasmalabs.minting.algebras.{BlockPackerAlgebra, StakingAlgebra}
-import org.plasmalabs.minting.models._
-import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.minting.models.*
+import org.plasmalabs.models.ModelGenerators.*
 import org.plasmalabs.models.VersionId
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
-import org.plasmalabs.models.generators.node.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
+import org.plasmalabs.models.generators.node.ModelGenerators.*
 import org.plasmalabs.node.models.{FullBlock, FullBlockBody}
-import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.sdk.generators.ModelGenerators.*
 import org.plasmalabs.sdk.models.box.{FungibilityType, QuantityDescriptorType}
 import org.plasmalabs.sdk.models.{GroupId, LockAddress, SeriesId}
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 import org.scalacheck.Test
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 
 import scala.collection.immutable.NumericRange
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 class BlockProducerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]

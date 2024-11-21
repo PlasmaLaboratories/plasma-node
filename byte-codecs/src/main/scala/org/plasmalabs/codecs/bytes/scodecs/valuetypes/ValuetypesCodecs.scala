@@ -1,12 +1,12 @@
 package org.plasmalabs.codecs.bytes.scodecs.valuetypes
 
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
-import org.plasmalabs.codecs.bytes.ZigZagEncoder._
-import org.plasmalabs.codecs.bytes.scodecs.valuetypes.Constants._
-import org.plasmalabs.codecs.bytes.scodecs.valuetypes.Types._
+import org.plasmalabs.codecs.bytes.ZigZagEncoder.*
+import org.plasmalabs.codecs.bytes.scodecs.valuetypes.Constants.*
+import org.plasmalabs.codecs.bytes.scodecs.valuetypes.Types.*
 import scodec.bits.BitVector
-import scodec.interop.cats._
+import scodec.interop.cats.*
 import scodec.{Attempt, Codec, DecodeResult, Err, SizeBound}
 
 trait ValuetypesCodecs {

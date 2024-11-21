@@ -1,13 +1,13 @@
 package org.plasmalabs.crypto.signing
 
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import io.circe.generic.semiauto.deriveDecoder
 import io.circe.{Decoder, HCursor}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.crypto.generation.mnemonic.Entropy
-import org.plasmalabs.crypto.utils.EntropySupport._
-import org.plasmalabs.crypto.utils._
+import org.plasmalabs.crypto.utils.*
+import org.plasmalabs.crypto.utils.EntropySupport.*
 import org.scalacheck.effect.PropF
 import scodec.bits.ByteVector
 

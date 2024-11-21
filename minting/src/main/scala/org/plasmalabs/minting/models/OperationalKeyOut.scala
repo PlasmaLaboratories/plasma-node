@@ -1,7 +1,7 @@
 package org.plasmalabs.minting.models
 
 import com.google.protobuf.ByteString
-import org.plasmalabs.consensus.models._
+import org.plasmalabs.consensus.models.*
 import org.plasmalabs.models.Slot
 
 case class OperationalKeyOut(

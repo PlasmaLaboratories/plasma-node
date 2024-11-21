@@ -1,13 +1,13 @@
 package org.plasmalabs.interpreters
 
 import cats.effect.kernel.Async
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.algebras.Store
 import org.plasmalabs.consensus.models.BlockId
 import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
 import org.plasmalabs.node.models.BlockBody
 import org.plasmalabs.sdk.models.TransactionId
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 object TxIdToBlockIdTree {
   type State[F[_]] = Store[F, TransactionId, BlockId]

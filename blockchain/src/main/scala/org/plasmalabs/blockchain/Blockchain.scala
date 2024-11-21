@@ -1,46 +1,46 @@
 package org.plasmalabs.blockchain
 
-import cats.data._
-import cats.effect._
-import cats.effect.implicits._
+import cats.data.*
+import cats.effect.*
+import cats.effect.implicits.*
 import cats.effect.std.{Queue, Random}
-import cats.implicits._
+import cats.implicits.*
 import com.comcast.ip4s.Dns
 import fs2.concurrent.Topic
-import fs2.{io => _, _}
+import fs2.{io as _, *}
 import io.grpc.ServerServiceDefinition
-import org.plasmalabs.algebras._
+import org.plasmalabs.algebras.*
 import org.plasmalabs.blockchain.interpreters.{NetworkControlRpcServer, RegtestRpcServer}
-import org.plasmalabs.catsutils._
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.catsutils.*
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.config.ApplicationConfig.Node.BigBangs.RegtestConfig
 import org.plasmalabs.config.ApplicationConfig.Node.{KnownPeer, NetworkProperties}
-import org.plasmalabs.consensus._
-import org.plasmalabs.grpc._
-import org.plasmalabs.ledger.implicits._
+import org.plasmalabs.consensus.*
+import org.plasmalabs.grpc.*
+import org.plasmalabs.ledger.implicits.*
 import org.plasmalabs.ledger.interpreters.{QuivrContext, TransactionSemanticValidation}
 import org.plasmalabs.ledger.models.StaticBodyValidationContext
 import org.plasmalabs.minting.algebras.StakingAlgebra
-import org.plasmalabs.minting.interpreters._
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.minting.interpreters.*
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.models.utility.NetworkCommands
 import org.plasmalabs.models.{ProposalId, VersionId}
-import org.plasmalabs.networking.blockchain._
+import org.plasmalabs.networking.blockchain.*
+import org.plasmalabs.networking.fsnetwork.*
 import org.plasmalabs.networking.fsnetwork.DnsResolverInstances.DefaultDnsResolver
-import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances.*
 import org.plasmalabs.networking.fsnetwork.ReverseDnsResolverInstances.{DefaultReverseDnsResolver, NoOpReverseResolver}
-import org.plasmalabs.networking.fsnetwork._
-import org.plasmalabs.networking.p2p._
+import org.plasmalabs.networking.p2p.*
 import org.plasmalabs.node.models.{Block, BlockBody, FullBlock, KnownHost}
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.sdk.syntax.ioTransactionAsTransactionSyntaxOps
-import org.plasmalabs.typeclasses.implicits._
-import org.typelevel.log4cats._
+import org.plasmalabs.typeclasses.implicits.*
+import org.typelevel.log4cats.*
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
-import ClockAlgebra.implicits._
+import ClockAlgebra.implicits.*
 
 object Blockchain {
 

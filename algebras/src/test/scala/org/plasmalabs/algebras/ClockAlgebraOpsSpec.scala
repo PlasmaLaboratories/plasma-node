@@ -1,12 +1,12 @@
 package org.plasmalabs.algebras
 
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.models.{Epoch, Slot}
 import org.scalamock.munit.AsyncMockFactory
 
-import ClockAlgebra.implicits._
+import ClockAlgebra.implicits.*
 
 class ClockAlgebraOpsSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

@@ -1,24 +1,24 @@
 package org.plasmalabs.transactiongenerator.interpreters
 
 import cats.data.OptionT
-import cats.effect._
+import cats.effect.*
 import cats.effect.std.Random
-import cats.implicits._
+import cats.implicits.*
 import cats.{Applicative, Monad}
 import com.google.protobuf.ByteString
-import fs2._
+import fs2.*
 import org.plasmalabs.quivr.api.Prover
 import org.plasmalabs.quivr.models.SmallData
-import org.plasmalabs.sdk.common.ContainsSignable._
-import org.plasmalabs.sdk.common.ContainsSignable.instances._
-import org.plasmalabs.sdk.models.box._
-import org.plasmalabs.sdk.models.transaction._
+import org.plasmalabs.sdk.common.ContainsSignable.*
+import org.plasmalabs.sdk.common.ContainsSignable.instances.*
+import org.plasmalabs.sdk.models.box.*
+import org.plasmalabs.sdk.models.transaction.*
 import org.plasmalabs.sdk.models.{Datum, Event, TransactionOutputAddress}
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 import org.plasmalabs.sdk.validation.algebras.TransactionCostCalculator
 import org.plasmalabs.transactiongenerator.algebras.TransactionGenerator
 import org.plasmalabs.transactiongenerator.models.Wallet
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 

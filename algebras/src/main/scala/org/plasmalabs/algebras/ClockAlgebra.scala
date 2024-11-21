@@ -1,6 +1,6 @@
 package org.plasmalabs.algebras
 
-import cats.implicits._
+import cats.implicits.*
 import cats.{Applicative, Functor, Monad}
 import org.plasmalabs.models.{Epoch, Slot, Timestamp}
 

@@ -3,7 +3,7 @@ package org.plasmalabs.interpreters
 import cats.Foldable
 import cats.effect.Async
 import cats.effect.std.{Random, SecureRandom}
-import cats.implicits._
+import cats.implicits.*
 import fs2.Stream
 import org.plasmalabs.algebras.{NodeRpc, SynchronizationTraversalStep}
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId}

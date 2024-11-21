@@ -1,17 +1,17 @@
 package org.plasmalabs.consensus.interpreters
 
-import cats._
-import cats.data._
-import cats.effect._
-import cats.implicits._
+import cats.*
+import cats.data.*
+import cats.effect.*
+import cats.implicits.*
 import org.plasmalabs.algebras.Stats
 import org.plasmalabs.consensus.algebras.ChainSelectionAlgebra
 import org.plasmalabs.consensus.models.{BlockId, SlotData}
 import org.plasmalabs.consensus.rhoToRhoTestHash
 import org.plasmalabs.crypto.hash.Blake2b512
-import org.plasmalabs.models._
-import org.plasmalabs.models.utility._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.models.*
+import org.plasmalabs.models.utility.*
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 

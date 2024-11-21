@@ -2,14 +2,14 @@ package org.plasmalabs.indexer.orientDb.instances
 
 import com.orientechnologies.orient.core.metadata.schema.OType
 import com.tinkerpop.blueprints.Vertex
-import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances._
+import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances.*
 import org.plasmalabs.indexer.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
 import org.plasmalabs.indexer.services.{Txo, TxoState}
 import org.plasmalabs.sdk.models.transaction.UnspentTransactionOutput
 import org.plasmalabs.sdk.models.{TransactionInputAddress, TransactionOutputAddress}
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 
-import VertexSchemaInstances.instances._
+import VertexSchemaInstances.instances.*
 
 object SchemaTxo {
 

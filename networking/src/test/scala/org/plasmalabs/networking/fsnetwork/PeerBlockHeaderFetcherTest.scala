@@ -3,26 +3,26 @@ package org.plasmalabs.networking.fsnetwork
 import cats.data.{NonEmptyChain, OptionT}
 import cats.effect.kernel.Sync
 import cats.effect.{Async, IO, Resource}
-import cats.implicits._
+import cats.implicits.*
 import cats.{Applicative, MonadThrow, Show}
 import fs2.Stream
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.{ClockAlgebra, Store}
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.consensus.algebras.{ChainSelectionAlgebra, LocalChainAlgebra}
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
 import org.plasmalabs.crypto.signing.Ed25519VRF
 import org.plasmalabs.eventtree.ParentChildTree
 import org.plasmalabs.models.ModelGenerators.GenHelper
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.networking.blockchain.BlockchainPeerClient
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError
-import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError._
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError.*
 import org.plasmalabs.networking.fsnetwork.PeerBlockHeaderFetcherTest.F
 import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
 import org.plasmalabs.networking.fsnetwork.RequestsProxy.RequestsProxyActor
-import org.plasmalabs.networking.fsnetwork.TestHelper._
+import org.plasmalabs.networking.fsnetwork.TestHelper.*
 import org.plasmalabs.node.models.BlockBody
 import org.scalacheck.Gen
 import org.scalamock.munit.AsyncMockFactory

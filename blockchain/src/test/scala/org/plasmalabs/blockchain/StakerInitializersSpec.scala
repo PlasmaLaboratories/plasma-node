@@ -2,15 +2,15 @@ package org.plasmalabs.blockchain
 
 import cats.effect.IO
 import cats.effect.kernel.Async
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.blockchain.PrivateTestnet.{DefaultTotalStake, GroupPolicyEth, SeriesPolicyEth}
 import org.plasmalabs.config.ApplicationConfig
 import org.plasmalabs.models.utility.Ratio
-import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.numerics.implicits.*
 import org.plasmalabs.quivr.models.Int128
 import org.plasmalabs.sdk.models.box.Value
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 import org.scalamock.munit.AsyncMockFactory
 
 import scala.concurrent.duration.FiniteDuration

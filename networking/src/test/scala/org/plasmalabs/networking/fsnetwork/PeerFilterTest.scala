@@ -2,8 +2,8 @@ package org.plasmalabs.networking.fsnetwork
 
 import com.google.protobuf.ByteString
 import munit.FunSuite
-import org.plasmalabs.models.p2p._
-import org.plasmalabs.networking.fsnetwork._
+import org.plasmalabs.models.p2p.*
+import org.plasmalabs.networking.fsnetwork.*
 
 class PeerFilterTest extends FunSuite {
 

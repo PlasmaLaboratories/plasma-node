@@ -2,7 +2,7 @@ package org.plasmalabs.networking.fsnetwork
 
 import cats.data.NonEmptyChain
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import cats.{MonadThrow, Show}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.Store
@@ -12,7 +12,7 @@ import org.plasmalabs.models.generators.consensus.ModelGenerators
 import org.plasmalabs.networking.fsnetwork.BlockCheckerTest.F
 import org.plasmalabs.networking.fsnetwork.NonEmptyChainFOps
 import org.plasmalabs.networking.fsnetwork.TestHelper.CallHandler3Ops
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.scalacheck.Gen
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory

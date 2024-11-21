@@ -2,16 +2,16 @@ package org.plasmalabs.ledger.interpreters
 
 import cats.Monad
 import cats.data.{EitherT, NonEmptyChain, OptionT, Validated, ValidatedNec}
-import cats.effect._
-import cats.implicits._
+import cats.effect.*
+import cats.implicits.*
 import org.plasmalabs.algebras.ContextlessValidationAlgebra
 import org.plasmalabs.consensus.models.BlockId
-import org.plasmalabs.ledger.algebras._
-import org.plasmalabs.ledger.models._
-import org.plasmalabs.models._
+import org.plasmalabs.ledger.algebras.*
+import org.plasmalabs.ledger.models.*
+import org.plasmalabs.models.*
 import org.plasmalabs.sdk.common.ContainsEvidence
 import org.plasmalabs.sdk.common.ContainsEvidence.blake2bEvidenceFromImmutable
-import org.plasmalabs.sdk.common.ContainsImmutable.instances._
+import org.plasmalabs.sdk.common.ContainsImmutable.instances.*
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.box.Lock
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, Schedule, SpentTransactionOutput}

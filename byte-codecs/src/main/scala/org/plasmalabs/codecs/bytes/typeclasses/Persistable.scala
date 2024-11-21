@@ -1,6 +1,6 @@
 package org.plasmalabs.codecs.bytes.typeclasses
 
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import scodec.bits.BitVector
 import scodec.{Attempt, Codec}

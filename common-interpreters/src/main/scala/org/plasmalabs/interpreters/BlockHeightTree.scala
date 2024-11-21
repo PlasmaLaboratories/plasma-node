@@ -1,11 +1,11 @@
 package org.plasmalabs.interpreters
 
 import cats.effect.kernel.Async
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.algebras.{Store, StoreReader}
 import org.plasmalabs.consensus.models.{BlockId, SlotData}
 import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 object BlockHeightTree {
 

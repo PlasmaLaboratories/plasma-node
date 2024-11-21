@@ -1,7 +1,7 @@
 package org.plasmalabs.models
 
 import cats.Show
-import cats.implicits._
+import cats.implicits.*
 
 package object p2p {
 

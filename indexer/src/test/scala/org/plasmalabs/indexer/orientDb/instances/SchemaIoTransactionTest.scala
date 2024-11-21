@@ -1,6 +1,6 @@
 package org.plasmalabs.indexer.orientDb.instances
 
-import cats.implicits._
+import cats.implicits.*
 import com.orientechnologies.orient.core.metadata.schema.OType
 import com.tinkerpop.blueprints.impls.orient.OrientVertex
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -13,11 +13,11 @@ import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances
 }
 import org.plasmalabs.models.ModelGenerators.GenHelper
 import org.plasmalabs.models.generators.consensus.ModelGenerators
-import org.plasmalabs.sdk.generators.{ModelGenerators => BramblGenerator}
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.generators.ModelGenerators as BramblGenerator
+import org.plasmalabs.sdk.syntax.*
 import org.scalamock.munit.AsyncMockFactory
 
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
 class SchemaIoTransactionTest
     extends CatsEffectSuite

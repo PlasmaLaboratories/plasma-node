@@ -1,6 +1,6 @@
 package org.plasmalabs.indexer.orientDb.instances
 
-import cats.implicits._
+import cats.implicits.*
 import com.orientechnologies.orient.core.metadata.schema.OType
 import munit.{CatsEffectFunFixtures, CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.indexer.DbFixtureUtil
@@ -9,12 +9,12 @@ import org.plasmalabs.indexer.orientDb.instances.SchemaSeriesPolicy.Field
 import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances.seriesPolicySchema
 import org.plasmalabs.models.ModelGenerators.GenHelper
 import org.plasmalabs.sdk.constants.NetworkConstants
-import org.plasmalabs.sdk.generators.{ModelGenerators => BramblGenerator}
-import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.generators.ModelGenerators as BramblGenerator
+import org.plasmalabs.sdk.models.*
 import org.plasmalabs.sdk.syntax.seriesPolicyAsSeriesPolicySyntaxOps
 import org.scalamock.munit.AsyncMockFactory
 
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
 class SchemaSeriesPolicyTest
     extends CatsEffectSuite

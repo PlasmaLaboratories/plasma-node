@@ -1,7 +1,7 @@
 package org.plasmalabs.node.cli
 
 import cats.effect.{IO, Resource, Sync}
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.config.ApplicationConfig
 
 class ConfiguredCliApp(appConfig: ApplicationConfig) {

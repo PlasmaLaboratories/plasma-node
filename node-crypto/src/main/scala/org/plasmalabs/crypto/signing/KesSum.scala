@@ -1,6 +1,6 @@
 package org.plasmalabs.crypto.signing
 
-import org.plasmalabs.crypto.models._
+import org.plasmalabs.crypto.models.*
 import org.plasmalabs.crypto.signing.kes.SumComposition
 
 /**

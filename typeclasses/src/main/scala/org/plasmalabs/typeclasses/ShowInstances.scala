@@ -1,12 +1,12 @@
 package org.plasmalabs.typeclasses
 
 import cats.Show
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.consensus.models.{BlockHeader, SlotId, StakingAddress}
-import org.plasmalabs.models._
-import org.plasmalabs.models.utility._
+import org.plasmalabs.models.*
+import org.plasmalabs.models.utility.*
 import org.plasmalabs.node.models.BlockBody
 import org.plasmalabs.quivr.models.Int128
 import org.plasmalabs.sdk.models.box.{Box, Value}

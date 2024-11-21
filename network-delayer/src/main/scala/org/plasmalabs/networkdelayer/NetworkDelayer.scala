@@ -1,19 +1,19 @@
 package org.plasmalabs.networkdelayer
 
 import cats.data.OptionT
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.kernel.Resource
 import cats.effect.{Async, IO}
-import cats.implicits._
-import com.comcast.ip4s._
+import cats.implicits.*
+import com.comcast.ip4s.*
 import com.typesafe.config.Config
-import fs2._
+import fs2.*
 import fs2.io.net.{Network, Socket}
 import org.plasmalabs.common.application.IOBaseApp
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 /**
  * An application  which intercepts TCP connections and induces bandwidth and latency throttling.

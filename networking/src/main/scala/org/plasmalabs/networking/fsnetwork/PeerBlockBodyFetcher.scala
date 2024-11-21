@@ -3,7 +3,7 @@ package org.plasmalabs.networking.fsnetwork
 import cats.MonadThrow
 import cats.data.{EitherT, NonEmptyChain, OptionT}
 import cats.effect.{Async, Resource}
-import cats.implicits._
+import cats.implicits.*
 import fs2.Stream
 import org.plasmalabs.actor.{Actor, Fsm}
 import org.plasmalabs.algebras.Store
@@ -11,17 +11,17 @@ import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import org.plasmalabs.consensus.algebras.BlockHeaderToBodyValidationAlgebra
 import org.plasmalabs.consensus.models.BlockHeaderToBodyValidationFailure.IncorrectTxRoot
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.networking.blockchain.BlockchainPeerClient
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
-import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError._
-import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError.*
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances.*
 import org.plasmalabs.networking.fsnetwork.RequestsProxy.RequestsProxyActor
 import org.plasmalabs.node.models.{Block, BlockBody}
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 
 object PeerBlockBodyFetcher {

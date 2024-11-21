@@ -2,16 +2,16 @@ package org.plasmalabs.consensus.interpreters
 
 import cats.MonadThrow
 import cats.effect.Async
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.algebras.ClockAlgebra
-import org.plasmalabs.algebras.ClockAlgebra.implicits._
-import org.plasmalabs.algebras.StoreOps._
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.algebras.ClockAlgebra.implicits.*
+import org.plasmalabs.algebras.StoreOps.*
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.consensus.interpreters.CrossEpochEventSourceState.VotingData
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
 import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
-import org.plasmalabs.models._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.models.*
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 
 object VotingEventSourceState {

@@ -1,11 +1,11 @@
 package org.plasmalabs.indexer
 
-import cats.effect._
+import cats.effect.*
 import fs2.io.file.Files
-import org.plasmalabs.algebras._
+import org.plasmalabs.algebras.*
 import org.plasmalabs.grpc.NodeGrpc
-import org.plasmalabs.indexer.algebras._
-import org.plasmalabs.indexer.interpreter.{GraphReplicationStatus, _}
+import org.plasmalabs.indexer.algebras.*
+import org.plasmalabs.indexer.interpreter.{GraphReplicationStatus, *}
 import org.plasmalabs.indexer.orientDb.{OrientDBFactory, OrientThread}
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger

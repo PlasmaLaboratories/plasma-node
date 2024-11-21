@@ -2,15 +2,15 @@ package org.plasmalabs.db.leveldb
 
 import cats.Applicative
 import cats.data.OptionT
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.{Async, Resource, Sync}
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
-import fs2.io.file._
-import org.iq80.leveldb.{Logger => _, _}
+import fs2.io.file.*
+import org.iq80.leveldb.{Logger as _, *}
 import org.plasmalabs.algebras.Store
 import org.plasmalabs.codecs.bytes.typeclasses.Persistable
-import org.plasmalabs.codecs.bytes.typeclasses.implicits._
+import org.plasmalabs.codecs.bytes.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 
 import java.util.InputMismatchException

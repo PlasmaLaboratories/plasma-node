@@ -1,7 +1,7 @@
 package org.plasmalabs.numerics.interpreters
 
 import org.plasmalabs.models.utility.Ratio
-import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.numerics.implicits.*
 
 trait LentzMethod {
 

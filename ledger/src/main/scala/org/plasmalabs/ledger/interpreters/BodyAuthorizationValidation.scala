@@ -2,9 +2,9 @@ package org.plasmalabs.ledger.interpreters
 
 import cats.data.ValidatedNec
 import cats.effect.Sync
-import cats.implicits._
-import org.plasmalabs.ledger.algebras._
-import org.plasmalabs.ledger.models._
+import cats.implicits.*
+import org.plasmalabs.ledger.algebras.*
+import org.plasmalabs.ledger.models.*
 import org.plasmalabs.node.models.BlockBody
 import org.plasmalabs.quivr.runtime.DynamicContext
 import org.plasmalabs.sdk.models.transaction.IoTransaction

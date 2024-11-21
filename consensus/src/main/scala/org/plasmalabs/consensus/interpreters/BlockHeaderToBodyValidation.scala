@@ -5,10 +5,10 @@ import cats.implicits.{catsSyntaxApplicativeId, catsSyntaxEq}
 import org.plasmalabs.consensus.algebras.BlockHeaderToBodyValidationAlgebra
 import org.plasmalabs.consensus.models.BlockHeaderToBodyValidationFailure
 import org.plasmalabs.consensus.models.BlockHeaderToBodyValidationFailure.IncorrectTxRoot
-import org.plasmalabs.models.utility.HasLength.instances._
-import org.plasmalabs.models.utility._
+import org.plasmalabs.models.utility.*
+import org.plasmalabs.models.utility.HasLength.instances.*
 import org.plasmalabs.node.models.Block
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 object BlockHeaderToBodyValidation {
 

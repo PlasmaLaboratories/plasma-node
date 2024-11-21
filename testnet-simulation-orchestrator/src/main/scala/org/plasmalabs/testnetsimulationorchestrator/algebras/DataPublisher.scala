@@ -1,6 +1,6 @@
 package org.plasmalabs.testnetsimulationorchestrator.algebras
 
-import org.plasmalabs.testnetsimulationorchestrator.models._
+import org.plasmalabs.testnetsimulationorchestrator.models.*
 
 /**
  * Exports result of the testnet to an external destination

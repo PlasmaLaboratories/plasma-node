@@ -4,15 +4,15 @@ import cats.ApplicativeThrow
 import cats.data.OptionT
 import cats.effect.Async
 import cats.effect.std.{Console, Env}
-import cats.implicits._
+import cats.implicits.*
 import fs2.io.file.{Files, Path}
-import io.circe._
-import io.circe.syntax._
+import io.circe.*
+import io.circe.syntax.*
 import org.plasmalabs.config.ApplicationConfig
 import org.plasmalabs.consensus.models.{BlockId, StakingAddress}
 import org.plasmalabs.node.AbstractNodeApp
 import org.plasmalabs.sdk.models.LockAddress
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 import java.nio.charset.StandardCharsets
 

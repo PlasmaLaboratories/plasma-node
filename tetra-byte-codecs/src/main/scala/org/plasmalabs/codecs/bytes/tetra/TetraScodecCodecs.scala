@@ -1,14 +1,14 @@
 package org.plasmalabs.codecs.bytes.tetra
 
-import org.plasmalabs.codecs.bytes.scodecs._
+import org.plasmalabs.codecs.bytes.scodecs.*
 import org.plasmalabs.codecs.bytes.scodecs.valuetypes.byteStringCodec
-import org.plasmalabs.consensus.models._
-import org.plasmalabs.crypto.{models => nodeCryptoModels}
-import org.plasmalabs.models._
-import org.plasmalabs.models.utility._
+import org.plasmalabs.consensus.models.*
+import org.plasmalabs.crypto.models as nodeCryptoModels
+import org.plasmalabs.models.*
+import org.plasmalabs.models.utility.*
 import org.plasmalabs.node.models.KnownHost
 import scodec.Codec
-import scodec.codecs._
+import scodec.codecs.*
 
 /**
  * Use this object or the package object to access all of the codecs from outside of this package.

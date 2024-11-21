@@ -1,23 +1,23 @@
 package org.plasmalabs.minting.interpreters
 
 import cats.data.OptionT
-import cats.effect._
-import cats.implicits._
+import cats.effect.*
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import org.plasmalabs.algebras.Stats
-import org.plasmalabs.catsutils._
-import org.plasmalabs.codecs.bytes.tetra.instances._
-import org.plasmalabs.codecs.bytes.typeclasses.implicits._
-import org.plasmalabs.consensus.algebras._
-import org.plasmalabs.consensus.models._
+import org.plasmalabs.catsutils.*
+import org.plasmalabs.codecs.bytes.tetra.instances.*
+import org.plasmalabs.codecs.bytes.typeclasses.implicits.*
+import org.plasmalabs.consensus.algebras.*
+import org.plasmalabs.consensus.models.*
 import org.plasmalabs.consensus.thresholdEvidence
 import org.plasmalabs.crypto.hash.Blake2b256
 import org.plasmalabs.crypto.signing.Ed25519
-import org.plasmalabs.minting.algebras._
+import org.plasmalabs.minting.algebras.*
 import org.plasmalabs.minting.models.VrfHit
-import org.plasmalabs.models._
+import org.plasmalabs.models.*
 import org.plasmalabs.sdk.models.LockAddress
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
 

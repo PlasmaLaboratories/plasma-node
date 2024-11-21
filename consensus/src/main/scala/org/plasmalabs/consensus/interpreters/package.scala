@@ -1,7 +1,7 @@
 package org.plasmalabs.consensus
 
 import org.plasmalabs.consensus.models.{BlockHeader, ProtocolVersion}
-import org.plasmalabs.models._
+import org.plasmalabs.models.*
 
 package object interpreters {
 

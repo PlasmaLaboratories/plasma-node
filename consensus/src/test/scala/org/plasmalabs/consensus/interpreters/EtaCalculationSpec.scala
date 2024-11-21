@@ -1,23 +1,23 @@
 package org.plasmalabs.consensus.interpreters
 
 import cats.effect.IO
-import cats.effect.implicits._
-import cats.implicits._
+import cats.effect.implicits.*
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.ClockAlgebra
-import org.plasmalabs.algebras.Stats.Implicits._
-import org.plasmalabs.codecs.bytes.tetra.instances._
-import org.plasmalabs.codecs.bytes.typeclasses.implicits._
+import org.plasmalabs.algebras.Stats.Implicits.*
+import org.plasmalabs.codecs.bytes.tetra.instances.*
+import org.plasmalabs.codecs.bytes.typeclasses.implicits.*
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData, SlotId, VrfArgument}
-import org.plasmalabs.consensus.{rhoToRhoNonceHash, _}
+import org.plasmalabs.consensus.{rhoToRhoNonceHash, *}
 import org.plasmalabs.crypto.hash.{Blake2b256, Blake2b512}
 import org.plasmalabs.crypto.signing.Ed25519VRF
-import org.plasmalabs.models.ModelGenerators._
-import org.plasmalabs.models._
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.*
+import org.plasmalabs.models.ModelGenerators.*
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
+import org.plasmalabs.models.utility.*
 import org.plasmalabs.models.utility.HasLength.instances.byteStringLength
-import org.plasmalabs.models.utility._
 import org.plasmalabs.sdk.utils.CatsUnsafeResource
 import org.scalacheck.Gen
 import org.scalamock.munit.AsyncMockFactory

@@ -2,7 +2,7 @@ package org.plasmalabs.networking.fsnetwork
 
 import cats.data.NonEmptyChain
 import cats.effect.{IO, Sync}
-import cats.implicits._
+import cats.implicits.*
 import cats.{Applicative, MonadThrow}
 import fs2.Stream
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -11,8 +11,8 @@ import org.plasmalabs.consensus.algebras.LocalChainAlgebra
 import org.plasmalabs.consensus.models.SlotData
 import org.plasmalabs.ledger.algebras.MempoolAlgebra
 import org.plasmalabs.models.ModelGenerators.GenHelper
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.networking.blockchain.BlockchainPeerClient
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
 import org.plasmalabs.networking.fsnetwork.PeerMempoolTransactionSyncTest.F
@@ -30,7 +30,7 @@ import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import java.util.concurrent.atomic.AtomicBoolean
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 object PeerMempoolTransactionSyncTest {
   type F[A] = IO[A]

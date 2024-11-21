@@ -1,22 +1,22 @@
 package org.plasmalabs.blockchain
 
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.{Async, Resource}
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.algebras.{ClockAlgebra, Stats}
-import org.plasmalabs.consensus.algebras._
+import org.plasmalabs.consensus.algebras.*
+import org.plasmalabs.consensus.interpreters.*
 import org.plasmalabs.consensus.interpreters.CrossEpochEventSourceState.VotingData
-import org.plasmalabs.consensus.interpreters._
 import org.plasmalabs.consensus.models.BlockId
 import org.plasmalabs.eventtree.EventSourcedState
-import org.plasmalabs.ledger.algebras._
+import org.plasmalabs.ledger.algebras.*
+import org.plasmalabs.ledger.interpreters.*
 import org.plasmalabs.ledger.interpreters.ProposalEventSourceState.ProposalEventSourceStateType
-import org.plasmalabs.ledger.interpreters._
 import org.plasmalabs.models.{ProposalConfig, VersionId}
 import org.plasmalabs.quivr.api.Verifier.instances.verifierInstance
 import org.plasmalabs.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionSyntaxVerifier}
 import org.plasmalabs.sdk.validation.{TransactionAuthorizationInterpreter, TransactionSyntaxInterpreter}
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 
 trait Validators[F[_]] {

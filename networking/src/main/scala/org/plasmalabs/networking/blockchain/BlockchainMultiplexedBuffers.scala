@@ -1,10 +1,10 @@
 package org.plasmalabs.networking.blockchain
 
 import cats.effect.{Async, Resource}
-import cats.implicits._
-import org.plasmalabs.consensus.models._
+import cats.implicits.*
+import org.plasmalabs.consensus.models.*
 import org.plasmalabs.networking.multiplexer.MultiplexedBuffer
-import org.plasmalabs.node.models._
+import org.plasmalabs.node.models.*
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 

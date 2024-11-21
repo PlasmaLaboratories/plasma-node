@@ -6,8 +6,8 @@ import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.SynchronizationTraversalSteps.{Applied, Unapplied}
 import org.plasmalabs.consensus.models.{BlockId, SlotData}
 import org.plasmalabs.eventtree.ParentChildTree
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
+import org.plasmalabs.typeclasses.implicits.*
 import org.scalacheck.effect.PropF
 
 class LocalChainSynchronizationTraversalSpec extends CatsEffectSuite with ScalaCheckEffectSuite {

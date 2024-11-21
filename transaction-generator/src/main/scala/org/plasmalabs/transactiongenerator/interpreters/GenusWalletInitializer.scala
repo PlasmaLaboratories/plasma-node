@@ -1,7 +1,7 @@
 package org.plasmalabs.transactiongenerator.interpreters
 
-import cats.effect._
-import cats.implicits._
+import cats.effect.*
+import cats.implicits.*
 import io.grpc.Metadata
 import org.plasmalabs.indexer.services.{QueryByLockAddressRequest, TransactionServiceFs2Grpc, TxoState}
 import org.plasmalabs.sdk.models.box.Box

@@ -1,6 +1,6 @@
 package org.plasmalabs.indexer.orientDb.instances
 
-import cats.implicits._
+import cats.implicits.*
 import com.orientechnologies.orient.core.metadata.schema.OType
 import munit.{CatsEffectFunFixtures, CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
@@ -12,7 +12,7 @@ import org.plasmalabs.models.ModelGenerators.GenHelper
 import org.plasmalabs.models.generators.consensus.ModelGenerators
 import org.scalamock.munit.AsyncMockFactory
 
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
 class SchemaBlockHeaderTest
     extends CatsEffectSuite

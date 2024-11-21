@@ -1,7 +1,7 @@
 package org.plasmalabs.interpreters
 
 import cats.Applicative
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.kernel.{Resource, Sync}
 import io.circe.Json
 import org.plasmalabs.algebras.Stats

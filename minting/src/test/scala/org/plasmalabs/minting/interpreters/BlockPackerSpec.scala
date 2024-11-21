@@ -1,35 +1,35 @@
 package org.plasmalabs.minting.interpreters
 
 import cats.effect.{IO, Resource}
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.ContextlessValidationAlgebra
 import org.plasmalabs.consensus.models.BlockId
-import org.plasmalabs.ledger.algebras._
+import org.plasmalabs.ledger.algebras.*
 import org.plasmalabs.ledger.models.{
   MempoolGraph,
   RewardQuantities,
   TransactionSemanticError,
   TransactionSemanticErrors
 }
-import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.models.ModelGenerators.*
 import org.plasmalabs.models.Slot
 import org.plasmalabs.models.generators.consensus.ModelGenerators
 import org.plasmalabs.quivr.models.Int128
 import org.plasmalabs.quivr.runtime.DynamicContext
-import org.plasmalabs.sdk.generators.ModelGenerators._
-import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.generators.ModelGenerators.*
+import org.plasmalabs.sdk.models.*
 import org.plasmalabs.sdk.models.box.{Attestation, Value}
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 import org.plasmalabs.sdk.validation.TransactionAuthorizationError
-import org.plasmalabs.sdk.validation.algebras._
+import org.plasmalabs.sdk.validation.algebras.*
 import org.scalacheck.Test
 import org.scalamock.munit.AsyncMockFactory
 
 import java.util.concurrent.TimeoutException
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 class BlockPackerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]

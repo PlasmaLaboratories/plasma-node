@@ -3,10 +3,10 @@ package org.plasmalabs.networking.fsnetwork
 import cats.Monad
 import cats.data.OptionT
 import cats.effect.Sync
-import cats.implicits._
+import cats.implicits.*
 import com.comcast.ip4s.{Dns, Hostname}
 import com.github.benmanes.caffeine.cache.{Cache, Caffeine}
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 
 import java.time.Duration
 

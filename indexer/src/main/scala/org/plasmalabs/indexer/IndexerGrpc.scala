@@ -1,9 +1,9 @@
 package org.plasmalabs.indexer
 
 import cats.effect.kernel.{Async, Resource}
-import cats.implicits._
+import cats.implicits.*
 import cats.{Eval, Now}
-import fs2.grpc.syntax.all._
+import fs2.grpc.syntax.all.*
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder
 import io.grpc.{Metadata, ServerServiceDefinition}
 import org.plasmalabs.algebras.IndexerRpc
@@ -14,7 +14,7 @@ import org.plasmalabs.indexer.algebras.{
   TransactionFetcherAlgebra,
   VertexFetcherAlgebra
 }
-import org.plasmalabs.indexer.services._
+import org.plasmalabs.indexer.services.*
 
 object IndexerGrpc {
 

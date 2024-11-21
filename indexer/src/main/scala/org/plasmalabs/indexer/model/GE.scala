@@ -1,9 +1,9 @@
 package org.plasmalabs.indexer.model
 
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.consensus.models.BlockId
 import org.plasmalabs.sdk.models.TransactionId
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 import scala.collection.immutable.ListSet
 

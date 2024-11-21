@@ -2,10 +2,10 @@ package org.plasmalabs.numerics.interpreters
 
 import cats.Monad
 import cats.effect.kernel.Sync
-import cats.implicits._
-import org.plasmalabs.models.utility._
+import cats.implicits.*
+import org.plasmalabs.models.utility.*
 import org.plasmalabs.numerics.algebras.Log1p
-import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.numerics.implicits.*
 import scalacache.caffeine.CaffeineCache
 
 object Log1pInterpreter extends LentzMethod {

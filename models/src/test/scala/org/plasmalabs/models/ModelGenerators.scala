@@ -4,9 +4,9 @@ import cats.data.{NonEmptyChain, NonEmptyList}
 import com.google.protobuf.ByteString
 import org.plasmalabs.consensus.models.{ProtocolVersion, StakingAddress}
 import org.plasmalabs.models.generators.common.ModelGenerators.genSizedStrictByteString
-import org.plasmalabs.models.utility.HasLength.instances._
-import org.plasmalabs.models.utility.Lengths._
-import org.plasmalabs.models.utility._
+import org.plasmalabs.models.utility.*
+import org.plasmalabs.models.utility.HasLength.instances.*
+import org.plasmalabs.models.utility.Lengths.*
 import org.scalacheck.rng.Seed
 import org.scalacheck.{Arbitrary, Gen}
 

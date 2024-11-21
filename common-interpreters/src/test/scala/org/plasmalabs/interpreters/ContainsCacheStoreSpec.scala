@@ -1,7 +1,7 @@
 package org.plasmalabs.interpreters
 
 import cats.effect.{IO, Resource}
-import cats.implicits._
+import cats.implicits.*
 import fs2.io.file.{Files, Path}
 import munit.CatsEffectSuite
 import org.plasmalabs.algebras.Store

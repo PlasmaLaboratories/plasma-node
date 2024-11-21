@@ -1,7 +1,7 @@
 package org.plasmalabs.indexer.interpreter
 
 import cats.effect.{IO, Resource}
-import cats.implicits._
+import cats.implicits.*
 import com.tinkerpop.blueprints.Vertex
 import com.tinkerpop.blueprints.impls.orient.{OrientEdge, OrientGraph, OrientVertex}
 import fs2.Stream
@@ -11,7 +11,7 @@ import org.plasmalabs.indexer.algebras.{BlockFetcherAlgebra, NodeBlockFetcherAlg
 import org.plasmalabs.indexer.model.{GE, GEs}
 import org.plasmalabs.indexer.orientDb.OrientThread
 import org.plasmalabs.indexer.services.BlockData
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
@@ -19,7 +19,7 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import java.lang
 import scala.annotation.nowarn
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
 class GraphBlockUpdaterTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

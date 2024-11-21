@@ -3,22 +3,22 @@ package org.plasmalabs.node
 import cats.effect.kernel.Async
 import cats.effect.std.Queue
 import cats.effect.{IO, Resource}
-import cats.implicits._
+import cats.implicits.*
 import fs2.io.file.{Files, Path}
 import org.plasmalabs.algebras.Store
 import org.plasmalabs.blockchain.{DataStores, PrunedDataStores}
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.config.ApplicationConfig
-import org.plasmalabs.consensus.models._
-import org.plasmalabs.models.utility._
-import org.plasmalabs.node.models._
+import org.plasmalabs.consensus.models.*
+import org.plasmalabs.models.utility.*
+import org.plasmalabs.node.models.*
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-import DataStoresInit.DataStoreNames._
+import DataStoresInit.DataStoreNames.*
 
 class PrunedDataStoresApp(appConfig: ApplicationConfig, prunedDataStorePath: String) {
   type F[A] = IO[A]

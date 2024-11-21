@@ -1,6 +1,6 @@
 package org.plasmalabs.consensus
 
-import org.plasmalabs.consensus.algebras._
+import org.plasmalabs.consensus.algebras.*
 import org.plasmalabs.consensus.models.{BlockId, SlotData}
 
 trait Consensus[F[_]] {

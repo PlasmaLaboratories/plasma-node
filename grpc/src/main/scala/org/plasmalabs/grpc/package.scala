@@ -2,8 +2,8 @@ package org.plasmalabs
 
 import cats.ApplicativeThrow
 import cats.effect.{Resource, Sync}
-import cats.implicits._
-import fs2.grpc.syntax.all._
+import cats.implicits.*
+import fs2.grpc.syntax.all.*
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder
 import io.grpc.{ManagedChannel, Status, StatusException}
 import scalapb.validate.FieldValidationException

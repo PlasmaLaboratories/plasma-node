@@ -1,11 +1,11 @@
 package org.plasmalabs.networking.fsnetwork
 
 import cats.data.NonEmptyChain
-import cats.implicits._
+import cats.implicits.*
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.plasmalabs.consensus.models.{BlockHeaderValidationFailure, BlockId}
 import org.plasmalabs.ledger.models.BodyValidationError
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 
 sealed abstract class BlockApplyError extends Exception
 

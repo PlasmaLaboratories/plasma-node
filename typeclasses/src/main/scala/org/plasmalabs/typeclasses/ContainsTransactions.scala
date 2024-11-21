@@ -2,20 +2,20 @@ package org.plasmalabs.typeclasses
 
 import cats.Foldable
 import cats.data.ValidatedNec
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import org.plasmalabs.crypto.accumulators.LeafData
 import org.plasmalabs.crypto.accumulators.merkle.MerkleTree
 import org.plasmalabs.crypto.hash.digest.{Digest, Digest32, InvalidDigestFailure}
 import org.plasmalabs.crypto.hash.{Blake2b, Blake2bHash}
-import org.plasmalabs.models._
-import org.plasmalabs.models.utility.HasLength.instances._
-import org.plasmalabs.models.utility.Lengths._
-import org.plasmalabs.models.utility._
+import org.plasmalabs.models.*
+import org.plasmalabs.models.utility.*
+import org.plasmalabs.models.utility.HasLength.instances.*
+import org.plasmalabs.models.utility.Lengths.*
 import org.plasmalabs.node.models.FullBlockBody
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 
 import scala.language.implicitConversions
 

@@ -1,9 +1,9 @@
 package org.plasmalabs.networking.fsnetwork
 
 import cats.data.{EitherT, NonEmptyChain, OptionT}
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.{Async, Concurrent, Resource}
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.actor.{Actor, Fsm}
 import org.plasmalabs.algebras.Store
 import org.plasmalabs.consensus.algebras.{BlockHeaderToBodyValidationAlgebra, ChainSelectionAlgebra, LocalChainAlgebra}
@@ -11,11 +11,11 @@ import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
 import org.plasmalabs.crypto.signing.Ed25519VRF
 import org.plasmalabs.eventtree.ParentChildTree
 import org.plasmalabs.ledger.algebras.MempoolAlgebra
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.networking.KnownHostOps
 import org.plasmalabs.networking.blockchain.BlockchainPeerClient
-import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
-import org.plasmalabs.networking.fsnetwork.PeerActor.Message._
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances.*
+import org.plasmalabs.networking.fsnetwork.PeerActor.Message.*
 import org.plasmalabs.networking.fsnetwork.PeerBlockBodyFetcher.PeerBlockBodyFetcherActor
 import org.plasmalabs.networking.fsnetwork.PeerBlockHeaderFetcher.PeerBlockHeaderFetcherActor
 import org.plasmalabs.networking.fsnetwork.PeerMempoolTransactionSync.PeerMempoolTransactionSyncActor
@@ -25,7 +25,7 @@ import org.plasmalabs.node.models.{BlockBody, CurrentKnownHostsReq, PingMessage}
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 
 import scala.util.Random

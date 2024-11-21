@@ -5,7 +5,7 @@ import org.plasmalabs.crypto.hash.{Blake2b, Blake2bHash, Hash, digest}
 import org.plasmalabs.crypto.models.KesBinaryTree
 import org.plasmalabs.crypto.signing.eddsa.Ed25519
 
-import KesBinaryTree._
+import KesBinaryTree.*
 
 trait KesEd25519Blake2b256 {
 

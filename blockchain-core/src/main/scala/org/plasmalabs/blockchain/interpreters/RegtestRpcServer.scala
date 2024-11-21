@@ -1,10 +1,10 @@
 package org.plasmalabs.blockchain.interpreters
 
 import cats.effect.{Async, Resource, Sync}
-import cats.implicits._
+import cats.implicits.*
 import io.grpc.{Metadata, ServerServiceDefinition}
 import org.plasmalabs.models.{ProposalId, VersionId}
-import org.plasmalabs.node.services._
+import org.plasmalabs.node.services.*
 import org.typelevel.log4cats.Logger
 
 /**

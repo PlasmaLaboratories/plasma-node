@@ -1,6 +1,6 @@
 package org.plasmalabs.networking.fsnetwork
 
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 
 import scala.annotation.tailrec
 import scala.util.Random

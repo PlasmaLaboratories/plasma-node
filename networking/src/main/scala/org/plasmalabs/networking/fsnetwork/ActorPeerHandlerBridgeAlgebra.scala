@@ -1,9 +1,9 @@
 package org.plasmalabs.networking.fsnetwork
 
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.kernel.Sync
 import cats.effect.{Async, Deferred, Resource}
-import cats.implicits._
+import cats.implicits.*
 import cats.{Monad, MonadThrow}
 import fs2.concurrent.Topic
 import org.plasmalabs.algebras.Stats
@@ -11,16 +11,16 @@ import org.plasmalabs.blockchain.BlockchainCore
 import org.plasmalabs.config.ApplicationConfig.Node.NetworkProperties
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
 import org.plasmalabs.crypto.signing.Ed25519VRF
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.models.utility.NetworkCommands
 import org.plasmalabs.networking.blockchain.{BlockchainPeerClient, BlockchainPeerHandlerAlgebra}
-import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances.*
 import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
 import org.plasmalabs.networking.p2p.{ConnectedPeer, DisconnectedPeer, PeerConnectionChange}
-import org.plasmalabs.node.models._
+import org.plasmalabs.node.models.*
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 

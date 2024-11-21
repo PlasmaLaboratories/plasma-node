@@ -2,7 +2,7 @@ package org.plasmalabs.eventtree
 
 import cats.data.OptionT
 import cats.effect.{IO, Sync}
-import cats.implicits._
+import cats.implicits.*
 import cats.{Applicative, Eq, Functor, MonadThrow, Semigroupal, Show}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.Store

@@ -1,6 +1,6 @@
 package org.plasmalabs.crypto.utils
 
-import org.plasmalabs.crypto.models._
+import org.plasmalabs.crypto.models.*
 import org.scalacheck.{Arbitrary, Gen}
 
 object NodeCryptoGenerators {

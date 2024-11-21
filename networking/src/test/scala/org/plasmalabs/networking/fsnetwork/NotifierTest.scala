@@ -2,7 +2,7 @@ package org.plasmalabs.networking.fsnetwork
 
 import cats.effect.kernel.Async
 import cats.effect.{IO, Sync}
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.config.ApplicationConfig.Node.NetworkProperties
 import org.plasmalabs.networking.fsnetwork.NotifierTest.{F, defaultP2PConfig}

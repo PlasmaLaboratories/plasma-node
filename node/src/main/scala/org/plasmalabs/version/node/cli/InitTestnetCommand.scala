@@ -2,10 +2,10 @@ package org.plasmalabs.node.cli
 
 import cats.effect.std.{Console, SecureRandom}
 import cats.effect.{Async, Sync}
-import cats.implicits._
+import cats.implicits.*
 import fs2.io.file.{Files, Path}
 import org.plasmalabs.blockchain.{BigBang, PrivateTestnet, StakerInitializers, StakingInit}
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.config.ApplicationConfig
 import org.plasmalabs.crypto.hash.Blake2b256
 import org.plasmalabs.node.ProtocolVersioner
@@ -14,7 +14,7 @@ import org.plasmalabs.quivr.models.{Int128, SmallData}
 import org.plasmalabs.sdk.models.box.Value
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
 import org.plasmalabs.sdk.models.{Datum, Event}
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 import java.nio.charset.StandardCharsets
 

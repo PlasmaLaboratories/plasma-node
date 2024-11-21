@@ -3,7 +3,7 @@ package org.plasmalabs.networking.fsnetwork
 import cats.data.NonEmptyChain
 import cats.effect.kernel.Sync
 import cats.effect.{Async, IO, Resource}
-import cats.implicits._
+import cats.implicits.*
 import cats.{Applicative, Parallel}
 import com.github.benmanes.caffeine.cache.{Cache, Caffeine}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -18,7 +18,7 @@ import org.plasmalabs.ledger.algebras.MempoolAlgebra
 import org.plasmalabs.models.ModelGenerators.GenHelper
 import org.plasmalabs.models.generators.consensus.ModelGenerators
 import org.plasmalabs.models.generators.consensus.ModelGenerators.arbitraryBlockId
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.networking.blockchain.{BlockchainPeerClient, NetworkProtocolVersions}
 import org.plasmalabs.networking.fsnetwork.BlockChecker.BlockCheckerActor
 import org.plasmalabs.networking.fsnetwork.NetworkQualityError.{IncorrectPongMessage, NoPongMessage}
@@ -41,7 +41,7 @@ import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import scala.concurrent.duration.{FiniteDuration, SECONDS}
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
 object PeersManagerTest {
   type F[A] = IO[A]

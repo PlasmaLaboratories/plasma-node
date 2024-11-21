@@ -1,11 +1,11 @@
 package org.plasmalabs.blockchain.interpreters
 
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.kernel.Sync
 import cats.effect.{Async, Resource}
-import cats.implicits._
+import cats.implicits.*
 import cats.{Applicative, MonadThrow}
-import org.plasmalabs.algebras.ClockAlgebra.implicits._
+import org.plasmalabs.algebras.ClockAlgebra.implicits.*
 import org.plasmalabs.algebras.{ClockAlgebra, Stats, Store}
 import org.plasmalabs.blockchain.algebras.EpochDataAlgebra
 import org.plasmalabs.codecs.bytes.tetra.TetraScodecCodecs
@@ -14,16 +14,16 @@ import org.plasmalabs.consensus.interpreters.{ConsensusDataEventSourcedState, Ep
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
 import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
 import org.plasmalabs.ledger.algebras.TransactionRewardCalculatorAlgebra
-import org.plasmalabs.models._
-import org.plasmalabs.models.utility._
+import org.plasmalabs.models.*
+import org.plasmalabs.models.utility.*
 import org.plasmalabs.node.models.BlockBody
-import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.numerics.implicits.*
 import org.plasmalabs.proto.node.EpochData
 import org.plasmalabs.sdk.common.ContainsImmutable
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.sdk.syntax._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.sdk.syntax.*
+import org.plasmalabs.typeclasses.implicits.*
 
 /**
  * Invokes an EpochDataEventSourcedState implementation along the chain's canonical head to produce EpochData

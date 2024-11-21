@@ -3,13 +3,13 @@ package org.plasmalabs.interpreters
 import cats.Applicative
 import cats.effect.kernel.Async
 import cats.effect.{Resource, Sync}
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.algebras.ClockAlgebra
 import org.plasmalabs.models.{Epoch, Slot, Timestamp}
 
 import java.time.Instant
 import scala.collection.immutable.NumericRange
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 object SchedulerClock {
 

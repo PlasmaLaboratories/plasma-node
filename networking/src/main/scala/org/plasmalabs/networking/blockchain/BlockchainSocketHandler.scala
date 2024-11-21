@@ -1,19 +1,19 @@
 package org.plasmalabs.networking.blockchain
 
 import cats.data.OptionT
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.std.{Mutex, Queue}
 import cats.effect.{Async, Deferred, Resource}
-import cats.implicits._
-import fs2._
-import org.plasmalabs.codecs.bytes.tetra.TetraScodecCodecs._
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import cats.implicits.*
+import fs2.*
+import org.plasmalabs.codecs.bytes.tetra.TetraScodecCodecs.*
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.codecs.bytes.typeclasses.Transmittable
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
 import org.plasmalabs.models.Bytes
 import org.plasmalabs.networking.multiplexer.{MultiplexedBuffer, MultiplexedReaderWriter}
 import org.plasmalabs.networking.p2p.ConnectedPeer
-import org.plasmalabs.node.models._
+import org.plasmalabs.node.models.*
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 

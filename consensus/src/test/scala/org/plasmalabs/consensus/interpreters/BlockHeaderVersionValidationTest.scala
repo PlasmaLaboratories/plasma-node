@@ -1,17 +1,17 @@
 package org.plasmalabs.consensus.interpreters
 
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
-import org.plasmalabs.algebras.testInterpreters._
+import org.plasmalabs.algebras.testInterpreters.*
 import org.plasmalabs.algebras.{ClockAlgebra, Store}
 import org.plasmalabs.consensus.interpreters.CrossEpochEventSourceState.VotingData
-import org.plasmalabs.consensus.models.BlockHeaderValidationFailures._
-import org.plasmalabs.consensus.models._
+import org.plasmalabs.consensus.models.*
+import org.plasmalabs.consensus.models.BlockHeaderValidationFailures.*
 import org.plasmalabs.eventtree.EventSourcedState
+import org.plasmalabs.models.*
 import org.plasmalabs.models.ModelGenerators.GenHelper
-import org.plasmalabs.models._
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
 import org.plasmalabs.sdk.models.box.Value.ConfigProposal
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger

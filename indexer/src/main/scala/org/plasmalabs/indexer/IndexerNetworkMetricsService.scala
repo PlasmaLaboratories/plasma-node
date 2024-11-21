@@ -4,7 +4,7 @@ import cats.data.EitherT
 import cats.effect.kernel.Async
 import io.grpc.Metadata
 import org.plasmalabs.indexer.algebras.VertexFetcherAlgebra
-import org.plasmalabs.indexer.services._
+import org.plasmalabs.indexer.services.*
 
 class GrpcNetworkMetricsService[F[_]: Async](vertexFetcher: VertexFetcherAlgebra[F])
     extends NetworkMetricsServiceFs2Grpc[F, Metadata] {

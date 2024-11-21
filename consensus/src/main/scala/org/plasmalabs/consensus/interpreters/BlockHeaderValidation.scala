@@ -1,26 +1,26 @@
 package org.plasmalabs.consensus.interpreters
 
-import cats.data._
+import cats.data.*
 import cats.effect.Resource
 import cats.effect.kernel.Async
-import cats.implicits._
+import cats.implicits.*
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
 import org.plasmalabs.algebras.ClockAlgebra.implicits.clockAsClockOps
 import org.plasmalabs.algebras.{ClockAlgebra, Store}
-import org.plasmalabs.codecs.bytes.tetra.instances._
-import org.plasmalabs.codecs.bytes.typeclasses.implicits._
-import org.plasmalabs.consensus.algebras._
-import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData, SlotId, _}
-import org.plasmalabs.consensus.{thresholdEvidence, _}
+import org.plasmalabs.codecs.bytes.tetra.instances.*
+import org.plasmalabs.codecs.bytes.typeclasses.implicits.*
+import org.plasmalabs.consensus.algebras.*
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData, SlotId, *}
+import org.plasmalabs.consensus.{thresholdEvidence, *}
 import org.plasmalabs.crypto.hash.Blake2b256
 import org.plasmalabs.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
-import org.plasmalabs.models._
-import org.plasmalabs.models.utility.HasLength.instances._
-import org.plasmalabs.models.utility.Lengths._
-import org.plasmalabs.models.utility._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.models.*
+import org.plasmalabs.models.utility.*
+import org.plasmalabs.models.utility.HasLength.instances.*
+import org.plasmalabs.models.utility.Lengths.*
+import org.plasmalabs.typeclasses.implicits.*
 import scalacache.Entry
 import scalacache.caffeine.CaffeineCache
 

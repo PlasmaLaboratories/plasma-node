@@ -1,6 +1,6 @@
 package org.plasmalabs.minting.algebras
 
-import org.plasmalabs.models._
+import org.plasmalabs.models.*
 
 trait VrfCalculatorAlgebra[F[_]] {
 

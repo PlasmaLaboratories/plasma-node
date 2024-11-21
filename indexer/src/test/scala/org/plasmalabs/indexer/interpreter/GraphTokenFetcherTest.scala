@@ -1,14 +1,14 @@
 package org.plasmalabs.indexer.interpreter
 
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import com.tinkerpop.blueprints.Vertex
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.indexer.algebras.VertexFetcherAlgebra
 import org.plasmalabs.indexer.model.{GE, GEs}
 import org.plasmalabs.indexer.orientDb.instances.{SchemaGroupPolicy, SchemaSeriesPolicy}
-import org.plasmalabs.sdk.generators.ModelGenerators._
-import org.plasmalabs.sdk.models.{GroupId, SeriesId, TransactionOutputAddress, _}
+import org.plasmalabs.sdk.generators.ModelGenerators.*
+import org.plasmalabs.sdk.models.{GroupId, SeriesId, TransactionOutputAddress, *}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 

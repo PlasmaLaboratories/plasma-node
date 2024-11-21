@@ -1,7 +1,7 @@
 package org.plasmalabs.algebras
 
 import cats.data.OptionT
-import cats.implicits._
+import cats.implicits.*
 import cats.{Functor, MonadThrow, Show}
 
 trait StoreReader[F[_], Key, T] {

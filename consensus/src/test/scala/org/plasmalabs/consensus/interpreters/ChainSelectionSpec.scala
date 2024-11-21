@@ -1,18 +1,18 @@
 package org.plasmalabs.consensus.interpreters
 
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
-import org.plasmalabs.algebras.Stats.Implicits._
-import org.plasmalabs.consensus.models._
+import org.plasmalabs.algebras.Stats.Implicits.*
+import org.plasmalabs.consensus.models.*
 import org.plasmalabs.consensus.rhoToRhoTestHash
 import org.plasmalabs.crypto.hash.Blake2b512
-import org.plasmalabs.models.ModelGenerators._
-import org.plasmalabs.models._
-import org.plasmalabs.models.generators.common.ModelGenerators._
-import org.plasmalabs.models.utility.HasLength.instances._
-import org.plasmalabs.models.utility.Lengths._
+import org.plasmalabs.models.*
+import org.plasmalabs.models.ModelGenerators.*
+import org.plasmalabs.models.generators.common.ModelGenerators.*
+import org.plasmalabs.models.utility.HasLength.instances.*
+import org.plasmalabs.models.utility.Lengths.*
 import org.plasmalabs.models.utility.{Lengths, Sized}
 import org.plasmalabs.sdk.utils.CatsUnsafeResource
 import org.scalamock.munit.AsyncMockFactory

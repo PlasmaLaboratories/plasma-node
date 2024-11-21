@@ -2,17 +2,17 @@ package org.plasmalabs.grpc
 
 import cats.MonadThrow
 import cats.effect.kernel.{Async, Resource}
-import cats.implicits._
+import cats.implicits.*
 import fs2.Stream
-import fs2.grpc.syntax.all._
+import fs2.grpc.syntax.all.*
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder
 import io.grpc.protobuf.services.ProtoReflectionService
 import io.grpc.{Metadata, Server, ServerServiceDefinition}
-import org.plasmalabs.algebras.{NodeRpc, _}
-import org.plasmalabs.consensus.models._
+import org.plasmalabs.algebras.{NodeRpc, *}
+import org.plasmalabs.consensus.models.*
 import org.plasmalabs.models.Epoch
 import org.plasmalabs.node.models.BlockBody
-import org.plasmalabs.node.services._
+import org.plasmalabs.node.services.*
 import org.plasmalabs.proto.node.{EpochData, NodeConfig}
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction

@@ -3,17 +3,17 @@ package org.plasmalabs.networking.fsnetwork
 import cats.MonadThrow
 import cats.data.EitherT
 import cats.effect.Async
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.algebras.Store
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.networking.blockchain.BlockchainPeerClient
-import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError._
-import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError.*
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances.*
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.sdk.syntax.ioTransactionAsTransactionSyntaxOps
 import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 
 class TransactionFetcher[F[_]: Async: Logger](

@@ -1,6 +1,6 @@
 package org.plasmalabs.ledger.interpreters
 
-import cats.effect._
+import cats.effect.*
 import org.plasmalabs.ledger.algebras.TransactionRewardCalculatorAlgebra
 import org.plasmalabs.ledger.models.{AssetId, RewardQuantities}
 import org.plasmalabs.sdk.models.box.Value

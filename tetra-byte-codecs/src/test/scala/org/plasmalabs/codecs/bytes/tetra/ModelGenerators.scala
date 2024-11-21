@@ -1,9 +1,9 @@
 package org.plasmalabs.codecs.bytes.tetra
 
 import cats.data.NonEmptyChain
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.consensus.models.{BlockHeader, ProtocolVersion, SlotData}
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
 import org.plasmalabs.node.models.BlockBody
 import org.plasmalabs.sdk.generators.ModelGenerators.arbitraryIoTransaction
 import org.plasmalabs.sdk.models.transaction.IoTransaction

@@ -1,9 +1,9 @@
 package org.plasmalabs.networking.fsnetwork
 
-import cats.data._
+import cats.data.*
 import cats.implicits.catsSyntaxEq
 import org.plasmalabs.consensus.models.{BlockId, SlotData}
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 case class BestChain(slotData: NonEmptyChain[SlotData]) {
   val last: SlotData = slotData.last

@@ -2,13 +2,13 @@ package org.plasmalabs.indexer
 
 import cats.data.EitherT
 import cats.effect.kernel.Async
-import cats.implicits._
+import cats.implicits.*
 import io.grpc.Metadata
 import org.plasmalabs.indexer.algebras.{BlockFetcherAlgebra, GraphReplicationStatusAlgebra}
 import org.plasmalabs.indexer.model.GEs
-import org.plasmalabs.indexer.services._
+import org.plasmalabs.indexer.services.*
 import org.plasmalabs.node.models.FullBlock
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 class GrpcBlockService[F[_]: Async](
   blockFetcher:     BlockFetcherAlgebra[F],

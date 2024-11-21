@@ -3,19 +3,19 @@ package org.plasmalabs.indexer.interpreter
 import cats.data.EitherT
 import cats.effect.Resource
 import cats.effect.kernel.Async
-import cats.implicits._
+import cats.implicits.*
 import com.github.benmanes.caffeine.cache.Caffeine
 import fs2.Stream
 import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import org.plasmalabs.indexer.algebras.{GraphReplicationStatusAlgebra, NodeBlockFetcherAlgebra, VertexFetcherAlgebra}
 import org.plasmalabs.indexer.model.{GE, GEs}
 import org.plasmalabs.indexer.orientDb.OrientThread
-import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances._
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances.*
 import org.plasmalabs.typeclasses.implicits.showBlockId
 import scalacache.Entry
 import scalacache.caffeine.CaffeineCache
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 object GraphReplicationStatus {
 

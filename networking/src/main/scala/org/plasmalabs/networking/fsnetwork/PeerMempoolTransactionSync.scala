@@ -3,22 +3,22 @@ package org.plasmalabs.networking.fsnetwork
 import cats.data.OptionT
 import cats.effect.kernel.Fiber
 import cats.effect.{Async, Ref, Resource, Spawn}
-import cats.implicits._
+import cats.implicits.*
 import fs2.Stream
 import org.plasmalabs.actor.{Actor, Fsm}
 import org.plasmalabs.algebras.Store
 import org.plasmalabs.consensus.algebras.LocalChainAlgebra
 import org.plasmalabs.ledger.algebras.MempoolAlgebra
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.networking.blockchain.BlockchainPeerClient
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError.UnknownError
-import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances.*
 import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 
 object PeerMempoolTransactionSync {

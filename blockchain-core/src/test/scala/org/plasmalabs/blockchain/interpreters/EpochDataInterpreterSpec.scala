@@ -2,35 +2,35 @@ package org.plasmalabs.blockchain.interpreters
 
 import cats.data.OptionT
 import cats.effect.{IO, Sync}
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
-import org.plasmalabs.algebras.Stats.Implicits._
+import org.plasmalabs.algebras.Stats.Implicits.*
 import org.plasmalabs.algebras.testInterpreters.TestStore
 import org.plasmalabs.codecs.bytes.tetra.TetraScodecCodecs
 import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import org.plasmalabs.consensus.interpreters.{ConsensusDataEventSourcedState, EpochBoundariesEventSourcedState}
-import org.plasmalabs.consensus.models._
+import org.plasmalabs.consensus.models.*
 import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
 import org.plasmalabs.interpreters.SchedulerClock
 import org.plasmalabs.ledger.algebras.TransactionRewardCalculatorAlgebra
 import org.plasmalabs.ledger.models.RewardQuantities
-import org.plasmalabs.models._
-import org.plasmalabs.models.utility._
+import org.plasmalabs.models.*
+import org.plasmalabs.models.utility.*
 import org.plasmalabs.node.models.{BlockBody, FullBlock, FullBlockBody}
-import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.numerics.implicits.*
 import org.plasmalabs.proto.node.EpochData
 import org.plasmalabs.quivr.models.Int128
 import org.plasmalabs.sdk.common.ContainsImmutable
 import org.plasmalabs.sdk.models.box.{Attestation, Value}
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
 import org.plasmalabs.sdk.models.{Datum, LockAddress, LockId, TransactionId, TransactionOutputAddress}
-import org.plasmalabs.sdk.syntax._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.sdk.syntax.*
+import org.plasmalabs.typeclasses.implicits.*
 import org.scalamock.munit.AsyncMockFactory
 
 import java.time.Instant
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 class EpochDataInterpreterSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

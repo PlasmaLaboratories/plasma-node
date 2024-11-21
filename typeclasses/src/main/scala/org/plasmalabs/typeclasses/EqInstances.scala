@@ -1,13 +1,13 @@
 package org.plasmalabs.typeclasses
 
 import cats.Eq
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import grpc.health.v1.ServingStatus
-import org.plasmalabs.consensus.models._
+import org.plasmalabs.consensus.models.*
 import org.plasmalabs.crypto.generation.mnemonic.Entropy
-import org.plasmalabs.models._
-import org.plasmalabs.models.utility.{Sized, _}
+import org.plasmalabs.models.*
+import org.plasmalabs.models.utility.{Sized, *}
 import org.plasmalabs.sdk.models.TransactionId
 
 trait EqInstances {

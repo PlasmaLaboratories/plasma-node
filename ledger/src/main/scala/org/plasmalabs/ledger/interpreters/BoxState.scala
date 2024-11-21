@@ -2,7 +2,7 @@ package org.plasmalabs.ledger.interpreters
 
 import cats.data.{NonEmptySet, OptionT}
 import cats.effect.Async
-import cats.implicits._
+import cats.implicits.*
 import cats.{Applicative, MonadThrow}
 import org.plasmalabs.algebras.Store
 import org.plasmalabs.consensus.models.BlockId
@@ -11,8 +11,8 @@ import org.plasmalabs.ledger.algebras.BoxStateAlgebra
 import org.plasmalabs.node.models.BlockBody
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.sdk.models.{TransactionId, TransactionOutputAddress}
-import org.plasmalabs.sdk.syntax._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.sdk.syntax.*
+import org.plasmalabs.typeclasses.implicits.*
 
 import scala.collection.immutable.SortedSet
 

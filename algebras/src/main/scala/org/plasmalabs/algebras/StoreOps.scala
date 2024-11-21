@@ -1,8 +1,8 @@
 package org.plasmalabs.algebras
 
 import cats.MonadThrow
-import cats.implicits._
-import org.plasmalabs.models._
+import cats.implicits.*
+import org.plasmalabs.models.*
 
 object StoreOps {
 

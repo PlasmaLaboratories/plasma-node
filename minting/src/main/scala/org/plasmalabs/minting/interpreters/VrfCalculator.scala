@@ -1,17 +1,17 @@
 package org.plasmalabs.minting.interpreters
 
-import cats.effect._
+import cats.effect.*
 import cats.effect.implicits.effectResourceOps
-import cats.implicits._
+import cats.implicits.*
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.google.protobuf.ByteString
-import org.plasmalabs.codecs.bytes.typeclasses.implicits._
+import org.plasmalabs.codecs.bytes.typeclasses.implicits.*
 import org.plasmalabs.consensus.models.VrfArgument
 import org.plasmalabs.crypto.signing.Ed25519VRF
 import org.plasmalabs.minting.algebras.VrfCalculatorAlgebra
-import org.plasmalabs.models._
-import org.plasmalabs.models.utility.HasLength.instances._
-import org.plasmalabs.models.utility._
+import org.plasmalabs.models.*
+import org.plasmalabs.models.utility.*
+import org.plasmalabs.models.utility.HasLength.instances.*
 import scalacache.Entry
 import scalacache.caffeine.CaffeineCache
 

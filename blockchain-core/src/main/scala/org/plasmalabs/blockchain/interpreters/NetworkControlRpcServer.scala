@@ -2,12 +2,12 @@ package org.plasmalabs.blockchain.interpreters
 
 import cats.Show
 import cats.effect.{Async, Resource}
-import cats.implicits._
+import cats.implicits.*
 import fs2.concurrent.Topic
 import io.grpc.{Metadata, ServerServiceDefinition}
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.models.utility.{NetworkCommands, byteStringToByteVector}
-import org.plasmalabs.node.services._
+import org.plasmalabs.node.services.*
 import org.typelevel.log4cats.Logger
 
 object NetworkControlRpcServer {

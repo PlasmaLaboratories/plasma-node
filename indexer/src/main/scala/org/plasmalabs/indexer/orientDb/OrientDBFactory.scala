@@ -2,7 +2,7 @@ package org.plasmalabs.indexer.orientDb
 
 import cats.effect.implicits.effectResourceOps
 import cats.effect.{Async, Resource}
-import cats.implicits._
+import cats.implicits.*
 import com.orientechnologies.orient.core.sql.OCommandSQL
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory
 import fs2.io.file.{Files, Path}

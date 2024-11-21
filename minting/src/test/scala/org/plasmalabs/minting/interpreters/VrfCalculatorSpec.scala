@@ -5,13 +5,13 @@ import cats.effect.IO.asyncForIO
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.crypto.signing.Ed25519VRF
-import org.plasmalabs.models._
-import org.plasmalabs.models.utility.HasLength.instances._
-import org.plasmalabs.models.utility.Lengths._
-import org.plasmalabs.models.utility._
+import org.plasmalabs.models.*
+import org.plasmalabs.models.utility.*
+import org.plasmalabs.models.utility.HasLength.instances.*
+import org.plasmalabs.models.utility.Lengths.*
 import org.plasmalabs.sdk.utils.CatsUnsafeResource
 import org.scalamock.munit.AsyncMockFactory
-import scodec.bits._
+import scodec.bits.*
 
 class VrfCalculatorSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]

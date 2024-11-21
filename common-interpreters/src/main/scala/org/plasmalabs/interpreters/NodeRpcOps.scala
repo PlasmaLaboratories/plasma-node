@@ -1,8 +1,8 @@
 package org.plasmalabs.interpreters
 
 import cats.data.OptionT
-import cats.effect._
-import cats.implicits._
+import cats.effect.*
+import cats.implicits.*
 import cats.{Applicative, MonadThrow}
 import fs2.Stream
 import org.plasmalabs.algebras.{NodeRpc, SynchronizationTraversalSteps}
@@ -10,7 +10,7 @@ import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
 import org.plasmalabs.node.models.{FullBlock, FullBlockBody}
 import org.typelevel.log4cats.Logger
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.language.implicitConversions
 
 object NodeRpcOps extends NodeRpcOps

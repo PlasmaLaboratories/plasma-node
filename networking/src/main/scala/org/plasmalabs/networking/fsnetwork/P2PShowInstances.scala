@@ -5,15 +5,15 @@ import cats.implicits.showInterpolator
 import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import org.plasmalabs.config.ApplicationConfig.Node.NetworkProperties
 import org.plasmalabs.consensus.models.{BlockHeaderToBodyValidationFailure, BlockHeaderValidationFailure}
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.models.utility.byteStringToByteVector
-import org.plasmalabs.networking.fsnetwork.NetworkQualityError._
+import org.plasmalabs.networking.fsnetwork.NetworkQualityError.*
 import org.plasmalabs.networking.fsnetwork.PeersManager.Message.PingPongMessagePing
 import org.plasmalabs.networking.p2p.ConnectedPeer
-import org.plasmalabs.node.models._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.node.models.*
+import org.plasmalabs.typeclasses.implicits.*
 
-import java.time._
+import java.time.*
 
 trait P2PShowInstances {
   implicit val showHostId: Show[HostId] = id => show"${id.id.toBase58.take(8)}..."

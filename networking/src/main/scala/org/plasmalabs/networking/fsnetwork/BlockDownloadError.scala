@@ -1,13 +1,13 @@
 package org.plasmalabs.networking.fsnetwork
 
 import cats.data.NonEmptyChain
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.consensus.models.BlockId
-import org.plasmalabs.ledger.implicits._
+import org.plasmalabs.ledger.implicits.*
 import org.plasmalabs.models.TxRoot
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.validation.TransactionSyntaxError
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 sealed abstract class BlockDownloadError extends Exception {
   def notCritical: Boolean

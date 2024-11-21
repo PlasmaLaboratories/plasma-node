@@ -1,28 +1,28 @@
 package org.plasmalabs.minting.interpreters
 
 import cats.Monad
+import cats.effect.*
 import cats.effect.IO.asyncForIO
-import cats.effect._
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
-import org.plasmalabs.algebras.Stats.Implicits._
-import org.plasmalabs.consensus.algebras._
-import org.plasmalabs.consensus.models._
+import org.plasmalabs.algebras.Stats.Implicits.*
+import org.plasmalabs.consensus.algebras.*
+import org.plasmalabs.consensus.models.*
 import org.plasmalabs.consensus.thresholdEvidence
 import org.plasmalabs.crypto.hash.Blake2b256
 import org.plasmalabs.minting.algebras.{OperationalKeyMakerAlgebra, VrfCalculatorAlgebra}
 import org.plasmalabs.minting.models.{OperationalKeyOut, VrfHit}
+import org.plasmalabs.models.*
 import org.plasmalabs.models.ModelGenerators.GenHelper
-import org.plasmalabs.models._
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
-import org.plasmalabs.models.utility.HasLength.instances._
-import org.plasmalabs.models.utility.Lengths._
-import org.plasmalabs.models.utility._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
+import org.plasmalabs.models.utility.*
+import org.plasmalabs.models.utility.HasLength.instances.*
+import org.plasmalabs.models.utility.Lengths.*
 import org.plasmalabs.sdk.models.{LockAddress, LockId}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
-import scodec.bits._
+import scodec.bits.*
 
 class StakingSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]

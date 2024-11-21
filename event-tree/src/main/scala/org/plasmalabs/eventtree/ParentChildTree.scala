@@ -1,9 +1,9 @@
 package org.plasmalabs.eventtree
 
-import cats._
+import cats.*
 import cats.data.{NonEmptyChain, OptionT}
-import cats.effect._
-import cats.implicits._
+import cats.effect.*
+import cats.implicits.*
 
 trait ParentChildTree[F[_], T] {
 

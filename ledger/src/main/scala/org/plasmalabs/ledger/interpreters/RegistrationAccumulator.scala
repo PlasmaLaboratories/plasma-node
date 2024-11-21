@@ -1,9 +1,9 @@
 package org.plasmalabs.ledger.interpreters
 
 import cats.MonadThrow
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.{Async, Resource, Sync}
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.algebras.Store
 import org.plasmalabs.consensus.models.{BlockId, StakingAddress}
 import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
@@ -11,7 +11,7 @@ import org.plasmalabs.ledger.algebras.RegistrationAccumulatorAlgebra
 import org.plasmalabs.node.models.BlockBody
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 /**
  * A RegistrationAccumulatorAlgebra interpreter which uses an EventSourcedState to track a set of Staking Addresses.

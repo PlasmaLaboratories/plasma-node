@@ -2,7 +2,7 @@ package org.plasmalabs.consensus.models
 
 import com.google.protobuf.ByteString
 import org.plasmalabs.codecs.bytes.typeclasses.Signable
-import org.plasmalabs.models._
+import org.plasmalabs.models.*
 
 case class VrfArgument(eta: Eta, slot: Slot)
 

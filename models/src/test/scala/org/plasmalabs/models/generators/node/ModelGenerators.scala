@@ -1,8 +1,8 @@
 package org.plasmalabs.models.generators.node
 
 import org.plasmalabs.models.generators.consensus.ModelGenerators.arbitraryHeader
-import org.plasmalabs.node.models._
-import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.node.models.*
+import org.plasmalabs.sdk.generators.ModelGenerators.*
 import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {

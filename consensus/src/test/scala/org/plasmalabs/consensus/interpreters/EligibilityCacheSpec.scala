@@ -1,12 +1,12 @@
 package org.plasmalabs.consensus.interpreters
 
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.consensus.algebras.EligibilityCacheAlgebra
-import org.plasmalabs.models.ModelGenerators._
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.ModelGenerators.*
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
 import org.plasmalabs.models.utility.Lengths
 import org.scalamock.munit.AsyncMockFactory
 

@@ -1,6 +1,6 @@
 package org.plasmalabs.networking.blockchain
 
-import cats.implicits._
+import cats.implicits.*
 
 /**
  * An ADT of blockchain-specific multiplexer ports

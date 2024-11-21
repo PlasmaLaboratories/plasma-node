@@ -1,14 +1,14 @@
 package org.plasmalabs.networking.blockchain
 
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
-import fs2._
+import fs2.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
 import org.plasmalabs.crypto.hash.Blake2b256
 import org.plasmalabs.networking.p2p.ConnectedPeer
-import org.plasmalabs.node.models._
+import org.plasmalabs.node.models.*
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.scalacheck.Gen

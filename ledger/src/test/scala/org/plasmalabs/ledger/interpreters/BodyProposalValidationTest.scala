@@ -2,7 +2,7 @@ package org.plasmalabs.ledger.interpreters
 
 import cats.data.ValidatedNec
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.ClockAlgebra
 import org.plasmalabs.algebras.testInterpreters.TestStore
@@ -10,20 +10,20 @@ import org.plasmalabs.codecs.bytes.tetra.ModelGenerators.arbitraryTxsAndBlock
 import org.plasmalabs.consensus.models.BlockId
 import org.plasmalabs.eventtree.EventSourcedState
 import org.plasmalabs.ledger.interpreters.ProposalEventSourceState.ProposalData
-import org.plasmalabs.ledger.models._
-import org.plasmalabs.models.ModelGenerators._
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.ledger.models.*
+import org.plasmalabs.models.ModelGenerators.*
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
 import org.plasmalabs.models.protocol.RatioCodec.ratioToProtoRatio
 import org.plasmalabs.models.protocol.{ConfigConverter, ConfigGenesis}
 import org.plasmalabs.models.utility.Ratio
 import org.plasmalabs.models.{Epoch, ProposalConfig, ProposalId, Slot, Timestamp, emptyVersionId, proposalDelta}
 import org.plasmalabs.node.models.BlockBody
-import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.sdk.generators.ModelGenerators.*
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.box.Value
 import org.plasmalabs.sdk.models.box.Value.ConfigProposal
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
