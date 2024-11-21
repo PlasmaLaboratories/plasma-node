@@ -12,8 +12,6 @@ case class LeafNode[T](key: Array[Byte], value: T) extends Node {
 
 case class ExtensionNode[T](key: Array[Byte], node: Node) extends Node {
 
-  assert(nibblesFromHp(key).filter(x => x <= 15 && x >= 0).nonEmpty)
-
   override def toString(): String = s"ExtensionNode(${nibblesFromHp(key).mkString("[", ", ", "]")}, $node)"
 }
 

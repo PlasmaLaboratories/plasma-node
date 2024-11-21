@@ -4,7 +4,45 @@ import org.bouncycastle.jcajce.provider.digest.Keccak
 
 package object mpt {
 
-  def hp(nibbles: Array[Byte], flag: Boolean): Array[Byte] = {
+  /**
+   * A nibble is a byte whose values is between 0 and 15, so it could
+   * be represented by a single hexadecimal digit.
+   */
+  private[mpt] opaque type Nibbles = Array[Byte]
+
+  object Nibbles {
+
+    val empty: Nibbles = Array.emptyByteArray
+
+    def apply(bytes: Array[Byte]): Nibbles = {
+      assert(bytes.forall(b => b >= 0 && b <= 15))
+      bytes
+    }
+  }
+
+  extension (x: Nibbles) {
+    inline def tailNibbles: Nibbles = x.tail
+    inline def grouped(n: Int): Array[Nibbles] = x.grouped(n)
+    inline def isEmpty: Boolean = x.isEmpty
+    inline def head: Byte = x.head
+    inline def length: Int = x.length
+    inline def mkString(begin: String, sep: String, end: String): String = x.mkString(begin, sep, end)
+    inline def zip(y:          Nibbles): Array[(Byte, Byte)] = x.zip(y)
+    inline def drop(n:         Int): Nibbles = x.drop(n)
+    inline def take(n:         Int): Nibbles = x.take(n)
+    inline def sameElements(y: Nibbles): Boolean = x.sameElements(y)
+  }
+
+  /**
+   * Uses the hex prefix encoding from the Ethereum Yellow Paper.
+   *
+   * @param nibbles The nibble array. An array of nibbles, each represented by
+   * a byte. A nibbles is a byte whose values is between 0 and 15.
+   * @param flag The flag to use. This flag is used in the encoding for the
+   * MP Trie.
+   * @return The encoded array.
+   */
+  def hp(nibbles: Nibbles, flag: Boolean): Array[Byte] = {
     val f = if (flag) 2 else 0
     if (nibbles.length % 2 == 0)
       (f.toByte << 4).toByte +: nibbles.grouped(2).map { case Array(a, b) => ((a << 4) | b).toByte }.toArray
@@ -15,7 +53,7 @@ package object mpt {
         .toArray
   }
 
-  def nibblesFromHp(hp: Array[Byte]): Array[Byte] = {
+  def nibblesFromHp(hp: Array[Byte]): Nibbles = {
     val lengthIsPair = ((hp.head >>> 4) & 0x01) == 0
     val headNibble = if (lengthIsPair) Array.emptyByteArray else Array((hp.head & 0x0f).toByte)
     headNibble ++ hp.tail.flatMap { b =>

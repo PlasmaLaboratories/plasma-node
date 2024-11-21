@@ -11,7 +11,7 @@ private[mpt] trait MPTGetOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
   self: AuxFunctions[F, T] =>
 
   @nowarn("msg=.*cannot be checked at runtime because its type arguments can't be determined from.*")
-  def auxGet(partialKey: Array[Byte], currentNode: Node): F[Option[T]] =
+  def auxGet(partialKey: Nibbles, currentNode: Node): F[Option[T]] =
     (currentNode match {
       case EmptyNode =>
         OptionT.none
@@ -32,7 +32,7 @@ private[mpt] trait MPTGetOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
       case ExtensionNode[T](hpEncodedKey, value) =>
         OptionT
           .whenF(hp(partialKey, flag = false).sameElements(hpEncodedKey)) {
-            auxGet(Array.emptyByteArray, value)
+            auxGet(Nibbles.empty, value)
           }
           .orElse {
             val previousKeyNibbles = nibblesFromHp(hpEncodedKey)
@@ -49,7 +49,7 @@ private[mpt] trait MPTGetOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
           OptionT.fromOption(value)
         } else {
           val child = children(partialKey.head)
-          OptionT(auxGet(partialKey.tail, child))
+          OptionT(auxGet(partialKey.tailNibbles, child))
         }
     }).value
 }

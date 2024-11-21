@@ -83,13 +83,13 @@ private[mpt] trait AuxFunctions[F[_]: Async, T: RLPPersistable]
     case EmptyNode => EmptyNode.pure[F]
   }
 
-  def createNewLeaf(partialKey: Array[Byte], value: T): F[Node] =
+  def createNewLeaf(partialKey: Nibbles, value: T): F[Node] =
     capNode(LeafNode(hp(partialKey, true), value))
 
-  def createBranch(partialKey1: Array[Byte], v1: T, partialKey2: Array[Byte], v2: T) = {
+  def createBranch(partialKey1: Nibbles, v1: T, partialKey2: Nibbles, v2: T) = {
     val branch = if (partialKey2.isEmpty) {
       for {
-        newLeaf <- createNewLeaf(partialKey1.tail, v1)
+        newLeaf <- createNewLeaf(partialKey1.tailNibbles, v1)
       } yield BranchNode[T](
         Vector
           .fill(16)(EmptyNode)
@@ -98,7 +98,7 @@ private[mpt] trait AuxFunctions[F[_]: Async, T: RLPPersistable]
       )
     } else if (partialKey1.isEmpty) {
       for {
-        newLeaf <- createNewLeaf(partialKey2.tail, v2)
+        newLeaf <- createNewLeaf(partialKey2.tailNibbles, v2)
       } yield BranchNode[T](
         Vector
           .fill(16)(EmptyNode)
@@ -107,8 +107,8 @@ private[mpt] trait AuxFunctions[F[_]: Async, T: RLPPersistable]
       )
     } else {
       for {
-        newLeaf      <- createNewLeaf(partialKey1.tail, v1)
-        previousLeaf <- createNewLeaf(partialKey2.tail, v2)
+        newLeaf      <- createNewLeaf(partialKey1.tailNibbles, v1)
+        previousLeaf <- createNewLeaf(partialKey2.tailNibbles, v2)
       } yield BranchNode[T](
         Vector
           .fill(16)(EmptyNode)
@@ -123,7 +123,7 @@ private[mpt] trait AuxFunctions[F[_]: Async, T: RLPPersistable]
     } yield result
   }
 
-  def createBranch(partialKey1: Array[Byte], node1: Node, partialKey2: Array[Byte], node2: Node) = {
+  def createBranch(partialKey1: Nibbles, node1: Node, partialKey2: Nibbles, node2: Node) = {
     assert(partialKey1.length > 0)
     assert(partialKey2.length > 0)
     for {
@@ -141,7 +141,7 @@ private[mpt] trait AuxFunctions[F[_]: Async, T: RLPPersistable]
     } yield result
   }
 
-  def createBranch(partialKey1: Array[Byte], node: Node, v: T) = {
+  def createBranch(partialKey1: Nibbles, node: Node, v: T) = {
     assert(partialKey1.length > 0)
     val branch = BranchNode[T](
       Vector
@@ -152,11 +152,11 @@ private[mpt] trait AuxFunctions[F[_]: Async, T: RLPPersistable]
     capNode(branch)
   }
 
-  def createBranch(partialKey1: Array[Byte], node: Node, partialKey2: Array[Byte], v: T) = {
+  def createBranch(partialKey1: Nibbles, node: Node, partialKey2: Nibbles, v: T) = {
     assert(partialKey1.length > 0)
     assert(partialKey2.length > 0)
     for {
-      cappedLeaf <- createNewLeaf(partialKey2.tail, v)
+      cappedLeaf <- createNewLeaf(partialKey2.tailNibbles, v)
       newBranch = BranchNode[T](
         Vector
           .fill(16)(EmptyNode)
@@ -169,10 +169,10 @@ private[mpt] trait AuxFunctions[F[_]: Async, T: RLPPersistable]
   }
 
   def createNewExtension(
-    prefix:      Array[Byte],
-    partialKey1: Array[Byte],
+    prefix:      Nibbles,
+    partialKey1: Nibbles,
     v1:          T,
-    partialKey2: Array[Byte],
+    partialKey2: Nibbles,
     v2:          T
   ): F[Node] =
     for {
@@ -187,10 +187,10 @@ private[mpt] trait AuxFunctions[F[_]: Async, T: RLPPersistable]
     } yield result
 
   def createNewExtension(
-    prefix:      Array[Byte],
-    partialKey1: Array[Byte],
+    prefix:      Nibbles,
+    partialKey1: Nibbles,
     node1:       Node,
-    partialKey2: Array[Byte],
+    partialKey2: Nibbles,
     node2:       Node
   ): F[Node] =
     for {

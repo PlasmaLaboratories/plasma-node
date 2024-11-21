@@ -11,7 +11,7 @@ private[mpt] trait MPTUpdateOps[F[_]: Async, T: RLPPersistable] extends Optics[T
   self: AuxFunctions[F, T] =>
 
   @nowarn("msg=.*cannot be checked at runtime because its type arguments can't be determined from.*")
-  def auxUpdate(currentNode: Node, currentPartialKeyNibbles: Array[Byte], f: T => T): F[Option[Node]] =
+  def auxUpdate(currentNode: Node, currentPartialKeyNibbles: Nibbles, f: T => T): F[Option[Node]] =
     (currentNode match
       case EmptyNode =>
         OptionT.none
@@ -36,7 +36,7 @@ private[mpt] trait MPTUpdateOps[F[_]: Async, T: RLPPersistable] extends Optics[T
         val previousPartialKeyNibbles = nibblesFromHp(hpEncodedPreviousPartialKey)
         if (currentPartialKeyNibbles.sameElements(previousPartialKeyNibbles)) {
           for {
-            newNode <- OptionT(auxUpdate(node, Array.emptyByteArray, f))
+            newNode <- OptionT(auxUpdate(node, Nibbles.empty, f))
             result  <- OptionT.liftF(capNode(ExtensionNode[T](hpEncodedPreviousPartialKey, newNode)))
           } yield result
         } else {
@@ -67,7 +67,7 @@ private[mpt] trait MPTUpdateOps[F[_]: Async, T: RLPPersistable] extends Optics[T
         } else {
           val child = children(currentPartialKeyNibbles.head)
           for {
-            updatedChild <- OptionT(auxUpdate(child, currentPartialKeyNibbles.tail, f))
+            updatedChild <- OptionT(auxUpdate(child, currentPartialKeyNibbles.tailNibbles, f))
             newBranch = BranchNode[T](
               children.updated(currentPartialKeyNibbles.head, updatedChild),
               someValue

@@ -11,7 +11,7 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
   self: AuxFunctions[F, T] =>
 
   @nowarn("msg=.*cannot be checked at runtime because its type arguments can't be determined from.*")
-  def auxPut(currentNode: Node, currentPartialKeyNibbles: Array[Byte], t: T): F[Option[Node]] =
+  def auxPut(currentNode: Node, currentPartialKeyNibbles: Nibbles, t: T): F[Option[Node]] =
     (currentNode match
       case EmptyNode =>
         import cats.implicits._
@@ -55,7 +55,7 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
           // we are updating the value of the node at the end of the extension
           // we leave that to the next call to decide how to do that
           for {
-            newNode <- OptionT(auxPut(node, Array.emptyByteArray, t))
+            newNode <- OptionT(auxPut(node, Nibbles.empty, t))
             result  <- OptionT.liftF(capNode(ExtensionNode[T](hpEncodedPreviousPartialKey, newNode)))
           } yield result
         } else if (currentPartialKeyNibbles.isEmpty) {
@@ -73,7 +73,7 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
             // we create a branch with the extension as a node and the value as the branch's end value
             for {
               cappedExtension <- OptionT
-                .liftF(capNode(ExtensionNode[T](hp(previousPartialKeyNibbles.tail, false), node)))
+                .liftF(capNode(ExtensionNode[T](hp(previousPartialKeyNibbles.tailNibbles, false), node)))
               newBranch <- OptionT.liftF(
                 createBranch(
                   previousPartialKeyNibbles,
@@ -103,7 +103,7 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
               // in this case we create a branch with the extension and another with the leaf containing the value
               for {
                 cappedExtension <- OptionT
-                  .liftF(capNode(ExtensionNode[T](hp(previousPartialKeyNibbles.tail, false), node)))
+                  .liftF(capNode(ExtensionNode[T](hp(previousPartialKeyNibbles.tailNibbles, false), node)))
                 newBranch <- OptionT.liftF(
                   createBranch(
                     previousPartialKeyNibbles,
@@ -158,7 +158,7 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
                   cappedExtension <- OptionT
                     .liftF(
                       capNode(
-                        ExtensionNode[T](hp(previousPartialKeyNibbles.drop(prefixLength).tail, false), node)
+                        ExtensionNode[T](hp(previousPartialKeyNibbles.drop(prefixLength).tailNibbles, false), node)
                       )
                     )
                   newBranch <- OptionT.liftF(
@@ -177,15 +177,15 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
               for {
                 newLeaf <- OptionT.liftF(
                   createNewLeaf(
-                    currentPartialKeyNibbles.drop(prefixLength).tail,
+                    currentPartialKeyNibbles.drop(prefixLength).tailNibbles,
                     t
                   )
                 )
                 cappedExtension <-
-                  if (previousPartialKeyNibbles.drop(prefixLength).tail.length > 0)
+                  if (previousPartialKeyNibbles.drop(prefixLength).tailNibbles.length > 0)
                     OptionT.liftF(
                       capNode(
-                        ExtensionNode[T](hp(previousPartialKeyNibbles.drop(prefixLength).tail, false), node)
+                        ExtensionNode[T](hp(previousPartialKeyNibbles.drop(prefixLength).tailNibbles, false), node)
                       )
                     )
                   else
@@ -223,7 +223,7 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
           // here we have to go down the branch and update the child or children
           val child = children(currentPartialKeyNibbles.head)
           for {
-            updatedChild <- OptionT(auxPut(child, currentPartialKeyNibbles.tail, t))
+            updatedChild <- OptionT(auxPut(child, currentPartialKeyNibbles.tailNibbles, t))
             newBranch = BranchNode[T](
               children.updated(currentPartialKeyNibbles.head, updatedChild),
               someValue

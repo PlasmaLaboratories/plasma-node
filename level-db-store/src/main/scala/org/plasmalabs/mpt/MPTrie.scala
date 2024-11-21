@@ -45,6 +45,7 @@ trait MPTrie[F[_], Key, T] {
    * @param t The value to store.
    * @return The new root hash of the trie. If there is a problem with the
    * database or the trie, this will return None.
+   * @throws RuntimeException if the root node is invalid.
    */
   def put(id: Key, t: T): F[TreeRoot]
 
@@ -99,8 +100,8 @@ object MPTrie {
 
             def put(id: Key, t: T): F[TreeRoot] = {
               val list = RlpDecoder.decode(root)
-              if (list.getValues().size() == 0) {
-                val leaf = LeafNode(hp(kEv.toNibbles(id), true), t)
+              if (list.getValues().isEmpty()) {
+                val leaf = LeafNode(hp(Nibbles(kEv.toNibbles(id)), true), t)
                 val newRootBytes = bytesRlpList.reverseGet(nodeToRlp(leaf))
                 val newTreeRootByes = keccak256(newRootBytes)
                 levelDb
@@ -111,7 +112,7 @@ object MPTrie {
                 rlpTypeToNode(rlpType) match {
                   case Some(node) =>
                     (for {
-                      updatedNode <- OptionT(auxPut(node, kEv.toNibbles(id), t))
+                      updatedNode <- OptionT(auxPut(node, Nibbles(kEv.toNibbles(id)), t))
                       newRoot     <- OptionT.liftF(capNode(updatedNode))
                       refRoot     <- OptionT.liftF(nodeToRef(newRoot))
                     } yield refRoot.hash).value.flatMap {
@@ -128,7 +129,7 @@ object MPTrie {
               (for {
                 list <- OptionT.fromOption(bytesRlpList.getOption(root))
                 node <- OptionT.fromOption(rlpTypeToNode(list))
-                res  <- OptionT(auxGet(kEv.toNibbles(id), node))
+                res  <- OptionT(auxGet(Nibbles(kEv.toNibbles(id)), node))
               } yield res).value
 
             def update(id: Key, f: T => T): F[Option[TreeRoot]] = {
@@ -140,7 +141,7 @@ object MPTrie {
                 rlpTypeToNode(rlpType) match {
                   case Some(node) =>
                     (for {
-                      updatedNode <- OptionT(auxUpdate(node, kEv.toNibbles(id), f))
+                      updatedNode <- OptionT(auxUpdate(node, Nibbles(kEv.toNibbles(id)), f))
                       newRoot     <- OptionT.liftF(capNode(updatedNode))
                       refRoot     <- OptionT.liftF(nodeToRef(newRoot))
                     } yield refRoot.hash).value
