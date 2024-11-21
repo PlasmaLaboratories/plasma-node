@@ -29,7 +29,7 @@ private[mpt] trait MPTGetOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
         // key is encoded using the hp function
         // we encode the key using the hp function
         OptionT.when(hp(partialKey, flag = true).sameElements(key))(value)
-      case ExtensionNode[T](hpEncodedKey, value) =>
+      case ExtensionNode(hpEncodedKey, value) =>
         OptionT
           .whenF(hp(partialKey, flag = false).sameElements(hpEncodedKey)) {
             auxGet(Nibbles.empty, value)

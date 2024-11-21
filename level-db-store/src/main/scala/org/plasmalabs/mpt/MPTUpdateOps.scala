@@ -32,12 +32,12 @@ private[mpt] trait MPTUpdateOps[F[_]: Async, T: RLPPersistable] extends Optics[T
         } else {
           OptionT.none
         }
-      case n @ ExtensionNode[T](hpEncodedPreviousPartialKey, node) =>
+      case n @ ExtensionNode(hpEncodedPreviousPartialKey, node) =>
         val previousPartialKeyNibbles = nibblesFromHp(hpEncodedPreviousPartialKey)
         if (currentPartialKeyNibbles.sameElementsNibbles(previousPartialKeyNibbles)) {
           for {
             newNode <- OptionT(auxUpdate(node, Nibbles.empty, f))
-            result  <- OptionT.liftF(capNode(ExtensionNode[T](hpEncodedPreviousPartialKey, newNode)))
+            result  <- OptionT.liftF(capNode(ExtensionNode(hpEncodedPreviousPartialKey, newNode)))
           } yield result
         } else {
           val prefixLength =
@@ -49,7 +49,7 @@ private[mpt] trait MPTUpdateOps[F[_]: Async, T: RLPPersistable] extends Optics[T
                   auxUpdate(node, currentPartialKeyNibbles.dropNibbles(prefixLength), f)
                 )
                 cappedExtension <- OptionT.liftF(
-                  capNode(ExtensionNode[T](hpEncodedPreviousPartialKey, updatedChild))
+                  capNode(ExtensionNode(hpEncodedPreviousPartialKey, updatedChild))
                 )
               } yield cappedExtension
             } else OptionT.none

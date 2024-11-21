@@ -10,7 +10,7 @@ case class LeafNode[T](key: Array[Byte], value: T) extends Node {
   override def toString(): String = s"LeafNode(${nibblesFromHp(key).mkStringNibbles("[", ", ", "]")}, $value)"
 }
 
-case class ExtensionNode[T](key: Array[Byte], node: Node) extends Node {
+case class ExtensionNode(key: Array[Byte], node: Node) extends Node {
 
   override def toString(): String = s"ExtensionNode(${nibblesFromHp(key).mkStringNibbles("[", ", ", "]")}, $node)"
 }

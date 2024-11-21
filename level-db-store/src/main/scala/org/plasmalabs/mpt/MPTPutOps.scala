@@ -48,7 +48,7 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
               }
             }
         }
-      case n @ ExtensionNode[T](hpEncodedPreviousPartialKey, node) =>
+      case n @ ExtensionNode(hpEncodedPreviousPartialKey, node) =>
         // this by definition has at least one nibble
         val previousPartialKeyNibbles = nibblesFromHp(hpEncodedPreviousPartialKey)
         if (currentPartialKeyNibbles.sameElementsNibbles(previousPartialKeyNibbles)) {
@@ -56,7 +56,7 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
           // we leave that to the next call to decide how to do that
           for {
             newNode <- OptionT(auxPut(node, Nibbles.empty, t))
-            result  <- OptionT.liftF(capNode(ExtensionNode[T](hpEncodedPreviousPartialKey, newNode)))
+            result  <- OptionT.liftF(capNode(ExtensionNode(hpEncodedPreviousPartialKey, newNode)))
           } yield result
         } else if (currentPartialKeyNibbles.isEmptyNibbles) {
           // in this case we are getting here from a branch node that consumed the last nibble
@@ -73,7 +73,7 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
             // we create a branch with the extension as a node and the value as the branch's end value
             for {
               cappedExtension <- OptionT
-                .liftF(capNode(ExtensionNode[T](hp(previousPartialKeyNibbles.tailNibbles, false), node)))
+                .liftF(capNode(ExtensionNode(hp(previousPartialKeyNibbles.tailNibbles, false), node)))
               newBranch <- OptionT.liftF(
                 createBranch(
                   previousPartialKeyNibbles,
@@ -103,7 +103,7 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
               // in this case we create a branch with the extension and another with the leaf containing the value
               for {
                 cappedExtension <- OptionT
-                  .liftF(capNode(ExtensionNode[T](hp(previousPartialKeyNibbles.tailNibbles, false), node)))
+                  .liftF(capNode(ExtensionNode(hp(previousPartialKeyNibbles.tailNibbles, false), node)))
                 newBranch <- OptionT.liftF(
                   createBranch(
                     previousPartialKeyNibbles,
@@ -131,7 +131,7 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
                   auxPut(node, currentPartialKeyNibbles.dropNibbles(prefixLength), t)
                 )
                 cappedExtension <- OptionT.liftF(
-                  capNode(ExtensionNode[T](hpEncodedPreviousPartialKey, updatedChild))
+                  capNode(ExtensionNode(hpEncodedPreviousPartialKey, updatedChild))
                 )
               } yield cappedExtension
             } else if (currentPartialKeyNibbles.dropNibbles(prefixLength).lengthNibbles == 0) {
@@ -158,7 +158,7 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
                   cappedExtension <- OptionT
                     .liftF(
                       capNode(
-                        ExtensionNode[T](hp(previousPartialKeyNibbles.dropNibbles(prefixLength).tailNibbles, false), node)
+                        ExtensionNode(hp(previousPartialKeyNibbles.dropNibbles(prefixLength).tailNibbles, false), node)
                       )
                     )
                   newBranch <- OptionT.liftF(
@@ -185,7 +185,7 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
                   if (previousPartialKeyNibbles.dropNibbles(prefixLength).tailNibbles.lengthNibbles > 0)
                     OptionT.liftF(
                       capNode(
-                        ExtensionNode[T](hp(previousPartialKeyNibbles.dropNibbles(prefixLength).tailNibbles, false), node)
+                        ExtensionNode(hp(previousPartialKeyNibbles.dropNibbles(prefixLength).tailNibbles, false), node)
                       )
                     )
                   else
@@ -200,7 +200,7 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
                 )
                 cappedExtension <- OptionT.liftF(
                   capNode(
-                    ExtensionNode[T](hp(previousPartialKeyNibbles.takeNibbles(prefixLength), false), newBranch)
+                    ExtensionNode(hp(previousPartialKeyNibbles.takeNibbles(prefixLength), false), newBranch)
                   )
                 )
               } yield cappedExtension

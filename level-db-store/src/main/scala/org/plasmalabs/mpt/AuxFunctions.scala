@@ -25,7 +25,7 @@ private[mpt] trait AuxFunctions[F[_]: Async, T: RLPPersistable]
         _ <- levelDb.put(keccak, encodedNewLeaf)
       } yield RefNode(keccak.toTreeRoot)
 
-    case n: ExtensionNode[T] =>
+    case n: ExtensionNode =>
       val encodedExtension = byteToExtension.reverseGet(n)
       val keccak = keccak256(encodedExtension)
       for {
@@ -54,7 +54,7 @@ private[mpt] trait AuxFunctions[F[_]: Async, T: RLPPersistable]
           _ <- levelDb.put(keccak, encodedNewLeaf)
         } yield RefNode(keccak256(encodedNewLeaf).toTreeRoot)
       }
-    case n: ExtensionNode[T] =>
+    case n: ExtensionNode =>
       val encodedExtension = byteToExtension.reverseGet(n)
       for {
         result <-
@@ -182,7 +182,7 @@ private[mpt] trait AuxFunctions[F[_]: Async, T: RLPPersistable]
         partialKey2,
         v2
       )
-      newExtension = ExtensionNode[T](hp(prefix, false), newBranch)
+      newExtension = ExtensionNode(hp(prefix, false), newBranch)
       result <- capNode(newExtension)
     } yield result
 
@@ -200,7 +200,7 @@ private[mpt] trait AuxFunctions[F[_]: Async, T: RLPPersistable]
         partialKey2,
         node2
       )
-      newExtension = ExtensionNode[T](hp(prefix, false), newBranch)
+      newExtension = ExtensionNode(hp(prefix, false), newBranch)
       result <- capNode(newExtension)
     } yield result
 
