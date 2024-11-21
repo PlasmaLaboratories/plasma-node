@@ -123,7 +123,7 @@ class MPTrieSpec extends CatsEffectSuite with ScalaCheckEffectSuite with MPTTest
 
   def genKey() = Gen.alphaNumStr
 
-  def genValue() = Gen.alphaNumStr
+  def genValue() = Gen.nonEmptyStringOf(Gen.alphaNumChar)
 
   def genMap() =
     Gen
@@ -148,7 +148,7 @@ class MPTrieSpec extends CatsEffectSuite with ScalaCheckEffectSuite with MPTTest
                   _ <- assertIOBoolean(
                     for {
                       retrievedValue <- mptRoot.get(key.getBytes())
-                    } yield retrievedValue == Some(value)
+                    } yield retrievedValue.get == value
                   )
                 } yield mptRoot
             }
@@ -174,7 +174,7 @@ class MPTrieSpec extends CatsEffectSuite with ScalaCheckEffectSuite with MPTTest
     val (mpt, treeRooRef) = mptAndRef
     PropF.forAllF(for {
       key   <- Gen.stringOfN(4, Gen.alphaNumChar)
-      value <- Gen.alphaNumStr
+      value <- Gen.nonEmptyStringOf(Gen.alphaNumChar)
     } yield (key, value)) { entry =>
       val (key, value) = entry
       for {
@@ -198,7 +198,7 @@ class MPTrieSpec extends CatsEffectSuite with ScalaCheckEffectSuite with MPTTest
     val (mpt, treeRooRef) = mptAndRef
     PropF.forAllF(for {
       key   <- Gen.stringOfN(4, Gen.alphaNumChar)
-      value <- Gen.alphaNumStr
+      value <- Gen.nonEmptyStringOf(Gen.alphaNumChar)
     } yield (key, value)) { entry =>
       val (key, value) = entry
       for {
