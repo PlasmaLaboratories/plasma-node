@@ -32,11 +32,14 @@ object LeaderElectionValidation {
     new LeaderElectionValidationAlgebra[F] {
 
       def getThreshold(relativeStake: Ratio, slotDiff: Long): F[Ratio] = {
-        val slotDiffWithDelay = slotDiff - slotGapLeaderElection
         val difficultyCurve: Ratio =
-          if (slotDiffWithDelay <= 0) Ratio.Zero
-          else if (slotDiffWithDelay > config.lddCutoff) config.baselineDifficulty
-          else Ratio(BigInt(slotDiffWithDelay), BigInt(config.lddCutoff)) * config.amplitude
+          if (slotDiff <= slotGapLeaderElection) Ratio.Zero
+          else if (slotDiff > config.lddCutoff) config.baselineDifficulty
+          else {
+            val numerator = BigInt(slotDiff - slotGapLeaderElection)
+            val denominator = BigInt(config.lddCutoff - slotGapLeaderElection)
+            Ratio(numerator, denominator) * config.amplitude
+          }
 
         difficultyCurve match {
           case Ratio.One  => Ratio.One.pure[F]
