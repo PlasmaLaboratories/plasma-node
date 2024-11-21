@@ -2,10 +2,10 @@ package org.plasmalabs.indexer
 
 import cats.effect.Async
 import cats.effect.kernel.Resource
-import cats.implicits._
+import cats.implicits.*
 import io.grpc.Metadata
 import org.plasmalabs.grpc.makeChannel
-import org.plasmalabs.node.services._
+import org.plasmalabs.node.services.*
 
 class NodeRpcProxy[F[_], Ctx](client: NodeRpcFs2Grpc[F, Ctx]) extends NodeRpcFs2Grpc[F, Ctx] {
 

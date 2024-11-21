@@ -1,7 +1,7 @@
 package org.plasmalabs.numerics
 
 import org.plasmalabs.models.utility.Ratio
-import org.plasmalabs.quivr.models.{Int128, Ratio => QuivrRatio}
+import org.plasmalabs.quivr.models.{Int128, Ratio as QuivrRatio}
 
 import scala.language.implicitConversions
 

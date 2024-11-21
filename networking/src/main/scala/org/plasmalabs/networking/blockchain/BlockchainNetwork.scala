@@ -1,19 +1,19 @@
 package org.plasmalabs.networking.blockchain
 
-import cats.effect._
-import cats.effect.implicits._
+import cats.effect.*
+import cats.effect.implicits.*
 import cats.effect.std.{Mutex, Random}
-import cats.implicits._
-import fs2._
+import cats.implicits.*
+import fs2.*
 import fs2.concurrent.Topic
 import org.plasmalabs.crypto.signing.Ed25519
 import org.plasmalabs.networking.multiplexer.MultiplexedReaderWriter
-import org.plasmalabs.networking.p2p._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.networking.p2p.*
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 object BlockchainNetwork {
 

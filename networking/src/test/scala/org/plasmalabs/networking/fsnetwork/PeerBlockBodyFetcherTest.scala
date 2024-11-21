@@ -3,10 +3,10 @@ package org.plasmalabs.networking.fsnetwork
 import cats.MonadThrow
 import cats.data.NonEmptyChain
 import cats.effect.{Async, IO}
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.Store
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.consensus.algebras.BlockHeaderToBodyValidationAlgebra
 import org.plasmalabs.consensus.models.BlockHeaderToBodyValidationFailure.IncorrectTxRoot
 import org.plasmalabs.consensus.models.{BlockHeader, BlockHeaderToBodyValidationFailure, BlockId}
@@ -14,22 +14,22 @@ import org.plasmalabs.models.ModelGenerators.GenHelper
 import org.plasmalabs.models.TxRoot
 import org.plasmalabs.models.generators.consensus.ModelGenerators
 import org.plasmalabs.models.generators.consensus.ModelGenerators.nonEmptyChainArbOf
-import org.plasmalabs.models.p2p._
-import org.plasmalabs.models.utility._
+import org.plasmalabs.models.p2p.*
+import org.plasmalabs.models.utility.*
 import org.plasmalabs.networking.blockchain.BlockchainPeerClient
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError.TransactionHaveIncorrectSyntax
 import org.plasmalabs.networking.fsnetwork.PeerBlockHeaderFetcherTest.F
 import org.plasmalabs.networking.fsnetwork.RequestsProxy.RequestsProxyActor
-import org.plasmalabs.networking.fsnetwork.TestHelper._
+import org.plasmalabs.networking.fsnetwork.TestHelper.*
 import org.plasmalabs.node.models.{Block, BlockBody}
 import org.plasmalabs.sdk.generators.TransactionGenerator
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 import org.plasmalabs.sdk.validation.TransactionSyntaxError.EmptyInputs
 import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger

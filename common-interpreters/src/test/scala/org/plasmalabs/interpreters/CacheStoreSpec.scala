@@ -1,7 +1,7 @@
 package org.plasmalabs.interpreters
 
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import munit.CatsEffectSuite
 import org.plasmalabs.algebras.Store
 import org.scalamock.munit.AsyncMockFactory

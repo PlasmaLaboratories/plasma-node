@@ -1,9 +1,9 @@
 package org.plasmalabs.interpreters
 
 import cats.Applicative
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.kernel.{Ref, Resource, Sync}
-import cats.implicits._
+import cats.implicits.*
 import io.circe.Json
 import kamon.Kamon
 import kamon.metric.Metric

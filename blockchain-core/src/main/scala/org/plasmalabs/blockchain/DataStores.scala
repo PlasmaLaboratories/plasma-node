@@ -2,13 +2,13 @@ package org.plasmalabs.blockchain
 
 import cats.MonadThrow
 import cats.data.NonEmptySet
-import cats.implicits._
+import cats.implicits.*
 import fs2.io.file.Path
 import org.plasmalabs.algebras.Store
-import org.plasmalabs.consensus.models._
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.consensus.models.*
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.models.{Epoch, ProposalId, VersionId}
-import org.plasmalabs.node.models._
+import org.plasmalabs.node.models.*
 import org.plasmalabs.proto.node.EpochData
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.box.Value.ConfigProposal

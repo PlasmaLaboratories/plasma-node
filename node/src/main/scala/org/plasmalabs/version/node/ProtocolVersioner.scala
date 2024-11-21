@@ -1,6 +1,6 @@
 package org.plasmalabs.node
 
-import cats.syntax.all._
+import cats.syntax.all.*
 import cats.{Eq, Order}
 import org.plasmalabs.config.ApplicationConfig.Node
 import org.plasmalabs.consensus.models.ProtocolVersion

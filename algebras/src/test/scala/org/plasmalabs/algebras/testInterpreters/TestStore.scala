@@ -1,7 +1,7 @@
 package org.plasmalabs.algebras.testInterpreters
 
 import cats.effect.kernel.{Async, Ref}
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.algebras.Store
 
 object TestStore {

@@ -2,11 +2,11 @@ package org.plasmalabs.testnetsimulationorchestrator.app
 
 import cats.Applicative
 import cats.data.OptionT
-import cats.effect._
+import cats.effect.*
 import cats.effect.std.{Random, SecureRandom}
-import cats.implicits._
+import cats.implicits.*
 import com.typesafe.config.Config
-import fs2._
+import fs2.*
 import fs2.concurrent.Topic
 import org.plasmalabs.algebras.{NodeRpc, SynchronizationTraversalSteps}
 import org.plasmalabs.common.application.IOBaseApp
@@ -14,20 +14,20 @@ import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
 import org.plasmalabs.grpc.NodeGrpc
 import org.plasmalabs.indexer.services.TransactionServiceFs2Grpc
 import org.plasmalabs.interpreters.MultiNodeRpc
-import org.plasmalabs.models.utility._
+import org.plasmalabs.models.utility.*
 import org.plasmalabs.sdk.models.TransactionId
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 import org.plasmalabs.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
 import org.plasmalabs.testnetsimulationorchestrator.algebras.DataPublisher
 import org.plasmalabs.testnetsimulationorchestrator.interpreters.{GcpCsvDataPublisher, K8sSimulationController}
 import org.plasmalabs.testnetsimulationorchestrator.models.{AdoptionDatum, BlockDatum, TransactionDatum}
 import org.plasmalabs.transactiongenerator.interpreters.{Fs2TransactionGenerator, IndexerWalletInitializer}
 import org.plasmalabs.transactiongenerator.models.Wallet
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 object Orchestrator
     extends IOBaseApp[Args, ApplicationConfig](

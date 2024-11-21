@@ -4,21 +4,21 @@ import cats.Applicative
 import cats.data.{NonEmptyChain, Validated}
 import cats.effect.IO
 import cats.effect.kernel.Async
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
-import org.plasmalabs.algebras.Stats.Implicits._
+import org.plasmalabs.algebras.Stats.Implicits.*
 import org.plasmalabs.consensus.algebras.ChainSelectionAlgebra
 import org.plasmalabs.consensus.models.{BlockId, SlotData, SlotId}
 import org.plasmalabs.eventtree.EventSourcedState
-import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.models.ModelGenerators.*
 import org.plasmalabs.models.generators.common.ModelGenerators.genSizedStrictByteString
 import org.plasmalabs.models.generators.consensus.ModelGenerators.etaGen
 import org.plasmalabs.models.utility.Lengths
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 class LocalChainSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
   type F[A] = IO[A]

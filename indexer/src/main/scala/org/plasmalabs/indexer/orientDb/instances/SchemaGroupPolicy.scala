@@ -1,7 +1,7 @@
 package org.plasmalabs.indexer.orientDb.instances
 
 import com.google.protobuf.ByteString
-import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances._
+import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances.*
 import org.plasmalabs.indexer.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
 import org.plasmalabs.sdk.models.{GroupPolicy, SeriesId, TransactionOutputAddress}
 import org.plasmalabs.sdk.syntax.groupPolicyAsGroupPolicySyntaxOps

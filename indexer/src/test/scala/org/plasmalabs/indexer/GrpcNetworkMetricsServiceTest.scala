@@ -1,12 +1,12 @@
 package org.plasmalabs.indexer
 
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import io.grpc.{Metadata, StatusException}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.indexer.algebras.VertexFetcherAlgebra
 import org.plasmalabs.indexer.model.{GE, GEs}
-import org.plasmalabs.indexer.services._
+import org.plasmalabs.indexer.services.*
 import org.scalamock.munit.AsyncMockFactory
 
 class GrpcNetworkMetricsServiceTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {

@@ -1,7 +1,7 @@
 package org.plasmalabs.indexer.interpreter
 
 import cats.effect.{IO, Resource, Sync}
-import cats.implicits._
+import cats.implicits.*
 import com.orientechnologies.orient.core.command.OCommandRequest
 import com.tinkerpop.blueprints.Vertex
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx
@@ -10,8 +10,8 @@ import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import org.plasmalabs.consensus.models.BlockHeader
 import org.plasmalabs.indexer.model.{GE, GEs}
 import org.plasmalabs.indexer.orientDb.OrientThread
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
-import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
+import org.plasmalabs.sdk.generators.ModelGenerators.*
 import org.plasmalabs.sdk.models.{LockAddress, TransactionOutputAddress}
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory

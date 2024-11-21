@@ -1,21 +1,21 @@
 package org.plasmalabs.ledger.interpreters
 
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.testInterpreters.TestStore
 import org.plasmalabs.consensus.models.{BlockId, StakingAddress}
 import org.plasmalabs.eventtree.ParentChildTree
-import org.plasmalabs.models.ModelGenerators._
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.ModelGenerators.*
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
 import org.plasmalabs.node.models.BlockBody
-import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.numerics.implicits.*
 import org.plasmalabs.sdk.constants.NetworkConstants
 import org.plasmalabs.sdk.models.box.{Attestation, Lock, Value}
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
 import org.plasmalabs.sdk.models.{Datum, LockAddress}
-import org.plasmalabs.sdk.syntax._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.sdk.syntax.*
+import org.plasmalabs.typeclasses.implicits.*
 import org.scalamock.munit.AsyncMockFactory
 
 class RegistrationAccumulatorSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {

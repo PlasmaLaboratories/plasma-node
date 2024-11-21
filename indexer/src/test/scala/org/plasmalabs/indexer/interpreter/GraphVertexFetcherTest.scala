@@ -1,7 +1,7 @@
 package org.plasmalabs.indexer.interpreter
 
 import cats.data.EitherT
-import cats.implicits._
+import cats.implicits.*
 import com.orientechnologies.orient.core.id.ORecordId
 import com.tinkerpop.blueprints.Vertex
 import com.tinkerpop.blueprints.impls.orient.OrientVertex
@@ -10,14 +10,14 @@ import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import org.plasmalabs.indexer.DbFixtureUtil
 import org.plasmalabs.indexer.model.GE
 import org.plasmalabs.indexer.orientDb.OrientThread
-import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.implicits._
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.implicits.*
 import org.plasmalabs.indexer.orientDb.instances.{SchemaBlockHeader, SchemaIoTransaction}
 import org.plasmalabs.indexer.services.{BlockStats, BlockchainSizeStats, Txo, TxoState, TxoStats}
 import org.plasmalabs.models.ModelGenerators.GenHelper
 import org.plasmalabs.models.generators.consensus.ModelGenerators
 import org.plasmalabs.node.models.BlockBody
-import org.plasmalabs.sdk.generators.{ModelGenerators => BramblGenerator}
-import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.generators.ModelGenerators as BramblGenerator
+import org.plasmalabs.sdk.models.*
 import org.plasmalabs.sdk.syntax.{
   groupPolicyAsGroupPolicySyntaxOps,
   ioTransactionAsTransactionSyntaxOps,

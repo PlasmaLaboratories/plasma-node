@@ -2,20 +2,20 @@ package org.plasmalabs.networking.blockchain
 
 import cats.data.Chain
 import cats.effect.{Async, Resource}
-import cats.implicits._
+import cats.implicits.*
 import fs2.Stream
 import fs2.concurrent.Topic
 import org.plasmalabs.blockchain.BlockchainCore
-import org.plasmalabs.catsutils._
+import org.plasmalabs.catsutils.*
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
-import org.plasmalabs.models.protocol.BigBangConstants._
+import org.plasmalabs.models.protocol.BigBangConstants.*
 import org.plasmalabs.networking.fsnetwork.RemotePeer
 import org.plasmalabs.networking.p2p.PeerConnectionChanges.RemotePeerApplicationLevel
 import org.plasmalabs.networking.p2p.{ConnectedPeer, PeerConnectionChange}
-import org.plasmalabs.node.models._
+import org.plasmalabs.node.models.*
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 

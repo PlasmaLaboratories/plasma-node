@@ -1,7 +1,7 @@
 package org.plasmalabs.models
 
 import com.google.protobuf.ByteString
-import org.plasmalabs.consensus.models._
+import org.plasmalabs.consensus.models.*
 
 case class UnsignedBlockHeader(
   parentHeaderId:                BlockId,

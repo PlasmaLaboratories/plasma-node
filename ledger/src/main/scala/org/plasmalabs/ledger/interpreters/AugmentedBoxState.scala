@@ -1,12 +1,12 @@
 package org.plasmalabs.ledger.interpreters
 
 import cats.effect.Sync
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.consensus.models.BlockId
 import org.plasmalabs.ledger.algebras.BoxStateAlgebra
 import org.plasmalabs.sdk.models.TransactionOutputAddress
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 
 object AugmentedBoxState {
 

@@ -13,8 +13,8 @@ import org.plasmalabs.interpreters.KamonStatsRef
 import org.plasmalabs.node.services.NodeRpcFs2Grpc
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import pureconfig.generic.derivation.default._
-import pureconfig.{ConfigSource, _}
+import pureconfig.generic.derivation.default.*
+import pureconfig.{ConfigSource, *}
 
 import scala.concurrent.duration.Duration
 

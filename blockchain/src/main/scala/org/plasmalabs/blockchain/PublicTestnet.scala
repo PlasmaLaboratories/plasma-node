@@ -3,7 +3,7 @@ package org.plasmalabs.blockchain
 import org.plasmalabs.config.ApplicationConfig
 import org.plasmalabs.sdk.models.box.Value.ConfigProposal
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 object PublicTestnet {
 

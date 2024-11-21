@@ -1,13 +1,13 @@
 package org.plasmalabs.indexer.orientDb.schema
 
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.indexer.DbFixtureUtil
-import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances._
+import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances.*
 import org.plasmalabs.indexer.orientDb.{OrientDBMetadataFactory, OrientThread}
 import org.scalamock.munit.AsyncMockFactory
 
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
 class VertexSchemaTest extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory with DbFixtureUtil {
 

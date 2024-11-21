@@ -5,7 +5,7 @@ import org.plasmalabs.crypto.models.KesBinaryTree
 import java.security.SecureRandom
 import scala.annotation.tailrec
 
-import KesBinaryTree._
+import KesBinaryTree.*
 
 /**
  * AMS 2021:

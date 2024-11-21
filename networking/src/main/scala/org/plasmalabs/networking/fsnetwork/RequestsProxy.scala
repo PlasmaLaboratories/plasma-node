@@ -2,19 +2,19 @@ package org.plasmalabs.networking.fsnetwork
 
 import cats.data.{NonEmptyChain, OptionT}
 import cats.effect.{Async, Resource}
-import cats.implicits._
+import cats.implicits.*
 import com.github.benmanes.caffeine.cache.{Cache, Caffeine}
 import org.plasmalabs.actor.{Actor, Fsm}
 import org.plasmalabs.algebras.Store
 import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData, SlotId}
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.networking.fsnetwork.BlockChecker.BlockCheckerActor
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.{BlockBodyOrTransactionError, BlockHeaderDownloadError}
 import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
-import org.plasmalabs.networking.fsnetwork.RequestsProxy.Message._
+import org.plasmalabs.networking.fsnetwork.RequestsProxy.Message.*
 import org.plasmalabs.node.models.BlockBody
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 import scalacache.Entry
 import scalacache.caffeine.CaffeineCache

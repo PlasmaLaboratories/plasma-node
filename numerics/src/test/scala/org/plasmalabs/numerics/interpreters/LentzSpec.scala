@@ -1,10 +1,10 @@
 package org.plasmalabs.numerics.interpreters
 
 import cats.effect.IO
-import cats.implicits._
-import munit._
+import cats.implicits.*
+import munit.*
 import org.plasmalabs.models.utility.Ratio
-import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.numerics.implicits.*
 
 class LentzSpec extends CatsEffectSuite {
 

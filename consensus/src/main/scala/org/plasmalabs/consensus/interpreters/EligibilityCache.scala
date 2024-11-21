@@ -1,14 +1,14 @@
 package org.plasmalabs.consensus.interpreters
 
-import cats.effect._
-import cats.effect.implicits._
-import cats.implicits._
+import cats.effect.*
+import cats.effect.implicits.*
+import cats.implicits.*
 import com.google.protobuf.ByteString
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.consensus.algebras.EligibilityCacheAlgebra
-import org.plasmalabs.consensus.models._
-import org.plasmalabs.models._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.consensus.models.*
+import org.plasmalabs.models.*
+import org.plasmalabs.typeclasses.implicits.*
 
 import scala.collection.immutable.SortedMap
 

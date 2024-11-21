@@ -1,11 +1,11 @@
 package org.plasmalabs.indexer
 
 import cats.effect.{IO, Resource, SyncIO}
-import cats.implicits._
+import cats.implicits.*
 import com.orientechnologies.orient.core.db.{ODatabaseType, OrientDB, OrientDBConfigBuilder}
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactoryV2
 import munit.{CatsEffectSuite, FunSuite, TestOptions}
-import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances._
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances.*
 import org.plasmalabs.indexer.orientDb.{OrientDBMetadataFactory, OrientThread}
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger

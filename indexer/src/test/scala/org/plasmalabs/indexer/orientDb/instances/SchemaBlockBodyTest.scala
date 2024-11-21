@@ -1,6 +1,6 @@
 package org.plasmalabs.indexer.orientDb.instances
 
-import cats.implicits._
+import cats.implicits.*
 import com.orientechnologies.orient.core.metadata.schema.OType
 import munit.{CatsEffectFunFixtures, CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.indexer.DbFixtureUtil
@@ -10,7 +10,7 @@ import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances
 import org.plasmalabs.node.models.BlockBody
 import org.scalamock.munit.AsyncMockFactory
 
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
 class SchemaBlockBodyTest
     extends CatsEffectSuite

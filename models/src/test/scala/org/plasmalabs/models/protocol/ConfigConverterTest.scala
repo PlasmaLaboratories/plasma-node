@@ -1,9 +1,9 @@
 package org.plasmalabs.models.protocol
 
 import munit.FunSuite
-import org.plasmalabs.models.protocol.RatioCodec._
+import org.plasmalabs.models.protocol.RatioCodec.*
 import org.plasmalabs.models.utility.Ratio
-import org.plasmalabs.quivr.models.{Ratio => QuivrRatio}
+import org.plasmalabs.quivr.models.Ratio as QuivrRatio
 import org.plasmalabs.sdk.models.box.Value.ConfigProposal
 
 case class SimpleTest1(stringPar: String, intPar: Int, longPar: Long)

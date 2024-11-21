@@ -1,7 +1,7 @@
 package org.plasmalabs.transactiongenerator.app
 
 import cats.Show
-import mainargs._
+import mainargs.*
 import org.plasmalabs.common.application.{ContainsDebugFlag, ContainsUserConfigs}
 
 @main

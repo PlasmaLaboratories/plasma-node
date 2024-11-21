@@ -1,7 +1,7 @@
 package org.plasmalabs.grpc
 
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import fs2.Stream
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.{ClockAlgebra, ProtocolConfigurationAlgebra, Store}
@@ -13,7 +13,7 @@ import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
 import org.plasmalabs.eventtree.ParentChildTree
 import org.plasmalabs.ledger.Ledger
 import org.plasmalabs.ledger.algebras.MempoolAlgebra
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
 import org.plasmalabs.node.models.BlockBody
 import org.plasmalabs.proto.node.{EpochData, NodeConfig}
 import org.plasmalabs.sdk.models.TransactionId

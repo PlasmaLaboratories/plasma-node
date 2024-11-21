@@ -1,37 +1,37 @@
 package org.plasmalabs.networking.fsnetwork
 
-import cats.data._
+import cats.data.*
 import cats.effect.{IO, Resource}
-import cats.implicits._
+import cats.implicits.*
 import cats.{MonadThrow, Show}
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.Store
 import org.plasmalabs.blockchain.{Validators, ValidatorsImpl}
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.config.ApplicationConfig.Node.NetworkProperties
-import org.plasmalabs.consensus._
-import org.plasmalabs.consensus.algebras._
+import org.plasmalabs.consensus.*
+import org.plasmalabs.consensus.algebras.*
 import org.plasmalabs.consensus.models.BlockHeaderValidationFailures.NonForwardSlot
-import org.plasmalabs.consensus.models.{BlockHeader, BlockHeaderValidationFailure, BlockId, _}
+import org.plasmalabs.consensus.models.{BlockHeader, BlockHeaderValidationFailure, BlockId, *}
 import org.plasmalabs.crypto.signing.Ed25519VRF
-import org.plasmalabs.ledger.algebras._
+import org.plasmalabs.ledger.algebras.*
+import org.plasmalabs.ledger.models.*
 import org.plasmalabs.ledger.models.BodySemanticErrors.TransactionSemanticErrors
 import org.plasmalabs.ledger.models.TransactionSemanticErrors.InputDataMismatch
-import org.plasmalabs.ledger.models._
 import org.plasmalabs.models.ModelGenerators.GenHelper
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
 import org.plasmalabs.models.generators.node.ModelGenerators
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.networking.fsnetwork.BlockCheckerTest.F
 import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
 import org.plasmalabs.networking.fsnetwork.RequestsProxy.RequestsProxyActor
-import org.plasmalabs.networking.fsnetwork.TestHelper._
+import org.plasmalabs.networking.fsnetwork.TestHelper.*
 import org.plasmalabs.node.models.{Block, BlockBody}
 import org.plasmalabs.quivr.runtime.DynamicContext
 import org.plasmalabs.sdk.models.Datum
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionSyntaxVerifier}
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.scalacheck.Gen
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
@@ -39,7 +39,7 @@ import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import scala.collection.mutable
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 object BlockCheckerTest {
   type F[A] = IO[A]

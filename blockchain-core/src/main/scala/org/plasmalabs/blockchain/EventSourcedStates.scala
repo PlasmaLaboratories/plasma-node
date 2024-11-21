@@ -1,9 +1,9 @@
 package org.plasmalabs.blockchain
 
-import cats.implicits._
+import cats.implicits.*
 import cats.{Functor, Parallel}
 import org.plasmalabs.blockchain.interpreters.EpochDataEventSourcedState
-import org.plasmalabs.consensus.interpreters._
+import org.plasmalabs.consensus.interpreters.*
 import org.plasmalabs.consensus.models.BlockId
 import org.plasmalabs.eventtree.EventSourcedState
 import org.plasmalabs.interpreters.{BlockHeightTree, TxIdToBlockIdTree}

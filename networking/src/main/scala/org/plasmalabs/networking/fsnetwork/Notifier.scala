@@ -2,11 +2,11 @@ package org.plasmalabs.networking.fsnetwork
 
 import cats.effect.kernel.{Async, Fiber}
 import cats.effect.{Resource, Spawn}
-import cats.implicits._
+import cats.implicits.*
 import fs2.Stream
 import org.plasmalabs.actor.{Actor, Fsm}
 import org.plasmalabs.networking.fsnetwork.Notifier.Message.StartNotifications
-import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances.*
 import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
 import org.typelevel.log4cats.Logger
 

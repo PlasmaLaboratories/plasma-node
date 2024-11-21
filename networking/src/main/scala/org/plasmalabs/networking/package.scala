@@ -2,11 +2,11 @@ package org.plasmalabs
 
 import cats.Monad
 import cats.data.OptionT
-import cats.implicits._
+import cats.implicits.*
 import com.comcast.ip4s.{IpAddress, SocketAddress}
 import fs2.Chunk
 import fs2.io.net.Socket
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.networking.fsnetwork.RemotePeer
 import org.plasmalabs.node.models.KnownHost
 

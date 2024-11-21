@@ -3,11 +3,11 @@ package org.plasmalabs.config
 import org.plasmalabs.consensus.models.{BlockId, StakingAddress}
 import org.plasmalabs.models.Slot
 import org.plasmalabs.models.utility.Ratio
-import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.numerics.implicits.*
 import org.plasmalabs.proto.node.NodeConfig
 import org.plasmalabs.sdk.models.LockAddress
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 // $COVERAGE-OFF$
 case class ApplicationConfig(

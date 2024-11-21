@@ -1,17 +1,17 @@
 package org.plasmalabs.indexer.orientDb
 
-import cats.implicits._
+import cats.implicits.*
 import fs2.Stream
 import munit.{CatsEffectFunFixtures, CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.consensus.models.BlockHeader
 import org.plasmalabs.indexer.DbFixtureUtil
 import org.plasmalabs.indexer.algebras.{BlockFetcherAlgebra, NodeBlockFetcherAlgebra}
 import org.plasmalabs.indexer.interpreter.GraphBlockUpdater
-import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.implicits._
-import org.plasmalabs.indexer.orientDb.schema.EdgeSchemaInstances._
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.implicits.*
+import org.plasmalabs.indexer.orientDb.schema.EdgeSchemaInstances.*
 import org.plasmalabs.indexer.services.BlockData
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
-import org.plasmalabs.models.generators.node.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
+import org.plasmalabs.models.generators.node.ModelGenerators.*
 import org.plasmalabs.node.models.FullBlockBody
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory

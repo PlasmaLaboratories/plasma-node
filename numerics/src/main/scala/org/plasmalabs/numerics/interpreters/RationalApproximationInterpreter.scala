@@ -1,10 +1,10 @@
 package org.plasmalabs.numerics.interpreters
 
 import cats.Monad
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.models.utility.Ratio
 import org.plasmalabs.numerics.algebras.RationalApproximation
-import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.numerics.implicits.*
 
 object RationalApproximationInterpreter {
 

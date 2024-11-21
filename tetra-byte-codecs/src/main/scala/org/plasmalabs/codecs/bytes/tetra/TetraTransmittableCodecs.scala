@@ -1,13 +1,13 @@
 package org.plasmalabs.codecs.bytes.tetra
 
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import org.plasmalabs.codecs.bytes.typeclasses.Transmittable
 import org.plasmalabs.consensus.models.BlockId
 import org.plasmalabs.models.utility.Ratio
 import scalapb.{GeneratedMessage, GeneratedMessageCompanion}
 import scodec.Codec
-import scodec.codecs._
+import scodec.codecs.*
 
 import scala.util.Try
 

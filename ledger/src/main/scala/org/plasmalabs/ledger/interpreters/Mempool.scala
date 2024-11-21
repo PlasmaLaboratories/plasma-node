@@ -1,9 +1,9 @@
 package org.plasmalabs.ledger.interpreters
 
 import cats.data.EitherT
-import cats.effect._
-import cats.effect.implicits._
-import cats.implicits._
+import cats.effect.*
+import cats.effect.implicits.*
+import cats.implicits.*
 import fs2.concurrent.Topic
 import org.plasmalabs.algebras.{ClockAlgebra, Stats}
 import org.plasmalabs.consensus.models.BlockId
@@ -15,7 +15,7 @@ import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.sdk.syntax.ioTransactionAsTransactionSyntaxOps
 import org.plasmalabs.sdk.validation.algebras.TransactionCostCalculator
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 object Mempool {
 

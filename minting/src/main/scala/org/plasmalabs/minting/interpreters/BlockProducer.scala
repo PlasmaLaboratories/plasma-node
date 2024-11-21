@@ -1,35 +1,35 @@
 package org.plasmalabs.minting.interpreters
 
 import cats.data.OptionT
-import cats.effect._
-import cats.implicits._
+import cats.effect.*
+import cats.implicits.*
 import com.google.protobuf.ByteString
-import fs2._
-import org.plasmalabs.algebras.ClockAlgebra.implicits._
+import fs2.*
+import org.plasmalabs.algebras.ClockAlgebra.implicits.*
 import org.plasmalabs.algebras.{ClockAlgebra, Stats}
-import org.plasmalabs.catsutils._
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.catsutils.*
+import org.plasmalabs.codecs.bytes.tetra.instances.*
+import org.plasmalabs.consensus.interpreters.*
 import org.plasmalabs.consensus.interpreters.CrossEpochEventSourceState.VotingData
-import org.plasmalabs.consensus.interpreters._
 import org.plasmalabs.consensus.models.{BlockId, ProtocolVersion, SlotData, SlotId, StakingAddress}
 import org.plasmalabs.eventtree.EventSourcedState
 import org.plasmalabs.ledger.algebras.TransactionRewardCalculatorAlgebra
 import org.plasmalabs.minting.algebras.{BlockPackerAlgebra, BlockProducerAlgebra, StakingAlgebra}
 import org.plasmalabs.minting.models.VrfHit
-import org.plasmalabs.models._
+import org.plasmalabs.models.*
 import org.plasmalabs.models.utility.HasLength.instances.byteStringLength
 import org.plasmalabs.models.utility.Sized
 import org.plasmalabs.node.models.{BlockBody, FullBlock, FullBlockBody}
 import org.plasmalabs.quivr.models.SmallData
-import org.plasmalabs.sdk.models._
-import org.plasmalabs.sdk.models.box._
-import org.plasmalabs.sdk.models.transaction._
-import org.plasmalabs.sdk.syntax._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.sdk.models.*
+import org.plasmalabs.sdk.models.box.*
+import org.plasmalabs.sdk.models.transaction.*
+import org.plasmalabs.sdk.syntax.*
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 object BlockProducer {
 

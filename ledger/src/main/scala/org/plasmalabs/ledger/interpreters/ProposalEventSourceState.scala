@@ -1,21 +1,21 @@
 package org.plasmalabs.ledger.interpreters
 
-import cats._
+import cats.*
 import cats.effect.Async
-import cats.implicits._
-import org.plasmalabs.algebras.ClockAlgebra.implicits._
-import org.plasmalabs.algebras.StoreOps._
-import org.plasmalabs.algebras._
+import cats.implicits.*
+import org.plasmalabs.algebras.*
+import org.plasmalabs.algebras.ClockAlgebra.implicits.*
+import org.plasmalabs.algebras.StoreOps.*
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
 import org.plasmalabs.crypto.hash.Blake2b256
 import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
-import org.plasmalabs.models._
-import org.plasmalabs.models.protocol.BigBangConstants._
-import org.plasmalabs.node.models._
+import org.plasmalabs.models.*
+import org.plasmalabs.models.protocol.BigBangConstants.*
+import org.plasmalabs.node.models.*
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.box.Value.ConfigProposal
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 

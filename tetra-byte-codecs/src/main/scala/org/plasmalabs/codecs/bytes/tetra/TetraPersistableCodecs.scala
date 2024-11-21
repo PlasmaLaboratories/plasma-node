@@ -1,9 +1,9 @@
 package org.plasmalabs.codecs.bytes.tetra
 
 import cats.data.NonEmptySet
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
-import org.plasmalabs.codecs.bytes.scodecs._
+import org.plasmalabs.codecs.bytes.scodecs.*
 import org.plasmalabs.codecs.bytes.typeclasses.Persistable
 import org.plasmalabs.consensus.models.BlockId
 import org.plasmalabs.crypto.models.SecretKeyKesProduct

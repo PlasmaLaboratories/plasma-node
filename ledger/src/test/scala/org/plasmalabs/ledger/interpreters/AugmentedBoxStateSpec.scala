@@ -2,19 +2,19 @@ package org.plasmalabs.ledger.interpreters
 
 import cats.data.NonEmptySet
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.testInterpreters.TestStore
 import org.plasmalabs.consensus.models.BlockId
 import org.plasmalabs.eventtree.ParentChildTree
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
 import org.plasmalabs.node.models.BlockBody
 import org.plasmalabs.sdk.constants.NetworkConstants
-import org.plasmalabs.sdk.generators.ModelGenerators._
-import org.plasmalabs.sdk.models._
-import org.plasmalabs.sdk.models.transaction._
-import org.plasmalabs.sdk.syntax._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.sdk.generators.ModelGenerators.*
+import org.plasmalabs.sdk.models.*
+import org.plasmalabs.sdk.models.transaction.*
+import org.plasmalabs.sdk.syntax.*
+import org.plasmalabs.typeclasses.implicits.*
 import org.scalacheck.effect.PropF
 
 class AugmentedBoxStateSpec extends CatsEffectSuite with ScalaCheckEffectSuite {

@@ -1,10 +1,10 @@
 package org.plasmalabs.actor
 
 import cats.Applicative
-import cats.effect._
+import cats.effect.*
 import cats.effect.std.Queue
-import cats.effect.syntax.all._
-import cats.syntax.all._
+import cats.effect.syntax.all.*
+import cats.syntax.all.*
 import fs2.Stream
 import fs2.concurrent.SignallingRef
 import org.plasmalabs.actor.Actor.ActorId

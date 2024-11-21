@@ -1,9 +1,9 @@
 package org.plasmalabs.interpreters
 
 import cats.effect.{IO, Sync}
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
-import fs2.io.{file => fs2file}
+import fs2.io.file as fs2file
 import munit.CatsEffectSuite
 import org.plasmalabs.codecs.bytes.typeclasses.Persistable
 

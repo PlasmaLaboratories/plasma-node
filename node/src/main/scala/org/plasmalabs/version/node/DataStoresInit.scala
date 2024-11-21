@@ -1,40 +1,40 @@
 package org.plasmalabs.node
 
-import cats._
+import cats.*
 import cats.data.NonEmptySet
-import cats.effect._
-import cats.effect.implicits._
-import cats.implicits._
+import cats.effect.*
+import cats.effect.implicits.*
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import fs2.io.file.{Files, Path}
 import org.iq80.leveldb.DBFactory
 import org.plasmalabs.algebras.Store
-import org.plasmalabs.blockchain._
+import org.plasmalabs.blockchain.*
 import org.plasmalabs.codecs.bytes.scodecs.valuetypes.ValuetypesCodecs.intCodec
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.codecs.bytes.typeclasses.Persistable
 import org.plasmalabs.config.ApplicationConfig
-import org.plasmalabs.consensus._
+import org.plasmalabs.consensus.*
 import org.plasmalabs.consensus.interpreters.BlockHeaderToBodyValidation
-import org.plasmalabs.consensus.models._
+import org.plasmalabs.consensus.models.*
 import org.plasmalabs.crypto.signing.Ed25519VRF
 import org.plasmalabs.db.leveldb.LevelDbStore
 import org.plasmalabs.interpreters.CacheStore
-import org.plasmalabs.interpreters.ContainsCacheStore._
-import org.plasmalabs.models.p2p._
-import org.plasmalabs.models.utility._
+import org.plasmalabs.interpreters.ContainsCacheStore.*
+import org.plasmalabs.models.p2p.*
+import org.plasmalabs.models.utility.*
 import org.plasmalabs.models.{Epoch, ProposalId, VersionId}
-import org.plasmalabs.networking.fsnetwork._
-import org.plasmalabs.node.models._
+import org.plasmalabs.networking.fsnetwork.*
+import org.plasmalabs.node.models.*
 import org.plasmalabs.proto.node.EpochData
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.box.Value.ConfigProposal
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.sdk.syntax._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.sdk.syntax.*
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 
-import DataStoresInit.DataStoreNames._
+import DataStoresInit.DataStoreNames.*
 
 object DataStoresInit {
 

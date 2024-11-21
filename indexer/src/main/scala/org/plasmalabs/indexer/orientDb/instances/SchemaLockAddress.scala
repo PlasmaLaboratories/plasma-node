@@ -1,6 +1,6 @@
 package org.plasmalabs.indexer.orientDb.instances
 
-import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances._
+import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances.*
 import org.plasmalabs.indexer.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
 import org.plasmalabs.sdk.codecs.AddressCodecs
 import org.plasmalabs.sdk.models.{LockAddress, LockId}

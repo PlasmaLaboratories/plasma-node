@@ -3,34 +3,34 @@ package org.plasmalabs.networking.fsnetwork
 import cats.data.{NonEmptyChain, Validated, ValidatedNec}
 import cats.effect.kernel.Sync
 import cats.effect.{Async, IO, Ref, Resource}
-import cats.implicits._
+import cats.implicits.*
 import cats.{Applicative, MonadThrow}
 import fs2.Stream
 import fs2.concurrent.Topic
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
-import org.plasmalabs.algebras.Stats.Implicits._
+import org.plasmalabs.algebras.Stats.Implicits.*
 import org.plasmalabs.algebras.testInterpreters.TestStore
 import org.plasmalabs.blockchain.{BlockchainCore, DataStores, Validators}
 import org.plasmalabs.config.ApplicationConfig.Node.NetworkProperties
 import org.plasmalabs.consensus.Consensus
-import org.plasmalabs.consensus.algebras._
-import org.plasmalabs.consensus.models._
+import org.plasmalabs.consensus.algebras.*
+import org.plasmalabs.consensus.models.*
 import org.plasmalabs.crypto.signing.Ed25519VRF
 import org.plasmalabs.eventtree.ParentChildTree
 import org.plasmalabs.interpreters.SchedulerClock
 import org.plasmalabs.ledger.Ledger
-import org.plasmalabs.ledger.algebras._
-import org.plasmalabs.ledger.models._
+import org.plasmalabs.ledger.algebras.*
+import org.plasmalabs.ledger.models.*
 import org.plasmalabs.models.ModelGenerators.GenHelper
 import org.plasmalabs.models.generators.consensus.ModelGenerators.arbitrarySlotData
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.models.utility.NetworkCommands
 import org.plasmalabs.networking.blockchain.{BlockchainPeerClient, NetworkProtocolVersions}
-import org.plasmalabs.networking.fsnetwork.ActorPeerHandlerBridgeAlgebraTest._
+import org.plasmalabs.networking.fsnetwork.ActorPeerHandlerBridgeAlgebraTest.*
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockBodyOrTransactionError
 import org.plasmalabs.networking.fsnetwork.TestHelper.arbitraryHost
 import org.plasmalabs.networking.p2p.{ConnectedPeer, DisconnectedPeer, PeerConnectionChange}
-import org.plasmalabs.node.models._
+import org.plasmalabs.node.models.*
 import org.plasmalabs.quivr.runtime.DynamicContext
 import org.plasmalabs.sdk.generators.ModelGenerators.arbitraryIoTransaction
 import org.plasmalabs.sdk.models.transaction.IoTransaction
@@ -38,7 +38,7 @@ import org.plasmalabs.sdk.models.{Datum, TransactionId}
 import org.plasmalabs.sdk.syntax.ioTransactionAsTransactionSyntaxOps
 import org.plasmalabs.sdk.validation.TransactionSyntaxError
 import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger

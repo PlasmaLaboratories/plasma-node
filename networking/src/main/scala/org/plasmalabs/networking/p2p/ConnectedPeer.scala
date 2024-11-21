@@ -1,9 +1,9 @@
 package org.plasmalabs.networking.p2p
 
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.models.Bytes
 import org.plasmalabs.models.p2p.RemoteAddress
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 case class ConnectedPeer(remoteAddress: RemoteAddress, p2pVK: Bytes, networkVersion: Bytes) {
   override def toString: String = show"ConnectedPeer(address=$remoteAddress, id=$p2pVK, version=$networkVersion)"

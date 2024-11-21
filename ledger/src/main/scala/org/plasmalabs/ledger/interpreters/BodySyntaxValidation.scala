@@ -2,17 +2,17 @@ package org.plasmalabs.ledger.interpreters
 
 import cats.data.{EitherT, NonEmptySet, ValidatedNec}
 import cats.effect.Sync
-import cats.implicits._
+import cats.implicits.*
 import cats.{Foldable, Order, Parallel}
 import com.google.protobuf.ByteString
 import org.plasmalabs.algebras.Stats
-import org.plasmalabs.ledger.algebras._
-import org.plasmalabs.ledger.models._
+import org.plasmalabs.ledger.algebras.*
+import org.plasmalabs.ledger.models.*
 import org.plasmalabs.node.models.BlockBody
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.sdk.models.{TransactionId, TransactionOutputAddress}
 import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 import scala.collection.immutable.SortedSet
 

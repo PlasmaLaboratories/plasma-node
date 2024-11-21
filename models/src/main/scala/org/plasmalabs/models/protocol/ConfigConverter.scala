@@ -1,15 +1,15 @@
 package org.plasmalabs.models.protocol
 
 import com.fasterxml.jackson.core.{JsonGenerator, JsonParser}
-import com.fasterxml.jackson.databind._
+import com.fasterxml.jackson.databind.*
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.module.scala._
+import com.fasterxml.jackson.module.scala.*
 import org.plasmalabs.models.utility.Ratio
 import org.plasmalabs.quivr.models
 import org.plasmalabs.quivr.models.Int128
-import org.plasmalabs.sdk.models.box.Value._
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.models.box.Value.*
+import org.plasmalabs.sdk.syntax.*
 
 import scala.language.implicitConversions
 import scala.reflect.ClassTag

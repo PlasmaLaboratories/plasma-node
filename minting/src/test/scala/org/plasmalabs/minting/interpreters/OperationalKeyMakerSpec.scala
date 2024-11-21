@@ -3,28 +3,28 @@ package org.plasmalabs.minting.interpreters
 import cats.data.Chain
 import cats.effect.IO.asyncForIO
 import cats.effect.{IO, Resource}
-import cats.implicits._
+import cats.implicits.*
 import cats.{Applicative, Monad}
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
-import org.plasmalabs.algebras._
+import org.plasmalabs.algebras.*
 import org.plasmalabs.codecs.bytes.typeclasses.Persistable
-import org.plasmalabs.consensus.algebras._
-import org.plasmalabs.consensus.models._
+import org.plasmalabs.consensus.algebras.*
+import org.plasmalabs.consensus.models.*
 import org.plasmalabs.crypto.models.SecretKeyKesProduct
-import org.plasmalabs.crypto.signing._
+import org.plasmalabs.crypto.signing.*
 import org.plasmalabs.minting.algebras.{OperationalKeyMakerAlgebra, VrfCalculatorAlgebra}
-import org.plasmalabs.models.ModelGenerators._
-import org.plasmalabs.models._
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.*
+import org.plasmalabs.models.ModelGenerators.*
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
+import org.plasmalabs.models.utility.*
 import org.plasmalabs.models.utility.HasLength.instances.byteStringLength
-import org.plasmalabs.models.utility._
 import org.plasmalabs.sdk.utils.CatsUnsafeResource
 import org.scalamock.munit.AsyncMockFactory
 
 import java.util.concurrent.TimeUnit
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.util.Random
 
 class OperationalKeyMakerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {

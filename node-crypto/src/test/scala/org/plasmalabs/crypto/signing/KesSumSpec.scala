@@ -1,11 +1,11 @@
 package org.plasmalabs.crypto.signing
 
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
-import org.plasmalabs.crypto.models._
-import org.plasmalabs.crypto.utils.Hex.implicits._
-import org.plasmalabs.crypto.utils.NodeCryptoGenerators._
+import org.plasmalabs.crypto.models.*
+import org.plasmalabs.crypto.utils.Hex.implicits.*
+import org.plasmalabs.crypto.utils.NodeCryptoGenerators.*
 import org.scalacheck.Gen
 import org.scalacheck.effect.PropF
 

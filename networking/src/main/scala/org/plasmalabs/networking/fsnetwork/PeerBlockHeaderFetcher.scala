@@ -4,27 +4,27 @@ import cats.MonadThrow
 import cats.data.{NonEmptyChain, OptionT}
 import cats.effect.kernel.{Async, Fiber}
 import cats.effect.{Resource, Spawn}
-import cats.implicits._
+import cats.implicits.*
 import fs2.Stream
 import org.plasmalabs.actor.{Actor, Fsm}
 import org.plasmalabs.algebras.{ClockAlgebra, Store, StoreWriter}
 import org.plasmalabs.catsutils.faAsFAClockOps
-import org.plasmalabs.codecs.bytes.tetra.instances._
-import org.plasmalabs.consensus._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
+import org.plasmalabs.consensus.*
 import org.plasmalabs.consensus.algebras.{ChainSelectionAlgebra, LocalChainAlgebra}
 import org.plasmalabs.consensus.models.{BlockId, SlotData}
 import org.plasmalabs.crypto.signing.Ed25519VRF
 import org.plasmalabs.eventtree.ParentChildTree
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.networking.blockchain.BlockchainPeerClient
 import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError
-import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError._
-import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
-import org.plasmalabs.networking.fsnetwork.PeerBlockHeaderFetcher.CompareResult._
+import org.plasmalabs.networking.fsnetwork.BlockDownloadError.BlockHeaderDownloadError.*
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances.*
+import org.plasmalabs.networking.fsnetwork.PeerBlockHeaderFetcher.CompareResult.*
 import org.plasmalabs.networking.fsnetwork.PeersManager.PeersManagerActor
 import org.plasmalabs.networking.fsnetwork.RequestsProxy.RequestsProxyActor
 import org.plasmalabs.node.models.BlockBody
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 
 object PeerBlockHeaderFetcher {

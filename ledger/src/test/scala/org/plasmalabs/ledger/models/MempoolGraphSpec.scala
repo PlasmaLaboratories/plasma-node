@@ -1,7 +1,7 @@
 package org.plasmalabs.ledger.models
 
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.ledger.algebras.TransactionRewardCalculatorAlgebra
@@ -9,7 +9,7 @@ import org.plasmalabs.quivr.models.Int128
 import org.plasmalabs.sdk.models.box.{Attestation, Value}
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
 import org.plasmalabs.sdk.models.{Datum, LockAddress, LockId, TransactionOutputAddress}
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 import org.plasmalabs.sdk.validation.algebras.TransactionCostCalculator
 import org.scalamock.munit.AsyncMockFactory
 

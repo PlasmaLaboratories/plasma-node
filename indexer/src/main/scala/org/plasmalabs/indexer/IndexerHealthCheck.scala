@@ -1,16 +1,16 @@
 package org.plasmalabs.indexer
 
 import cats.MonadThrow
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.{Async, Ref, Resource}
-import cats.implicits._
+import cats.implicits.*
 import fs2.Stream
 import fs2.concurrent.SignallingRef
 import grpc.health.v1.{HealthCheckRequest, HealthCheckResponse, ServingStatus}
 import io.grpc.{Status, StatusException}
 import org.plasmalabs.algebras.HealthCheckAlgebra
 import org.plasmalabs.models.ServiceStatus
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 /**
  * HealthCheck

@@ -2,22 +2,22 @@ package org.plasmalabs.grpc
 
 import cats.data.OptionT
 import cats.effect.{Async, Resource}
-import cats.implicits._
+import cats.implicits.*
 import com.comcast.ip4s.{Host, Port}
 import fs2.io.net.Network
-import io.circe._
-import io.circe.syntax._
-import org.http4s._
-import org.http4s.circe.CirceEntityCodec._
-import org.http4s.circe._
+import io.circe.*
+import io.circe.syntax.*
+import org.http4s.*
+import org.http4s.circe.*
+import org.http4s.circe.CirceEntityCodec.*
 import org.http4s.dsl.Http4sDslBinCompat
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.Router
 import org.http4s.server.middleware.CORS
 import org.plasmalabs.blockchain.BlockchainCore
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.consensus.models.BlockHeader
-import org.plasmalabs.models.protocol.BigBangConstants._
+import org.plasmalabs.models.protocol.BigBangConstants.*
 import org.plasmalabs.typeclasses.implicits.showBlockId
 import org.typelevel.log4cats.Logger
 import scodec.bits.ByteVector

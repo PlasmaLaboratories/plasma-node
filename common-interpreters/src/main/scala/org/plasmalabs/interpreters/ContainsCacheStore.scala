@@ -1,7 +1,7 @@
 package org.plasmalabs.interpreters
 
 import cats.effect.kernel.Sync
-import cats.implicits._
+import cats.implicits.*
 import com.github.benmanes.caffeine.cache.Caffeine
 import org.plasmalabs.algebras.Store
 import scalacache.Entry

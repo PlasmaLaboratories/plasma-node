@@ -2,9 +2,9 @@ package org.plasmalabs.transactiongenerator.interpreters
 
 import cats.effect.IO
 import cats.effect.std.{Random, SecureRandom}
-import cats.implicits._
+import cats.implicits.*
 import munit.CatsEffectSuite
-import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.numerics.implicits.*
 import org.plasmalabs.quivr.models.SmallData
 import org.plasmalabs.sdk.models.box.Value
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}

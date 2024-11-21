@@ -2,12 +2,12 @@ package org.plasmalabs.grpc
 
 import cats.data.{EitherT, OptionT}
 import cats.effect.Async
-import cats.implicits._
+import cats.implicits.*
 import cats.{Monad, Show}
 import fs2.Stream
-import org.plasmalabs.algebras._
+import org.plasmalabs.algebras.*
 import org.plasmalabs.blockchain.{BlockchainCore, LocalChainSynchronizationTraversal}
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
 import org.plasmalabs.ledger.algebras.MempoolAlgebra
 import org.plasmalabs.models.Epoch
@@ -15,9 +15,9 @@ import org.plasmalabs.node.models.BlockBody
 import org.plasmalabs.proto.node.{EpochData, NodeConfig}
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 import org.plasmalabs.sdk.validation.TransactionSyntaxError
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
 

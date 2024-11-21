@@ -1,16 +1,16 @@
 package org.plasmalabs.interpreters
 
-import cats.effect._
-import cats.effect.implicits._
-import cats.implicits._
-import fs2._
+import cats.effect.*
+import cats.effect.implicits.*
+import cats.implicits.*
+import fs2.*
 import org.apache.commons.net.ntp.NTPUDPClient
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import java.net.InetAddress
-import scala.concurrent.duration._
-import scala.jdk.DurationConverters._
+import scala.concurrent.duration.*
+import scala.jdk.DurationConverters.*
 
 object NtpClockSkewer {
 

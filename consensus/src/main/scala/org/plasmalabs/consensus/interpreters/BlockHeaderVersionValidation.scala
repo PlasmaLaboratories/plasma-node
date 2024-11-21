@@ -1,13 +1,13 @@
 package org.plasmalabs.consensus.interpreters
 
-import cats.data._
+import cats.data.*
 import cats.effect.kernel.Async
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.algebras.ClockAlgebra
-import org.plasmalabs.algebras.ClockAlgebra.implicits._
-import org.plasmalabs.consensus.algebras._
+import org.plasmalabs.algebras.ClockAlgebra.implicits.*
+import org.plasmalabs.consensus.algebras.*
 import org.plasmalabs.consensus.interpreters.CrossEpochEventSourceState.VotingData
-import org.plasmalabs.consensus.models.BlockHeaderValidationFailures._
+import org.plasmalabs.consensus.models.BlockHeaderValidationFailures.*
 import org.plasmalabs.consensus.models.{BlockHeader, BlockHeaderValidationFailure, BlockId}
 import org.plasmalabs.eventtree.EventSourcedState
 import org.plasmalabs.models.VersionId

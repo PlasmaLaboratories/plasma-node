@@ -2,9 +2,9 @@ package org.plasmalabs.eventtree
 
 import cats.Eq
 import cats.data.Chain
-import cats.effect._
+import cats.effect.*
 import cats.effect.std.Semaphore
-import cats.implicits._
+import cats.implicits.*
 
 /**
  * Derives/computes/retrieves the State at some eventId

@@ -1,26 +1,26 @@
 package org.plasmalabs.transactiongenerator.app
 
 import cats.Show
-import cats.effect._
+import cats.effect.*
 import cats.effect.std.{Random, SecureRandom}
-import cats.implicits._
+import cats.implicits.*
 import com.typesafe.config.Config
-import fs2._
+import fs2.*
 import org.plasmalabs.algebras.NodeRpc
-import org.plasmalabs.common.application._
+import org.plasmalabs.common.application.*
 import org.plasmalabs.grpc.NodeGrpc
 import org.plasmalabs.indexer.services.TransactionServiceFs2Grpc
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 import org.plasmalabs.sdk.validation.algebras.TransactionCostCalculator
 import org.plasmalabs.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
-import org.plasmalabs.transactiongenerator.interpreters._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.transactiongenerator.interpreters.*
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 object TransactionGeneratorApp
     extends IOBaseApp[Args, ApplicationConfig](

@@ -9,7 +9,7 @@ import grpc.health.v1.{HealthCheckRequest, HealthCheckResponse, ServingStatus}
 import io.grpc.{Status, StatusException}
 import org.plasmalabs.algebras.HealthCheckAlgebra
 import org.plasmalabs.models.ServiceStatus
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 object HealthChecker {
 

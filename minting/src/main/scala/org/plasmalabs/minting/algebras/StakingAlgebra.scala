@@ -2,7 +2,7 @@ package org.plasmalabs.minting.algebras
 
 import org.plasmalabs.consensus.models.{BlockHeader, SlotId, StakingAddress}
 import org.plasmalabs.minting.models.VrfHit
-import org.plasmalabs.models._
+import org.plasmalabs.models.*
 import org.plasmalabs.sdk.models.LockAddress
 
 /**

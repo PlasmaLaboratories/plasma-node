@@ -1,10 +1,10 @@
 package org.plasmalabs.healthcheck
 
-import cats.effect._
+import cats.effect.*
 import fs2.Stream
 import fs2.concurrent.SignallingRef
 import grpc.health.v1.ServingStatus
-import org.plasmalabs.algebras._
+import org.plasmalabs.algebras.*
 import org.plasmalabs.models.ServiceStatus
 
 /**

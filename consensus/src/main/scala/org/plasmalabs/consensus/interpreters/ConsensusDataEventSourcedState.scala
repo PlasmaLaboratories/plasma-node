@@ -2,15 +2,15 @@ package org.plasmalabs.consensus.interpreters
 
 import cats.MonadThrow
 import cats.effect.Async
-import cats.implicits._
-import org.plasmalabs.algebras._
+import cats.implicits.*
+import org.plasmalabs.algebras.*
 import org.plasmalabs.consensus.models.{ActiveStaker, BlockId, StakingAddress}
 import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
 import org.plasmalabs.node.models.BlockBody
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.box.Value
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 /**
  * An EventSourcedState which operates on a `ConsensusData`.

@@ -5,14 +5,14 @@ import com.tinkerpop.blueprints.impls.orient.{OrientDynaElementIterable, OrientG
 import com.tinkerpop.blueprints.{Direction, Vertex}
 import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import org.plasmalabs.consensus.models.BlockHeader
-import org.plasmalabs.indexer.orientDb.schema.EdgeSchemaInstances._
+import org.plasmalabs.indexer.orientDb.schema.EdgeSchemaInstances.*
 import org.plasmalabs.indexer.orientDb.schema.VertexSchema
 import org.plasmalabs.indexer.services.Txo
 import org.plasmalabs.node.models.BlockBody
-import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.models.*
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 import scala.language.implicitConversions
 
 /**

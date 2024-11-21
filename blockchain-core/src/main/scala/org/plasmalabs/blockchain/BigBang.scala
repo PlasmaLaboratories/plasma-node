@@ -3,29 +3,29 @@ package org.plasmalabs.blockchain
 import cats.Parallel
 import cats.data.{EitherT, ReaderT}
 import cats.effect.Sync
-import cats.implicits._
+import cats.implicits.*
 import com.google.common.primitives.Longs
 import com.google.protobuf.ByteString
 import com.google.protobuf.duration.Duration
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.codecs.bytes.typeclasses.Transmittable
 import org.plasmalabs.config.ApplicationConfig
 import org.plasmalabs.consensus.algebras.BlockHeaderToBodyValidationAlgebra
-import org.plasmalabs.consensus.models._
+import org.plasmalabs.consensus.models.*
 import org.plasmalabs.crypto.hash.Blake2b256
-import org.plasmalabs.models._
-import org.plasmalabs.models.protocol.BigBangConstants._
+import org.plasmalabs.models.*
+import org.plasmalabs.models.protocol.BigBangConstants.*
 import org.plasmalabs.models.protocol.{ConfigConverter, ConfigGenesis}
+import org.plasmalabs.models.utility.*
 import org.plasmalabs.models.utility.HasLength.instances.byteStringLength
-import org.plasmalabs.models.utility._
-import org.plasmalabs.node.models._
-import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.node.models.*
+import org.plasmalabs.numerics.implicits.*
 import org.plasmalabs.quivr.models.Ratio
-import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.models.*
 import org.plasmalabs.sdk.models.box.Value
-import org.plasmalabs.sdk.models.transaction._
-import org.plasmalabs.sdk.syntax._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.sdk.models.transaction.*
+import org.plasmalabs.sdk.syntax.*
+import org.plasmalabs.typeclasses.implicits.*
 
 /**
  * The beginning of everything.  ("everything" of course just means the first block of a blockchain)

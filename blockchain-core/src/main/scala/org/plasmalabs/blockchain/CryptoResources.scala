@@ -1,9 +1,9 @@
 package org.plasmalabs.blockchain
 
 import cats.effect.{Async, Resource}
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.crypto.hash.{Blake2b256, Blake2b512}
-import org.plasmalabs.crypto.signing._
+import org.plasmalabs.crypto.signing.*
 import org.plasmalabs.sdk.utils.CatsUnsafeResource
 
 case class CryptoResources[F[_]](

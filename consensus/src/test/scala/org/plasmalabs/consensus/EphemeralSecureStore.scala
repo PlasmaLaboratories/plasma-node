@@ -1,11 +1,11 @@
 package org.plasmalabs.consensus
 
 import cats.data.Chain
-import cats.implicits._
+import cats.implicits.*
 import cats.{Defer, Monad}
 import org.plasmalabs.algebras.SecureStore
 import org.plasmalabs.codecs.bytes.typeclasses.Persistable
-import org.plasmalabs.codecs.bytes.typeclasses.implicits._
+import org.plasmalabs.codecs.bytes.typeclasses.implicits.*
 import org.plasmalabs.models.Bytes
 
 /**

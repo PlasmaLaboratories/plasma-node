@@ -1,12 +1,12 @@
 package org.plasmalabs.catsutils
 
-import cats.effect._
+import cats.effect.*
 import cats.effect.std.Queue
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.typelevel.log4cats.Logger
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 class FOpsSpec extends CatsEffectSuite with ScalaCheckEffectSuite {
 

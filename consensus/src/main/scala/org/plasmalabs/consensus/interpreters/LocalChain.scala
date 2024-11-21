@@ -1,17 +1,17 @@
 package org.plasmalabs.consensus.interpreters
 
 import cats.data.{EitherT, NonEmptyChain, Validated}
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.kernel.Sync
 import cats.effect.{Async, Ref, Resource}
-import cats.implicits._
+import cats.implicits.*
 import fs2.concurrent.Topic
 import org.plasmalabs.algebras.Stats
-import org.plasmalabs.consensus.algebras._
-import org.plasmalabs.consensus.models._
+import org.plasmalabs.consensus.algebras.*
+import org.plasmalabs.consensus.models.*
 import org.plasmalabs.eventtree.EventSourcedState
-import org.plasmalabs.typeclasses.implicits._
-import org.typelevel.log4cats._
+import org.plasmalabs.typeclasses.implicits.*
+import org.typelevel.log4cats.*
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 object LocalChain {

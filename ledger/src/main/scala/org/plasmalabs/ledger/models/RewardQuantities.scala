@@ -1,11 +1,11 @@
 package org.plasmalabs.ledger.models
 
-import cats.implicits._
+import cats.implicits.*
 import cats.{Monoid, Show}
 import org.plasmalabs.models.Bytes
 import org.plasmalabs.sdk.models.box.{FungibilityType, QuantityDescriptorType}
 import org.plasmalabs.sdk.models.{GroupId, SeriesId}
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 case class RewardQuantities(
   lvl:    BigInt = BigInt(0),

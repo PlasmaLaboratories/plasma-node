@@ -2,18 +2,18 @@ package org.plasmalabs.networking.multiplexer
 
 import cats.Monad
 import cats.data.OptionT
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.std.Mutex
 import cats.effect.{Async, Resource}
-import cats.implicits._
+import cats.implicits.*
 import com.google.common.primitives.Ints
 import com.google.protobuf.ByteString
-import fs2._
+import fs2.*
 import fs2.io.net.Socket
 import org.plasmalabs.models.Bytes
-import org.plasmalabs.networking._
+import org.plasmalabs.networking.*
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 /**
  * Provides functions which read and write data to an underlying socket

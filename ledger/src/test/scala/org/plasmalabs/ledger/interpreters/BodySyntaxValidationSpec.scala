@@ -1,20 +1,20 @@
 package org.plasmalabs.ledger.interpreters
 
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
-import org.plasmalabs.algebras.Stats.Implicits._
+import org.plasmalabs.algebras.Stats.Implicits.*
 import org.plasmalabs.ledger.algebras.TransactionRewardCalculatorAlgebra
 import org.plasmalabs.ledger.models.{AssetId, BodySyntaxErrors, RewardQuantities}
-import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.models.ModelGenerators.*
 import org.plasmalabs.node.models.BlockBody
 import org.plasmalabs.sdk.constants.NetworkConstants
-import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.sdk.generators.ModelGenerators.*
 import org.plasmalabs.sdk.models.box.{FungibilityType, Lock, QuantityDescriptorType, Value}
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, SpentTransactionOutput, UnspentTransactionOutput}
 import org.plasmalabs.sdk.models.{GroupId, LockAddress, SeriesId, TransactionId}
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 import org.plasmalabs.sdk.validation.TransactionSyntaxError
 import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
 import org.scalacheck.effect.PropF

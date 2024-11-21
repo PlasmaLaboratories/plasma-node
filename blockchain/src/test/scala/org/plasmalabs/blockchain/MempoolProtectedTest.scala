@@ -2,22 +2,22 @@ package org.plasmalabs.blockchain
 
 import cats.data.Validated
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
-import org.plasmalabs.algebras.Stats.Implicits._
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.algebras.Stats.Implicits.*
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.config.ApplicationConfig.Node.MempoolProtection
-import org.plasmalabs.ledger.algebras._
-import org.plasmalabs.ledger.models.{IoTransactionEx, MempoolGraph, RewardQuantities, _}
-import org.plasmalabs.models.ModelGenerators._
+import org.plasmalabs.ledger.algebras.*
+import org.plasmalabs.ledger.models.{IoTransactionEx, MempoolGraph, RewardQuantities, *}
+import org.plasmalabs.models.ModelGenerators.*
+import org.plasmalabs.models.generators.consensus.*
 import org.plasmalabs.models.generators.consensus.ModelGenerators.arbitraryBlockId
-import org.plasmalabs.models.generators.consensus._
 import org.plasmalabs.networking.fsnetwork.TestHelper.arbitraryIoTransaction
 import org.plasmalabs.quivr.runtime.DynamicContext
 import org.plasmalabs.sdk.constants.NetworkConstants
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.sdk.models.{Datum, TransactionId, TransactionOutputAddress}
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 import org.plasmalabs.sdk.validation.TransactionAuthorizationError
 import org.plasmalabs.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
 import org.scalacheck.Arbitrary

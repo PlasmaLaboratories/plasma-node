@@ -1,15 +1,15 @@
 package org.plasmalabs.consensus.interpreters
 
-import cats.effect._
-import cats.implicits._
+import cats.effect.*
+import cats.implicits.*
 import org.plasmalabs.consensus.algebras.LeaderElectionValidationAlgebra
 import org.plasmalabs.consensus.models.VrfConfig
 import org.plasmalabs.consensus.rhoToRhoTestHash
 import org.plasmalabs.crypto.hash.Blake2b512
-import org.plasmalabs.models._
+import org.plasmalabs.models.*
 import org.plasmalabs.models.utility.Ratio
 import org.plasmalabs.numerics.algebras.{Exp, Log1p}
-import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.numerics.implicits.*
 import scalacache.caffeine.CaffeineCache
 
 /**

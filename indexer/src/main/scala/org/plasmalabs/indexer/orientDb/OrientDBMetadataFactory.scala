@@ -1,12 +1,12 @@
 package org.plasmalabs.indexer.orientDb
 
 import cats.effect.{Async, Resource, Sync}
-import cats.implicits._
+import cats.implicits.*
 import com.orientechnologies.orient.core.db.ODatabaseDocumentInternal
 import com.orientechnologies.orient.core.metadata.schema.{OClass, OType}
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory
-import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances._
-import org.plasmalabs.indexer.orientDb.schema.EdgeSchemaInstances._
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances.*
+import org.plasmalabs.indexer.orientDb.schema.EdgeSchemaInstances.*
 import org.plasmalabs.indexer.orientDb.schema.{EdgeSchema, VertexSchema}
 import org.typelevel.log4cats.Logger
 

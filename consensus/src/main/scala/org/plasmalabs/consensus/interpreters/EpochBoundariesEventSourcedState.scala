@@ -1,13 +1,13 @@
 package org.plasmalabs.consensus.interpreters
 
 import cats.effect.Async
-import cats.implicits._
-import org.plasmalabs.algebras.ClockAlgebra.implicits._
-import org.plasmalabs.algebras._
+import cats.implicits.*
+import org.plasmalabs.algebras.*
+import org.plasmalabs.algebras.ClockAlgebra.implicits.*
 import org.plasmalabs.consensus.models.{BlockId, SlotData}
 import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
-import org.plasmalabs.models._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.models.*
+import org.plasmalabs.typeclasses.implicits.*
 
 /**
  * An EventSourcedState which operates on an `EpochBoundaries`.

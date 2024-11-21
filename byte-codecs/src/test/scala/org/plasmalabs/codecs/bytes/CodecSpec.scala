@@ -2,7 +2,7 @@ package org.plasmalabs.codecs.bytes
 
 import cats.Eq
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.scalacheck.effect.PropF
 import org.scalacheck.{Arbitrary, Gen}

@@ -1,10 +1,10 @@
 package org.plasmalabs.consensus.interpreters
 
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.testInterpreters.TestStore
-import org.plasmalabs.models.{Epoch, _}
+import org.plasmalabs.models.{Epoch, *}
 import org.plasmalabs.sdk.generators.TransactionGenerator
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger

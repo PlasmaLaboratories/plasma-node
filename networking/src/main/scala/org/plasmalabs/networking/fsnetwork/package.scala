@@ -2,14 +2,14 @@ package org.plasmalabs.networking
 
 import cats.data.{Chain, NonEmptyChain, OptionT}
 import cats.effect.Async
-import cats.implicits._
+import cats.implicits.*
 import cats.{Applicative, Monad, MonadThrow}
 import com.github.benmanes.caffeine.cache.Cache
 import org.plasmalabs.algebras.Store
-import org.plasmalabs.codecs.bytes.scodecs.valuetypes._
+import org.plasmalabs.codecs.bytes.scodecs.valuetypes.*
 import org.plasmalabs.consensus.algebras.LocalChainAlgebra
-import org.plasmalabs.consensus.models._
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.consensus.models.*
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.networking.blockchain.BlockchainPeerClient
 import org.plasmalabs.node.models.BlockBody
 import org.typelevel.log4cats.Logger

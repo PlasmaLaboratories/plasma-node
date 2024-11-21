@@ -4,7 +4,7 @@ import cats.{Eq, Show}
 import org.plasmalabs.codecs.bytes.CodecSpec
 import org.plasmalabs.consensus.models.{BlockId, EligibilityCertificate}
 import org.plasmalabs.crypto.models.KesBinaryTree
-import org.plasmalabs.models._
+import org.plasmalabs.models.*
 import org.plasmalabs.models.utility.Ratio
 import org.scalacheck.Gen
 

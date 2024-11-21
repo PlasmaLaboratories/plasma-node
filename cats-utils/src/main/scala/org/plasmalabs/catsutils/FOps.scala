@@ -1,11 +1,11 @@
 package org.plasmalabs.catsutils
 
 import cats.Monad
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.{Async, Clock}
 import org.typelevel.log4cats.Logger
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.language.implicitConversions
 
 trait FOps {

@@ -1,55 +1,55 @@
 package org.plasmalabs.node
 
 import cats.data.OptionT
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.std.{Random, SecureRandom}
 import cats.effect.{Async, IO, Resource, Sync}
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import com.typesafe.config.Config
 import fs2.io.file.Path
 import kamon.Kamon
 import org.plasmalabs.algebras.Stats
-import org.plasmalabs.blockchain._
+import org.plasmalabs.blockchain.*
 import org.plasmalabs.blockchain.interpreters.{EpochDataEventSourcedState, EpochDataInterpreter, NodeMetadata}
 import org.plasmalabs.buildinfo.node.BuildInfo
-import org.plasmalabs.catsutils._
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.catsutils.*
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.common.application.IOBaseApp
 import org.plasmalabs.config.ApplicationConfig
 import org.plasmalabs.config.ApplicationConfig.Node.KnownPeer
-import org.plasmalabs.consensus._
+import org.plasmalabs.consensus.*
+import org.plasmalabs.consensus.interpreters.*
 import org.plasmalabs.consensus.interpreters.CrossEpochEventSourceState.VotingData
-import org.plasmalabs.consensus.interpreters._
 import org.plasmalabs.consensus.models.{BlockId, VrfConfig}
 import org.plasmalabs.crypto.hash.Blake2b512
 import org.plasmalabs.crypto.signing.Ed25519
 import org.plasmalabs.eventtree.ParentChildTree
-import org.plasmalabs.grpc.{HealthCheckGrpc, _}
+import org.plasmalabs.grpc.{HealthCheckGrpc, *}
 import org.plasmalabs.healthcheck.HealthCheck
-import org.plasmalabs.indexer._
-import org.plasmalabs.interpreters._
+import org.plasmalabs.indexer.*
+import org.plasmalabs.interpreters.*
 import org.plasmalabs.ledger.LedgerImpl
+import org.plasmalabs.ledger.interpreters.*
 import org.plasmalabs.ledger.interpreters.ProposalEventSourceState.ProposalData
-import org.plasmalabs.ledger.interpreters._
 import org.plasmalabs.models.ProposalConfig
-import org.plasmalabs.models.p2p._
-import org.plasmalabs.models.protocol.BigBangConstants._
+import org.plasmalabs.models.p2p.*
+import org.plasmalabs.models.protocol.BigBangConstants.*
+import org.plasmalabs.models.utility.*
 import org.plasmalabs.models.utility.HasLength.instances.byteStringLength
-import org.plasmalabs.models.utility._
 import org.plasmalabs.networking.p2p.LocalPeer
 import org.plasmalabs.node.cli.ConfiguredCliApp
 import org.plasmalabs.numerics.interpreters.{ExpInterpreter, Log1pInterpreter}
 import org.plasmalabs.sdk.validation.{TransactionCostCalculatorInterpreter, TransactionCostConfig}
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.plasmalabs.version.VersionReplicator
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import java.time.Instant
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
-import ApplicationConfigOps._
+import ApplicationConfigOps.*
 
 object NodeApp extends AbstractNodeApp
 

@@ -3,7 +3,7 @@ package org.plasmalabs.networking.fsnetwork
 import cats.data.{NonEmptyChain, OptionT}
 import cats.effect.implicits.effectResourceOps
 import cats.effect.{Async, Resource}
-import cats.implicits._
+import cats.implicits.*
 import cats.{Parallel, Show}
 import com.github.benmanes.caffeine.cache.Cache
 import org.plasmalabs.actor.{Actor, Fsm}
@@ -14,23 +14,23 @@ import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
 import org.plasmalabs.crypto.signing.Ed25519VRF
 import org.plasmalabs.eventtree.ParentChildTree
 import org.plasmalabs.ledger.algebras.MempoolAlgebra
-import org.plasmalabs.models.p2p._
-import org.plasmalabs.models.utility._
-import org.plasmalabs.networking._
+import org.plasmalabs.models.p2p.*
+import org.plasmalabs.models.utility.*
+import org.plasmalabs.networking.*
 import org.plasmalabs.networking.blockchain.BlockchainPeerClient
 import org.plasmalabs.networking.fsnetwork.BlockChecker.BlockCheckerActor
-import org.plasmalabs.networking.fsnetwork.DnsResolverHTInstances._
-import org.plasmalabs.networking.fsnetwork.P2PShowInstances._
+import org.plasmalabs.networking.fsnetwork.DnsResolverHTInstances.*
+import org.plasmalabs.networking.fsnetwork.P2PShowInstances.*
 import org.plasmalabs.networking.fsnetwork.PeerActor.PeerActor
-import org.plasmalabs.networking.fsnetwork.PeersManager.Message._
+import org.plasmalabs.networking.fsnetwork.PeersManager.Message.*
 import org.plasmalabs.networking.fsnetwork.RequestsProxy.RequestsProxyActor
-import org.plasmalabs.networking.fsnetwork.ReverseDnsResolverHTInstances._
-import org.plasmalabs.networking.p2p._
+import org.plasmalabs.networking.fsnetwork.ReverseDnsResolverHTInstances.*
+import org.plasmalabs.networking.p2p.*
 import org.plasmalabs.node.models.{BlockBody, KnownHost}
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 import org.plasmalabs.sdk.validation.algebras.TransactionSyntaxVerifier
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 import scodec.bits.ByteVector
 

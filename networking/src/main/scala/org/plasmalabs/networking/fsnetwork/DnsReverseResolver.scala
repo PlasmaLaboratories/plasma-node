@@ -2,11 +2,11 @@ package org.plasmalabs.networking.fsnetwork
 
 import cats.data.OptionT
 import cats.effect.Sync
-import cats.implicits._
+import cats.implicits.*
 import cats.{Applicative, Monad}
 import com.comcast.ip4s.{Dns, IpAddress}
 import com.github.benmanes.caffeine.cache.Caffeine
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.models.p2p.*
 import scalacache.Entry
 import scalacache.caffeine.CaffeineCache
 

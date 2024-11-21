@@ -1,9 +1,9 @@
 package org.plasmalabs.actor
 
 import cats.effect.{Concurrent, Deferred, IO, Ref, Resource}
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
-import org.plasmalabs.actor.ActorSpec._
+import org.plasmalabs.actor.ActorSpec.*
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger

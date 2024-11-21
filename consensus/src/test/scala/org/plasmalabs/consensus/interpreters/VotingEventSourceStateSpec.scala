@@ -1,35 +1,35 @@
 package org.plasmalabs.consensus.interpreters
 
 import cats.effect.{Async, IO}
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
-import org.plasmalabs.algebras.ClockAlgebra.implicits._
+import org.plasmalabs.algebras.ClockAlgebra.implicits.*
 import org.plasmalabs.algebras.testInterpreters.TestStore
 import org.plasmalabs.algebras.{ClockAlgebra, Store}
-import org.plasmalabs.codecs.bytes.tetra.ModelGenerators._
-import org.plasmalabs.codecs.bytes.tetra.instances._
-import org.plasmalabs.consensus._
+import org.plasmalabs.codecs.bytes.tetra.ModelGenerators.*
+import org.plasmalabs.codecs.bytes.tetra.instances.*
+import org.plasmalabs.consensus.*
 import org.plasmalabs.consensus.algebras.VersionInfoAlgebra
 import org.plasmalabs.consensus.interpreters.CrossEpochEventSourceState.VotingData
-import org.plasmalabs.consensus.models.{BlockHeader, BlockId, _}
+import org.plasmalabs.consensus.models.{BlockHeader, BlockId, *}
 import org.plasmalabs.crypto.signing.Ed25519VRF
 import org.plasmalabs.eventtree.{EventSourcedState, ParentChildTree}
 import org.plasmalabs.ledger.interpreters.ProposalEventSourceState
-import org.plasmalabs.ledger.interpreters.ProposalEventSourceState._
-import org.plasmalabs.models.ModelGenerators._
-import org.plasmalabs.models._
+import org.plasmalabs.ledger.interpreters.ProposalEventSourceState.*
+import org.plasmalabs.models.*
+import org.plasmalabs.models.ModelGenerators.*
 import org.plasmalabs.models.generators.consensus.ModelGenerators.arbitraryHeader
 import org.plasmalabs.models.protocol.{ConfigConverter, ConfigGenesis}
 import org.plasmalabs.models.utility.Ratio
 import org.plasmalabs.node.models.BlockBody
-import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.numerics.implicits.*
 import org.plasmalabs.proto.node.EpochData
 import org.plasmalabs.sdk.generators.TransactionGenerator
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.box.Value
 import org.plasmalabs.sdk.models.box.Value.ConfigProposal
-import org.plasmalabs.sdk.models.transaction._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.sdk.models.transaction.*
+import org.plasmalabs.typeclasses.implicits.*
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger

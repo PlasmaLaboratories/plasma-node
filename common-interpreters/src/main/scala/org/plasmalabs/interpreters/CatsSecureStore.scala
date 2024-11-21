@@ -3,14 +3,14 @@ package org.plasmalabs.interpreters
 import cats.data.Chain
 import cats.effect.std.Semaphore
 import cats.effect.{Async, Resource, Sync}
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import org.plasmalabs.algebras.SecureStore
 import org.plasmalabs.codecs.bytes.typeclasses.Persistable
-import org.plasmalabs.codecs.bytes.typeclasses.implicits._
+import org.plasmalabs.codecs.bytes.typeclasses.implicits.*
 
 import java.nio.file.{Files, Path, Paths, StandardOpenOption}
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
 /**
  * Interprets the SecureStore algebra using cats-effect and java NIO.

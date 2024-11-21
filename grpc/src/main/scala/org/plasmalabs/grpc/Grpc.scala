@@ -1,7 +1,7 @@
 package org.plasmalabs.grpc
 
 import cats.effect.kernel.{Async, Resource}
-import fs2.grpc.syntax.all._
+import fs2.grpc.syntax.all.*
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder
 import io.grpc.protobuf.services.ProtoReflectionService
 import io.grpc.{Server, ServerServiceDefinition}

@@ -3,16 +3,16 @@ package org.plasmalabs.version
 import cats.data.OptionT
 import cats.effect.implicits.genSpawnOps
 import cats.effect.kernel.{Async, Outcome, Resource}
-import cats.implicits._
+import cats.implicits.*
 import fs2.Stream
 import fs2.io.net.Network
-import io.circe.parser._
+import io.circe.parser.*
 import org.http4s.ember.client.EmberClientBuilder
 import org.plasmalabs.algebras.SoftwareVersionAlgebra
 import org.plasmalabs.blockchain.algebras.NodeMetadataAlgebra
 import org.typelevel.log4cats.Logger
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 object VersionReplicator {
 

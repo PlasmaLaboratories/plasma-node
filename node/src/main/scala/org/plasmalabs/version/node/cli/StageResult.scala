@@ -1,7 +1,7 @@
 package org.plasmalabs.node.cli
 
-import cats._
-import cats.implicits._
+import cats.*
+import cats.implicits.*
 
 import scala.annotation.tailrec
 

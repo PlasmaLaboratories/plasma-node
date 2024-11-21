@@ -1,29 +1,29 @@
 package org.plasmalabs.minting.interpreters
 
 import cats.data.EitherT
-import cats.effect._
-import cats.effect.implicits._
-import cats.implicits._
-import fs2._
+import cats.effect.*
+import cats.effect.implicits.*
+import cats.implicits.*
+import fs2.*
 import org.plasmalabs.algebras.ContextlessValidationAlgebra
 import org.plasmalabs.consensus.models.BlockId
-import org.plasmalabs.ledger.algebras._
-import org.plasmalabs.ledger.implicits._
+import org.plasmalabs.ledger.algebras.*
+import org.plasmalabs.ledger.implicits.*
 import org.plasmalabs.ledger.interpreters.{QuivrContext, RegistrationAccumulator}
 import org.plasmalabs.ledger.models.{MempoolGraph, TransactionSemanticError}
 import org.plasmalabs.minting.algebras.BlockPackerAlgebra
-import org.plasmalabs.models._
+import org.plasmalabs.models.*
 import org.plasmalabs.node.models.FullBlockBody
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 import org.plasmalabs.sdk.validation.algebras.{TransactionAuthorizationVerifier, TransactionCostCalculator}
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
 
 import scala.collection.immutable.ListSet
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 /**
  * Implements a BlockPackerAlgebra which uses the graph-nature of the Mempool combined with a Transaction Scoring algorithm to produce an "ideal" block body.

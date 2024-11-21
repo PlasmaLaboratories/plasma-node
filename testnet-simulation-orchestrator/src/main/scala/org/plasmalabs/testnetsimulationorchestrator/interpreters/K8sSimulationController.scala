@@ -2,7 +2,7 @@ package org.plasmalabs.testnetsimulationorchestrator.interpreters
 
 import cats.effect.std.Dispatcher
 import cats.effect.{Async, Deferred, Resource, Sync}
-import cats.implicits._
+import cats.implicits.*
 import io.kubernetes.client.openapi.apis.CoreV1Api
 import io.kubernetes.client.openapi.models.V1Status
 import io.kubernetes.client.openapi.{ApiCallback, ApiException}

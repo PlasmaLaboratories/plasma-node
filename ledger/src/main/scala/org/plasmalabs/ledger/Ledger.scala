@@ -1,7 +1,7 @@
 package org.plasmalabs.ledger
 
-import org.plasmalabs.ledger.algebras._
-import org.plasmalabs.sdk.validation.algebras._
+import org.plasmalabs.ledger.algebras.*
+import org.plasmalabs.sdk.validation.algebras.*
 
 trait Ledger[F[_]] {
   def transactionSyntaxValidation: TransactionSyntaxVerifier[F]

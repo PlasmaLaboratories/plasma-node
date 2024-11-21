@@ -1,8 +1,8 @@
 package org.plasmalabs.networking.blockchain
 
-import fs2._
+import fs2.*
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
-import org.plasmalabs.node.models._
+import org.plasmalabs.node.models.*
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
 

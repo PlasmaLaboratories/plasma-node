@@ -1,19 +1,19 @@
 package org.plasmalabs.indexer.interpreter
 
 import cats.effect.IO
-import cats.implicits._
-import fs2._
+import cats.implicits.*
+import fs2.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.NodeRpc
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId}
-import org.plasmalabs.indexer.model.GEs._
+import org.plasmalabs.indexer.model.GEs.*
 import org.plasmalabs.indexer.services.BlockData
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
 import org.plasmalabs.node.models.{BlockBody, FullBlockBody}
-import org.plasmalabs.sdk.generators.ModelGenerators._
+import org.plasmalabs.sdk.generators.ModelGenerators.*
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 import org.typelevel.log4cats.Logger

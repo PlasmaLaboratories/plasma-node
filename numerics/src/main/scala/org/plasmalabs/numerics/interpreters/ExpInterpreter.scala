@@ -1,10 +1,10 @@
 package org.plasmalabs.numerics.interpreters
 
 import cats.Monad
-import cats.implicits._
-import org.plasmalabs.models.utility._
+import cats.implicits.*
+import org.plasmalabs.models.utility.*
 import org.plasmalabs.numerics.algebras.Exp
-import org.plasmalabs.numerics.implicits._
+import org.plasmalabs.numerics.implicits.*
 
 object ExpInterpreter extends LentzMethod {
 

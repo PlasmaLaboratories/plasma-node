@@ -2,11 +2,11 @@ package org.plasmalabs.node.cli
 
 import cats.effect.Async
 import cats.effect.std.Console
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import fs2.io.file.{Files, Path}
 import org.plasmalabs.blockchain.BigBang
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.config.ApplicationConfig
 import org.plasmalabs.node.ProtocolVersioner
 import org.plasmalabs.node.models.FullBlock
@@ -15,8 +15,8 @@ import org.plasmalabs.sdk.constants.NetworkConstants
 import org.plasmalabs.sdk.models.box.Value
 import org.plasmalabs.sdk.models.transaction.{IoTransaction, Schedule, UnspentTransactionOutput}
 import org.plasmalabs.sdk.models.{Datum, Event, LockAddress, LockId}
-import org.plasmalabs.sdk.syntax._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.sdk.syntax.*
+import org.plasmalabs.typeclasses.implicits.*
 
 object InitMainnetCommand {
 

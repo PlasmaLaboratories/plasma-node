@@ -5,12 +5,12 @@ import cats.effect.{Async, Resource}
 import com.github.benmanes.caffeine.cache.Caffeine
 import org.plasmalabs.algebras.{ClockAlgebra, Stats, Store}
 import org.plasmalabs.blockchain.Validators
-import org.plasmalabs.consensus.algebras._
+import org.plasmalabs.consensus.algebras.*
 import org.plasmalabs.consensus.models.{BlockHeader, BlockId, SlotData}
 import org.plasmalabs.crypto.signing.Ed25519VRF
 import org.plasmalabs.eventtree.ParentChildTree
-import org.plasmalabs.ledger.algebras._
-import org.plasmalabs.models.p2p._
+import org.plasmalabs.ledger.algebras.*
+import org.plasmalabs.models.p2p.*
 import org.plasmalabs.networking.blockchain.BlockchainPeerClient
 import org.plasmalabs.networking.fsnetwork.BlockChecker.BlockCheckerActor
 import org.plasmalabs.networking.fsnetwork.Notifier.NotifierActor

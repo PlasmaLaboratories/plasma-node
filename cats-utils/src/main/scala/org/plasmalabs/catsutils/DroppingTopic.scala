@@ -1,7 +1,7 @@
 package org.plasmalabs.catsutils
 
 import cats.effect.{Async, Resource}
-import cats.implicits._
+import cats.implicits.*
 import fs2.concurrent.Topic
 
 object DroppingTopic {

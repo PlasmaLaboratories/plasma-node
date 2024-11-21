@@ -5,7 +5,7 @@ import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import org.plasmalabs.consensus.models.{BlockHeader, SlotData, SlotId}
 import org.plasmalabs.crypto.hash.{Blake2b256, Blake2b512}
 import org.plasmalabs.crypto.signing.Ed25519VRF
-import org.plasmalabs.models.utility._
+import org.plasmalabs.models.utility.*
 import org.plasmalabs.models.{Bytes, UnsignedBlockHeader}
 
 package object consensus {

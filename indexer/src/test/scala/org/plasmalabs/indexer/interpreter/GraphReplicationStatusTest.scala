@@ -1,7 +1,7 @@
 package org.plasmalabs.indexer.interpreter
 
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import com.tinkerpop.blueprints.Vertex
 import fs2.Stream
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
@@ -11,7 +11,7 @@ import org.plasmalabs.indexer.algebras.{NodeBlockFetcherAlgebra, VertexFetcherAl
 import org.plasmalabs.indexer.model.{GE, GEs}
 import org.plasmalabs.indexer.orientDb.OrientThread
 import org.plasmalabs.indexer.orientDb.instances.SchemaBlockHeader
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
 import org.plasmalabs.typeclasses.implicits.showBlockId
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory

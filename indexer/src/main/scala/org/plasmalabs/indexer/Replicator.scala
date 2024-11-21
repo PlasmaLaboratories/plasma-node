@@ -1,15 +1,15 @@
 package org.plasmalabs.indexer
 
-import cats.data._
+import cats.data.*
 import cats.effect.Async
-import cats.effect.implicits._
+import cats.effect.implicits.*
 import cats.effect.kernel.{Outcome, Resource}
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.algebras.{Stats, SynchronizationTraversalStep, SynchronizationTraversalSteps}
 import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import org.plasmalabs.indexer.services.BlockData
-import org.plasmalabs.interpreters.NodeRpcOps._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.interpreters.NodeRpcOps.*
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 

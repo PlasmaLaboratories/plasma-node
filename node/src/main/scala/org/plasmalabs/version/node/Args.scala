@@ -1,11 +1,11 @@
 package org.plasmalabs.node
 
 import cats.Show
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
-import mainargs._
+import mainargs.*
 import monocle.macros.GenLens
-import monocle.syntax.all._
+import monocle.syntax.all.*
 import org.plasmalabs.common.application.{ContainsDebugFlag, ContainsUserConfigs}
 import org.plasmalabs.consensus.models.StakingAddress
 import org.plasmalabs.sdk.models.LockAddress

@@ -2,25 +2,25 @@ package org.plasmalabs.networking.blockchain
 
 import cats.data.NonEmptyChain
 import cats.effect.{IO, Resource}
-import cats.implicits._
+import cats.implicits.*
 import cats.{MonadThrow, Show}
-import fs2._
+import fs2.*
 import fs2.concurrent.Topic
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.algebras.Store
 import org.plasmalabs.blockchain.{BlockchainCore, DataStores}
 import org.plasmalabs.consensus.Consensus
 import org.plasmalabs.consensus.algebras.LocalChainAlgebra
-import org.plasmalabs.consensus.models._
+import org.plasmalabs.consensus.models.*
 import org.plasmalabs.ledger.Ledger
 import org.plasmalabs.ledger.algebras.{MempoolAlgebra, TransactionRewardCalculatorAlgebra}
 import org.plasmalabs.ledger.models.{MempoolGraph, RewardQuantities}
-import org.plasmalabs.models.ModelGenerators._
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
-import org.plasmalabs.models.generators.node.ModelGenerators._
-import org.plasmalabs.networking.NetworkGen._
+import org.plasmalabs.models.ModelGenerators.*
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
+import org.plasmalabs.models.generators.node.ModelGenerators.*
+import org.plasmalabs.networking.NetworkGen.*
 import org.plasmalabs.networking.fsnetwork.RemotePeer
-import org.plasmalabs.networking.fsnetwork.TestHelper._
+import org.plasmalabs.networking.fsnetwork.TestHelper.*
 import org.plasmalabs.networking.p2p.PeerConnectionChanges.RemotePeerApplicationLevel
 import org.plasmalabs.networking.p2p.{ConnectedPeer, PeerConnectionChange}
 import org.plasmalabs.node.models.{BlockBody, CurrentKnownHostsReq, CurrentKnownHostsRes, KnownHost}
@@ -31,7 +31,7 @@ import org.scalacheck.Gen
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 class BlockchainPeerServerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with AsyncMockFactory {
 

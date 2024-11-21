@@ -1,9 +1,9 @@
 package org.plasmalabs.indexer.interpreter
 
 import cats.data.{EitherT, OptionT}
-import cats.effect._
-import cats.effect.implicits._
-import cats.implicits._
+import cats.effect.*
+import cats.effect.implicits.*
+import cats.implicits.*
 import fs2.Stream
 import org.plasmalabs.algebras.NodeRpc
 import org.plasmalabs.consensus.models.BlockId
@@ -16,7 +16,7 @@ import org.typelevel.log4cats.Logger
 
 import scala.collection.immutable.ListSet
 
-import EitherT._
+import EitherT.*
 
 object NodeBlockFetcher {
 

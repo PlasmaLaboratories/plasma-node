@@ -4,11 +4,11 @@ import cats.MonadThrow
 import cats.data.EitherT
 import cats.effect.std.Console
 import cats.effect.{Async, Sync}
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import fs2.io.file.Path
 import org.plasmalabs.blockchain.{StakerInitializers, StakingInit}
-import org.plasmalabs.codecs.bytes.tetra.instances._
+import org.plasmalabs.codecs.bytes.tetra.instances.*
 import org.plasmalabs.config.ApplicationConfig
 import org.plasmalabs.consensus.models.StakingAddress
 import org.plasmalabs.crypto.generation.EntropyToSeed
@@ -17,7 +17,7 @@ import org.plasmalabs.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
 import org.plasmalabs.quivr.models.Int128
 import org.plasmalabs.sdk.models.transaction.Schedule
 import org.plasmalabs.sdk.models.{Datum, Event}
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 
 object RegistrationCommand {
 

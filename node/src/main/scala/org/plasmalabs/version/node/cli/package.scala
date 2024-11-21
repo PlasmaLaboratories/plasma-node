@@ -3,17 +3,17 @@ package org.plasmalabs.node
 import cats.data.EitherT
 import cats.effect.std.Console
 import cats.effect.{Async, Sync}
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import fs2.Chunk
 import fs2.io.file.{Files, Path}
 import org.plasmalabs.consensus.models.{BlockId, StakingAddress}
-import org.plasmalabs.models.utility._
+import org.plasmalabs.models.utility.*
 import org.plasmalabs.quivr.models.{Int128, Ratio}
 import org.plasmalabs.sdk.models.LockAddress
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.util.Try
 
 package object cli {

@@ -2,20 +2,20 @@ package org.plasmalabs.ledger.interpreters
 
 import cats.data.{NonEmptyChain, Validated, ValidatedNec}
 import cats.effect.Sync
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.algebras.ClockAlgebra
-import org.plasmalabs.algebras.ClockAlgebra.implicits._
+import org.plasmalabs.algebras.ClockAlgebra.implicits.*
 import org.plasmalabs.consensus.models.BlockId
 import org.plasmalabs.ledger.algebras.BodyProposalValidationAlgebra
-import org.plasmalabs.ledger.interpreters.ProposalEventSourceState._
-import org.plasmalabs.ledger.models.BodySemanticErrors._
-import org.plasmalabs.ledger.models._
-import org.plasmalabs.models.{Epoch, _}
+import org.plasmalabs.ledger.interpreters.ProposalEventSourceState.*
+import org.plasmalabs.ledger.models.*
+import org.plasmalabs.ledger.models.BodySemanticErrors.*
+import org.plasmalabs.models.{Epoch, *}
 import org.plasmalabs.node.models.BlockBody
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.box.Value.ConfigProposal
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.typeclasses.implicits.*
 import org.typelevel.log4cats.Logger
 
 object BodyProposalValidation {

@@ -4,9 +4,9 @@ import cats.effect.IO
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.consensus.interpreters.BlockHeaderToBodyValidation
 import org.plasmalabs.consensus.models.BlockHeaderToBodyValidationFailure.IncorrectTxRoot
-import org.plasmalabs.models.generators.node.ModelGenerators._
-import org.plasmalabs.node.models._
-import org.plasmalabs.typeclasses.implicits._
+import org.plasmalabs.models.generators.node.ModelGenerators.*
+import org.plasmalabs.node.models.*
+import org.plasmalabs.typeclasses.implicits.*
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 

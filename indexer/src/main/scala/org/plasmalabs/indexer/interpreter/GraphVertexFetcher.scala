@@ -1,7 +1,7 @@
 package org.plasmalabs.indexer.interpreter
 
 import cats.effect.Resource
-import cats.implicits._
+import cats.implicits.*
 import com.orientechnologies.orient.core.sql.OCommandSQL
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery
 import com.tinkerpop.blueprints.Vertex
@@ -10,15 +10,15 @@ import org.plasmalabs.consensus.models.BlockId
 import org.plasmalabs.indexer.algebras.VertexFetcherAlgebra
 import org.plasmalabs.indexer.model.{GE, GEs}
 import org.plasmalabs.indexer.orientDb.OrientThread
+import org.plasmalabs.indexer.orientDb.instances.*
 import org.plasmalabs.indexer.orientDb.instances.SchemaIoTransaction.Field
-import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances._
-import org.plasmalabs.indexer.orientDb.instances._
+import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances.*
 import org.plasmalabs.indexer.orientDb.schema.EdgeSchemaInstances
-import org.plasmalabs.indexer.services._
-import org.plasmalabs.sdk.models._
+import org.plasmalabs.indexer.services.*
+import org.plasmalabs.sdk.models.*
 import org.plasmalabs.sdk.syntax.transactionIdAsIdSyntaxOps
 
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 import scala.util.Try
 
 object GraphVertexFetcher {

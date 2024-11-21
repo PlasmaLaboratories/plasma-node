@@ -3,12 +3,12 @@ package org.plasmalabs.networking.p2p
 import cats.data.{EitherT, OptionT}
 import cats.effect.std.Random
 import cats.effect.{Async, Resource}
-import cats.implicits._
+import cats.implicits.*
 import com.google.protobuf.ByteString
 import fs2.Chunk
 import fs2.io.net.Socket
 import org.plasmalabs.crypto.signing.Ed25519
-import org.plasmalabs.networking._
+import org.plasmalabs.networking.*
 
 object PeerIdentity {
 

@@ -1,8 +1,8 @@
 package org.plasmalabs.common.application
 
 import cats.data.{Chain, EitherT, Nested, OptionT}
-import cats.effect._
-import cats.implicits._
+import cats.effect.*
+import cats.implicits.*
 import cats.kernel.Monoid
 import com.typesafe.config.{Config, ConfigFactory}
 import fs2.io.file.Files
@@ -11,7 +11,7 @@ import org.http4s.client.middleware.FollowRedirect
 import org.http4s.ember.client.EmberClientBuilder
 import org.typelevel.log4cats.SelfAwareStructuredLogger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import pureconfig._
+import pureconfig.*
 
 /**
  * Assists with constructing applications which use cats-effect  Initializes the runtime and configurations.

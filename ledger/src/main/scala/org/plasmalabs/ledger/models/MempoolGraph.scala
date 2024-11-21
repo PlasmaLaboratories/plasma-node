@@ -1,11 +1,11 @@
 package org.plasmalabs.ledger.models
 
 import cats.data.NonEmptySet
-import cats.implicits._
+import cats.implicits.*
 import org.plasmalabs.ledger.algebras.TransactionRewardCalculatorAlgebra
 import org.plasmalabs.sdk.models.TransactionId
 import org.plasmalabs.sdk.models.transaction.IoTransaction
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.syntax.*
 import org.plasmalabs.sdk.validation.algebras.TransactionCostCalculator
 
 /**

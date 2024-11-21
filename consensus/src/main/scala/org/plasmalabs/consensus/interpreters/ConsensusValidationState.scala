@@ -1,13 +1,13 @@
 package org.plasmalabs.consensus.interpreters
 
-import cats.implicits._
+import cats.implicits.*
 import cats.{Applicative, MonadThrow}
-import org.plasmalabs.algebras.ClockAlgebra.implicits._
-import org.plasmalabs.algebras._
+import org.plasmalabs.algebras.*
+import org.plasmalabs.algebras.ClockAlgebra.implicits.*
 import org.plasmalabs.consensus.algebras.ConsensusValidationStateAlgebra
 import org.plasmalabs.consensus.models.{ActiveStaker, BlockId, StakingAddress}
 import org.plasmalabs.eventtree.EventSourcedState
-import org.plasmalabs.models._
+import org.plasmalabs.models.*
 
 object ConsensusValidationState {
 

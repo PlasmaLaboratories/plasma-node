@@ -1,18 +1,18 @@
 package org.plasmalabs.ledger.interpreters
 
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
 import munit.{CatsEffectSuite, ScalaCheckEffectSuite}
 import org.plasmalabs.consensus.models.BlockId
-import org.plasmalabs.ledger.algebras._
-import org.plasmalabs.ledger.models._
-import org.plasmalabs.models.generators.consensus.ModelGenerators._
+import org.plasmalabs.ledger.algebras.*
+import org.plasmalabs.ledger.models.*
+import org.plasmalabs.models.generators.consensus.ModelGenerators.*
 import org.plasmalabs.sdk.constants.NetworkConstants
-import org.plasmalabs.sdk.generators.ModelGenerators._
-import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.generators.ModelGenerators.*
+import org.plasmalabs.sdk.models.*
 import org.plasmalabs.sdk.models.box.Value
-import org.plasmalabs.sdk.models.transaction._
-import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.sdk.models.transaction.*
+import org.plasmalabs.sdk.syntax.*
 import org.scalacheck.effect.PropF
 import org.scalamock.munit.AsyncMockFactory
 
