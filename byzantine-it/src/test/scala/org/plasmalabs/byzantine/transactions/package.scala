@@ -1,7 +1,7 @@
 package org.plasmalabs.byzantine
 
-import org.plasmalabs.sdk.models.{LockAddress, TransactionOutputAddress}
 import org.plasmalabs.sdk.models.box.{Box, Lock}
+import org.plasmalabs.sdk.models.{LockAddress, TransactionOutputAddress}
 
 /**
  * Package transactions try to group methods and variables used on byzantine-it.TransactionTest

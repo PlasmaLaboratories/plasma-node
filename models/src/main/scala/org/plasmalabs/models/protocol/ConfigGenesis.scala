@@ -1,14 +1,17 @@
 package org.plasmalabs.models.protocol
 
+import com.google.protobuf.duration.Duration
+import org.plasmalabs.quivr.models.Ratio
+
 case class ConfigGenesis(
   label:                      String,
-  fEffective:                 quivr.models.Ratio,
+  fEffective:                 Ratio,
   vrfLddCutoff:               Int,
   vrfPrecision:               Int,
-  vrfBaselineDifficulty:      quivr.models.Ratio,
-  vrfAmplitude:               quivr.models.Ratio,
+  vrfBaselineDifficulty:      Ratio,
+  vrfAmplitude:               Ratio,
   chainSelectionKLookback:    Long,
-  slotDuration:               com.google.protobuf.duration.Duration,
+  slotDuration:               Duration,
   forwardBiasedSlotWindow:    Long,
   operationalPeriodsPerEpoch: Long,
   kesKeyHours:                Int,

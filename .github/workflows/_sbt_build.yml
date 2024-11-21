@@ -43,7 +43,7 @@ jobs:
       - name: Setup SBT
         run: |
           mkdir -p $HOME/bin/sbt
-          set -eux && curl --fail --silent --location --retry 3 https://github.com/sbt/sbt/releases/download/v1.9.9/sbt-1.9.9.tgz | gunzip | tar x -C $HOME/bin/sbt
+          set -eux && curl --fail --silent --location --retry 3 https://github.com/sbt/sbt/releases/download/v1.10.5/sbt-1.10.5.tgz | gunzip | tar x -C $HOME/bin/sbt
           echo "$HOME/bin/sbt" >> $GITHUB_PATH
 
       - name: Cache sbt
@@ -68,11 +68,8 @@ jobs:
       - name: git-restore-mtime
         uses: chetan/git-restore-mtime-action@v1
 
-#      - name: Compile
-#        run: sbt Test/compile
-
       - name: Tests and Checks
-        run: sbt checkPRTest
+        run: sbt checkPR
 
       - name: Upload Test Results
         if: always()

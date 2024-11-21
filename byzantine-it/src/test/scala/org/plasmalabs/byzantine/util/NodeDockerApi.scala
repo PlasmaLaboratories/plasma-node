@@ -3,13 +3,13 @@ package org.plasmalabs.byzantine.util
 import cats.effect._
 import cats.effect.implicits._
 import cats.implicits._
-import org.plasmalabs.algebras.{NodeRpc, IndexerRpc}
-import org.plasmalabs.indexer.IndexerGrpc
-import org.plasmalabs.grpc.NodeGrpc
 import com.spotify.docker.client.DockerClient
 import com.spotify.docker.client.messages.HostConfig
 import fs2._
 import fs2.io.file.{Files, Flags, Path}
+import org.plasmalabs.algebras.{IndexerRpc, NodeRpc}
+import org.plasmalabs.grpc.NodeGrpc
+import org.plasmalabs.indexer.IndexerGrpc
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 

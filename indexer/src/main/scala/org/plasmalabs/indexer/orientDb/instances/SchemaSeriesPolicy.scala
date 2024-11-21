@@ -3,9 +3,8 @@ package org.plasmalabs.indexer.orientDb.instances
 import com.google.protobuf.struct.Struct
 import org.plasmalabs.indexer.orientDb.schema.OTyped.Instances._
 import org.plasmalabs.indexer.orientDb.schema.{GraphDataEncoder, OIndexable, VertexSchema}
-import org.plasmalabs.sdk.models.Event.SeriesPolicy
-import org.plasmalabs.sdk.models.TransactionOutputAddress
 import org.plasmalabs.sdk.models.box.{FungibilityType, QuantityDescriptorType}
+import org.plasmalabs.sdk.models.{SeriesPolicy, TransactionOutputAddress}
 import org.plasmalabs.sdk.syntax.seriesPolicyAsSeriesPolicySyntaxOps
 
 object SchemaSeriesPolicy {

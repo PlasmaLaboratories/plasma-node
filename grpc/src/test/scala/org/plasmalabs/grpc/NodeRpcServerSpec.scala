@@ -198,6 +198,20 @@ class NodeRpcServerSpec extends CatsEffectSuite with ScalaCheckEffectSuite with 
       }
     }
 
+    test("Fetch Canonical Head Id") {
+      PropF.forAllF { (_canonicalHead: SlotData) =>
+        val canonicalHead = _canonicalHead.copy(height = 10)
+        withMock {
+          for {
+            localChain <- mock[LocalChainAlgebra[F]].pure[F]
+            _ = (() => localChain.head).expects().once().returning(canonicalHead.pure[F])
+            underTest <- createServer(localChain = localChain)
+            _         <- underTest.fetchCanonicalHeadId().assertEquals(canonicalHead.slotId.blockId.some)
+          } yield ()
+        }
+      }
+    }
+
   }
 
   private def createServer(

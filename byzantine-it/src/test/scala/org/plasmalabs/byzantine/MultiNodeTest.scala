@@ -5,14 +5,12 @@ import cats.effect.IO
 import cats.effect.implicits._
 import cats.effect.kernel.Sync
 import cats.implicits._
+import com.google.protobuf.ByteString
+import com.spotify.docker.client.DockerClient
+import fs2.Chunk
+import fs2.io.file.{Files, Path, PosixPermission, PosixPermissions}
 import org.plasmalabs.algebras.{NodeRpc, SynchronizationTraversalSteps}
 import org.plasmalabs.blockchain._
-import org.plasmalabs.sdk.common.ContainsSignable.ContainsSignableTOps
-import org.plasmalabs.sdk.common.ContainsSignable.instances._
-import org.plasmalabs.sdk.models.box.{Attestation, Value}
-import org.plasmalabs.sdk.models._
-import org.plasmalabs.sdk.models.transaction._
-import org.plasmalabs.sdk.syntax._
 import org.plasmalabs.byzantine.util._
 import org.plasmalabs.codecs.bytes.tetra.instances._
 import org.plasmalabs.codecs.bytes.typeclasses.Persistable
@@ -20,20 +18,22 @@ import org.plasmalabs.consensus.models.{BlockId, StakingAddress}
 import org.plasmalabs.crypto.generation.mnemonic.Entropy
 import org.plasmalabs.crypto.models.SecretKeyKesProduct
 import org.plasmalabs.crypto.signing.{Ed25519, Ed25519VRF, KesProduct}
-import com.spotify.docker.client.DockerClient
-import org.typelevel.log4cats.Logger
 import org.plasmalabs.interpreters.NodeRpcOps._
-import com.google.protobuf.ByteString
-import fs2.Chunk
-import fs2.io.file.{Files, Path, PosixPermission, PosixPermissions}
-import org.plasmalabs.quivr.api.Prover
-import org.plasmalabs.typeclasses.implicits._
 import org.plasmalabs.models.protocol.BigBangConstants._
+import org.plasmalabs.quivr.api.Prover
+import org.plasmalabs.sdk.common.ContainsSignable.ContainsSignableTOps
+import org.plasmalabs.sdk.common.ContainsSignable.instances._
+import org.plasmalabs.sdk.constants.NetworkConstants
+import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.models.box.{Attestation, Value}
+import org.plasmalabs.sdk.models.transaction._
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.typeclasses.implicits._
+import org.typelevel.log4cats.Logger
 
 import java.security.SecureRandom
 import java.time.Instant
 import scala.concurrent.duration._
-import org.plasmalabs.sdk.constants.NetworkConstants
 
 class MultiNodeTest extends IntegrationSuite {
   import MultiNodeTest._
@@ -60,7 +60,7 @@ class MultiNodeTest extends IntegrationSuite {
                 bigBang,
                 totalNodeCount - 1,
                 index,
-                List(s"MultiNodeTest-node0"),
+                List("MultiNodeTest-node0"),
                 serverHost = if (index == 1) s"MultiNodeTest-node$index".some else None,
                 serverPort = if (index == 1) 9085.some else None
               )

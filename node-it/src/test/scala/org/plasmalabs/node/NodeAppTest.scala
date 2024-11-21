@@ -5,19 +5,19 @@ import cats.effect._
 import cats.effect.implicits._
 import cats.effect.std.{Random, SecureRandom}
 import cats.implicits._
-import org.plasmalabs.sdk.syntax._
-import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import org.plasmalabs.consensus.models.BlockId
-import org.plasmalabs.indexer.services._
-import org.plasmalabs.grpc.NodeGrpc
-import org.plasmalabs.interpreters.NodeRpcOps.clientAsNodeRpcApi
-import org.plasmalabs.node.Util._
-import org.plasmalabs.transactiongenerator.interpreters.Fs2TransactionGenerator
-import org.plasmalabs.typeclasses.implicits._
 import fs2.io.file.{Files, Path}
 import fs2.{io => _, _}
 import io.grpc.Metadata
 import munit._
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.consensus.models.BlockId
+import org.plasmalabs.grpc.NodeGrpc
+import org.plasmalabs.indexer.services._
+import org.plasmalabs.interpreters.NodeRpcOps.clientAsNodeRpcApi
+import org.plasmalabs.node.Util._
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.transactiongenerator.interpreters.Fs2TransactionGenerator
+import org.plasmalabs.typeclasses.implicits._
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
@@ -117,13 +117,13 @@ class NodeAppTest extends CatsEffectSuite {
               rpcClientA <- NodeGrpc.Client.make[F]("127.0.0.2", 9151, tls = false)
               rpcClientB <- NodeGrpc.Client.make[F]("localhost", 9153, tls = false)
               rpcClients = List(rpcClientA, rpcClientB)
-              given Logger[F] <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
-              _                            <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
-              indexerChannelA              <- org.plasmalabs.grpc.makeChannel[F]("localhost", 9151, tls = false)
-              indexerTxServiceA            <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
-              wallet                       <- makeWallet(indexerTxServiceA)
-              _                            <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
-              given Random[F] <- SecureRandom.javaSecuritySecureRandom[F].toResource
+              given Logger[F]   <- Slf4jLogger.fromName[F]("NodeAppTest").toResource
+              _                 <- rpcClients.parTraverse(_.waitForRpcStartUp).toResource
+              indexerChannelA   <- org.plasmalabs.grpc.makeChannel[F]("localhost", 9151, tls = false)
+              indexerTxServiceA <- TransactionServiceFs2Grpc.stubResource[F](indexerChannelA)
+              wallet            <- makeWallet(indexerTxServiceA)
+              _                 <- IO(wallet.spendableBoxes.nonEmpty).assert.toResource
+              given Random[F]   <- SecureRandom.javaSecuritySecureRandom[F].toResource
               // Construct two competing graphs of transactions.
               // Graph 1 has higher fees and should be included in the chain
               transactionGenerator1 <-

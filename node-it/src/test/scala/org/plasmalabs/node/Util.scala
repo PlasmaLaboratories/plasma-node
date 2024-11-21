@@ -5,24 +5,6 @@ import cats.effect.implicits._
 import cats.effect.kernel.{Async, Resource}
 import cats.effect.std.SecureRandom
 import cats.implicits._
-import org.plasmalabs.algebras.{NodeRpc, SynchronizationTraversalSteps}
-import org.plasmalabs.blockchain.{BigBang, PrivateTestnet, StakerInitializers, StakingInit}
-import org.plasmalabs.sdk.models._
-import org.plasmalabs.sdk.models.box.Value
-import org.plasmalabs.sdk.models.transaction.{IoTransaction, UnspentTransactionOutput}
-import org.plasmalabs.sdk.syntax._
-import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
-import org.plasmalabs.config.ApplicationConfig
-import org.plasmalabs.consensus.models.{BlockId, ProtocolVersion}
-import org.plasmalabs.indexer.services._
-import org.plasmalabs.grpc.makeChannel
-import org.plasmalabs.interpreters.NodeRpcOps.clientAsNodeRpcApi
-import org.plasmalabs.models.utility._
-import org.plasmalabs.node.models.{BlockBody, FullBlock}
-import org.plasmalabs.node.services.NetworkControlRpcFs2Grpc
-import org.plasmalabs.transactiongenerator.interpreters.IndexerWalletInitializer
-import org.plasmalabs.transactiongenerator.models._
-import org.plasmalabs.typeclasses.implicits._
 import com.comcast.ip4s.Port
 import fs2.io.file.{Files, Path}
 import fs2.{io => _, _}
@@ -32,9 +14,26 @@ import org.http4s._
 import org.http4s.dsl.io._
 import org.http4s.ember.server._
 import org.http4s.server.Router
-import quivr.models.Int128
+import org.plasmalabs.algebras.{NodeRpc, SynchronizationTraversalSteps}
+import org.plasmalabs.blockchain.{BigBang, PrivateTestnet, StakerInitializers, StakingInit}
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
+import org.plasmalabs.config.ApplicationConfig
+import org.plasmalabs.consensus.models.{BlockId, ProtocolVersion}
+import org.plasmalabs.grpc.makeChannel
+import org.plasmalabs.indexer.services._
+import org.plasmalabs.interpreters.NodeRpcOps.clientAsNodeRpcApi
 import org.plasmalabs.models.p2p.HostId
-import org.plasmalabs.node.services._
+import org.plasmalabs.models.utility._
+import org.plasmalabs.node.models.{BlockBody, FullBlock}
+import org.plasmalabs.node.services.{NetworkControlRpcFs2Grpc, _}
+import org.plasmalabs.quivr.models.Int128
+import org.plasmalabs.sdk.models._
+import org.plasmalabs.sdk.models.box.Value
+import org.plasmalabs.sdk.models.transaction.{IoTransaction, UnspentTransactionOutput}
+import org.plasmalabs.sdk.syntax._
+import org.plasmalabs.transactiongenerator.interpreters.IndexerWalletInitializer
+import org.plasmalabs.transactiongenerator.models._
+import org.plasmalabs.typeclasses.implicits._
 
 import java.nio.charset.StandardCharsets
 import scala.concurrent.duration._

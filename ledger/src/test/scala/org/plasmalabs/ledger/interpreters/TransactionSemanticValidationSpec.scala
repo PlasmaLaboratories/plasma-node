@@ -57,9 +57,9 @@ class TransactionSemanticValidationSpec extends CatsEffectSuite with ScalaCheckE
             )
           )
           for {
-            fetchTransaction <- mockFunction[TransactionId, F[IoTransaction]].pure[F]
+            fetchTransaction <- mockFunction[TransactionId, F[Option[IoTransaction]]].pure[F]
             boxState         <- mock[BoxStateAlgebra[F]].pure[F]
-            _ = fetchTransaction.expects(transactionA.id).once().returning(transactionA.pure[F])
+            _ = fetchTransaction.expects(transactionA.id).once().returning(transactionA.some.pure[F])
             _ = (boxState
               .boxExistsAt(_: BlockId)(_: TransactionOutputAddress))
               .expects(*, *)
@@ -112,9 +112,9 @@ class TransactionSemanticValidationSpec extends CatsEffectSuite with ScalaCheckE
             )
           )
           for {
-            fetchTransaction <- mockFunction[TransactionId, F[IoTransaction]].pure[F]
+            fetchTransaction <- mockFunction[TransactionId, F[Option[IoTransaction]]].pure[F]
             boxState         <- mock[BoxStateAlgebra[F]].pure[F]
-            _ = fetchTransaction.expects(transactionA.id).once().returning(transactionA.pure[F])
+            _ = fetchTransaction.expects(transactionA.id).once().returning(transactionA.some.pure[F])
             _ = (boxState
               .boxExistsAt(_: BlockId)(_: TransactionOutputAddress))
               .expects(*, *)
@@ -159,9 +159,9 @@ class TransactionSemanticValidationSpec extends CatsEffectSuite with ScalaCheckE
             )
           )
           for {
-            fetchTransaction <- mockFunction[TransactionId, F[IoTransaction]].pure[F]
+            fetchTransaction <- mockFunction[TransactionId, F[Option[IoTransaction]]].pure[F]
             boxState         <- mock[BoxStateAlgebra[F]].pure[F]
-            _ = fetchTransaction.expects(transactionA.id).once().returning(transactionA.pure[F])
+            _ = fetchTransaction.expects(transactionA.id).once().returning(transactionA.some.pure[F])
             _ = (boxState
               .boxExistsAt(_: BlockId)(_: TransactionOutputAddress))
               .expects(*, *)
@@ -175,6 +175,51 @@ class TransactionSemanticValidationSpec extends CatsEffectSuite with ScalaCheckE
             )
             _ <- IO(
               result.toEither.swap.getOrElse(???).exists(_.isInstanceOf[TransactionSemanticErrors.InputDataMismatch])
+            ).assert
+          } yield ()
+        }
+    }
+  }
+
+  test("Missed input transaction shall fail") {
+    PropF.forAllF {
+      (
+        blockId:       BlockId,
+        _transactionA: IoTransaction,
+        _transactionB: IoTransaction,
+        output:        UnspentTransactionOutput,
+        input:         SpentTransactionOutput
+      ) =>
+        withMock {
+          val transactionA = _transactionA.copy(outputs = List(output.copy(value = Value.defaultInstance)))
+          val transactionB = _transactionB.copy(inputs =
+            List(
+              input.copy(
+                value = Value.defaultInstance,
+                address =
+                  transactionA.id.outputAddress(NetworkConstants.PRIVATE_NETWORK_ID, NetworkConstants.MAIN_LEDGER_ID, 0)
+              )
+            )
+          )
+          for {
+            fetchTransaction <- mockFunction[TransactionId, F[Option[IoTransaction]]].pure[F]
+            boxState         <- mock[BoxStateAlgebra[F]].pure[F]
+            _ = fetchTransaction.expects(transactionA.id).once().returning(none.pure[F])
+            _ = (boxState
+              .boxExistsAt(_: BlockId)(_: TransactionOutputAddress))
+              .expects(*, *)
+              .anyNumberOfTimes()
+              .returning(true.pure[F])
+            underTest = TransactionSemanticValidation.make[F](fetchTransaction, boxState)
+            result <- underTest.use(
+              _.validate(
+                StaticTransactionValidationContext(blockId, Nil, 1, transactionB.datum.event.schedule.min)
+              )(transactionB)
+            )
+            _ <- IO(
+              result.toEither.swap
+                .getOrElse(???)
+                .exists(_.isInstanceOf[TransactionSemanticErrors.InputTransactionIsMissed])
             ).assert
           } yield ()
         }
@@ -212,9 +257,9 @@ class TransactionSemanticValidationSpec extends CatsEffectSuite with ScalaCheckE
             )
           )
           for {
-            fetchTransaction <- mockFunction[TransactionId, F[IoTransaction]].pure[F]
+            fetchTransaction <- mockFunction[TransactionId, F[Option[IoTransaction]]].pure[F]
             boxState         <- mock[BoxStateAlgebra[F]].pure[F]
-            _ = fetchTransaction.expects(transactionA.id).once().returning(transactionA.pure[F])
+            _ = fetchTransaction.expects(transactionA.id).once().returning(transactionA.some.pure[F])
             _ = (boxState
               .boxExistsAt(_: BlockId)(_: TransactionOutputAddress))
               .expects(

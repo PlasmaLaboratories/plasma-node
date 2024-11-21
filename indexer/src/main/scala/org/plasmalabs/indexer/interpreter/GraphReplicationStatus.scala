@@ -6,10 +6,12 @@ import cats.effect.kernel.Async
 import cats.implicits._
 import com.github.benmanes.caffeine.cache.Caffeine
 import fs2.Stream
+import org.plasmalabs.codecs.bytes.tetra.instances.blockHeaderAsBlockHeaderOps
 import org.plasmalabs.indexer.algebras.{GraphReplicationStatusAlgebra, NodeBlockFetcherAlgebra, VertexFetcherAlgebra}
 import org.plasmalabs.indexer.model.{GE, GEs}
 import org.plasmalabs.indexer.orientDb.OrientThread
 import org.plasmalabs.indexer.orientDb.instances.VertexSchemaInstances.instances._
+import org.plasmalabs.typeclasses.implicits.showBlockId
 import scalacache.Entry
 import scalacache.caffeine.CaffeineCache
 
@@ -43,20 +45,20 @@ object GraphReplicationStatus {
                 maybeBlockHeader match {
                   case Some(indexerBlockHeader) =>
                     EitherT {
-                      nodeBlockFetcherAlgebra.fetchHeight().map {
-                        case Some(height) if height == indexerBlockHeader.height =>
+                      nodeBlockFetcherAlgebra.fetchCanonicalHeadId().map {
+                        case Some(nodeHeadBlockId) if nodeHeadBlockId == indexerBlockHeader.id =>
                           true.asRight[GE]
-                        case Some(height) =>
+                        case Some(nodeHeadBlockId) =>
                           (GEs
                             .Internal(
                               new IllegalStateException(
-                                s"Indexer canonical head height:[${indexerBlockHeader.height}] differs to Node head[${height}]"
+                                show"Indexer canonical head [${indexerBlockHeader.id}] differs to Node [${nodeHeadBlockId}]"
                               )
                             ))
                             .asLeft[Boolean]
                         case None =>
                           (GEs
-                            .Internal(new IllegalStateException("Node empty response at fetchHeight")))
+                            .Internal(new IllegalStateException("Node empty response at fetchCanonicalHeadId")))
                             .asLeft[Boolean]
                       }
                     }

@@ -2,17 +2,18 @@ import sbt._
 
 object Dependencies {
 
-  val circeVersion = "0.14.7"
-  val kamonVersion = "2.7.2"
-  val catsCoreVersion = "2.10.0"
-  val catsEffectVersion = "3.5.4"
-  val fs2Version = "3.10.2"
-  val logback = "1.5.6"
-  val orientDbVersion = "3.2.34"
-  val ioGrpcVersion = "1.64.0"
-  val http4sVersion = "0.23.26"
-  val protobufSpecsVersion = "0.1.1+2-290af250-SNAPSHOT"
-  val plasmaSdkVersion = "0.2.0"
+  val circeVersion = "0.14.10"
+  val kamonVersion = "2.7.5"
+  val catsCoreVersion = "2.12.0"
+  val catsEffectVersion = "3.5.6"
+  val fs2Version = "3.11.0"
+  val logback = "1.5.12"
+  val orientDbVersion = "3.2.35"
+  val ioGrpcVersion = "1.68.1"
+  val http4sVersion = "0.23.29"
+  val protobufSpecsVersion = "0.1.4"
+  val plasmaSdkVersion = "0.2.1"
+
   val catsSlf4j =
     "org.typelevel" %% "log4cats-slf4j" % "2.7.0"
 
@@ -20,7 +21,7 @@ object Dependencies {
     "com.typesafe.scala-logging" %% "scala-logging"   % "3.9.5",
     "ch.qos.logback"              % "logback-classic" % logback,
     "ch.qos.logback"              % "logback-core"    % logback,
-    "org.slf4j"                   % "slf4j-api"       % "2.0.12",
+    "org.slf4j"                   % "slf4j-api"       % "2.0.16",
     catsSlf4j
   )
 
@@ -28,7 +29,7 @@ object Dependencies {
   val scalamock = scalamockBase        % Test
 
   private val mUnitTestBase: Seq[ModuleID] = Seq(
-    "org.scalameta" %% "munit"                   % "1.0.0",
+    "org.scalameta" %% "munit"                   % "1.0.2",
     "org.scalameta" %% "munit-scalacheck"        % "1.0.0",
     "org.typelevel" %% "munit-cats-effect"       % "2.0.0",
     "org.typelevel" %% "scalacheck-effect-munit" % "2.0-9366e44",
@@ -54,8 +55,7 @@ object Dependencies {
   )
 
   val cats: Seq[ModuleID] = Seq(
-    "org.typelevel" %% "cats-core" % catsCoreVersion,
-    "org.typelevel" %% "mouse"     % "1.2.3"
+    "org.typelevel" %% "cats-core" % catsCoreVersion
   )
 
   val catsEffect: Seq[ModuleID] = Seq(
@@ -67,7 +67,7 @@ object Dependencies {
   )
 
   val externalCrypto: Seq[ModuleID] = Seq(
-    "org.bouncycastle" % "bcprov-jdk18on" % "1.78.1"
+    "org.bouncycastle" % "bcprov-jdk18on" % "1.79"
   )
 
   val levelDb: Seq[ModuleID] = Seq(
@@ -84,7 +84,7 @@ object Dependencies {
   val geny213ExlusionRule = ExclusionRule("com.lihaoyi", "geny_2.13")
 
   val mainargs = Seq(
-    "com.lihaoyi" %% "mainargs" % "0.6.3"
+    "com.lihaoyi" %% "mainargs" % "0.7.6"
   )
 
   val fastparse = "com.lihaoyi" %% "fastparse" % "3.1.0"
@@ -97,10 +97,10 @@ object Dependencies {
   val fs2Core = "co.fs2"                          %% "fs2-core"                  % fs2Version
   val fs2IO = "co.fs2"                            %% "fs2-io"                    % fs2Version
   val fs2ReactiveStreams = "co.fs2"               %% "fs2-reactive-streams"      % fs2Version
-  val pureConfig = "com.github.pureconfig"        %% "pureconfig-core"           % "0.17.7"
-  val pureConfigGeneric = "com.github.pureconfig" %% "pureconfig-generic-scala3" % "0.17.7"
+  val pureConfig = "com.github.pureconfig"        %% "pureconfig-core"           % "0.17.8"
+  val pureConfigGeneric = "com.github.pureconfig" %% "pureconfig-generic-scala3" % "0.17.8"
   val circeYaml = "io.circe"                      %% "circe-yaml"                % "1.15.0"
-  val kubernetes = "io.kubernetes"                 % "client-java"               % "20.0.1"
+  val kubernetes = "io.kubernetes"                 % "client-java"               % "22.0.0"
 
   val http4s = Seq(
     "org.http4s" %% "http4s-ember-client" % http4sVersion,
@@ -120,19 +120,19 @@ object Dependencies {
     "org.plasmalabs" %% "protobuf-fs2" % protobufSpecsVersion
   )
 
-  val ipaddress = "com.github.seancfoley" % "ipaddress" % "5.5.0"
+  val ipaddress = "com.github.seancfoley" % "ipaddress" % "5.5.1"
 
-  val apacheCommonLang = "org.apache.commons" % "commons-lang3" % "3.0"
+  val apacheCommonLang = "org.apache.commons" % "commons-lang3" % "3.17.0"
 
   // For NTP-UDP
-  val commonsNet = "commons-net" % "commons-net" % "3.10.0"
+  val commonsNet = "commons-net" % "commons-net" % "3.11.1"
 
   val catsAll: Seq[ModuleID] = cats ++ catsEffect ++ Seq(catsSlf4j)
   val fs2All: Seq[ModuleID] = catsAll ++ Seq(fs2Core, fs2IO)
 
   val grpcServices = "io.grpc" % "grpc-services" % ioGrpcVersion
 
-  val jacksonScala = "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.18.0"
+  val jacksonScala = "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.18.1"
 
   val node: Seq[ModuleID] =
     Seq(
@@ -170,7 +170,7 @@ object Dependencies {
       pureConfig,
       pureConfigGeneric,
       kubernetes,
-      "com.google.cloud" % "google-cloud-storage" % "2.36.1"
+      "com.google.cloud" % "google-cloud-storage" % "2.45.0"
     )
 
   lazy val actor: Seq[sbt.ModuleID] = fs2All
@@ -267,10 +267,13 @@ object Dependencies {
 
   lazy val orientDb: Seq[ModuleID] =
     Seq(
-      "com.orientechnologies" % "orientdb-core"   % orientDbVersion,
-      "com.orientechnologies" % "orientdb-server" % orientDbVersion,
-      "com.orientechnologies" % "orientdb-tools"  % orientDbVersion,
-      "com.orientechnologies" % "orientdb-graphdb" % orientDbVersion exclude ("commons-beanutils", "commons-beanutils") exclude ("commons-beanutils", "commons-beanutils-core"),
+      "com.orientechnologies" % "orientdb-core"    % orientDbVersion,
+      "com.orientechnologies" % "orientdb-server"  % orientDbVersion,
+      "com.orientechnologies" % "orientdb-tools"   % orientDbVersion,
+      "com.orientechnologies" % "orientdb-graphdb" % orientDbVersion exclude (
+        "commons-beanutils",
+        "commons-beanutils"
+      ) exclude ("commons-beanutils", "commons-beanutils-core"),
       "com.googlecode.concurrentlinkedhashmap" % "concurrentlinkedhashmap-lru" % "1.4.2",
       "org.lz4"                                % "lz4-java"                    % "1.8.0"
       // Add jna

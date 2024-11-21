@@ -2,19 +2,14 @@ package org.plasmalabs.byzantine.util
 
 import cats.Applicative
 import cats.effect._
-import cats.implicits._
 import cats.effect.implicits._
+import cats.implicits._
+import com.spotify.docker.client.messages.{ContainerConfig, HostConfig, NetworkConfig, NetworkCreation}
+import com.spotify.docker.client.{DefaultDockerClient, DockerClient}
+import fs2.io.file.{Files, Path}
 import org.plasmalabs.buildinfo.node.BuildInfo
 import org.plasmalabs.consensus.models.StakingAddress
 import org.plasmalabs.typeclasses.implicits._
-import com.spotify.docker.client.messages.ContainerConfig
-import com.spotify.docker.client.messages.HostConfig
-import com.spotify.docker.client.messages.NetworkConfig
-import com.spotify.docker.client.messages.NetworkCreation
-import com.spotify.docker.client.DefaultDockerClient
-import com.spotify.docker.client.DockerClient
-import fs2.io.file.Files
-import fs2.io.file.Path
 
 import java.time.Instant
 import scala.jdk.CollectionConverters._
@@ -44,15 +39,17 @@ object DockerSupport {
     debugLoggingEnabled:    Boolean = loggingEnabledFromEnvironment
   ): Resource[F, (DockerSupport[F], DockerClient)] =
     for {
-      given DockerClient <- Resource.make(Sync[F].blocking(DefaultDockerClient.fromEnv().build()))(
-        c => Sync[F].blocking(c.close())
+      given DockerClient <- Resource.make(Sync[F].blocking(DefaultDockerClient.fromEnv().build()))(c =>
+        Sync[F].blocking(c.close())
       )
       nodeCache <- Resource.make[F, Ref[F, Set[DockerNode]]](Ref.of(Set.empty[DockerNode]))(
         _.get.flatMap(
           _.toList
             .traverse(node =>
               Sync[F]
-                .blocking(summon[DockerClient].removeContainer(node.containerId, DockerClient.RemoveContainerParam.forceKill))
+                .blocking(
+                  summon[DockerClient].removeContainer(node.containerId, DockerClient.RemoveContainerParam.forceKill)
+                )
                 .voidError
             )
             .void

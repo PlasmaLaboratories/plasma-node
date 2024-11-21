@@ -1,12 +1,13 @@
 package org.plasmalabs.byzantine
 
 import cats.effect.{Async, IO}
+import fastparse.{CharsWhile, _}
+import fs2.Stream
 import munit.CatsEffectSuite
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import fastparse.{CharsWhile, _}
+
 import SingleLineWhitespace._
-import fs2.Stream
 
 class LogParserTest extends CatsEffectSuite {
   type F[A] = IO[A]
@@ -138,11 +139,13 @@ object LogParserTest {
     time ~ "|" ~ level ~ packagePath ~ "-" ~ "Received syntactically invalid transaction" ~ "id=" ~ transactionId.! ~ "reasons="
   )
 
-  private def blockHeader[$: P]: P[(String,String)] =
+  private def blockHeader[$: P]: P[(String, String)] =
     P("header=BlockHeader(id=") ~ blockIdId ~ "parentId=" ~ blockIdId ~ CharsWhile(_ != ')') ~ ")"
 
   private def minted[$: P]: P[String] = P(
-    time ~ "|" ~ level ~ packagePath ~ "-" ~ "Minted" ~ blockHeader.map(_ => ()) ~ "body=Body(transactionIds=" ~ seqCount.map(_ => ()) ~ "List(" ~ seqTransactionId.!
+    time ~ "|" ~ level ~ packagePath ~ "-" ~ "Minted" ~ blockHeader.map(_ =>
+      ()
+    ) ~ "body=Body(transactionIds=" ~ seqCount.map(_ => ()) ~ "List(" ~ seqTransactionId.!
   )
 
   def processStreamFromRpc[F[_]: Async](s: Stream[F, Byte]): F[List[String]] =

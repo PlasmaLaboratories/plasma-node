@@ -58,7 +58,7 @@ object Replicator {
                 Logger[F].info(s"Inserting block ${blockData.header.id.show} height=${blockData.header.height}") >>
                 Async[F].defer(
                   Stats[F].recordGauge(
-                    "strata_node_indexer_replications",
+                    "plasma_node_indexer_replications",
                     "Indexer replications",
                     Map("block_id" -> stringToJson(blockData.header.id.show)),
                     longToJson(blockData.header.height)

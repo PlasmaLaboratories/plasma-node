@@ -8,6 +8,7 @@ import cats.{Applicative, Monad}
 import com.google.protobuf.ByteString
 import fs2._
 import org.plasmalabs.quivr.api.Prover
+import org.plasmalabs.quivr.models.SmallData
 import org.plasmalabs.sdk.common.ContainsSignable._
 import org.plasmalabs.sdk.common.ContainsSignable.instances._
 import org.plasmalabs.sdk.models.box._
@@ -20,7 +21,6 @@ import org.plasmalabs.transactiongenerator.models.Wallet
 import org.plasmalabs.typeclasses.implicits._
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import quivr.models.SmallData
 
 object Fs2TransactionGenerator {
 
