@@ -28,21 +28,21 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
         } yield res
       case LeafNode[T](hpEncodedPreviousPartialKey, value) =>
         val previousPartialKeyNibbles = nibblesFromHp(hpEncodedPreviousPartialKey)
-        if (currentPartialKeyNibbles.sameElements(previousPartialKeyNibbles)) { // replace case
+        if (currentPartialKeyNibbles.sameElementsNibbles(previousPartialKeyNibbles)) { // replace case
           OptionT.liftF(createNewLeaf(currentPartialKeyNibbles, t))
         } else {
           val prefixLength =
-            currentPartialKeyNibbles.zip(previousPartialKeyNibbles).takeWhile(_ == _).length
+            currentPartialKeyNibbles.zipNibbles(previousPartialKeyNibbles).takeWhile(_ == _).length
           OptionT
             .liftF {
               if (prefixLength == 0) { // no sharing, we create a branch
                 createBranch(currentPartialKeyNibbles, t, previousPartialKeyNibbles, value)
               } else { // sharing, we create an extension
                 createNewExtension(
-                  currentPartialKeyNibbles.take(prefixLength),
-                  currentPartialKeyNibbles.drop(prefixLength),
+                  currentPartialKeyNibbles.takeNibbles(prefixLength),
+                  currentPartialKeyNibbles.dropNibbles(prefixLength),
                   t,
-                  previousPartialKeyNibbles.drop(prefixLength),
+                  previousPartialKeyNibbles.dropNibbles(prefixLength),
                   value
                 )
               }
@@ -51,21 +51,21 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
       case n @ ExtensionNode[T](hpEncodedPreviousPartialKey, node) =>
         // this by definition has at least one nibble
         val previousPartialKeyNibbles = nibblesFromHp(hpEncodedPreviousPartialKey)
-        if (currentPartialKeyNibbles.sameElements(previousPartialKeyNibbles)) {
+        if (currentPartialKeyNibbles.sameElementsNibbles(previousPartialKeyNibbles)) {
           // we are updating the value of the node at the end of the extension
           // we leave that to the next call to decide how to do that
           for {
             newNode <- OptionT(auxPut(node, Nibbles.empty, t))
             result  <- OptionT.liftF(capNode(ExtensionNode[T](hpEncodedPreviousPartialKey, newNode)))
           } yield result
-        } else if (currentPartialKeyNibbles.isEmpty) {
+        } else if (currentPartialKeyNibbles.isEmptyNibbles) {
           // in this case we are getting here from a branch node that consumed the last nibble
           // hence, we are replacing the value of the extension node
           // we have two options
           // 1. previousPartialKeyNibbles.length == 1
           // since the whole thing become as a branch, we forget
           // about the extension and create a branch with the node
-          if (previousPartialKeyNibbles.length == 1) {
+          if (previousPartialKeyNibbles.lengthNibbles == 1) {
             OptionT.liftF(createBranch(previousPartialKeyNibbles, node, t))
           } else {
             // 2. previousPartialKeyNibbles.length > 1
@@ -86,13 +86,13 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
         } else {
           // now, we have have some partial key to match
           val prefixLength =
-            currentPartialKeyNibbles.zip(previousPartialKeyNibbles).takeWhile(_ == _).length
+            currentPartialKeyNibbles.zipNibbles(previousPartialKeyNibbles).takeWhile(_ == _).length
           if (prefixLength == 0) {
             // there is no sharing, we create a branch
             // 1. previousPartialKeyNibbles.length == 1
             // this means tha the node occupies the place of the branch corresponding to the shared nibble
             // and the value is in a leaf with the rest of the key
-            if (previousPartialKeyNibbles.length == 1) {
+            if (previousPartialKeyNibbles.lengthNibbles == 1) {
               // as before, we create a branch with the node and another with the leaf containing the value
               OptionT
                 .liftF(createBranch(previousPartialKeyNibbles, node, currentPartialKeyNibbles, t))
@@ -121,31 +121,31 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
             // 1. previousPartialKeyNibbles.drop(prefixLength).length == 0
             // 2. currentPartialKeyNibbles.drop(prefixLength).length == 0
             // 3. both are non-empty
-            if (previousPartialKeyNibbles.drop(prefixLength).length == 0) {
+            if (previousPartialKeyNibbles.dropNibbles(prefixLength).lengthNibbles == 0) {
               // here we will replace the whole node at the end of the extension
               // with a new value
               // the currentPartialKeyNibbles.drop(prefixLength) might
               // be empty, but  that is handled in the next call
               for {
                 updatedChild <- OptionT(
-                  auxPut(node, currentPartialKeyNibbles.drop(prefixLength), t)
+                  auxPut(node, currentPartialKeyNibbles.dropNibbles(prefixLength), t)
                 )
                 cappedExtension <- OptionT.liftF(
                   capNode(ExtensionNode[T](hpEncodedPreviousPartialKey, updatedChild))
                 )
               } yield cappedExtension
-            } else if (currentPartialKeyNibbles.drop(prefixLength).length == 0) {
+            } else if (currentPartialKeyNibbles.dropNibbles(prefixLength).lengthNibbles == 0) {
               // here, the partial key is consumed by the branch
               // two options
-              // 1. previousPartialKeyNibbles.drop(prefixLength).length == 1
-              if (previousPartialKeyNibbles.drop(prefixLength).length == 1) {
+              // 1. previousPartialKeyNibbles.dropNibbles(prefixLength).length == 1
+              if (previousPartialKeyNibbles.dropNibbles(prefixLength).lengthNibbles == 1) {
                 // here the extension becomes a branch and disappears, leaving the node as part of the branch
                 // the value is now part of the branch
                 // in this case we create a branch with the node and another with the leaf containing the value
                 OptionT
                   .liftF(
                     createBranch(
-                      previousPartialKeyNibbles.drop(prefixLength),
+                      previousPartialKeyNibbles.dropNibbles(prefixLength),
                       node,
                       t
                     )
@@ -158,12 +158,12 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
                   cappedExtension <- OptionT
                     .liftF(
                       capNode(
-                        ExtensionNode[T](hp(previousPartialKeyNibbles.drop(prefixLength).tailNibbles, false), node)
+                        ExtensionNode[T](hp(previousPartialKeyNibbles.dropNibbles(prefixLength).tailNibbles, false), node)
                       )
                     )
                   newBranch <- OptionT.liftF(
                     createBranch(
-                      previousPartialKeyNibbles.drop(prefixLength),
+                      previousPartialKeyNibbles.dropNibbles(prefixLength),
                       cappedExtension,
                       t
                     )
@@ -177,30 +177,30 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
               for {
                 newLeaf <- OptionT.liftF(
                   createNewLeaf(
-                    currentPartialKeyNibbles.drop(prefixLength).tailNibbles,
+                    currentPartialKeyNibbles.dropNibbles(prefixLength).tailNibbles,
                     t
                   )
                 )
                 cappedExtension <-
-                  if (previousPartialKeyNibbles.drop(prefixLength).tailNibbles.length > 0)
+                  if (previousPartialKeyNibbles.dropNibbles(prefixLength).tailNibbles.lengthNibbles > 0)
                     OptionT.liftF(
                       capNode(
-                        ExtensionNode[T](hp(previousPartialKeyNibbles.drop(prefixLength).tailNibbles, false), node)
+                        ExtensionNode[T](hp(previousPartialKeyNibbles.dropNibbles(prefixLength).tailNibbles, false), node)
                       )
                     )
                   else
                     OptionT.pure(node)
                 newBranch <- OptionT.liftF(
                   createBranch(
-                    previousPartialKeyNibbles.drop(prefixLength),
+                    previousPartialKeyNibbles.dropNibbles(prefixLength),
                     cappedExtension,
-                    currentPartialKeyNibbles.drop(prefixLength),
+                    currentPartialKeyNibbles.dropNibbles(prefixLength),
                     newLeaf
                   )
                 )
                 cappedExtension <- OptionT.liftF(
                   capNode(
-                    ExtensionNode[T](hp(previousPartialKeyNibbles.take(prefixLength), false), newBranch)
+                    ExtensionNode[T](hp(previousPartialKeyNibbles.takeNibbles(prefixLength), false), newBranch)
                   )
                 )
               } yield cappedExtension
@@ -211,7 +211,7 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
         // two cases
         // 1. currentPartialKeyNibbles.isEmpty
         // here we just update the value of the branch
-        if (currentPartialKeyNibbles.isEmpty) {
+        if (currentPartialKeyNibbles.isEmptyNibbles) {
           import cats.implicits._
           val newBranch = BranchNode[T](
             children,
@@ -221,11 +221,11 @@ private[mpt] trait MPTPutOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
         } else {
           // 2. currentPartialKeyNibbles.nonEmpty
           // here we have to go down the branch and update the child or children
-          val child = children(currentPartialKeyNibbles.head)
+          val child = children(currentPartialKeyNibbles.headNibbles)
           for {
             updatedChild <- OptionT(auxPut(child, currentPartialKeyNibbles.tailNibbles, t))
             newBranch = BranchNode[T](
-              children.updated(currentPartialKeyNibbles.head, updatedChild),
+              children.updated(currentPartialKeyNibbles.headNibbles, updatedChild),
               someValue
             )
             result <- OptionT.liftF(capNode(newBranch))

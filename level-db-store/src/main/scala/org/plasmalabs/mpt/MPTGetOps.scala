@@ -36,19 +36,19 @@ private[mpt] trait MPTGetOps[F[_]: Async, T: RLPPersistable] extends Optics[T] {
           }
           .orElse {
             val previousKeyNibbles = nibblesFromHp(hpEncodedKey)
-            val prefixLength = partialKey.zip(previousKeyNibbles).takeWhile(_ == _).length
-            if (prefixLength == previousKeyNibbles.length) {
-              OptionT.liftF(auxGet(partialKey.drop(prefixLength), value))
+            val prefixLength = partialKey.zipNibbles(previousKeyNibbles).takeWhile(_ == _).length
+            if (prefixLength == previousKeyNibbles.lengthNibbles) {
+              OptionT.liftF(auxGet(partialKey.dropNibbles(prefixLength), value))
             } else {
               OptionT.none
             }
           }
           .mapFilter(identity)
       case BranchNode[T](children, value) =>
-        if (partialKey.isEmpty) {
+        if (partialKey.isEmptyNibbles) {
           OptionT.fromOption(value)
         } else {
-          val child = children(partialKey.head)
+          val child = children(partialKey.headNibbles)
           OptionT(auxGet(partialKey.tailNibbles, child))
         }
     }).value

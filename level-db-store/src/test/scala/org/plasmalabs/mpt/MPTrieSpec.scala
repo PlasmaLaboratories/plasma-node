@@ -36,7 +36,9 @@ class MPTrieSpec extends CatsEffectSuite with ScalaCheckEffectSuite with MPTTest
   given MPTKeyEncoder[SpecKey] with {
 
     def toNibbles(t: SpecKey): Array[Byte] = t.flatMap { b =>
-      Array((b >> 4).toByte, (b & 0xf).toByte)
+      val first = (b >>> 4).toByte
+      val correctedFirst = if (first < 0) (16 - first.abs).toByte else first
+      Array(correctedFirst, (b & 0xf).toByte)
     }
   }
 

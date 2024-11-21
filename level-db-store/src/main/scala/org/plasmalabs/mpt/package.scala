@@ -22,15 +22,15 @@ package object mpt {
 
   extension (x: Nibbles) {
     inline def tailNibbles: Nibbles = x.tail
-    inline def grouped(n: Int): Array[Nibbles] = x.grouped(n)
-    inline def isEmpty: Boolean = x.isEmpty
-    inline def head: Byte = x.head
-    inline def length: Int = x.length
-    inline def mkString(begin: String, sep: String, end: String): String = x.mkString(begin, sep, end)
-    inline def zip(y:          Nibbles): Array[(Byte, Byte)] = x.zip(y)
-    inline def drop(n:         Int): Nibbles = x.drop(n)
-    inline def take(n:         Int): Nibbles = x.take(n)
-    inline def sameElements(y: Nibbles): Boolean = x.sameElements(y)
+    inline def groupedNibbles(n: Int) = x.grouped(n)
+    inline def isEmptyNibbles: Boolean = x.isEmpty
+    inline def headNibbles: Byte = x.head
+    inline def lengthNibbles: Int = x.length
+    inline def mkStringNibbles(begin: String, sep: String, end: String): String = x.mkString(begin, sep, end)
+    inline def zipNibbles(y:          Nibbles): Array[(Byte, Byte)] = x.zip(y)
+    inline def dropNibbles(n:         Int): Nibbles = x.drop(n)
+    inline def takeNibbles(n:         Int): Nibbles = x.take(n)
+    inline def sameElementsNibbles(y: Nibbles): Boolean = x.sameElements(y)
   }
 
   /**

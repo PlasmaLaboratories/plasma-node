@@ -27,26 +27,26 @@ private[mpt] trait MPTUpdateOps[F[_]: Async, T: RLPPersistable] extends Optics[T
         } yield res
       case LeafNode[T](hpEncodedPreviousPartialKey, value) =>
         val previousPartialKeyNibbles = nibblesFromHp(hpEncodedPreviousPartialKey)
-        if (currentPartialKeyNibbles.sameElements(previousPartialKeyNibbles)) { // replace case
+        if (currentPartialKeyNibbles.sameElementsNibbles(previousPartialKeyNibbles)) { // replace case
           OptionT.liftF(createNewLeaf(currentPartialKeyNibbles, f(value)))
         } else {
           OptionT.none
         }
       case n @ ExtensionNode[T](hpEncodedPreviousPartialKey, node) =>
         val previousPartialKeyNibbles = nibblesFromHp(hpEncodedPreviousPartialKey)
-        if (currentPartialKeyNibbles.sameElements(previousPartialKeyNibbles)) {
+        if (currentPartialKeyNibbles.sameElementsNibbles(previousPartialKeyNibbles)) {
           for {
             newNode <- OptionT(auxUpdate(node, Nibbles.empty, f))
             result  <- OptionT.liftF(capNode(ExtensionNode[T](hpEncodedPreviousPartialKey, newNode)))
           } yield result
         } else {
           val prefixLength =
-            currentPartialKeyNibbles.zip(previousPartialKeyNibbles).takeWhile(_ == _).length
+            currentPartialKeyNibbles.zipNibbles(previousPartialKeyNibbles).takeWhile(_ == _).length
           if (prefixLength != 0) {
-            if (previousPartialKeyNibbles.drop(prefixLength).length == 0) {
+            if (previousPartialKeyNibbles.dropNibbles(prefixLength).lengthNibbles == 0) {
               for {
                 updatedChild <- OptionT(
-                  auxUpdate(node, currentPartialKeyNibbles.drop(prefixLength), f)
+                  auxUpdate(node, currentPartialKeyNibbles.dropNibbles(prefixLength), f)
                 )
                 cappedExtension <- OptionT.liftF(
                   capNode(ExtensionNode[T](hpEncodedPreviousPartialKey, updatedChild))
@@ -58,18 +58,18 @@ private[mpt] trait MPTUpdateOps[F[_]: Async, T: RLPPersistable] extends Optics[T
           }
         }
       case n @ BranchNode[T](children, someValue) =>
-        if (currentPartialKeyNibbles.isEmpty) {
+        if (currentPartialKeyNibbles.isEmptyNibbles) {
           val newBranch = BranchNode[T](
             children,
             someValue.map(f)
           )
           OptionT.liftF(capNode(newBranch))
         } else {
-          val child = children(currentPartialKeyNibbles.head)
+          val child = children(currentPartialKeyNibbles.headNibbles)
           for {
             updatedChild <- OptionT(auxUpdate(child, currentPartialKeyNibbles.tailNibbles, f))
             newBranch = BranchNode[T](
-              children.updated(currentPartialKeyNibbles.head, updatedChild),
+              children.updated(currentPartialKeyNibbles.headNibbles, updatedChild),
               someValue
             )
             result <- OptionT.liftF(capNode(newBranch))
