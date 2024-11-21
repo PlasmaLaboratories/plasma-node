@@ -38,6 +38,8 @@ object Dependencies {
 
   val mUnitTest: Seq[ModuleID] = mUnitTestBase.map(_ % Test)
 
+  val rlp: Seq[ModuleID] = Seq("org.web3j" % "rlp" % "4.12.2")
+
   val dockerClient = "com.spotify" % "docker-client" % "8.16.0"
 
   val circe: Seq[ModuleID] = Seq(
@@ -259,6 +261,8 @@ object Dependencies {
     cats ++
     catsEffect ++
     mUnitTest ++
+    rlp ++
+    monocle ++
     Seq(fs2Core, fs2IO)
 
   lazy val orientDb: Seq[ModuleID] =
