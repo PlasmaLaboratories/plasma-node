@@ -5,7 +5,7 @@ object Dependencies {
   val circeVersion = "0.14.10"
   val kamonVersion = "2.7.5"
   val catsCoreVersion = "2.12.0"
-  val catsEffectVersion = "3.5.5"
+  val catsEffectVersion = "3.5.6"
   val fs2Version = "3.11.0"
   val logback = "1.5.12"
   val orientDbVersion = "3.2.35"
@@ -95,8 +95,8 @@ object Dependencies {
   val fs2Core = "co.fs2"                          %% "fs2-core"                  % fs2Version
   val fs2IO = "co.fs2"                            %% "fs2-io"                    % fs2Version
   val fs2ReactiveStreams = "co.fs2"               %% "fs2-reactive-streams"      % fs2Version
-  val pureConfig = "com.github.pureconfig"        %% "pureconfig-core"           % "0.17.7"
-  val pureConfigGeneric = "com.github.pureconfig" %% "pureconfig-generic-scala3" % "0.17.7"
+  val pureConfig = "com.github.pureconfig"        %% "pureconfig-core"           % "0.17.8"
+  val pureConfigGeneric = "com.github.pureconfig" %% "pureconfig-generic-scala3" % "0.17.8"
   val circeYaml = "io.circe"                      %% "circe-yaml"                % "1.15.0"
   val kubernetes = "io.kubernetes"                 % "client-java"               % "22.0.0"
 
@@ -168,7 +168,7 @@ object Dependencies {
       pureConfig,
       pureConfigGeneric,
       kubernetes,
-      "com.google.cloud" % "google-cloud-storage" % "2.44.1"
+      "com.google.cloud" % "google-cloud-storage" % "2.45.0"
     )
 
   lazy val actor: Seq[sbt.ModuleID] = fs2All
