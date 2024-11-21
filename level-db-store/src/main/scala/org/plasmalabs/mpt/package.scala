@@ -53,6 +53,12 @@ package object mpt {
         .toArray
   }
 
+  /**
+   * Decodes a hex prefix encoded array and returns the nibbles.
+   *
+   * @param hp The hex prefix encoded array.
+   * @return The nibbles.
+   */
   def nibblesFromHp(hp: Array[Byte]): Nibbles = {
     val lengthIsPair = ((hp.head >>> 4) & 0x01) == 0
     val headNibble = if (lengthIsPair) Array.emptyByteArray else Array((hp.head & 0x0f).toByte)
@@ -63,8 +69,20 @@ package object mpt {
     }
   }
 
+  /**
+   * Checks if the flag is set in the hex prefix encoded array.
+   *
+   * @param hp The hex prefix encoded array.
+   * @return True if the flag is set, false otherwise.
+   */
   inline def hpFlag(hp: Array[Byte]): Boolean = ((hp.head >>> 4) & 0x2) == 2
 
+  /**
+   * Applies the Keccak-256 hash function to the input.
+   *
+   * @param input The input to hash. An arbitrary array of bytes.
+   * @return The hash of the input.
+   */
   def keccak256(input: Array[Byte]): Array[Byte] = {
     val kecc = new Keccak.Digest256()
     kecc.update(input, 0, input.length)
