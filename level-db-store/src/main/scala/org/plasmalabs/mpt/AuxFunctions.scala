@@ -87,36 +87,38 @@ private[mpt] trait AuxFunctions[F[_]: Async, T: RLPPersistable]
     capNode(LeafNode(hp(partialKey, true), value))
 
   def createBranch(partialKey1: Nibbles, v1: T, partialKey2: Nibbles, v2: T) = {
-    val branch = if (partialKey2.isEmptyNibbles) {
-      for {
-        newLeaf <- createNewLeaf(partialKey1.tailNibbles, v1)
-      } yield BranchNode[T](
-        Vector
-          .fill(16)(EmptyNode)
-          .updated(partialKey1.headNibbles, newLeaf),
-        Some(v2)
-      )
-    } else if (partialKey1.isEmptyNibbles) {
-      for {
-        newLeaf <- createNewLeaf(partialKey2.tailNibbles, v2)
-      } yield BranchNode[T](
-        Vector
-          .fill(16)(EmptyNode)
-          .updated(partialKey2.headNibbles, newLeaf),
-        Some(v1)
-      )
-    } else {
-      for {
-        newLeaf      <- createNewLeaf(partialKey1.tailNibbles, v1)
-        previousLeaf <- createNewLeaf(partialKey2.tailNibbles, v2)
-      } yield BranchNode[T](
-        Vector
-          .fill(16)(EmptyNode)
-          .updated(partialKey1.headNibbles, newLeaf)
-          .updated(partialKey2.headNibbles, previousLeaf),
-        None
-      )
+    val branch = (partialKey1.isEmptyNibbles, partialKey2.isEmptyNibbles) match {
+      case (_, true) =>
+        for {
+          newLeaf <- createNewLeaf(partialKey1.tailNibbles, v1)
+        } yield BranchNode[T](
+          Vector
+            .fill(16)(EmptyNode)
+            .updated(partialKey1.headNibbles, newLeaf),
+          Some(v2)
+        )
+      case (true, _) =>
+        for {
+          newLeaf <- createNewLeaf(partialKey2.tailNibbles, v2)
+        } yield BranchNode[T](
+          Vector
+            .fill(16)(EmptyNode)
+            .updated(partialKey2.headNibbles, newLeaf),
+          Some(v1)
+        )
+      case _ =>
+        for {
+          newLeaf      <- createNewLeaf(partialKey1.tailNibbles, v1)
+          previousLeaf <- createNewLeaf(partialKey2.tailNibbles, v2)
+        } yield BranchNode[T](
+          Vector
+            .fill(16)(EmptyNode)
+            .updated(partialKey1.headNibbles, newLeaf)
+            .updated(partialKey2.headNibbles, previousLeaf),
+          None
+        )
     }
+
     for {
       newBranch <- branch
       result    <- capNode(newBranch)
