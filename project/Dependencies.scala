@@ -5,7 +5,7 @@ object Dependencies {
   val circeVersion = "0.14.10"
   val kamonVersion = "2.7.5"
   val catsCoreVersion = "2.12.0"
-  val catsEffectVersion = "3.5.5"
+  val catsEffectVersion = "3.5.6"
   val fs2Version = "3.11.0"
   val logback = "1.5.12"
   val orientDbVersion = "3.2.35"
