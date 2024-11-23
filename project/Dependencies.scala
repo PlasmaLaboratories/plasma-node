@@ -38,7 +38,7 @@ object Dependencies {
 
   val mUnitTest: Seq[ModuleID] = mUnitTestBase.map(_ % Test)
 
-  val rlp: Seq[ModuleID] = Seq("org.web3j" % "rlp" % "4.12.2")
+  val rlp: Seq[ModuleID] = Seq("org.web3j" % "rlp" % "5.0.0")
 
   val dockerClient = "com.spotify" % "docker-client" % "8.16.0"
 
