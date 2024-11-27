@@ -8,7 +8,7 @@ object Dependencies {
   val catsEffectVersion = "3.5.6"
   val fs2Version = "3.11.0"
   val logback = "1.5.12"
-  val orientDbVersion = "3.2.35"
+  val orientDbVersion = "3.2.36"
   val ioGrpcVersion = "1.68.1"
   val http4sVersion = "0.23.29"
   val protobufSpecsVersion = "0.1.5"
