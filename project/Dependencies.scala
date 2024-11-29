@@ -132,7 +132,7 @@ object Dependencies {
 
   val grpcServices = "io.grpc" % "grpc-services" % ioGrpcVersion
 
-  val jacksonScala = "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.18.1"
+  val jacksonScala = "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.18.2"
 
   val node: Seq[ModuleID] =
     Seq(
