@@ -9,7 +9,7 @@ object Dependencies {
   val fs2Version = "3.11.0"
   val logback = "1.5.12"
   val orientDbVersion = "3.2.36"
-  val ioGrpcVersion = "1.68.1"
+  val ioGrpcVersion = "1.68.2"
   val http4sVersion = "0.23.29"
   val protobufSpecsVersion = "0.1.5"
   val plasmaSdkVersion = "0.2.2"
@@ -132,7 +132,7 @@ object Dependencies {
 
   val grpcServices = "io.grpc" % "grpc-services" % ioGrpcVersion
 
-  val jacksonScala = "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.18.1"
+  val jacksonScala = "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.18.2"
 
   val node: Seq[ModuleID] =
     Seq(
