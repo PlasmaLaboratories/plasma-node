@@ -2,5 +2,6 @@
 -Xms1G
 -Xss32M
 -Dstorage.diskCache.bufferSize=4096
+-Dstorage.wal.allowDirectIO=false
 -Denvironment.dumpCfgAtStartup=false
 -Dmemory.useUnsafe=false
