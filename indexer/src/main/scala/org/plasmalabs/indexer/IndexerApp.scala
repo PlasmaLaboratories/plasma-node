@@ -2,8 +2,8 @@ package org.plasmalabs.indexer
 
 import cats.Show
 import cats.effect.IO
-import cats.implicits.showInterpolator
-import com.typesafe.config.Config
+import cats.implicits.*
+import com.typesafe.config.{Config, ConfigFactory}
 import kamon.Kamon
 import mainargs.{Flag, ParserForClass, arg, main}
 import org.plasmalabs.algebras.Stats
@@ -13,7 +13,6 @@ import org.plasmalabs.interpreters.KamonStatsRef
 import org.plasmalabs.node.services.NodeRpcFs2Grpc
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import pureconfig.generic.derivation.default.*
 import pureconfig.{ConfigSource, *}
 
 import scala.concurrent.duration.Duration
@@ -99,7 +98,9 @@ object IndexerArgs {
     @arg(doc = "Flag indicating if data should be copied from the node to the local database")
     enableReplicator: Option[Boolean] = None,
     @arg(doc = "Flag indicating if Prometheus metrics should be generated.")
-    enableMetrics: Option[Boolean] = None
+    enableMetrics: Option[Boolean] = None,
+    @arg(doc = "Ttl cache indexer rpc call sync with node check")
+    ttlCacheCheck: Option[String] = None
   )
 
   implicit val parserStartupArgs: ParserForClass[Startup] =
@@ -127,6 +128,7 @@ object IndexerArgs {
       show" dataDir=${args.runtime.dataDir}" +
       show" enableReplicator=${args.runtime.enableReplicator}" +
       show" enableMetrics=${args.runtime.enableMetrics}" +
+      show" ttlCacheCheck=${args.runtime.ttlCacheCheck}" +
       // NOTE: Do not show orientDbPassword
       show")"
 }
@@ -147,6 +149,7 @@ case class IndexerApplicationConfig(
 object IndexerApplicationConfig {
 
   def unsafe(args: IndexerArgs, config: Config): IndexerApplicationConfig = {
+    println(config)
     val argsAsConfig = {
       val entries = List(
         args.runtime.rpcBindHost.map("rpc-bind-host: " + _),
@@ -159,7 +162,7 @@ object IndexerApplicationConfig {
         args.runtime.enableReplicator.map("enable-replicator: " + _),
         args.runtime.enableMetrics.map("enable-metrics: " + _)
       ).flatten
-      YamlConfig.parse(entries.mkString("\n"))
+      if (entries.isEmpty) ConfigFactory.empty() else YamlConfig.parse(entries.mkString("\n"))
     }
 
     ConfigSource.fromConfig(config.withFallback(argsAsConfig)).loadOrThrow[IndexerApplicationConfig]
