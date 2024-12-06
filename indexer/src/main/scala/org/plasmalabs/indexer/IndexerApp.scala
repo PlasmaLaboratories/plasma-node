@@ -6,6 +6,8 @@ import cats.implicits.*
 import com.typesafe.config.Config
 import kamon.Kamon
 import mainargs.{Flag, ParserForClass, arg, main}
+import monocle.*
+import monocle.macros.*
 import org.plasmalabs.algebras.Stats
 import org.plasmalabs.common.application.{ContainsDebugFlag, ContainsUserConfigs, IOBaseApp}
 import org.plasmalabs.grpc.{Grpc, HealthCheckGrpc}
@@ -14,8 +16,6 @@ import org.plasmalabs.node.services.NodeRpcFs2Grpc
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import pureconfig.{ConfigSource, *}
-import monocle.*
-import monocle.macros.*
 
 import scala.concurrent.duration.Duration
 
