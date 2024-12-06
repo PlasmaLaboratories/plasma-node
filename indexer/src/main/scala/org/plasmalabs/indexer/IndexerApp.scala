@@ -122,12 +122,12 @@ object IndexerArgs {
     args =>
       show"IndexerApplicationConfig(" +
       show"rpcBindHost=${args.runtime.rpcBindHost}" +
-      show"rpcBindPort=${args.runtime.rpcBindPort}" +
-      show"nodeRpcHost=${args.runtime.nodeRpcHost}" +
-      show"nodeRpcPort=${args.runtime.nodeRpcPort}" +
-      show"dataDir=${args.runtime.dataDir}" +
-      show"enableReplicator=${args.runtime.enableReplicator}" +
-      show"ttlCacheCheck=${args.runtime.ttlCacheCheck}" +
+      show" rpcBindPort=${args.runtime.rpcBindPort}" +
+      show" nodeRpcHost=${args.runtime.nodeRpcHost}" +
+      show" nodeRpcPort=${args.runtime.nodeRpcPort}" +
+      show" dataDir=${args.runtime.dataDir}" +
+      show" enableReplicator=${args.runtime.enableReplicator}" +
+      show" ttlCacheCheck=${args.runtime.ttlCacheCheck}" +
       // NOTE: Do not show orientDbPassword
       show")"
 }
@@ -178,12 +178,12 @@ object IndexerApplicationConfig {
     config =>
       show"IndexerApplicationConfig(" +
       show"rpcBindHost=${config.rpcBindHost}" +
-      show"rpcBindPort=${config.rpcBindPort}" +
-      show"nodeRpcHost=${config.nodeRpcHost}" +
-      show"nodeRpcPort=${config.nodeRpcPort}" +
-      show"dataDir=${config.dataDir}" +
-      show"enableReplicator=${config.enableReplicator}" +
-      show"ttlCacheCheck=${config.ttlCacheCheck}" +
+      show" rpcBindPort=${config.rpcBindPort}" +
+      show" nodeRpcHost=${config.nodeRpcHost}" +
+      show" nodeRpcPort=${config.nodeRpcPort}" +
+      show" dataDir=${config.dataDir}" +
+      show" enableReplicator=${config.enableReplicator}" +
+      show" ttlCacheCheck=${config.ttlCacheCheck}" +
       // NOTE: Do not show orientDbPassword
       show")"
 }
