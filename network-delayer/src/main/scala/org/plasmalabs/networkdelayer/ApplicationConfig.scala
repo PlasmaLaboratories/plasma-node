@@ -2,7 +2,6 @@ package org.plasmalabs.networkdelayer
 
 import cats.Show
 import com.typesafe.config.Config
-import pureconfig.generic.derivation.default.*
 import pureconfig.{ConfigSource, *}
 
 import scala.concurrent.duration.FiniteDuration

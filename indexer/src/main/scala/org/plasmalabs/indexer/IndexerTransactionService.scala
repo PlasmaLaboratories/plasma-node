@@ -2,14 +2,13 @@ package org.plasmalabs.indexer
 
 import cats.data.EitherT
 import cats.effect.kernel.Async
-import cats.implicits._
-import org.plasmalabs.indexer.services._
+import cats.implicits.*
+import fs2.Stream
+import io.grpc.Metadata
 import org.plasmalabs.indexer.algebras.TransactionFetcherAlgebra
 import org.plasmalabs.indexer.model.GEs
-import org.plasmalabs.typeclasses.implicits._
-
-import io.grpc.Metadata // scalafix:ok
-import fs2._ // scalafix:ok
+import org.plasmalabs.indexer.services.*
+import org.plasmalabs.typeclasses.implicits.*
 
 class GrpcTransactionService[F[_]: Async](transactionFetcher: TransactionFetcherAlgebra[F])
     extends TransactionServiceFs2Grpc[F, Metadata] {
