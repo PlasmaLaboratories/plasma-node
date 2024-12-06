@@ -141,7 +141,6 @@ case class IndexerApplicationConfig(
   dataDir:          String,
   orientDbPassword: String,
   enableReplicator: Boolean = false,
-  enableMetrics:    Boolean = false,
   ttlCacheCheck:    Duration,
   kamon:            KamonConfig
 ) derives ConfigReader
