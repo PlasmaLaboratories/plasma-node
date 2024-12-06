@@ -10,7 +10,7 @@ object Dependencies {
   val logback = "1.5.12"
   val orientDbVersion = "3.2.36"
   val ioGrpcVersion = "1.68.2"
-  val http4sVersion = "0.23.29"
+  val http4sVersion = "0.23.30"
   val protobufSpecsVersion = "0.1.5"
   val plasmaSdkVersion = "0.2.2"
 
@@ -29,7 +29,7 @@ object Dependencies {
   val scalamock = scalamockBase        % Test
 
   private val mUnitTestBase: Seq[ModuleID] = Seq(
-    "org.scalameta" %% "munit"                   % "1.0.2",
+    "org.scalameta" %% "munit"                   % "1.0.3",
     "org.scalameta" %% "munit-scalacheck"        % "1.0.0",
     "org.typelevel" %% "munit-cats-effect"       % "2.0.0",
     "org.typelevel" %% "scalacheck-effect-munit" % "2.0-9366e44",
